@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/home_screen/home_screen.dart';
 
 class CollectionApp extends StatelessWidget {
@@ -7,12 +8,14 @@ class CollectionApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: '集金くん',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+        brightness: Brightness.light,
+        textTheme: GoogleFonts.montserratTextTheme(),
       ),
-      home: const HomeScreen(title: 'Flutter Demo Home Page'),
+      home: const HomeScreen(
+        title: '集金くん',
+      ),
     );
   }
 }
