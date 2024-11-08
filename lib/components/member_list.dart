@@ -114,10 +114,49 @@ class MemberList extends StatelessWidget {
           const SizedBox(height: 44),
           ElevatedButton(
             onPressed: () {},
-            child: const Text('支払い催促'),
+            style: ElevatedButton.styleFrom(
+              fixedSize: const Size(200, 40),
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              backgroundColor: const Color(0xFFE2E2E2),
+            ),
+            child: Text(
+              '支払い催促',
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
           ),
-          Row(),
-          Row(),
+          const SizedBox(height: 4),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            const SizedBox(height: 11),
+            Text(
+              "出席",
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            const SizedBox(width: 30),
+            SizedBox(
+                width: 30, child: SvgPicture.asset('assets/icons/flag.svg')),
+            const SizedBox(width: 4),
+            const Text("・・・・・・"),
+            const SizedBox(width: 26),
+            const Text("2人")
+          ]),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            const SizedBox(height: 11),
+            Text(
+              "未払い",
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            const SizedBox(width: 30),
+            SizedBox(
+                width: 30,
+                child: SvgPicture.asset('assets/icons/sad_face.svg')),
+            const SizedBox(width: 4),
+            const Text("・・・・・・"),
+            const SizedBox(width: 26),
+            const Text("1人")
+          ]),
         ],
       ),
     );
