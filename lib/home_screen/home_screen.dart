@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/components/member_list.dart';
 import 'package:mr_collection/data/model/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
@@ -48,11 +49,17 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           ],
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.settings), // TODO: 画像を使用
-            onPressed: () {
-              Navigator.pushNamed(context, '/settings'); // TODO: slideSheetに変える
-            },
+          Row(
+            children: [
+              IconButton(
+                icon: SvgPicture.asset('assets/icons/settings.svg'),
+                onPressed: () {
+                  Navigator.pushNamed(
+                      context, '/settings'); // TODO: slideSheetに変える
+                },
+              ),
+              const SizedBox(width: 16),
+            ],
           ),
         ],
         bottom: TabBar(
@@ -72,8 +79,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           members: [
             Member(name: 'Rina Kusaba', status: PaymentStatus.paid),
             Member(name: 'Yuma Ikeo', status: PaymentStatus.unpaid),
-            Member(name: 'Kanta Unagami', status: PaymentStatus.unknown),
-            Member(name: 'Mio Osato', status: PaymentStatus.unknown),
+            Member(name: 'Kanta Unagami', status: PaymentStatus.absence),
+            Member(name: 'Mio Osato', status: PaymentStatus.absence),
           ],
         ),
         Center(child: Text("二次会のコンテンツ")),

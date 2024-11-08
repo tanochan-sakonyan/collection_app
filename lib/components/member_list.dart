@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/data/model/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 
@@ -9,70 +10,128 @@ class MemberList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('メンバー'),
-            Text('支払い状況'),
-          ],
-        ),
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.42,
-          child: ListView.separated(
-            itemCount: members.length,
-            separatorBuilder: (context, index) => const Divider(),
-            itemBuilder: (context, index) {
-              final member = members[index];
-              return ListTile(
-                title: Text(
-                  member.name,
-                  style: TextStyle(
-                    color: member.status == PaymentStatus.unknown
-                        ? Colors.grey
-                        : Colors.black,
+    return Padding(
+      padding: const EdgeInsets.only(top: 16, left: 29, right: 29),
+      child: Column(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              children: [
+                Container(
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFE8E8E8),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(12),
+                      topRight: Radius.circular(12),
+                    ),
+                    border: Border(
+                      bottom: BorderSide(color: Colors.black),
+                    ),
+                  ),
+                  height: 32,
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 24),
+                      const Text('メンバー'),
+                      const Spacer(),
+                      const Text('支払い状況'),
+                      SvgPicture.asset('assets/icons/filter.svg'),
+                      const SizedBox(width: 28),
+                    ],
                   ),
                 ),
-                trailing: _buildStatusIcon(member.status),
-              );
-            },
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.4,
+                  child: ListView.separated(
+                    itemCount: members.length,
+                    separatorBuilder: (context, index) => const Divider(
+                      thickness: 1,
+                      height: 1,
+                    ),
+                    itemBuilder: (context, index) {
+                      final member = members[index];
+                      return ListTile(
+                        minTileHeight: 32,
+                        title: Text(
+                          member.name,
+                          style: TextStyle(
+                            color: member.status == PaymentStatus.absence
+                                ? Colors.grey
+                                : Colors.black,
+                          ),
+                        ),
+                        trailing: _buildStatusIcon(member.status),
+                      );
+                    },
                   ),
                 ),
-                child: const Text('一括編集'),
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.add),
-              ),
-            ],
+                const Divider(
+                  color: Colors.black,
+                  thickness: 1,
+                  height: 1,
+                ),
+                SizedBox(
+                  height: 32,
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 53),
+                      ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          elevation: 0,
+                          side: const BorderSide(
+                            color: Colors.black,
+                            width: 1.0,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          minimumSize: const Size(12, 24),
+                          backgroundColor: Colors.white,
+                        ),
+                        child: Text(
+                          '一括編集',
+                          style: Theme.of(context).textTheme.labelSmall,
+                        ),
+                      ),
+                      const SizedBox(width: 100),
+                      IconButton(
+                        onPressed: () {},
+                        icon: SvgPicture.asset('assets/icons/circle_plus.svg'),
+                      ),
+                      const SizedBox(width: 30),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
-        ),
-      ],
+          const SizedBox(height: 44),
+          ElevatedButton(
+            onPressed: () {},
+            child: const Text('支払い催促'),
+          ),
+          Row(),
+          Row(),
+        ],
+      ),
     );
   }
 
   Widget _buildStatusIcon(PaymentStatus status) {
     switch (status) {
       case PaymentStatus.paid:
-        return const Icon(Icons.check, color: Colors.green);
+        return const Icon(Icons.check, color: Color(0xFF5AFF9C));
       case PaymentStatus.unpaid:
         return const Icon(Icons.close, color: Colors.red);
-      case PaymentStatus.unknown:
+      case PaymentStatus.absence:
       default:
-        return const Icon(Icons.remove, color: Colors.grey);
+        return const Icon(Icons.remove, color: Color(0xFFC0C0C0));
     }
   }
 }
