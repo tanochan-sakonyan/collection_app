@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mr_collection/components/member_list.dart';
+import 'package:mr_collection/data/model/member.dart';
+import 'package:mr_collection/data/model/payment_status.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key, required this.title});
@@ -64,14 +67,18 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           indicatorColor: Colors.black,
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: const [
-          Center(child: Text("一次会のコンテンツ")),
-          Center(child: Text("二次会のコンテンツ")),
-          Center(child: Text("カラオケのコンテンツ")),
-        ],
-      ),
+      body: TabBarView(controller: _tabController, children: [
+        MemberList(
+          members: [
+            Member(name: 'Rina Kusaba', status: PaymentStatus.paid),
+            Member(name: 'Yuma Ikeo', status: PaymentStatus.unpaid),
+            Member(name: 'Kanta Unagami', status: PaymentStatus.unknown),
+            Member(name: 'Mio Osato', status: PaymentStatus.unknown),
+          ],
+        ),
+        Center(child: Text("二次会のコンテンツ")),
+        Center(child: Text("カラオケのコンテンツ")),
+      ]),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
         items: const <BottomNavigationBarItem>[
