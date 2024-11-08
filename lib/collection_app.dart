@@ -20,6 +20,7 @@ class CollectionApp extends StatelessWidget {
     return MaterialApp(
       title: '集金くん',
       theme: ThemeData(
+        useMaterial3: true,
         brightness: Brightness.light,
         textTheme: collectionAppTextTheme,
       ),
