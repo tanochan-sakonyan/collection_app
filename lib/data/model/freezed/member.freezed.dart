@@ -23,7 +23,7 @@ mixin _$Member {
   int get memberId => throw _privateConstructorUsedError;
   String get memberName => throw _privateConstructorUsedError;
   int? get lineUserId => throw _privateConstructorUsedError;
-  int get status => throw _privateConstructorUsedError;
+  PaymentStatus get status => throw _privateConstructorUsedError;
 
   /// Serializes this Member to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -39,7 +39,8 @@ abstract class $MemberCopyWith<$Res> {
   factory $MemberCopyWith(Member value, $Res Function(Member) then) =
       _$MemberCopyWithImpl<$Res, Member>;
   @useResult
-  $Res call({int memberId, String memberName, int? lineUserId, int status});
+  $Res call(
+      {int memberId, String memberName, int? lineUserId, PaymentStatus status});
 }
 
 /// @nodoc
@@ -78,7 +79,7 @@ class _$MemberCopyWithImpl<$Res, $Val extends Member>
       status: null == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
-              as int,
+              as PaymentStatus,
     ) as $Val);
   }
 }
@@ -90,7 +91,8 @@ abstract class _$$MemberImplCopyWith<$Res> implements $MemberCopyWith<$Res> {
       __$$MemberImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int memberId, String memberName, int? lineUserId, int status});
+  $Res call(
+      {int memberId, String memberName, int? lineUserId, PaymentStatus status});
 }
 
 /// @nodoc
@@ -127,7 +129,7 @@ class __$$MemberImplCopyWithImpl<$Res>
       status: null == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
-              as int,
+              as PaymentStatus,
     ));
   }
 }
@@ -151,7 +153,7 @@ class _$MemberImpl implements _Member {
   @override
   final int? lineUserId;
   @override
-  final int status;
+  final PaymentStatus status;
 
   @override
   String toString() {
@@ -198,7 +200,7 @@ abstract class _Member implements Member {
       {required final int memberId,
       required final String memberName,
       final int? lineUserId,
-      required final int status}) = _$MemberImpl;
+      required final PaymentStatus status}) = _$MemberImpl;
 
   factory _Member.fromJson(Map<String, dynamic> json) = _$MemberImpl.fromJson;
 
@@ -209,7 +211,7 @@ abstract class _Member implements Member {
   @override
   int? get lineUserId;
   @override
-  int get status;
+  PaymentStatus get status;
 
   /// Create a copy of Member
   /// with the given fields replaced by the non-null parameter values.
