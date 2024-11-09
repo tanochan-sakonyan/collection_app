@@ -44,6 +44,7 @@ class MemberList extends StatelessWidget {
                       const Text('メンバー'),
                       const Spacer(),
                       const Text('支払い状況'),
+                      const SizedBox(width: 3),
                       SvgPicture.asset('assets/icons/filter.svg'),
                       const SizedBox(width: 28),
                     ],
@@ -159,7 +160,8 @@ class MemberList extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyLarge,
             ),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 12),
+          //TODO メンバーのステータスによって表示を変える
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             const SizedBox(height: 11),
             Text(
@@ -174,6 +176,7 @@ class MemberList extends StatelessWidget {
             const SizedBox(width: 26),
             const Text("2人")
           ]),
+          const SizedBox(height: 20),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             const SizedBox(height: 11),
             Text(
