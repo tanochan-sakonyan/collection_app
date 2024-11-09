@@ -30,6 +30,7 @@ class AddMemberDialog extends StatelessWidget {
                 child: const TextField(
                   decoration: InputDecoration(
                     border: InputBorder.none,
+                    hintText: 'メンバーを入力',
                   ),
                 ),
               ),
