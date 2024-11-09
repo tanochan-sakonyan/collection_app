@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mr_collection/components/dialog/confirmation_dialog.dart';
+import 'package:mr_collection/components/dialog/status_popup.dart';
 import 'package:mr_collection/data/model/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 
@@ -113,7 +115,12 @@ class MemberList extends StatelessWidget {
           ),
           const SizedBox(height: 44),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => const ConfirmationDialog(),
+              );
+            },
             style: ElevatedButton.styleFrom(
               fixedSize: const Size(200, 40),
               elevation: 0,

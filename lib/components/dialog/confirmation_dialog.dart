@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 
-class ConfirmationPopup extends StatelessWidget {
-  final VoidCallback onYes;
-  final VoidCallback onNo;
-
-  const ConfirmationPopup({
+class ConfirmationDialog extends StatelessWidget {
+  const ConfirmationDialog({
     super.key,
-    required this.onYes,
-    required this.onNo,
   });
 
   @override
@@ -58,7 +53,9 @@ class ConfirmationPopup extends StatelessWidget {
               children: [
                 Expanded(
                   child: GestureDetector(
-                    onTap: onYes,
+                    onTap: () {
+                      // onYes(); //TODO
+                    },
                     child: Container(
                       height: 50,
                       alignment: Alignment.center,
@@ -78,7 +75,9 @@ class ConfirmationPopup extends StatelessWidget {
                 ),
                 Expanded(
                   child: GestureDetector(
-                    onTap: onNo,
+                    onTap: () {
+                      // onNo(); //TODO
+                    },
                     child: Container(
                       height: 50,
                       alignment: Alignment.center,
@@ -105,16 +104,7 @@ void showConfirmationPopup(BuildContext context) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      return ConfirmationPopup(
-        onYes: () {
-          Navigator.of(context).pop();
-          // 「はい」を選択した際の処理
-        },
-        onNo: () {
-          Navigator.of(context).pop();
-          // 「いいえ」を選択した際の処理
-        },
-      );
+      return const ConfirmationDialog();
     },
   );
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/components/member_list.dart';
+import 'package:mr_collection/components/tanochan_drawer.dart';
 import 'package:mr_collection/data/model/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 
@@ -17,6 +18,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 class HomeScreenState extends ConsumerState<HomeScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -33,6 +35,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -48,14 +51,14 @@ class HomeScreenState extends ConsumerState<HomeScreen>
             ),
           ],
         ),
+        automaticallyImplyLeading: false,
         actions: [
           Row(
             children: [
               IconButton(
                 icon: SvgPicture.asset('assets/icons/settings.svg'),
                 onPressed: () {
-                  Navigator.pushNamed(
-                      context, '/settings'); // TODO: slideSheetに変える
+                  _scaffoldKey.currentState?.openDrawer();
                 },
               ),
               const SizedBox(width: 16),
@@ -74,6 +77,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           indicatorColor: Colors.black,
         ),
       ),
+      drawer: const TanochanDrawer(),
       body: TabBarView(controller: _tabController, children: [
         MemberList(
           members: [
@@ -83,8 +87,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
             Member(name: 'Mio Osato', status: PaymentStatus.absence),
           ],
         ),
-        Center(child: Text("二次会のコンテンツ")),
-        Center(child: Text("カラオケのコンテンツ")),
+        const Center(child: Text("二次会のコンテンツ")),
+        const Center(child: Text("カラオケのコンテンツ")),
       ]),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
