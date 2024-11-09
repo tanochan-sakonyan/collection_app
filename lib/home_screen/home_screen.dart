@@ -18,6 +18,25 @@ class HomeScreen extends ConsumerStatefulWidget {
 class HomeScreenState extends ConsumerState<HomeScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+
+  final List<String> _tabTitles = ['一次会', '二次会', 'カラオケ']; // TODO BEから取得する
+
+  final Map<String, List<Member>> eventMembers = {
+    '一次会': [
+      Member(name: 'Rina Kusaba', status: PaymentStatus.paid),
+      Member(name: 'Yuma Ikeo', status: PaymentStatus.unpaid),
+    ],
+    '二次会': [
+      Member(name: 'Kanta Unagami', status: PaymentStatus.unpaid),
+      Member(name: 'Mio Osato', status: PaymentStatus.paid),
+    ],
+    'カラオケ': [
+      Member(name: 'Rina Kusaba', status: PaymentStatus.paid),
+      Member(name: 'Kanta Unagami', status: PaymentStatus.unpaid),
+      Member(name: 'Mio Osato', status: PaymentStatus.paid),
+    ],
+  }; // TODO BEから取得
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -65,47 +84,91 @@ class HomeScreenState extends ConsumerState<HomeScreen>
             ],
           ),
         ],
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: '一次会'),
-            Tab(text: '二次会'),
-            Tab(text: 'カラオケ'),
-          ],
-          labelColor: Colors.black,
-          unselectedLabelColor: Colors.grey,
-          indicatorColor: Colors.black,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(36),
+          child: Stack(
+            children: [
+              Container(
+                height: 36,
+                decoration: const BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: Color(0xFFC0C8CA),
+                      width: 1,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 36,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: TabBar(
+                          isScrollable: true,
+                          controller: _tabController,
+                          tabs: _tabTitles.map((eventName) {
+                            return SizedBox(
+                              width: 52,
+                              child: Tab(
+                                child: Text(
+                                  eventName,
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                          indicatorColor: Colors.black,
+                          indicatorWeight: 1,
+                        ),
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: SvgPicture.asset('assets/icons/plus.svg'),
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('新しいタブ'),
+                                content: const Text('ここにポップアップの内容を追加してください'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                    child: const Text('閉じる'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                        const SizedBox(width: 16),
+                        IconButton(
+                          onPressed: () {
+                            // TODO 削除処理
+                          },
+                          icon: SvgPicture.asset('assets/icons/delete.svg'),
+                        ),
+                        const SizedBox(width: 8),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       drawer: const TanochanDrawer(),
-      body: TabBarView(controller: _tabController, children: [
-        MemberList(
-          members: [
-            Member(name: 'Rina Kusaba', status: PaymentStatus.paid),
-            Member(name: 'Yuma Ikeo', status: PaymentStatus.unpaid),
-            Member(name: 'Kanta Unagami', status: PaymentStatus.absence),
-            Member(name: 'Mio Osato', status: PaymentStatus.absence),
-          ],
-        ),
-        const Center(child: Text("二次会のコンテンツ")),
-        const Center(child: Text("カラオケのコンテンツ")),
-      ]),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'ホーム',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add),
-            label: '追加',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'プロフィール',
-          ),
-        ],
+      body: TabBarView(
+        controller: _tabController,
+        children: _tabTitles.map((eventId) {
+          return MemberList(members: eventMembers[eventId] ?? []);
+        }).toList(),
       ),
     );
   }
