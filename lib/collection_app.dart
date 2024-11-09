@@ -20,12 +20,17 @@ class CollectionApp extends StatelessWidget {
     return MaterialApp(
       title: '集金くん',
       theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.white,
+        ),
         brightness: Brightness.light,
         textTheme: collectionAppTextTheme,
       ),
       home: const HomeScreen(
         title: '集金くん',
       ),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

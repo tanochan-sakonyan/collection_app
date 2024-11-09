@@ -13,6 +13,8 @@ dependencies:
 
   cupertino_icons: ^1.0.8
   google_fonts: ^6.2.1
+  flutter_riverpod: ^2.6.1
+  flutter_svg: ^2.0.14
 
 dev_dependencies:
   flutter_test:
@@ -21,5 +23,14 @@ dev_dependencies:
   flutter_lints: ^4.0.0
 
 flutter:
+  assets: 
+    - assets/icons/filter.svg
+    - assets/icons/circle_plus.svg
+    - assets/icons/settings.svg
+    - assets/icons/flag.svg
+    - assets/icons/sad_face.svg
+    - assets/icons/close_circle.svg
+    - assets/icons/check_circle.svg
+    - assets/icons/line.svg
 
   uses-material-design: true
