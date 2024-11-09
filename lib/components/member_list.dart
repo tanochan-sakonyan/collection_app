@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mr_collection/components/dialog/add_member_dialog.dart';
 import 'package:mr_collection/components/dialog/confirmation_dialog.dart';
-import 'package:mr_collection/components/dialog/status_popup.dart';
 import 'package:mr_collection/data/model/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 
@@ -103,7 +103,12 @@ class MemberList extends StatelessWidget {
                       ),
                       const SizedBox(width: 100),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => const AddMemberDialog(),
+                          );
+                        },
                         icon: SvgPicture.asset('assets/icons/circle_plus.svg'),
                       ),
                       const SizedBox(width: 30),

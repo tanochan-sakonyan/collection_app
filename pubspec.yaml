@@ -31,5 +31,6 @@ flutter:
     - assets/icons/sad_face.svg
     - assets/icons/close_circle.svg
     - assets/icons/check_circle.svg
+    - assets/icons/line.svg
 
   uses-material-design: true
