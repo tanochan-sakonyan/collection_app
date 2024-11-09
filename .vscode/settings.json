@@ -1,4 +1,19 @@
 {
+  "java.configuration.updateBuildConfiguration": "interactive",
+  "dart.flutterSdkPath": ".fvm/versions/stable",
+  "search.exclude": {
+    "**/.fvm": true
+  },
+  "files.watcherExclude": {
+    "**/.fvm": true
+  },
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.fileNesting.patterns": {
+    "*.dart": "$(capture).freezed.dart, $(capture).g.dart"
+  },
+  "conventionalCommits.scopes": ["app", "core", "feature"],
+  "eslint.workingDirectories": ["./functions"],
   "cSpell.words": [
     "cupertino",
     "Ikeo",

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/components/member_list.dart';
 import 'package:mr_collection/components/tanochan_drawer.dart';
-import 'package:mr_collection/data/model/member.dart';
+import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -23,17 +23,64 @@ class HomeScreenState extends ConsumerState<HomeScreen>
 
   final Map<String, List<Member>> eventMembers = {
     '一次会': [
-      Member(name: 'Rina Kusaba', status: PaymentStatus.paid),
-      Member(name: 'Yuma Ikeo', status: PaymentStatus.unpaid),
+      const Member(
+        memberId: 1,
+        memberName: '田中太郎',
+        lineUserId: 123456789,
+        status: PaymentStatus.paid,
+      ),
+      const Member(
+        memberId: 2,
+        memberName: '佐藤花子',
+        lineUserId: 987654321,
+        status: PaymentStatus.unpaid,
+      ),
+      const Member(
+        memberId: 3,
+        memberName: '鈴木次郎',
+        lineUserId: 123456789,
+        status: PaymentStatus.paid,
+      ),
     ],
     '二次会': [
-      Member(name: 'Kanta Unagami', status: PaymentStatus.unpaid),
-      Member(name: 'Mio Osato', status: PaymentStatus.paid),
+      const Member(
+        memberId: 4,
+        memberName: '山田太郎',
+        lineUserId: 123456789,
+        status: PaymentStatus.paid,
+      ),
+      const Member(
+        memberId: 5,
+        memberName: '山本花子',
+        lineUserId: 987654321,
+        status: PaymentStatus.unpaid,
+      ),
+      const Member(
+        memberId: 6,
+        memberName: '山口次郎',
+        lineUserId: 123456789,
+        status: PaymentStatus.paid,
+      ),
     ],
     'カラオケ': [
-      Member(name: 'Rina Kusaba', status: PaymentStatus.paid),
-      Member(name: 'Kanta Unagami', status: PaymentStatus.unpaid),
-      Member(name: 'Mio Osato', status: PaymentStatus.paid),
+      const Member(
+        memberId: 7,
+        memberName: '高橋太郎',
+        lineUserId: 123456789,
+        status: PaymentStatus.paid,
+      ),
+      const Member(
+        memberId: 8,
+        memberName: '高橋花子',
+        lineUserId: 987654321,
+        status: PaymentStatus.unpaid,
+      ),
+      const Member(
+        memberId: 9,
+        memberName: '高橋次郎',
+        lineUserId: 123456789,
+        status: PaymentStatus.paid,
+      ),
     ],
   }; // TODO BEから取得
 
