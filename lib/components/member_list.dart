@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/components/dialog/add_member_dialog.dart';
 import 'package:mr_collection/components/dialog/confirmation_dialog.dart';
 import 'package:mr_collection/components/dialog/line_dialog.dart';
+import 'package:mr_collection/components/dialog/status_dialog.dart';
 import 'package:mr_collection/data/model/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 
@@ -58,17 +59,27 @@ class MemberList extends StatelessWidget {
                     ),
                     itemBuilder: (context, index) {
                       final member = members[index];
-                      return ListTile(
-                        minTileHeight: 32,
-                        title: Text(
-                          member.name,
-                          style: TextStyle(
-                            color: member.status == PaymentStatus.absence
-                                ? Colors.grey
-                                : Colors.black,
+                      return GestureDetector(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => StatusDialog(
+                              member: member.toString(),
+                            ),
+                          );
+                        },
+                        child: ListTile(
+                          minTileHeight: 32,
+                          title: Text(
+                            member.name,
+                            style: TextStyle(
+                              color: member.status == PaymentStatus.absence
+                                  ? Colors.grey
+                                  : Colors.black,
+                            ),
                           ),
+                          trailing: _buildStatusIcon(member.status),
                         ),
-                        trailing: _buildStatusIcon(member.status),
                       );
                     },
                   ),
@@ -122,16 +133,18 @@ class MemberList extends StatelessWidget {
           const SizedBox(height: 44),
           ElevatedButton(
             onPressed: () {
-              if (true) {
-                // showDialog(
-                //   context: context,
-                //   builder: (context) => const ConfirmationDialog(),
-                // );
+              if (true) // TODO ユーザーが公式LINEを追加しているかの確認、isConnectedでチェック可能
+              {
+                showDialog(
+                  context: context,
+                  builder: (context) => const ConfirmationDialog(),
+                );
+              } else {
                 showDialog(
                   context: context,
                   builder: (context) => const LineDialog(),
                 );
-              } else {}
+              }
             },
             style: ElevatedButton.styleFrom(
               fixedSize: const Size(200, 40),

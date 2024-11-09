@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class PaymentStatusDialog extends StatelessWidget {
+class StatusDialog extends StatelessWidget {
   final String member;
 
-  const PaymentStatusDialog({super.key, required this.member});
+  const StatusDialog({super.key, required this.member});
 
   @override
   Widget build(BuildContext context) {
