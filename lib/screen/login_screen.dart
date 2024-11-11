@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_line_sdk/flutter_line_sdk.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mr_collection/provider/access_token_provider.dart';
+import 'package:mr_collection/screen/home_screen.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(title: const Text("Login")),
       body: Center(
@@ -23,23 +26,14 @@ class LoginScreen extends StatelessWidget {
             try {
               // LINEログイン処理
               final result = await LineSDK.instance.login();
-              final userProfile = result.userProfile;
-              final displayName = userProfile?.displayName ?? 'No Name';
-              final userId = userProfile?.userId ?? 'No ID';
+              final accessToken = result.accessToken;
+
+              ref.read(accessTokenProvider.notifier).state = accessToken.value;
 
               // ログイン成功時の処理
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text('ログイン成功'),
-                  content: Text('ようこそ、$displayName さん！\nユーザーID: $userId'),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: const Text('OK'),
-                    ),
-                  ],
-                ),
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                    builder: (context) => const HomeScreen(title: '集金くん')),
               );
             } on PlatformException catch (e) {
               // エラーハンドリング

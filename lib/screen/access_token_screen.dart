@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_line_sdk/flutter_line_sdk.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/provider/access_token_provider.dart';
 import 'package:mr_collection/screen/home_screen.dart';
@@ -9,20 +10,14 @@ class AccessTokenScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final accessTokenAsyncValue = ref.watch(accessTokenProvider);
+    final accessToken = ref.watch(accessTokenProvider);
 
-    return accessTokenAsyncValue.when(
-      data: (accessToken) {
-        if (accessToken != null) {
-          return const HomeScreen(
-            title: '集金くん',
-          );
-        } else {
-          return const LoginScreen();
-        }
-      },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => Center(child: Text('Error: $error')),
-    );
+    if (accessToken != null) {
+      return const HomeScreen(
+        title: '集金くん',
+      );
+    } else {
+      return const LoginScreen();
+    }
   }
 }
