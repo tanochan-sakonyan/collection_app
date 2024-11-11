@@ -41,5 +41,6 @@ flutter:
     - assets/icons/line.svg
     - assets/icons/delete.svg
     - assets/icons/plus.svg
+    - assets/icons/line-login.svg
 
   uses-material-design: true
