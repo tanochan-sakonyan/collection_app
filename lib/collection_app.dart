@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mr_collection/screen/access_token_screen.dart';
 import 'package:mr_collection/screen/home_screen.dart';
 
 class CollectionApp extends StatelessWidget {
@@ -27,9 +28,7 @@ class CollectionApp extends StatelessWidget {
         brightness: Brightness.light,
         textTheme: collectionAppTextTheme,
       ),
-      home: const HomeScreen(
-        title: '集金くん',
-      ),
+      home: AccessTokenScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
