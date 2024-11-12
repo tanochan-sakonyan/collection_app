@@ -25,7 +25,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     '一次会': [
       const Member(
         memberId: 1,
-        memberName: '一次会 Aさん',
+        memberName: 'ああああああああああああああああああああああああああああ',
         lineUserId: 123456789,
         status: PaymentStatus.paid,
       ),

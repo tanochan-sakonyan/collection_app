@@ -71,7 +71,9 @@ class MemberList extends StatelessWidget {
                         child: ListTile(
                           minTileHeight: 32,
                           title: Text(
-                            member.memberName,
+                            member.memberName.length > 17
+                                ? '${member.memberName.substring(0, 10)}...'
+                                : member.memberName,
                             style: TextStyle(
                               color: member.status == PaymentStatus.absence
                                   ? Colors.grey
