@@ -4,8 +4,31 @@ import 'package:flutter_svg/svg.dart';
 class PayPayDialog extends StatelessWidget {
   const PayPayDialog({super.key});
 
+  get userRepository => null;
+
+  Future<void> _sendPaypayLink(BuildContext context, String controller) async {
+    final paypayLink = controller;
+
+    if (paypayLink.isEmpty) {
+      return;
+    }
+
+    try {
+      final event = await userRepository.sendPaypayLink(paypayLink);
+      Navigator.of(context).pop(event);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('PayPayリンクを送信しました。')),
+      );
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('PayPayリンクの送信に失敗しました')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    var controller = TextEditingController();
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
@@ -19,10 +42,12 @@ class PayPayDialog extends StatelessWidget {
             children: [
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
                     icon: SvgPicture.asset("assets/icons/close_circle.svg")),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () => _sendPaypayLink(context, controller.text),
                   icon: SvgPicture.asset("assets/icons/check_circle.svg"),
                 )
               ]),
@@ -39,6 +64,7 @@ class PayPayDialog extends StatelessWidget {
                 width: 247,
                 child: TextField(
                   decoration: InputDecoration(
+                    hintText: 'PayPayの受け取りリンク',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: const BorderSide(color: Colors.black),
