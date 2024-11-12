@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mr_collection/components/button/toggle_button.dart';
 
-class AddEventDialog extends StatelessWidget {
+class AddEventDialog extends StatefulWidget {
   const AddEventDialog({super.key});
 
   @override
+  AddEventDialogState createState() => AddEventDialogState();
+}
+
+class AddEventDialogState extends State<AddEventDialog> {
+  bool isToggleOn = true;
+
+  @override
   Widget build(BuildContext context) {
+    var controller = TextEditingController();
     return Dialog(
       backgroundColor: const Color(0xFFF2F2F2),
       shape: RoundedRectangleBorder(
@@ -52,8 +61,9 @@ class AddEventDialog extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: Colors.black),
                 ),
-                child: const TextField(
-                  decoration: InputDecoration(
+                child: TextField(
+                  controller: controller,
+                  decoration: const InputDecoration(
                     border: InputBorder.none,
                     hintText: 'イベント名を入力',
                   ),
@@ -71,12 +81,13 @@ class AddEventDialog extends StatelessWidget {
                   children: [
                     ListTile(
                       title: const Text('参加者引継ぎ'),
-                      trailing: Switch(
-                        value: false,
-                        onChanged: (bool value) {
-                          // TODO: Toggle switch logic
+                      trailing: ToggleButton(
+                        initialValue: isToggleOn,
+                        onChanged: (bool isOn) {
+                          setState(() {
+                            isToggleOn = isOn;
+                          });
                         },
-                        activeColor: Colors.green,
                       ),
                     ),
                     const Divider(height: 1, color: Color(0xFFE8E8E8)),
