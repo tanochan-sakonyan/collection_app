@@ -37,4 +37,19 @@ class UserRepository {
       throw Exception('ログインに失敗しました');
     }
   }
+
+  Future<User> sendPaypayLink(String userId, String paypayLink) async {
+    final url = Uri.parse('$baseUrl/users/$userId/paypay-link');
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'paypayLink': paypayLink}),
+    );
+
+    if (response.statusCode == 200) {
+      return User.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('PayPayリンクの送信に失敗しました');
+    }
+  }
 }
