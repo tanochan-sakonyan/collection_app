@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
 
 class StatusDialog extends StatelessWidget {
+  final String eventId;
+  final int memberId;
   final String member;
+  final Function(String, int, int) onStatusChange;
 
-  const StatusDialog({super.key, required this.member});
+  const StatusDialog({
+    super.key,
+    required this.eventId,
+    required this.memberId,
+    required this.member,
+    required this.onStatusChange,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +46,7 @@ class StatusDialog extends StatelessWidget {
                 label: '支払い済み',
                 icon: Icons.check,
                 iconColor: const Color(0xFF5AFF9C),
+                status: 1,
               ),
               const SizedBox(height: 32),
               _buildStatusButton(
@@ -44,6 +54,7 @@ class StatusDialog extends StatelessWidget {
                 label: '未払い',
                 icon: Icons.close,
                 iconColor: Colors.red,
+                status: 2,
               ),
               const SizedBox(height: 32),
               _buildStatusButton(
@@ -51,6 +62,7 @@ class StatusDialog extends StatelessWidget {
                 label: '欠席',
                 icon: Icons.remove,
                 iconColor: const Color(0xFFC0C0C0),
+                status: 3,
               ),
             ],
           ),
@@ -62,10 +74,12 @@ class StatusDialog extends StatelessWidget {
   Widget _buildStatusButton(BuildContext context,
       {required String label,
       required IconData icon,
-      required Color iconColor}) {
+      required Color iconColor,
+      required int status}) {
     return GestureDetector(
-      onTap: () {
-        Navigator.pop(context); // TODO ここにステータス更新処理を記述
+      onTap: () async {
+        Navigator.pop(context);
+        await onStatusChange(eventId, memberId, status);
       },
       child: Container(
         decoration: BoxDecoration(
