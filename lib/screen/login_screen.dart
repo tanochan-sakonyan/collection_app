@@ -24,19 +24,15 @@ class LoginScreen extends ConsumerWidget {
           ),
           onPressed: () async {
             try {
-              // LINEログイン処理
               final result = await LineSDK.instance.login();
               final accessToken = result.accessToken;
-
               ref.read(accessTokenProvider.notifier).state = accessToken.value;
 
-              // ログイン成功時の処理
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
                     builder: (context) => const HomeScreen(title: '集金くん')),
               );
             } on PlatformException catch (e) {
-              // エラーハンドリング
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
