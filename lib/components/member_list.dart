@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/components/dialog/add_member_dialog.dart';
 import 'package:mr_collection/components/dialog/confirmation_dialog.dart';
-import 'package:mr_collection/components/dialog/line_dialog.dart';
 import 'package:mr_collection/components/dialog/status_dialog.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
@@ -136,16 +135,10 @@ class MemberList extends StatelessWidget {
           const SizedBox(height: 44),
           ElevatedButton(
             onPressed: () {
-              if (true) // TODO ユーザーが公式LINEを追加しているかの確認、isConnectedでチェック可能
               {
                 showDialog(
                   context: context,
                   builder: (context) => const ConfirmationDialog(),
-                );
-              } else {
-                showDialog(
-                  context: context,
-                  builder: (context) => const LineDialog(),
                 );
               }
             },

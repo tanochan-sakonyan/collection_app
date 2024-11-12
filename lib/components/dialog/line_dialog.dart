@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+// TODO リリース初期段階ではLINEログイン必須のため、このポップアップは使わない
 class LineDialog extends StatelessWidget {
   const LineDialog({super.key});
 
