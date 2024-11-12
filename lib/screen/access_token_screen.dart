@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_line_sdk/flutter_line_sdk.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/provider/access_token_provider.dart';
 import 'package:mr_collection/screen/home_screen.dart';

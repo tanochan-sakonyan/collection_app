@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mr_collection/components/dialog/add_event_dialog.dart';
 import 'package:mr_collection/components/member_list.dart';
 import 'package:mr_collection/components/tanochan_drawer.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
@@ -179,17 +180,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                           onPressed: () {
                             showDialog(
                               context: context,
-                              builder: (context) => AlertDialog(
-                                title: const Text('新しいタブ'),
-                                content: const Text('ここにポップアップの内容を追加してください'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(),
-                                    child: const Text('閉じる'),
-                                  ),
-                                ],
-                              ),
+                              builder: (BuildContext context) {
+                                return const AddEventDialog();
+                              },
                             );
                           },
                         ),
