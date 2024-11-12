@@ -25,19 +25,19 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     '一次会': [
       const Member(
         memberId: 1,
-        memberName: '田中太郎',
+        memberName: '一次会 Aさん',
         lineUserId: 123456789,
         status: PaymentStatus.paid,
       ),
       const Member(
         memberId: 2,
-        memberName: '佐藤花子',
+        memberName: '一次会 Bさん',
         lineUserId: 987654321,
         status: PaymentStatus.unpaid,
       ),
       const Member(
         memberId: 3,
-        memberName: '鈴木次郎',
+        memberName: '一次会 Cさん',
         lineUserId: 123456789,
         status: PaymentStatus.paid,
       ),
@@ -45,19 +45,19 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     '二次会': [
       const Member(
         memberId: 4,
-        memberName: '山田太郎',
+        memberName: '二次会 Aさん',
         lineUserId: 123456789,
         status: PaymentStatus.paid,
       ),
       const Member(
         memberId: 5,
-        memberName: '山本花子',
+        memberName: '二次会 Bさん',
         lineUserId: 987654321,
         status: PaymentStatus.unpaid,
       ),
       const Member(
         memberId: 6,
-        memberName: '山口次郎',
+        memberName: '二次会 Cさん',
         lineUserId: 123456789,
         status: PaymentStatus.paid,
       ),
@@ -65,19 +65,19 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     'カラオケ': [
       const Member(
         memberId: 7,
-        memberName: '高橋太郎',
+        memberName: 'カラオケ Aさん',
         lineUserId: 123456789,
         status: PaymentStatus.paid,
       ),
       const Member(
         memberId: 8,
-        memberName: '高橋花子',
+        memberName: 'カラオケ Bさん',
         lineUserId: 987654321,
         status: PaymentStatus.unpaid,
       ),
       const Member(
         memberId: 9,
-        memberName: '高橋次郎',
+        memberName: 'カラオケ Cさん',
         lineUserId: 123456789,
         status: PaymentStatus.paid,
       ),
