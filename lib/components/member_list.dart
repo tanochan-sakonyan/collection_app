@@ -64,7 +64,7 @@ class MemberList extends StatelessWidget {
                           showDialog(
                             context: context,
                             builder: (context) => StatusDialog(
-                              member: member.toString(),
+                              member: member.memberName.toString(),
                             ),
                           );
                         },
