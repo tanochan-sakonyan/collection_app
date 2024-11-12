@@ -1,6 +1,8 @@
 // lib/custom_drawer.dart
 import 'package:flutter/material.dart';
 import 'package:mr_collection/components/dialog/paypay_dialog.dart';
+import 'package:mr_collection/screen/privacy_policy_screen.dart';
+import 'package:mr_collection/screen/terms_of_service_screen.dart';
 
 class TanochanDrawer extends StatelessWidget {
   const TanochanDrawer({super.key});
@@ -41,6 +43,36 @@ class TanochanDrawer extends StatelessWidget {
                 // ログアウトの処理をここに記述
               },
             ),
+            const Spacer(),
+            Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildMenuItem(
+                    context,
+                    text: "利用規約",
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const TermsOfServiceScreen()),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  _buildMenuItem(
+                    context,
+                    text: "プライパシーポリシー",
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const PrivacyPolicyScreen()),
+                      );
+                    },
+                  ),
+                ]),
+            const SizedBox(height: 100),
           ],
         ),
       ),
