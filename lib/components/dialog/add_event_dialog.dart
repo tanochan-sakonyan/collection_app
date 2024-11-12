@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mr_collection/components/button/toggle_button.dart';
+import 'package:mr_collection/data/repository/event_repository.dart';
 
 class AddEventDialog extends StatefulWidget {
   const AddEventDialog({super.key});
@@ -11,6 +12,33 @@ class AddEventDialog extends StatefulWidget {
 
 class AddEventDialogState extends State<AddEventDialog> {
   bool isToggleOn = true;
+
+  final EventRepository eventRepository =
+      EventRepository(baseUrl: 'https://your-api-base-url.com');
+
+  Future<void> _createEvent(dynamic controller) async {
+    final eventName = controller.text;
+    final isCopy = isToggleOn;
+
+    if (eventName.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('イベント名を入力してください')),
+      );
+      return;
+    }
+
+    try {
+      final event = await eventRepository.createEvent(eventName, isCopy);
+      Navigator.of(context).pop(event);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('イベントが作成されました')),
+      );
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('イベント作成に失敗しました')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,9 +75,7 @@ class AddEventDialogState extends State<AddEventDialog> {
                   ),
                   IconButton(
                     icon: SvgPicture.asset("assets/icons/check_circle.svg"),
-                    onPressed: () {
-                      // TODO: イベントを追加するロジック
-                    },
+                    onPressed: () => _createEvent,
                   ),
                 ],
               ),
