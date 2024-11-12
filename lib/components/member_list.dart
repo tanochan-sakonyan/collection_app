@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/components/dialog/add_member_dialog.dart';
 import 'package:mr_collection/components/dialog/confirmation_dialog.dart';
-import 'package:mr_collection/components/dialog/line_dialog.dart';
 import 'package:mr_collection/components/dialog/status_dialog.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
@@ -72,7 +71,9 @@ class MemberList extends StatelessWidget {
                         child: ListTile(
                           minTileHeight: 32,
                           title: Text(
-                            member.memberName,
+                            member.memberName.length > 17
+                                ? '${member.memberName.substring(0, 10)}...'
+                                : member.memberName,
                             style: TextStyle(
                               color: member.status == PaymentStatus.absence
                                   ? Colors.grey
@@ -93,28 +94,30 @@ class MemberList extends StatelessWidget {
                 SizedBox(
                   height: 32,
                   child: Row(
+                    mainAxisAlignment:
+                        MainAxisAlignment.center, //TODO リリース初期段階では中央に一つのボタンを配置
                     children: [
-                      const SizedBox(width: 53),
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          elevation: 0,
-                          side: const BorderSide(
-                            color: Colors.black,
-                            width: 1.0,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          minimumSize: const Size(12, 24),
-                          backgroundColor: Colors.white,
-                        ),
-                        child: Text(
-                          '一括編集',
-                          style: Theme.of(context).textTheme.labelSmall,
-                        ),
-                      ),
-                      const SizedBox(width: 100),
+                      // const SizedBox(width: 53),
+                      // ElevatedButton(
+                      //   onPressed: () {},
+                      //   style: ElevatedButton.styleFrom(
+                      //     elevation: 0,
+                      //     side: const BorderSide(
+                      //       color: Colors.black,
+                      //       width: 1.0,
+                      //     ),
+                      //     shape: RoundedRectangleBorder(
+                      //       borderRadius: BorderRadius.circular(20),
+                      //     ),
+                      //     minimumSize: const Size(12, 24),
+                      //     backgroundColor: Colors.white,
+                      //   ),
+                      //   child: Text(
+                      //     '一括編集',
+                      //     style: Theme.of(context).textTheme.labelSmall,
+                      //   ),
+                      // ),
+                      // const SizedBox(width: 100),
                       IconButton(
                         onPressed: () {
                           showDialog(
@@ -124,7 +127,7 @@ class MemberList extends StatelessWidget {
                         },
                         icon: SvgPicture.asset('assets/icons/circle_plus.svg'),
                       ),
-                      const SizedBox(width: 30),
+                      // const SizedBox(width: 30),
                     ],
                   ),
                 )
@@ -134,16 +137,10 @@ class MemberList extends StatelessWidget {
           const SizedBox(height: 44),
           ElevatedButton(
             onPressed: () {
-              if (true) // TODO ユーザーが公式LINEを追加しているかの確認、isConnectedでチェック可能
               {
                 showDialog(
                   context: context,
                   builder: (context) => const ConfirmationDialog(),
-                );
-              } else {
-                showDialog(
-                  context: context,
-                  builder: (context) => const LineDialog(),
                 );
               }
             },
