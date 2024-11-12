@@ -93,28 +93,30 @@ class MemberList extends StatelessWidget {
                 SizedBox(
                   height: 32,
                   child: Row(
+                    mainAxisAlignment:
+                        MainAxisAlignment.center, //TODO リリース初期段階では中央に一つのボタンを配置
                     children: [
-                      const SizedBox(width: 53),
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          elevation: 0,
-                          side: const BorderSide(
-                            color: Colors.black,
-                            width: 1.0,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          minimumSize: const Size(12, 24),
-                          backgroundColor: Colors.white,
-                        ),
-                        child: Text(
-                          '一括編集',
-                          style: Theme.of(context).textTheme.labelSmall,
-                        ),
-                      ),
-                      const SizedBox(width: 100),
+                      // const SizedBox(width: 53),
+                      // ElevatedButton(
+                      //   onPressed: () {},
+                      //   style: ElevatedButton.styleFrom(
+                      //     elevation: 0,
+                      //     side: const BorderSide(
+                      //       color: Colors.black,
+                      //       width: 1.0,
+                      //     ),
+                      //     shape: RoundedRectangleBorder(
+                      //       borderRadius: BorderRadius.circular(20),
+                      //     ),
+                      //     minimumSize: const Size(12, 24),
+                      //     backgroundColor: Colors.white,
+                      //   ),
+                      //   child: Text(
+                      //     '一括編集',
+                      //     style: Theme.of(context).textTheme.labelSmall,
+                      //   ),
+                      // ),
+                      // const SizedBox(width: 100),
                       IconButton(
                         onPressed: () {
                           showDialog(
@@ -124,7 +126,7 @@ class MemberList extends StatelessWidget {
                         },
                         icon: SvgPicture.asset('assets/icons/circle_plus.svg'),
                       ),
-                      const SizedBox(width: 30),
+                      // const SizedBox(width: 30),
                     ],
                   ),
                 )

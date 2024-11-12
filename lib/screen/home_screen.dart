@@ -194,13 +194,14 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                           },
                         ),
                         const SizedBox(width: 16),
-                        IconButton(
-                          onPressed: () {
-                            // TODO 削除処理
-                          },
-                          icon: SvgPicture.asset('assets/icons/delete.svg'),
-                        ),
-                        const SizedBox(width: 8),
+                        // TODO リリース初期段階では、一括削除機能のボタンは非表示
+                        // IconButton(
+                        //   onPressed: () {
+                        //     // TODO 一括削除処理
+                        //   },
+                        //   icon: SvgPicture.asset('assets/icons/delete.svg'),
+                        // ),
+                        // const SizedBox(width: 8),
                       ],
                     ),
                   ],
