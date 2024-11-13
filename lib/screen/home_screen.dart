@@ -172,7 +172,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                           isScrollable: true,
                           controller: _tabController,
                           tabs: _tabTitles.map((eventName) {
-                            // 対応するイベントのIDを取得
                             final event = mockEvents.firstWhere(
                               (e) => e.eventName == eventName,
                               orElse: () => const Event(

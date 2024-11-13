@@ -1,5 +1,7 @@
 // lib/custom_drawer.dart
 import 'package:flutter/material.dart';
+import 'package:mr_collection/components/dialog/confirmation_dialog.dart';
+import 'package:mr_collection/components/dialog/logout_dialog.dart';
 import 'package:mr_collection/components/dialog/paypay_dialog.dart';
 import 'package:mr_collection/screen/privacy_policy_screen.dart';
 import 'package:mr_collection/screen/terms_of_service_screen.dart';
@@ -40,7 +42,9 @@ class TanochanDrawer extends StatelessWidget {
               context,
               text: "ログアウト",
               onTap: () {
-                // ログアウトの処理をここに記述
+                showDialog(
+                    context: context,
+                    builder: (context) => const LogoutDialog());
               },
             ),
             const Spacer(),
