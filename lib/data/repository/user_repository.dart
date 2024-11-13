@@ -52,4 +52,19 @@ class UserRepository {
       throw Exception('PayPayリンクの送信に失敗しました');
     }
   }
+
+  Future<User> changeStatus(String eventId, String memberId, int status) async {
+    final url = Uri.parse('$baseUrl/events/$eventId/members/$memberId/status');
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'status': status}),
+    );
+
+    if (response.statusCode == 200) {
+      return User.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('ステータスの更新に失敗しました');
+    }
+  }
 }
