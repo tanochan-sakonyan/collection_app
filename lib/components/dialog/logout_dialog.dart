@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_line_sdk/flutter_line_sdk.dart';
+import 'package:mr_collection/screen/login_screen.dart';
 
 class LogoutDialog extends StatelessWidget {
   const LogoutDialog({
@@ -51,7 +52,7 @@ class LogoutDialog extends StatelessWidget {
                   children: [
                     const Spacer(),
                     GestureDetector(
-                      onTap: _signOut,
+                      onTap: () => _signOut(context),
                       child: Container(
                         height: 80,
                         alignment: Alignment.center,
@@ -94,6 +95,11 @@ class LogoutDialog extends StatelessWidget {
 }
 
 final _lineSdk = LineSDK.instance;
-Future<void> _signOut() async {
+Future<void> _signOut(context) async {
   await _lineSdk.logout();
+  Navigator.of(context).pushReplacement(
+    MaterialPageRoute(
+      builder: (context) => const LoginScreen(),
+    ),
+  );
 }
