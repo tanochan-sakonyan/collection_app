@@ -42,5 +42,13 @@ flutter:
     - assets/icons/delete.svg
     - assets/icons/plus.svg
     - assets/icons/line-login.svg
+    - assets/icons/sort.svg
+    - assets/icons/user-add.svg
+    - assets/icons/chat_bubble.svg
+    - assets/icons/yen.svg
+    - assets/icons/drawer_yen.svg
+    - assets/icons/drawer_star.svg
+    - assets/icons/drawer_key.svg
+    - assets/icons/drawer_file.svg
 
   uses-material-design: true
