@@ -21,7 +21,8 @@ dependencies:
   shared_preferences: ^2.3.3
   path_provider: ^2.0.11
   sign_in_with_apple: ^6.1.3
-  flutter_line_sdk: ^2.3.8
+  flutter_line_sdk:
+    path: C:/Users/sugar/tanochan/flutter_line_sdk
 
 dev_dependencies:
   flutter_test:
@@ -51,7 +52,6 @@ flutter:
     - assets/icons/delete.svg
     - assets/icons/plus.svg
     - assets/icons/line-login.svg
-    - assets/icons/apple_logo.svg
     - assets/icons/sort.svg
     - assets/icons/user-add.svg
     - assets/icons/chat_bubble.svg
