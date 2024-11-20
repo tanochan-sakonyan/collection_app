@@ -20,14 +20,15 @@ dependencies:
   json_annotation: ^4.9.0
   http: ^1.2.2
   shared_preferences: ^2.3.3
-  path_provider: ^2.0.11
   sign_in_with_apple: ^6.1.3
   url_launcher: ^6.1.10
-  flutter_line_sdk: ^2.3.8
   webview_flutter: ^4.11.0
   auto_size_text: ^3.0.0
   tutorial_coach_mark: ^1.2.13
   smooth_page_indicator: ^1.2.1
+  path_provider: ^2.0.11
+  flutter_line_sdk:
+    path: C:/Users/sugar/tanochan/flutter_line_sdk
 
 dev_dependencies:
   flutter_test:
