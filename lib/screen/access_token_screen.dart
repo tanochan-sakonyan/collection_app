@@ -9,7 +9,7 @@ class AccessTokenScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final accessToken = ref.watch(accessTokenProvider);
+    final accessToken = "AdWzO3Z7T3BIpOGI6SMxNkm0UBwqxAcBRkqCgbFb94C3kKGYWL4E4iU3ozmK83ATEt4+B94o8co+Z4OAPjxoTeXG7qtVHcDJPWfqQZKybziN9BIPTjrtNSpKf3Mtt9wOuxwqL+FFefNLVfqPulUrRgdB04t89/1O/w1cDnyilFU="; //mockTokenとして自分の持っているアカウントのトークンを食わせる
 
     if (accessToken != null) {
       return const HomeScreen(
