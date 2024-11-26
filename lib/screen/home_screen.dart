@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mr_collection/components/dialog/add_event_dialog.dart';
 import 'package:mr_collection/components/dialog/delete_event_dialog.dart';
 import 'package:mr_collection/components/member_list.dart';
@@ -249,7 +249,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         children: _tabTitles.map((memberId) {
           return MemberList(
             members: mockEvents[0].members,
-            eventId: mockEvents[0].eventId.toString(),
+            eventId: mockEvents[0].eventId,
           );
         }).toList(),
       ),
