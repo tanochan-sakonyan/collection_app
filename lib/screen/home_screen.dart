@@ -184,17 +184,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                 context: context,
                                 builder: (BuildContext context) {
                                   return DeleteEventDialog(
-                                    eventId: eventId.toString(),
+                                    eventId: eventId,
                                   );
                                 },
-                              ).then((value) {
-                                if (value == true) {
-                                  // Yes button pressed
-                                  // イベント削除の処理を追加
-                                } else {
-                                  // No button pressed
-                                }
-                              }),
+                              ),
                               child: SizedBox(
                                 width: 52,
                                 child: Tab(

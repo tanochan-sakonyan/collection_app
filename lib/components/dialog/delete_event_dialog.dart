@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
+import 'package:mr_collection/provider/event_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class DeleteEventDialog extends StatelessWidget {
-  final String eventId;
+class DeleteEventDialog extends ConsumerWidget {
+  final int eventId;
   const DeleteEventDialog({required this.eventId, super.key});
 
-  get eventRepository => null;
-
-  Future<void> _deleteEvent(BuildContext context, String id) async {
+  Future<void> _deleteEvent(BuildContext context, WidgetRef ref, int id) async {
     final eventId = id;
 
-    if (eventId.isEmpty) {
+    if (eventId <= 0) { // 例: eventIdが0以下の場合は無効とみなす
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('無効なイベントIDです')), // 必要に応じてメッセージを表示
+      );
       return;
     }
 
     try {
-      final event = await eventRepository.sendPaypayLink(eventId);
-      Navigator.of(context).pop(event);
+      await ref.read(eventProvider.notifier).deleteEvent([eventId]);
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('イベントを削除しました')),
       );
@@ -28,7 +31,7 @@ class DeleteEventDialog extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final List<Event> events;
     return Dialog(
       shape: RoundedRectangleBorder(
@@ -81,7 +84,7 @@ class DeleteEventDialog extends StatelessWidget {
                   children: [
                     const Spacer(),
                     GestureDetector(
-                      onTap: () => _deleteEvent(context, eventId),
+                      onTap: () => _deleteEvent(context, ref, eventId),
                       child: Container(
                         height: 59,
                         alignment: Alignment.center,
