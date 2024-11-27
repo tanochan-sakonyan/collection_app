@@ -10,9 +10,9 @@ class DeleteEventDialog extends ConsumerWidget {
   Future<void> _deleteEvent(BuildContext context, WidgetRef ref, int id) async {
     final eventId = id;
 
-    if (eventId <= 0) { // 例: eventIdが0以下の場合は無効とみなす
+    if (eventId <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('無効なイベントIDです')), // 必要に応じてメッセージを表示
+        const SnackBar(content: Text('無効なイベントIDです')),
       );
       return;
     }
