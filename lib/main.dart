@@ -5,7 +5,7 @@ import 'package:mr_collection/collection_app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await LineSDK.instance.setup('2006600637');
+  await LineSDK.instance.setup('2006612683');
 
   runApp(
     const ProviderScope(child: CollectionApp()),
