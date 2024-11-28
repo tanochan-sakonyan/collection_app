@@ -18,6 +18,7 @@ class LoginScreen extends ConsumerWidget {
     bool isChecked = ref.watch(checkboxProvider);
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
