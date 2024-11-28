@@ -5,7 +5,7 @@ import 'package:mr_collection/components/dialog/add_event_dialog.dart';
 import 'package:mr_collection/components/dialog/delete_event_dialog.dart';
 import 'package:mr_collection/components/member_list.dart';
 import 'package:mr_collection/components/tanochan_drawer.dart';
-import 'package:mr_collection/data/mock/mock_events.dart';
+import 'package:mr_collection/data/mock/mock_user.dart';
 import 'package:mr_collection/data/mock/tab_titles.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 
