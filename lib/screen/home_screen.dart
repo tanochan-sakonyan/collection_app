@@ -8,8 +8,6 @@ import 'package:mr_collection/components/tanochan_drawer.dart';
 import 'package:mr_collection/data/mock/mock_events.dart';
 import 'package:mr_collection/data/mock/tab_titles.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
-import 'package:mr_collection/data/model/freezed/member.dart';
-import 'package:mr_collection/data/model/payment_status.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key, required this.title});
@@ -97,7 +95,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                           isScrollable: true,
                           controller: _tabController,
                           tabs: tabTitles.map((eventName) {
-                            final event = mockEvents.firstWhere(
+                            final event = mockUser.events.firstWhere(
                               (e) => e.eventName == eventName,
                               orElse: () => const Event(
                                   eventId: -1, eventName: '', members: []),
@@ -173,8 +171,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         controller: _tabController,
         children: tabTitles.map((memberId) {
           return MemberList(
-            members: mockEvents[0].members,
-            eventId: mockEvents[0].eventId.toString(),
+            members: mockUser.events[0].members,
+            eventId: mockUser.events[0].eventId.toString(),
           );
         }).toList(),
       ),
