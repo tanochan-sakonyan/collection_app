@@ -40,7 +40,7 @@ class TanochanDrawer extends StatelessWidget {
               onTap: () {
                 showDialog(
                   context: context,
-                  builder: (context) => const PayPayDialog(),
+                  builder: (context) => PayPayDialog(),
                 );
               },
             ),

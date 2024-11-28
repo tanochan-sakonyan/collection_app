@@ -1,21 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mr_collection/provider/user_provider.dart';
 
-class PayPayDialog extends StatelessWidget {
-  const PayPayDialog({super.key});
+class PayPayDialog extends ConsumerStatefulWidget {
+  PayPayDialog({super.key});
+  @override
+  _PayPayDialogState createState() => _PayPayDialogState();
+}
 
-  get userRepository => null;
+class _PayPayDialogState extends ConsumerState<PayPayDialog> {
+  final TextEditingController controller = TextEditingController();
+  String? _errorMessage;
 
-  Future<void> _sendPaypayLink(BuildContext context, String controller) async {
-    final paypayLink = controller;
+  Future<void> _sendPaypayLink(BuildContext context) async {
+    final paypayLink = controller.text;
 
     if (paypayLink.isEmpty) {
+      setState(() {
+        _errorMessage = 'PayPayリンクを入力してください';
+      });
       return;
     }
 
     try {
-      final event = await userRepository.sendPaypayLink(paypayLink);
-      Navigator.of(context).pop(event);
+      final userRepository = ref.read(userRepositoryProvider);
+      final user = ref.read(userProvider);
+      final userId = user?.userId.toString();
+
+      await userRepository.sendPaypayLink(userId, paypayLink);
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('PayPayリンクを送信しました。')),
       );
@@ -28,47 +41,69 @@ class PayPayDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var controller = TextEditingController();
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(23),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(24),
         child: SizedBox(
-          width: 296,
-          height: 240,
+          width: 320,
+          height: 216,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    icon: SvgPicture.asset("assets/icons/close_circle.svg")),
-                IconButton(
-                  onPressed: () => _sendPaypayLink(context, controller.text),
-                  icon: SvgPicture.asset("assets/icons/check_circle.svg"),
-                )
-              ]),
+              SizedBox(height: 4),
               Text(
-                'PayPayリンクを\n入力してください',
+                'PayPayリンクを入力してください',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
               ),
-              const SizedBox(height: 30),
-              // Input field
+              const SizedBox(height: 14),
               SizedBox(
                 width: 247,
                 child: TextField(
+                  controller: controller,
+                  cursorColor: Color(0xFFA3A3A3),
                   decoration: InputDecoration(
-                    hintText: 'PayPayの受け取りリンク',
+                    hintText: '受け取りリンクを入力',
+                    hintStyle: const TextStyle(color: Color(0xFFA3A3A3)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(color: Colors.black),
+                      borderSide: const BorderSide(color: Color(0xFFE8E8E8)),
                     ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Color(0xFFE8E8E8)),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Color(0xFFE8E8E8)),
+                    ),
+                    errorText: _errorMessage,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 40),
+              SizedBox(
+                height: 40,
+                width: 272,
+                child: ElevatedButton(
+                  onPressed: () {
+                    _sendPaypayLink(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFF2F2F2),
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  child: Text(
+                    'OK',
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
               ),

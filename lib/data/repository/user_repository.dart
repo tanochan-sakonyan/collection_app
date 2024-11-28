@@ -38,7 +38,7 @@ class UserRepository {
     }
   }
 
-  Future<User> sendPaypayLink(String userId, String paypayLink) async {
+  Future<User> sendPaypayLink(String? userId, String paypayLink) async {
     final url = Uri.parse('$baseUrl/users/$userId/paypay-link');
     final response = await http.post(
       url,
