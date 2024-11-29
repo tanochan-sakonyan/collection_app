@@ -3,11 +3,11 @@ import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 
-final mockUser = (const User(
+const mockUser = (User(
   userId: 1,
-  lineUserId: '1001',
-  email: 'user1@example.com',
-  isConnected: true,
+  lineToken: '1001',
+  paypayUrl: "aaaaaaaaaaaaaaaa",
+  belongingLineGroupIds: ['1001', '1002'],
   events: [
     Event(
       eventId: 1,

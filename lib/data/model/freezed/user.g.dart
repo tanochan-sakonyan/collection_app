@@ -8,9 +8,11 @@ part of 'user.dart';
 
 _$UserImpl _$$UserImplFromJson(Map<String, dynamic> json) => _$UserImpl(
       userId: (json['userId'] as num).toInt(),
-      lineUserId: json['lineUserId'] as String,
-      email: json['email'] as String,
-      isConnected: json['isConnected'] as bool,
+      lineToken: json['lineToken'] as String,
+      paypayUrl: json['paypayUrl'] as String,
+      belongingLineGroupIds: (json['belongingLineGroupIds'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
       events: (json['events'] as List<dynamic>)
           .map((e) => Event.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -19,8 +21,8 @@ _$UserImpl _$$UserImplFromJson(Map<String, dynamic> json) => _$UserImpl(
 Map<String, dynamic> _$$UserImplToJson(_$UserImpl instance) =>
     <String, dynamic>{
       'userId': instance.userId,
-      'lineUserId': instance.lineUserId,
-      'email': instance.email,
-      'isConnected': instance.isConnected,
+      'lineToken': instance.lineToken,
+      'paypayUrl': instance.paypayUrl,
+      'belongingLineGroupIds': instance.belongingLineGroupIds,
       'events': instance.events,
     };
