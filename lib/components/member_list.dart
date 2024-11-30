@@ -31,6 +31,13 @@ class MemberList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final int attendanceCount = members
+        .where((member) => member.status == PaymentStatus.paid)
+        .length;
+    final int unpaidCount = members
+        .where((member) => member.status == PaymentStatus.unpaid)
+        .length;
+
     return Padding(
       padding: const EdgeInsets.only(top: 16, left: 29, right: 29),
       child: Stack(
@@ -196,13 +203,23 @@ class MemberList extends ConsumerWidget {
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(width: 30),
-                SizedBox(
-                    width: 30,
-                    child: SvgPicture.asset('assets/icons/flag.svg')),
+                Row(
+                  children: List.generate(
+                    attendanceCount,
+                        (index) => Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                      child: SvgPicture.asset(
+                        'assets/icons/flag.svg',
+                        width: 30,
+                        height: 30,
+                      ),
+                    ),
+                  ),
+                ),
                 const SizedBox(width: 4),
                 const Text("・・・・・・"),
                 const SizedBox(width: 26),
-                const Text("2人")
+                Text("$attendanceCount人"),
               ]),
               const SizedBox(height: 20),
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -212,13 +229,23 @@ class MemberList extends ConsumerWidget {
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(width: 30),
-                SizedBox(
-                    width: 30,
-                    child: SvgPicture.asset('assets/icons/sad_face.svg')),
+                Row(
+                  children: List.generate(
+                    unpaidCount,
+                        (index) => Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                      child: SvgPicture.asset(
+                        'assets/icons/sad_face.svg',
+                        width: 30,
+                        height: 30,
+                      ),
+                    ),
+                  ),
+                ),
                 const SizedBox(width: 4),
                 const Text("・・・・・・"),
                 const SizedBox(width: 26),
-                const Text("1人")
+                Text("$unpaidCount人"),
               ]),
             ],
           ),
