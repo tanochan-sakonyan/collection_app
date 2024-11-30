@@ -71,15 +71,13 @@ class MemberList extends ConsumerWidget {
                     ),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.4,
-                      child: ListView.separated(
+                      child: ListView.builder(
                         itemCount: members.length,
-                        separatorBuilder: (context, index) => const Divider(
-                          thickness: 1,
-                          height: 1,
-                        ),
                         itemBuilder: (context, index) {
                           final member = members[index];
-                          return GestureDetector(
+                          return Column(
+                            children : [
+                            GestureDetector(
                             onTap: () {
                               showDialog(
                                 context: context,
@@ -109,6 +107,12 @@ class MemberList extends ConsumerWidget {
                               ),
                               trailing: _buildStatusIcon(member.status),
                             ),
+                          ),
+                          const Divider(
+                            thickness: 1,
+                            height: 1,
+                          ),
+                          ],
                           );
                         },
                       ),
