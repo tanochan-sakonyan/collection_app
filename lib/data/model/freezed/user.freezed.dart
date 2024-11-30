@@ -22,8 +22,8 @@ User _$UserFromJson(Map<String, dynamic> json) {
 mixin _$User {
   int get userId => throw _privateConstructorUsedError;
   String get lineToken => throw _privateConstructorUsedError;
-  String get paypayUrl => throw _privateConstructorUsedError;
-  List<String> get belongingLineGroupIds => throw _privateConstructorUsedError;
+  String? get paypayUrl => throw _privateConstructorUsedError;
+  List<String>? get belongingLineGroupIds => throw _privateConstructorUsedError;
   List<Event> get events => throw _privateConstructorUsedError;
 
   /// Serializes this User to a JSON map.
@@ -43,8 +43,8 @@ abstract class $UserCopyWith<$Res> {
   $Res call(
       {int userId,
       String lineToken,
-      String paypayUrl,
-      List<String> belongingLineGroupIds,
+      String? paypayUrl,
+      List<String>? belongingLineGroupIds,
       List<Event> events});
 }
 
@@ -65,8 +65,8 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
   $Res call({
     Object? userId = null,
     Object? lineToken = null,
-    Object? paypayUrl = null,
-    Object? belongingLineGroupIds = null,
+    Object? paypayUrl = freezed,
+    Object? belongingLineGroupIds = freezed,
     Object? events = null,
   }) {
     return _then(_value.copyWith(
@@ -78,14 +78,14 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
           ? _value.lineToken
           : lineToken // ignore: cast_nullable_to_non_nullable
               as String,
-      paypayUrl: null == paypayUrl
+      paypayUrl: freezed == paypayUrl
           ? _value.paypayUrl
           : paypayUrl // ignore: cast_nullable_to_non_nullable
-              as String,
-      belongingLineGroupIds: null == belongingLineGroupIds
+              as String?,
+      belongingLineGroupIds: freezed == belongingLineGroupIds
           ? _value.belongingLineGroupIds
           : belongingLineGroupIds // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<String>?,
       events: null == events
           ? _value.events
           : events // ignore: cast_nullable_to_non_nullable
@@ -104,8 +104,8 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
   $Res call(
       {int userId,
       String lineToken,
-      String paypayUrl,
-      List<String> belongingLineGroupIds,
+      String? paypayUrl,
+      List<String>? belongingLineGroupIds,
       List<Event> events});
 }
 
@@ -123,8 +123,8 @@ class __$$UserImplCopyWithImpl<$Res>
   $Res call({
     Object? userId = null,
     Object? lineToken = null,
-    Object? paypayUrl = null,
-    Object? belongingLineGroupIds = null,
+    Object? paypayUrl = freezed,
+    Object? belongingLineGroupIds = freezed,
     Object? events = null,
   }) {
     return _then(_$UserImpl(
@@ -136,14 +136,14 @@ class __$$UserImplCopyWithImpl<$Res>
           ? _value.lineToken
           : lineToken // ignore: cast_nullable_to_non_nullable
               as String,
-      paypayUrl: null == paypayUrl
+      paypayUrl: freezed == paypayUrl
           ? _value.paypayUrl
           : paypayUrl // ignore: cast_nullable_to_non_nullable
-              as String,
-      belongingLineGroupIds: null == belongingLineGroupIds
+              as String?,
+      belongingLineGroupIds: freezed == belongingLineGroupIds
           ? _value._belongingLineGroupIds
           : belongingLineGroupIds // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<String>?,
       events: null == events
           ? _value._events
           : events // ignore: cast_nullable_to_non_nullable
@@ -159,7 +159,7 @@ class _$UserImpl implements _User {
       {required this.userId,
       required this.lineToken,
       required this.paypayUrl,
-      required final List<String> belongingLineGroupIds,
+      required final List<String>? belongingLineGroupIds,
       required final List<Event> events})
       : _belongingLineGroupIds = belongingLineGroupIds,
         _events = events;
@@ -172,14 +172,16 @@ class _$UserImpl implements _User {
   @override
   final String lineToken;
   @override
-  final String paypayUrl;
-  final List<String> _belongingLineGroupIds;
+  final String? paypayUrl;
+  final List<String>? _belongingLineGroupIds;
   @override
-  List<String> get belongingLineGroupIds {
+  List<String>? get belongingLineGroupIds {
+    final value = _belongingLineGroupIds;
+    if (value == null) return null;
     if (_belongingLineGroupIds is EqualUnmodifiableListView)
       return _belongingLineGroupIds;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_belongingLineGroupIds);
+    return EqualUnmodifiableListView(value);
   }
 
   final List<Event> _events;
@@ -240,8 +242,8 @@ abstract class _User implements User {
   const factory _User(
       {required final int userId,
       required final String lineToken,
-      required final String paypayUrl,
-      required final List<String> belongingLineGroupIds,
+      required final String? paypayUrl,
+      required final List<String>? belongingLineGroupIds,
       required final List<Event> events}) = _$UserImpl;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$UserImpl.fromJson;
@@ -251,9 +253,9 @@ abstract class _User implements User {
   @override
   String get lineToken;
   @override
-  String get paypayUrl;
+  String? get paypayUrl;
   @override
-  List<String> get belongingLineGroupIds;
+  List<String>? get belongingLineGroupIds;
   @override
   List<Event> get events;
 

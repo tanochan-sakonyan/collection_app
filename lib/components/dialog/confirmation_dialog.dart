@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mr_collection/components/dialog/paypay_dialog.dart';
+import 'package:mr_collection/data/mock/mock_user.dart';
 
 class ConfirmationDialog extends StatelessWidget {
   const ConfirmationDialog({
@@ -23,7 +25,7 @@ class ConfirmationDialog extends StatelessWidget {
           children: [
             Column(
               children: [
-                Text(
+                const Text(
                   "どちらの催促LINEを",
                   style: TextStyle(
                     fontSize: 16,
@@ -31,7 +33,7 @@ class ConfirmationDialog extends StatelessWidget {
                     color: Colors.black,
                   ),
                 ),
-                Text(
+                const Text(
                   "送信しますか？",
                   style: TextStyle(
                     fontSize: 16,
@@ -39,13 +41,20 @@ class ConfirmationDialog extends StatelessWidget {
                     color: Colors.black,
                   ),
                 ),
-                SizedBox(height: 28),
+                const SizedBox(height: 28),
                 SizedBox(
                   height: 40,
                   width: 272,
                   child: ElevatedButton(
                     onPressed: () {
-                      // TODO
+                      if (mockUser.paypayUrl == null) {
+                        showDialog(
+                          context: context,
+                          builder: (context) => PayPayDialog(),
+                        );
+                      } else {
+                        // TODO LINEでメッセージを送信
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFF2F2F2),
@@ -60,13 +69,13 @@ class ConfirmationDialog extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 28),
+                const SizedBox(height: 28),
                 SizedBox(
                   height: 40,
                   width: 272,
                   child: ElevatedButton(
                     onPressed: () {
-                      // TODO
+                      // TODO LINEでメッセージを送信
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFD7D7D7),
