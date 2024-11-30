@@ -4,6 +4,7 @@ import 'package:mr_collection/provider/access_token_provider.dart';
 import 'package:mr_collection/screen/home_screen.dart';
 import 'package:mr_collection/screen/login_screen.dart';
 
+// FIXME: Screenという名前がついているが、実際はスクリーンとして機能していないため、名前を変えたほうが良いかも。
 class AccessTokenScreen extends ConsumerWidget {
   const AccessTokenScreen({super.key});
 
@@ -12,6 +13,7 @@ class AccessTokenScreen extends ConsumerWidget {
     final accessToken = ref.watch(accessTokenProvider);
 
     if (accessToken != null) {
+      debugPrint('accessToken: $accessToken');
       return const HomeScreen(
         title: '集金くん',
       );

@@ -21,9 +21,9 @@ User _$UserFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$User {
   int get userId => throw _privateConstructorUsedError;
-  String get lineUserId => throw _privateConstructorUsedError;
-  String get email => throw _privateConstructorUsedError;
-  bool get isConnected => throw _privateConstructorUsedError;
+  String get lineToken => throw _privateConstructorUsedError;
+  String? get paypayUrl => throw _privateConstructorUsedError;
+  List<String>? get belongingLineGroupIds => throw _privateConstructorUsedError;
   List<Event> get events => throw _privateConstructorUsedError;
 
   /// Serializes this User to a JSON map.
@@ -42,9 +42,9 @@ abstract class $UserCopyWith<$Res> {
   @useResult
   $Res call(
       {int userId,
-      String lineUserId,
-      String email,
-      bool isConnected,
+      String lineToken,
+      String? paypayUrl,
+      List<String>? belongingLineGroupIds,
       List<Event> events});
 }
 
@@ -64,9 +64,9 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
   @override
   $Res call({
     Object? userId = null,
-    Object? lineUserId = null,
-    Object? email = null,
-    Object? isConnected = null,
+    Object? lineToken = null,
+    Object? paypayUrl = freezed,
+    Object? belongingLineGroupIds = freezed,
     Object? events = null,
   }) {
     return _then(_value.copyWith(
@@ -74,18 +74,18 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
               as int,
-      lineUserId: null == lineUserId
-          ? _value.lineUserId
-          : lineUserId // ignore: cast_nullable_to_non_nullable
+      lineToken: null == lineToken
+          ? _value.lineToken
+          : lineToken // ignore: cast_nullable_to_non_nullable
               as String,
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      isConnected: null == isConnected
-          ? _value.isConnected
-          : isConnected // ignore: cast_nullable_to_non_nullable
-              as bool,
+      paypayUrl: freezed == paypayUrl
+          ? _value.paypayUrl
+          : paypayUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      belongingLineGroupIds: freezed == belongingLineGroupIds
+          ? _value.belongingLineGroupIds
+          : belongingLineGroupIds // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
       events: null == events
           ? _value.events
           : events // ignore: cast_nullable_to_non_nullable
@@ -103,9 +103,9 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
   @useResult
   $Res call(
       {int userId,
-      String lineUserId,
-      String email,
-      bool isConnected,
+      String lineToken,
+      String? paypayUrl,
+      List<String>? belongingLineGroupIds,
       List<Event> events});
 }
 
@@ -122,9 +122,9 @@ class __$$UserImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? userId = null,
-    Object? lineUserId = null,
-    Object? email = null,
-    Object? isConnected = null,
+    Object? lineToken = null,
+    Object? paypayUrl = freezed,
+    Object? belongingLineGroupIds = freezed,
     Object? events = null,
   }) {
     return _then(_$UserImpl(
@@ -132,18 +132,18 @@ class __$$UserImplCopyWithImpl<$Res>
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
               as int,
-      lineUserId: null == lineUserId
-          ? _value.lineUserId
-          : lineUserId // ignore: cast_nullable_to_non_nullable
+      lineToken: null == lineToken
+          ? _value.lineToken
+          : lineToken // ignore: cast_nullable_to_non_nullable
               as String,
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      isConnected: null == isConnected
-          ? _value.isConnected
-          : isConnected // ignore: cast_nullable_to_non_nullable
-              as bool,
+      paypayUrl: freezed == paypayUrl
+          ? _value.paypayUrl
+          : paypayUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      belongingLineGroupIds: freezed == belongingLineGroupIds
+          ? _value._belongingLineGroupIds
+          : belongingLineGroupIds // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
       events: null == events
           ? _value._events
           : events // ignore: cast_nullable_to_non_nullable
@@ -157,11 +157,12 @@ class __$$UserImplCopyWithImpl<$Res>
 class _$UserImpl implements _User {
   const _$UserImpl(
       {required this.userId,
-      required this.lineUserId,
-      required this.email,
-      required this.isConnected,
+      required this.lineToken,
+      required this.paypayUrl,
+      required final List<String>? belongingLineGroupIds,
       required final List<Event> events})
-      : _events = events;
+      : _belongingLineGroupIds = belongingLineGroupIds,
+        _events = events;
 
   factory _$UserImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserImplFromJson(json);
@@ -169,11 +170,20 @@ class _$UserImpl implements _User {
   @override
   final int userId;
   @override
-  final String lineUserId;
+  final String lineToken;
   @override
-  final String email;
+  final String? paypayUrl;
+  final List<String>? _belongingLineGroupIds;
   @override
-  final bool isConnected;
+  List<String>? get belongingLineGroupIds {
+    final value = _belongingLineGroupIds;
+    if (value == null) return null;
+    if (_belongingLineGroupIds is EqualUnmodifiableListView)
+      return _belongingLineGroupIds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   final List<Event> _events;
   @override
   List<Event> get events {
@@ -184,7 +194,7 @@ class _$UserImpl implements _User {
 
   @override
   String toString() {
-    return 'User(userId: $userId, lineUserId: $lineUserId, email: $email, isConnected: $isConnected, events: $events)';
+    return 'User(userId: $userId, lineToken: $lineToken, paypayUrl: $paypayUrl, belongingLineGroupIds: $belongingLineGroupIds, events: $events)';
   }
 
   @override
@@ -193,18 +203,24 @@ class _$UserImpl implements _User {
         (other.runtimeType == runtimeType &&
             other is _$UserImpl &&
             (identical(other.userId, userId) || other.userId == userId) &&
-            (identical(other.lineUserId, lineUserId) ||
-                other.lineUserId == lineUserId) &&
-            (identical(other.email, email) || other.email == email) &&
-            (identical(other.isConnected, isConnected) ||
-                other.isConnected == isConnected) &&
+            (identical(other.lineToken, lineToken) ||
+                other.lineToken == lineToken) &&
+            (identical(other.paypayUrl, paypayUrl) ||
+                other.paypayUrl == paypayUrl) &&
+            const DeepCollectionEquality()
+                .equals(other._belongingLineGroupIds, _belongingLineGroupIds) &&
             const DeepCollectionEquality().equals(other._events, _events));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, userId, lineUserId, email,
-      isConnected, const DeepCollectionEquality().hash(_events));
+  int get hashCode => Object.hash(
+      runtimeType,
+      userId,
+      lineToken,
+      paypayUrl,
+      const DeepCollectionEquality().hash(_belongingLineGroupIds),
+      const DeepCollectionEquality().hash(_events));
 
   /// Create a copy of User
   /// with the given fields replaced by the non-null parameter values.
@@ -225,9 +241,9 @@ class _$UserImpl implements _User {
 abstract class _User implements User {
   const factory _User(
       {required final int userId,
-      required final String lineUserId,
-      required final String email,
-      required final bool isConnected,
+      required final String lineToken,
+      required final String? paypayUrl,
+      required final List<String>? belongingLineGroupIds,
       required final List<Event> events}) = _$UserImpl;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$UserImpl.fromJson;
@@ -235,11 +251,11 @@ abstract class _User implements User {
   @override
   int get userId;
   @override
-  String get lineUserId;
+  String get lineToken;
   @override
-  String get email;
+  String? get paypayUrl;
   @override
-  bool get isConnected;
+  List<String>? get belongingLineGroupIds;
   @override
   List<Event> get events;
 

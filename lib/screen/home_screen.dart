@@ -5,9 +5,9 @@ import 'package:mr_collection/components/dialog/add_event_dialog.dart';
 import 'package:mr_collection/components/dialog/delete_event_dialog.dart';
 import 'package:mr_collection/components/member_list.dart';
 import 'package:mr_collection/components/tanochan_drawer.dart';
+import 'package:mr_collection/data/mock/mock_user.dart';
+import 'package:mr_collection/data/mock/tab_titles.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
-import 'package:mr_collection/data/model/freezed/member.dart';
-import 'package:mr_collection/data/model/payment_status.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key, required this.title});
@@ -21,83 +21,6 @@ class HomeScreen extends ConsumerStatefulWidget {
 class HomeScreenState extends ConsumerState<HomeScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-
-  final List<String> _tabTitles = ['一次会', '二次会', 'カラオケ']; // TODO BEから取得する
-
-  final mockEvents = [
-    const Event(
-      eventId: 1,
-      eventName: '一次会',
-      members: [
-        Member(
-          memberId: 1,
-          memberName: 'Aさん',
-          lineUserId: 1001,
-          status: PaymentStatus.absence,
-        ),
-        Member(
-          memberId: 2,
-          memberName: 'Bさん',
-          lineUserId: 1002,
-          status: PaymentStatus.paid,
-        ),
-        Member(
-          memberId: 3,
-          memberName: 'Cさん',
-          lineUserId: 1003,
-          status: PaymentStatus.unpaid,
-        ),
-      ],
-    ),
-    const Event(
-      eventId: 2,
-      eventName: '二次会',
-      members: [
-        Member(
-          memberId: 4,
-          memberName: 'Dさん',
-          lineUserId: 1001,
-          status: PaymentStatus.paid,
-        ),
-        Member(
-          memberId: 5,
-          memberName: 'Eさん',
-          lineUserId: 1002,
-          status: PaymentStatus.absence,
-        ),
-        Member(
-          memberId: 6,
-          memberName: 'Fさん',
-          lineUserId: 1003,
-          status: PaymentStatus.unpaid,
-        ),
-      ],
-    ),
-    const Event(
-      eventId: 3,
-      eventName: '三次会',
-      members: [
-        Member(
-          memberId: 7,
-          memberName: 'Gさん',
-          lineUserId: 1001,
-          status: PaymentStatus.unpaid,
-        ),
-        Member(
-          memberId: 8,
-          memberName: 'Hさん',
-          lineUserId: 1002,
-          status: PaymentStatus.paid,
-        ),
-        Member(
-          memberId: 9,
-          memberName: 'Iさん',
-          lineUserId: 1003,
-          status: PaymentStatus.absence,
-        ),
-      ],
-    ),
-  ];
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -171,8 +94,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                         child: TabBar(
                           isScrollable: true,
                           controller: _tabController,
-                          tabs: _tabTitles.map((eventName) {
-                            final event = mockEvents.firstWhere(
+                          tabs: tabTitles.map((eventName) {
+                            final event = mockUser.events.firstWhere(
                               (e) => e.eventName == eventName,
                               orElse: () => const Event(
                                   eventId: -1, eventName: '', members: []),
@@ -246,10 +169,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       drawer: const TanochanDrawer(),
       body: TabBarView(
         controller: _tabController,
-        children: _tabTitles.map((memberId) {
+        children: tabTitles.map((memberId) {
           return MemberList(
-            members: mockEvents[0].members,
-            eventId: mockEvents[0].eventId.toString(),
+            members: mockUser.events[0].members,
+            eventId: mockUser.events[0].eventId.toString(),
           );
         }).toList(),
       ),

@@ -14,7 +14,7 @@ class AddEventDialogState extends State<AddEventDialog> {
   bool isToggleOn = true;
 
   final EventRepository eventRepository =
-      EventRepository(baseUrl: 'https://your-api-base-url.com');
+      EventRepository(baseUrl: 'https://shukinkun-086ea89ed514.herokuapp.com/');
 
   Future<void> _createEvent(dynamic controller) async {
     final eventName = controller.text;

@@ -40,23 +40,23 @@ class TanochanDrawer extends StatelessWidget {
               onTap: () {
                 showDialog(
                   context: context,
-                  builder: (context) => const PayPayDialog(),
+                  builder: (context) => PayPayDialog(),
                 );
               },
             ),
-            const SizedBox(height: 20),
-            _buildMenuItem(
-              context,
-              text: "テーマカラーの変更",
-              icon: SvgPicture.asset("assets/icons/drawer_star.svg"),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const TermsOfServiceScreen()),
-                );
-              },
-            ),
+            // const SizedBox(height: 20),
+            // _buildMenuItem(
+            //   context,
+            //   text: "テーマカラーの変更",
+            //   icon: SvgPicture.asset("assets/icons/drawer_star.svg"),
+            //   onTap: () {
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(
+            //           builder: (context) => const TermsOfServiceScreen()),
+            //     );
+            //   },
+            // ),
             const SizedBox(height: 20),
             _buildMenuItem(
               context,

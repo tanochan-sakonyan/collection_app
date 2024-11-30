@@ -18,64 +18,75 @@ class LoginScreen extends ConsumerWidget {
     bool isChecked = ref.watch(checkboxProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Login")),
+      backgroundColor: Colors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF06C755),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+            SizedBox(height: 100),
+            Text("集金くん",
+                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+            SizedBox(height: 100),
+            SizedBox(
+              width: 300,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF06C755),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              ),
-              onPressed: isChecked
-                  ? () async {
-                      try {
-                        final result = await LineSDK.instance.login();
-                        final accessToken = result.accessToken;
-                        ref.read(accessTokenProvider.notifier).state =
-                            accessToken.value;
+                onPressed: isChecked
+                    ? () async {
+                        try {
+                          final result = await LineSDK.instance.login();
+                          final accessToken = result.accessToken;
+                          ref.read(accessTokenProvider.notifier).state =
+                              accessToken.value;
 
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const HomeScreen(title: '集金くん'),
-                          ),
-                        );
-                      } on PlatformException catch (e) {
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: const Text('ログイン失敗'),
-                            content:
-                                Text('エラーコード: ${e.code}\nメッセージ: ${e.message}'),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.of(context).pop(),
-                                child: const Text('OK'),
-                              ),
-                            ],
-                          ),
-                        );
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const HomeScreen(title: '集金くん'),
+                            ),
+                          );
+                        } on PlatformException catch (e) {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('ログイン失敗'),
+                              content: Text(
+                                  'エラーコード: ${e.code}\nメッセージ: ${e.message}'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  child: const Text('OK'),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
                       }
-                    }
-                  : null,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SvgPicture.asset(
-                    'assets/icons/line-login.svg',
-                  ),
-                  const SizedBox(width: 8),
-                  const Text(
-                    'LINEでログイン',
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                  ),
-                ],
+                    : null,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    // const SizedBox(width: 12),
+                    SvgPicture.asset(
+                      'assets/icons/line-login.svg',
+                    ),
+                    const SizedBox(width: 40),
+                    const Text(
+                      'LINEでログイン',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 20),
@@ -87,6 +98,7 @@ class LoginScreen extends ConsumerWidget {
                   onChanged: (bool? value) {
                     ref.read(checkboxProvider.notifier).state = value!;
                   },
+                  activeColor: Colors.black,
                 ),
                 GestureDetector(
                   onTap: () {
