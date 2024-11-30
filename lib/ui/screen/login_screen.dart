@@ -4,9 +4,10 @@ import 'package:flutter_line_sdk/flutter_line_sdk.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mr_collection/provider/access_token_provider.dart';
-import 'package:mr_collection/screen/home_screen.dart';
-import 'package:mr_collection/screen/privacy_policy_screen.dart';
-import 'package:mr_collection/screen/terms_of_service_screen.dart';
+import 'package:mr_collection/provider/user_provider.dart';
+import 'package:mr_collection/ui/screen/home_screen.dart';
+import 'package:mr_collection/ui/screen/privacy_policy_screen.dart';
+import 'package:mr_collection/ui/screen/terms_of_service_screen.dart';
 
 final checkboxProvider = StateProvider<bool>((ref) => false);
 
@@ -23,10 +24,10 @@ class LoginScreen extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: 100),
-            Text("集金くん",
+            const SizedBox(height: 100),
+            const Text("集金くん",
                 style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
-            SizedBox(height: 100),
+            const SizedBox(height: 100),
             SizedBox(
               width: 300,
               child: ElevatedButton(
@@ -43,13 +44,14 @@ class LoginScreen extends ConsumerWidget {
                         try {
                           final result = await LineSDK.instance.login();
                           final accessToken = result.accessToken;
+                          final user = ref.watch(userProvider);
                           ref.read(accessTokenProvider.notifier).state =
                               accessToken.value;
 
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
                               builder: (context) =>
-                                  const HomeScreen(title: '集金くん'),
+                                  HomeScreen(title: '集金くん', user: user),
                             ),
                           );
                         } on PlatformException catch (e) {

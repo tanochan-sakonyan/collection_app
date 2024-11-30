@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mr_collection/constants/base_url.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/repository/event_repository.dart';
 import 'package:mr_collection/services/event_service.dart';
 
 final eventRepositoryProvider = Provider<EventRepository>((ref) {
-  return EventRepository(
-      baseUrl: 'https://your-api-base-url.com'); // TODO: 実際のURLに置き換えてください
+  return EventRepository(baseUrl: baseUrl);
 });
 
 final eventProvider = StateNotifierProvider<EventNotifier, List<Event>>((ref) {

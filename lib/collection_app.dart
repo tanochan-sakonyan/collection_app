@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mr_collection/screen/access_token_screen.dart';
+import 'package:mr_collection/ui/screen/access_token_screen.dart';
 
 class CollectionApp extends StatelessWidget {
   const CollectionApp({super.key});

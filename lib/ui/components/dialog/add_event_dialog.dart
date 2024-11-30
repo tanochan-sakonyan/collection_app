@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mr_collection/components/button/toggle_button.dart';
+import 'package:mr_collection/ui/components/button/toggle_button.dart';
 import 'package:mr_collection/data/repository/event_repository.dart';
 
 class AddEventDialog extends StatefulWidget {

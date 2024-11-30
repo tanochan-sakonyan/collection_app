@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mr_collection/components/dialog/paypay_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/paypay_dialog.dart';
 import 'package:mr_collection/data/mock/mock_user.dart';
 
 class ConfirmationDialog extends StatelessWidget {

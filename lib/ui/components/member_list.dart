@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mr_collection/components/dialog/add_member_dialog.dart';
-import 'package:mr_collection/components/dialog/confirmation_dialog.dart';
-import 'package:mr_collection/components/dialog/status_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/add_member_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/confirmation_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/status_dialog.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/provider/user_provider.dart';

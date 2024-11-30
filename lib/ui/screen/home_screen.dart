@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mr_collection/components/dialog/add_event_dialog.dart';
-import 'package:mr_collection/components/dialog/delete_event_dialog.dart';
-import 'package:mr_collection/components/member_list.dart';
-import 'package:mr_collection/components/tanochan_drawer.dart';
+import 'package:mr_collection/ui/components/dialog/add_event_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/delete_event_dialog.dart';
+import 'package:mr_collection/ui/components/member_list.dart';
+import 'package:mr_collection/ui/components/tanochan_drawer.dart';
 import 'package:mr_collection/data/mock/mock_user.dart';
 import 'package:mr_collection/data/mock/tab_titles.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
+import 'package:mr_collection/data/model/freezed/user.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
-  const HomeScreen({super.key, required this.title});
+  const HomeScreen({super.key, required this.title, required this.user});
 
   final String title;
+  final User? user;
 
   @override
   ConsumerState<HomeScreen> createState() => HomeScreenState();
