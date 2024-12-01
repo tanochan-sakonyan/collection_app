@@ -41,13 +41,6 @@ class MemberList extends ConsumerWidget {
             .length;
 
     final double iconSize = 30.0;
-    final double overlap = 10.0;
-
-    final double attendanceContainerWidth =
-    (attendanceCount > 1) ? (iconSize + (attendanceCount - 1) * (iconSize - overlap)) : iconSize;
-    final double unpaidContainerWidth =
-    (unpaidCount > 1) ? (iconSize + (unpaidCount - 1) * (iconSize - overlap)) : iconSize;
-
 
     return Padding(
       padding: const EdgeInsets.only(top: 16, left: 29, right: 29),
@@ -259,17 +252,27 @@ class MemberList extends ConsumerWidget {
     const SizedBox(width: 30),
     Container(
     width: MediaQuery.of(context).size.width * 0.3,
-    child: Row(
+      height: iconSize,
+    child: Stack(
     children: List.generate(
     unpaidCount,
-    (index) => Transform.translate(
-    offset: Offset(index == 0 ? 0 : -10, 0),
-    child: SvgPicture.asset(
-    'assets/icons/sad_face.svg',
-    width: 30,
-    height: 30,
-    ),
-    ),
+    (index) {
+      double spacing = (unpaidCount > 1)
+          ? (MediaQuery.of(context).size.width * 0.3 - iconSize) /
+          (unpaidCount - 1)
+          : 0;
+      double left = (unpaidCount > 1)
+          ? index * spacing
+          : (MediaQuery.of(context).size.width * 0.3 - iconSize) / 2;
+      return Positioned(
+        left: left,
+        child: SvgPicture.asset(
+          'assets/icons/sad_face.svg',
+          width: iconSize,
+          height: iconSize,
+        ),
+      );
+    },
     ),
     ),
     ),
