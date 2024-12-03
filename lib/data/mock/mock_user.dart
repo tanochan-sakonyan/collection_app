@@ -5,7 +5,7 @@ import 'package:mr_collection/data/model/payment_status.dart';
 
 const mockUser = (User(
   userId: 1,
-  lineToken: '1001',
+  lineUserId: '1',
   paypayUrl: null,
   belongingLineGroupIds: ['1001', '1002'],
   events: [

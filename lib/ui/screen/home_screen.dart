@@ -31,28 +31,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final tabTitles = ref.read(tabTitlesProvider);
-      setState(() {
-        _tabTitles = tabTitles;
-        _tabController = TabController(length: _tabTitles.length, vsync: this);
-      });
-    });
 
-    @override
-    void didChangeDependencies() {
-      super.didChangeDependencies();
-      ref.listen<List<String>>(tabTitlesProvider, (previous, next) {
-        if (_tabTitles.length != next.length) {
-          setState(() {
-            _tabTitles = next;
-            _tabController.dispose();
-            _tabController =
-                TabController(length: _tabTitles.length, vsync: this);
-          });
-        }
-      });
-    }
+    // 初期のタブタイトルを取得してタブコントローラーを初期化
+    _tabTitles = ref.read(tabTitlesProvider);
+    _tabController = TabController(length: _tabTitles.length, vsync: this);
   }
 
   @override
@@ -61,9 +43,28 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     super.dispose();
   }
 
+  void _updateTabController(int newLength) {
+    _tabController.dispose();
+    _tabController = TabController(length: newLength, vsync: this);
+  }
+
   @override
   Widget build(BuildContext context) {
     final tabTitles = ref.watch(tabTitlesProvider);
+
+    // タブタイトルが変更された場合、タブコントローラーを更新
+    if (tabTitles.length != _tabController.length) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          setState(() {
+            _updateTabController(tabTitles.length);
+            _tabTitles = tabTitles;
+          });
+        }
+      });
+    } else {
+      _tabTitles = tabTitles;
+    }
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.white,
