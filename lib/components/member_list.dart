@@ -6,19 +6,19 @@ import 'package:mr_collection/components/dialog/confirmation_dialog.dart';
 import 'package:mr_collection/components/dialog/status_dialog.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
-import 'package:mr_collection/provider/user_provider.dart';
+import 'package:mr_collection/provider/member_provider.dart';
 
 class MemberList extends ConsumerWidget {
   final List<Member> members;
-  final String eventId;
+  final int eventId;
 
   const MemberList({super.key, required this.members, required this.eventId});
 
-  Future<void> _changeStatus(
-      WidgetRef ref, String eventId, String memberId, int status) async {
+  Future<void> _updateMemberStatus(
+      WidgetRef ref, int eventId, int memberId, int status) async {
     try {
-      final userRepository = ref.read(userRepositoryProvider);
-      await userRepository.changeStatus(eventId, memberId, status);
+      await ref.read(memberProvider.notifier).updateMemberStatus(eventId, memberId, status);
+
       ScaffoldMessenger.of(ref.context).showSnackBar(
         const SnackBar(content: Text('ステータスが更新されました')),
       );
@@ -87,10 +87,10 @@ class MemberList extends ConsumerWidget {
                                   eventId: eventId,
                                   memberId: member.memberId,
                                   member: member.memberName,
-                                  onStatusChange: (String eventId, int memberId,
+                                  onStatusChange: (int eventId, int memberId,
                                       int status) {
-                                    _changeStatus(ref, eventId,
-                                        memberId.toString(), status);
+                                    _updateMemberStatus(ref, eventId,
+                                        memberId, status);
                                   },
                                 ),
                               );

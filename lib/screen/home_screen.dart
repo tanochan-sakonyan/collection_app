@@ -249,7 +249,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         children: _tabTitles.map((memberId) {
           return MemberList(
             members: mockEvents[0].members,
-            eventId: mockEvents[0].eventId.toString(),
+            eventId: mockEvents[0].eventId,
           );
         }).toList(),
       ),
