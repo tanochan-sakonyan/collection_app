@@ -23,8 +23,7 @@ dependencies:
   path_provider: ^2.0.11
   sign_in_with_apple: ^6.1.3
   url_launcher: ^6.1.10
-  flutter_line_sdk:
-    path: C:/Users/sugar/tanochan/flutter_line_sdk
+  flutter_line_sdk: ^2.3.8
 
 dev_dependencies:
   flutter_test:
