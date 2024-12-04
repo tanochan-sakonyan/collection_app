@@ -7,22 +7,22 @@ part of 'member.dart';
 // **************************************************************************
 
 _$MemberImpl _$$MemberImplFromJson(Map<String, dynamic> json) => _$MemberImpl(
-      memberId: (json['memberId'] as num).toInt(),
-      memberName: json['memberName'] as String,
-      lineUserId: (json['lineUserId'] as num?)?.toInt(),
+      memberId: (json['member_id'] as num).toInt(),
+      memberName: json['member_name'] as String,
+      lineUserId: json['line_user_id'] as String?,
       status: $enumDecode(_$PaymentStatusEnumMap, json['status']),
     );
 
 Map<String, dynamic> _$$MemberImplToJson(_$MemberImpl instance) =>
     <String, dynamic>{
-      'memberId': instance.memberId,
-      'memberName': instance.memberName,
-      'lineUserId': instance.lineUserId,
+      'member_id': instance.memberId,
+      'member_name': instance.memberName,
+      'line_user_id': instance.lineUserId,
       'status': _$PaymentStatusEnumMap[instance.status]!,
     };
 
 const _$PaymentStatusEnumMap = {
-  PaymentStatus.paid: 'paid',
-  PaymentStatus.unpaid: 'unpaid',
-  PaymentStatus.absence: 'absence',
+  PaymentStatus.paid: 1,
+  PaymentStatus.unpaid: 2,
+  PaymentStatus.absence: 0,
 };
