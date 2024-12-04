@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mr_collection/ui/components/dialog/add_member_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/confirmation_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/status_dialog.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/provider/user_provider.dart';
+import 'package:mr_collection/ui/components/dialog/add_member_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/confirmation_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/status_dialog.dart';
 
 class MemberList extends ConsumerWidget {
-  final List<Member>? members;
-  final int? eventId;
+  final List<Member> members;
+  final int eventId;
 
   const MemberList({super.key, required this.members, required this.eventId});
 
   Future<void> _changeStatus(
-      WidgetRef ref, String? eventId, String memberId, int status) async {
+      WidgetRef ref, int? eventId, String memberId, int? status) async {
     try {
       final userRepository = ref.read(userRepositoryProvider);
       await userRepository.changeStatus(eventId, memberId, status);
@@ -31,6 +31,13 @@ class MemberList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final int attendanceCount =
+        members.where((member) => member.status == PaymentStatus.paid).length;
+    final int unpaidCount =
+        members.where((member) => member.status == PaymentStatus.unpaid).length;
+
+    final double iconSize = 30.0;
+
     return Padding(
       padding: const EdgeInsets.only(top: 16, left: 29, right: 29),
       child: Stack(
@@ -71,28 +78,24 @@ class MemberList extends ConsumerWidget {
                     ),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.4,
-                      child: ListView.builder(
-                        itemCount: members?.length,
+                      child: ListView.separated(
+                        itemCount: members.length,
+                        separatorBuilder: (context, index) => const Divider(
+                          thickness: 1,
+                          height: 1,
+                        ),
                         itemBuilder: (context, index) {
-                          final member = members?[index];
+                          final member = members[index];
                           return GestureDetector(
                             onTap: () {
                               showDialog(
                                 context: context,
                                 builder: (context) => StatusDialog(
-<<<<<<< HEAD:lib/components/member_list.dart
-                                  eventId: eventId.toString(),
+                                  eventId: eventId,
                                   memberId: member.memberId,
                                   member: member.memberName,
-                                  onStatusChange: (String eventId, int memberId,
+                                  onStatusChange: (int? eventId, int? memberId,
                                       int status) {
-=======
-                                  eventId: eventId,
-                                  memberId: member?.memberId,
-                                  member: member?.memberName,
-                                  onStatusChange: (String? eventId,
-                                      int? memberId, int status) {
->>>>>>> main:lib/ui/components/member_list.dart
                                     _changeStatus(ref, eventId,
                                         memberId.toString(), status);
                                   },
@@ -101,18 +104,17 @@ class MemberList extends ConsumerWidget {
                             },
                             child: ListTile(
                               minTileHeight: 32,
-                              title: member?.memberName != null
-                                  ? Text(
-                                      member!.memberName,
-                                      style: TextStyle(
-                                        color: member.status ==
-                                                PaymentStatus.absence
-                                            ? Colors.grey
-                                            : Colors.black,
-                                      ),
-                                    )
-                                  : null,
-                              trailing: _buildStatusIcon(member?.status),
+                              title: Text(
+                                member.memberName.length > 17
+                                    ? '${member.memberName.substring(0, 10)}...'
+                                    : member.memberName,
+                                style: TextStyle(
+                                  color: member.status == PaymentStatus.absence
+                                      ? Colors.grey
+                                      : Colors.black,
+                                ),
+                              ),
+                              trailing: _buildStatusIcon(member.status),
                             ),
                           );
                         },
@@ -154,7 +156,9 @@ class MemberList extends ConsumerWidget {
                             onPressed: () {
                               showDialog(
                                 context: context,
-                                builder: (context) => AddMemberDialog(eventId: eventId,),
+                                builder: (context) => AddMemberDialog(
+                                  eventId: eventId,
+                                ),
                               );
                             },
                             style: TextButton.styleFrom(
@@ -201,13 +205,39 @@ class MemberList extends ConsumerWidget {
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(width: 30),
-                SizedBox(
-                    width: 30,
-                    child: SvgPicture.asset('assets/icons/flag.svg')),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.3,
+                  height: iconSize,
+                  child: Stack(
+                    children: List.generate(
+                      attendanceCount,
+                      (index) {
+                        double spacing = (attendanceCount > 1)
+                            ? (MediaQuery.of(context).size.width * 0.3 -
+                                    iconSize) /
+                                (attendanceCount - 1)
+                            : 0;
+                        double left = (attendanceCount > 1)
+                            ? index * spacing
+                            : (MediaQuery.of(context).size.width * 0.3 -
+                                    iconSize) /
+                                2;
+                        return Positioned(
+                          left: left,
+                          child: SvgPicture.asset(
+                            'assets/icons/flag.svg',
+                            width: iconSize,
+                            height: iconSize,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
                 const SizedBox(width: 4),
                 const Text("・・・・・・"),
                 const SizedBox(width: 26),
-                const Text("2人")
+                Text("$attendanceCount人"),
               ]),
               const SizedBox(height: 20),
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -217,13 +247,39 @@ class MemberList extends ConsumerWidget {
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(width: 30),
-                SizedBox(
-                    width: 30,
-                    child: SvgPicture.asset('assets/icons/sad_face.svg')),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.3,
+                  height: iconSize,
+                  child: Stack(
+                    children: List.generate(
+                      unpaidCount,
+                      (index) {
+                        double spacing = (unpaidCount > 1)
+                            ? (MediaQuery.of(context).size.width * 0.3 -
+                                    iconSize) /
+                                (unpaidCount - 1)
+                            : 0;
+                        double left = (unpaidCount > 1)
+                            ? index * spacing
+                            : (MediaQuery.of(context).size.width * 0.3 -
+                                    iconSize) /
+                                2;
+                        return Positioned(
+                          left: left,
+                          child: SvgPicture.asset(
+                            'assets/icons/sad_face.svg',
+                            width: iconSize,
+                            height: iconSize,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
                 const SizedBox(width: 4),
                 const Text("・・・・・・"),
                 const SizedBox(width: 26),
-                const Text("1人")
+                Text("$unpaidCount人"),
               ]),
             ],
           ),
@@ -273,7 +329,7 @@ class MemberList extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatusIcon(PaymentStatus? status) {
+  Widget _buildStatusIcon(PaymentStatus status) {
     switch (status) {
       case PaymentStatus.paid:
         return const Icon(Icons.check, color: Color(0xFF5AFF9C));

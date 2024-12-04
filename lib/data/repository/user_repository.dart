@@ -63,8 +63,7 @@ class UserRepository {
     }
   }
 
-  Future<User> changeStatus(
-      String? eventId, String memberId, int status) async {
+  Future<User> changeStatus(int? eventId, String memberId, int? status) async {
     final url = Uri.parse('$baseUrl/events/$eventId/members/$memberId/status');
     final response = await http.post(
       url,
