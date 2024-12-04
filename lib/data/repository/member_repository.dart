@@ -50,7 +50,7 @@ class MemberRepository {
   }
 
   Future<Member> updateMemberStatus(
-      int eventId, int memberId, int status) async {
+      int? eventId, int? memberId, int? status) async {
     final url = Uri.parse('$baseUrl/events/$eventId/members/$memberId/status');
     final response = await http.put(
       url,

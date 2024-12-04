@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/provider/member_provider.dart';
 
 class AddMemberDialog extends ConsumerStatefulWidget {
-  final int eventId;
+  final int? eventId;
 
   const AddMemberDialog({required this.eventId, super.key});
 
@@ -16,7 +16,7 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
   final TextEditingController _controller = TextEditingController();
   String? _errorMessage;
 
-  Future<void> _addMember() async{
+  Future<void> _addMember() async {
     setState(() {
       if (_controller.text.trim().isEmpty) {
         _errorMessage = 'メンバーを入力してください';
@@ -26,7 +26,9 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
     });
 
     try {
-      await ref.read(memberProvider.notifier).addMember(widget.eventId, _controller.text.trim());
+      await ref
+          .read(memberProvider.notifier)
+          .addMember(widget.eventId, _controller.text.trim());
       Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('メンバーを追加しました')),

@@ -57,7 +57,7 @@ class MemberNotifier extends StateNotifier<List<Member>> {
   }
 
   Future<void> updateMemberStatus(
-      int eventId, int memberId, int newStatus) async {
+      int? eventId, int? memberId, int? newStatus) async {
     try {
       final updatedMember =
           await _memberService.updateMemberStatus(eventId, memberId, newStatus);
