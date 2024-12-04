@@ -34,11 +34,14 @@ class MemberList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final int? attendanceCount =
+    /*final int? attendanceCount =
         members?.where((member) => member.status == PaymentStatus.paid).length;
     final int? unpaidCount = members
         ?.where((member) => member.status == PaymentStatus.unpaid)
-        .length;
+        .length;*/
+
+    final int? attendanceCount = 3;
+    final int? unpaidCount = 2;
 
     final double iconSize = 30.0;
 
@@ -220,16 +223,13 @@ class MemberList extends ConsumerWidget {
                         ? List.generate(
                             unpaidCount,
                             (index) {
+                              double containerWidth = MediaQuery.of(context).size.width * 0.25; // 固定幅を変数に格納
                               double spacing = (unpaidCount > 1)
-                                  ? (MediaQuery.of(context).size.width * 0.3 -
-                                          iconSize) /
-                                      (unpaidCount - 1)
+                                  ? (containerWidth - iconSize) / (unpaidCount - 1) // 修正: コンテナの幅を使用
                                   : 0;
                               double left = (unpaidCount > 1)
                                   ? index * spacing
-                                  : (MediaQuery.of(context).size.width * 0.3 -
-                                          iconSize) /
-                                      2;
+                                  : (containerWidth - iconSize) / 2;
                               return Positioned(
                                 left: left,
                                 child: SvgPicture.asset(
@@ -271,16 +271,13 @@ class MemberList extends ConsumerWidget {
                         ? List.generate(
                       attendanceCount,
                           (index) {
-                        double spacing = (attendanceCount > 1)
-                            ? (MediaQuery.of(context).size.width * 0.3 -
-                            iconSize) /
-                            (attendanceCount - 1)
-                            : 0;
-                        double left = (attendanceCount > 1)
-                            ? index * spacing
-                            : (MediaQuery.of(context).size.width * 0.3 -
-                            iconSize) /
-                            2;
+                            double containerWidth = MediaQuery.of(context).size.width * 0.25; // 固定幅を変数に格納
+                            double spacing = (attendanceCount > 1)
+                                ? (containerWidth - iconSize) / (attendanceCount - 1) // 修正: コンテナの幅を使用
+                                : 0;
+                            double left = (attendanceCount > 1)
+                                ? index * spacing
+                                : (containerWidth - iconSize) / 2;
                         return Positioned(
                           left: left,
                           child: SvgPicture.asset(
