@@ -6,10 +6,11 @@ part 'member.g.dart';
 
 @freezed
 class Member with _$Member {
+  @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
   const factory Member({
     required int memberId,
     required String memberName,
-    int? lineUserId,
+    String? lineUserId,
     required PaymentStatus status,
   }) = _Member;
 

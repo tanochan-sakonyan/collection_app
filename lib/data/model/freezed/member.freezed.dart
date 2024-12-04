@@ -22,7 +22,7 @@ Member _$MemberFromJson(Map<String, dynamic> json) {
 mixin _$Member {
   int get memberId => throw _privateConstructorUsedError;
   String get memberName => throw _privateConstructorUsedError;
-  int? get lineUserId => throw _privateConstructorUsedError;
+  String? get lineUserId => throw _privateConstructorUsedError;
   PaymentStatus get status => throw _privateConstructorUsedError;
 
   /// Serializes this Member to a JSON map.
@@ -40,7 +40,10 @@ abstract class $MemberCopyWith<$Res> {
       _$MemberCopyWithImpl<$Res, Member>;
   @useResult
   $Res call(
-      {int memberId, String memberName, int? lineUserId, PaymentStatus status});
+      {int memberId,
+      String memberName,
+      String? lineUserId,
+      PaymentStatus status});
 }
 
 /// @nodoc
@@ -75,7 +78,7 @@ class _$MemberCopyWithImpl<$Res, $Val extends Member>
       lineUserId: freezed == lineUserId
           ? _value.lineUserId
           : lineUserId // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as String?,
       status: null == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
@@ -92,7 +95,10 @@ abstract class _$$MemberImplCopyWith<$Res> implements $MemberCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {int memberId, String memberName, int? lineUserId, PaymentStatus status});
+      {int memberId,
+      String memberName,
+      String? lineUserId,
+      PaymentStatus status});
 }
 
 /// @nodoc
@@ -125,7 +131,7 @@ class __$$MemberImplCopyWithImpl<$Res>
       lineUserId: freezed == lineUserId
           ? _value.lineUserId
           : lineUserId // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as String?,
       status: null == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
@@ -135,7 +141,8 @@ class __$$MemberImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class _$MemberImpl implements _Member {
   const _$MemberImpl(
       {required this.memberId,
@@ -151,7 +158,7 @@ class _$MemberImpl implements _Member {
   @override
   final String memberName;
   @override
-  final int? lineUserId;
+  final String? lineUserId;
   @override
   final PaymentStatus status;
 
@@ -199,7 +206,7 @@ abstract class _Member implements Member {
   const factory _Member(
       {required final int memberId,
       required final String memberName,
-      final int? lineUserId,
+      final String? lineUserId,
       required final PaymentStatus status}) = _$MemberImpl;
 
   factory _Member.fromJson(Map<String, dynamic> json) = _$MemberImpl.fromJson;
@@ -209,7 +216,7 @@ abstract class _Member implements Member {
   @override
   String get memberName;
   @override
-  int? get lineUserId;
+  String? get lineUserId;
   @override
   PaymentStatus get status;
 
