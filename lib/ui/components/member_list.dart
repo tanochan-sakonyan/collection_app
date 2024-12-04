@@ -10,7 +10,7 @@ import 'package:mr_collection/provider/user_provider.dart';
 
 class MemberList extends ConsumerWidget {
   final List<Member>? members;
-  final String? eventId;
+  final int? eventId;
 
   const MemberList({super.key, required this.members, required this.eventId});
 
@@ -80,11 +80,19 @@ class MemberList extends ConsumerWidget {
                               showDialog(
                                 context: context,
                                 builder: (context) => StatusDialog(
+<<<<<<< HEAD:lib/components/member_list.dart
+                                  eventId: eventId.toString(),
+                                  memberId: member.memberId,
+                                  member: member.memberName,
+                                  onStatusChange: (String eventId, int memberId,
+                                      int status) {
+=======
                                   eventId: eventId,
                                   memberId: member?.memberId,
                                   member: member?.memberName,
                                   onStatusChange: (String? eventId,
                                       int? memberId, int status) {
+>>>>>>> main:lib/ui/components/member_list.dart
                                     _changeStatus(ref, eventId,
                                         memberId.toString(), status);
                                   },
@@ -146,7 +154,7 @@ class MemberList extends ConsumerWidget {
                             onPressed: () {
                               showDialog(
                                 context: context,
-                                builder: (context) => const AddMemberDialog(),
+                                builder: (context) => AddMemberDialog(eventId: eventId,),
                               );
                             },
                             style: TextButton.styleFrom(

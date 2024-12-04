@@ -6,7 +6,6 @@ import 'package:mr_collection/ui/components/dialog/add_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/delete_event_dialog.dart';
 import 'package:mr_collection/ui/components/member_list.dart';
 import 'package:mr_collection/ui/components/tanochan_drawer.dart';
-import 'package:mr_collection/data/mock/mock_user.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/user.dart';
 
@@ -191,7 +190,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         children: tabTitles.map((memberId) {
           return MemberList(
             members: widget.user?.events[0].members,
-            eventId: widget.user?.events[0].eventId.toString(),
+            eventId: widget.user?.events[0].eventId,
           );
         }).toList(),
       ),
