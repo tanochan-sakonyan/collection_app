@@ -29,7 +29,7 @@ class UserNotifier extends StateNotifier<User?> {
       if (next != null) {
         fetchUser(next);
       } else {
-        state = null; // ログアウト時など
+        state = null;
       }
     });
   }
@@ -39,7 +39,6 @@ class UserNotifier extends StateNotifier<User?> {
       final user = await userService.fetchUser(accessToken);
       state = user;
     } catch (e) {
-      // エラーハンドリング
       print('ユーザー情報の取得に失敗しました: $e');
       state = null;
     }

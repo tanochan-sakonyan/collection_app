@@ -7,6 +7,6 @@ class UserService {
   UserService(this.userRepository);
 
   Future<User> fetchUser(String accessToken) async {
-    return userRepository.fetchUserId(accessToken);
+    return userRepository.fetchUser(accessToken);
   }
 }

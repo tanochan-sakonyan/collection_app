@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_line_sdk/flutter_line_sdk.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mr_collection/data/model/freezed/user.dart';
 import 'package:mr_collection/provider/access_token_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/screen/home_screen.dart';
@@ -19,6 +20,7 @@ class LoginScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     bool isChecked = ref.watch(checkboxProvider);
+    debugPrint('isChecked: $isChecked');
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -34,7 +36,9 @@ class LoginScreen extends ConsumerWidget {
               width: 300,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF06C755),
+                  backgroundColor: isChecked
+                      ? const Color(0xFF06C755)
+                      : const Color(0xFFD7D7D7),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -45,10 +49,15 @@ class LoginScreen extends ConsumerWidget {
                   if (isChecked) {
                     try {
                       final result = await LineSDK.instance.login();
-                      final accessToken = result.accessToken;
+                      final accessToken = result.accessToken.value;
                       ref.read(accessTokenProvider.notifier).state =
-                          accessToken.value;
-                      final user = ref.watch(userProvider);
+                          accessToken;
+
+                      User? user;
+                      while (user == null) {
+                        await Future.delayed(const Duration(milliseconds: 100));
+                        user = ref.read(userProvider);
+                      }
 
                       debugPrint('LoginScreenからHomeScreenに遷移します。user: $user');
                       Navigator.of(context).pushReplacement(
@@ -73,6 +82,8 @@ class LoginScreen extends ConsumerWidget {
                         ),
                       );
                     }
+                  } else {
+                    null;
                   }
                 },
                 child: Row(
