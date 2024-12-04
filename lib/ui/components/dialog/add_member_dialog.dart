@@ -1,25 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mr_collection/provider/member_provider.dart';
 
-class AddMemberDialog extends StatefulWidget {
-  const AddMemberDialog({super.key});
+class AddMemberDialog extends ConsumerStatefulWidget {
+  final int eventId;
+
+  const AddMemberDialog({required this.eventId, super.key});
+
   @override
   AddMemberDialogState createState() => AddMemberDialogState();
 }
 
-class AddMemberDialogState extends State<AddMemberDialog> {
+class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
   final TextEditingController _controller = TextEditingController();
   String? _errorMessage;
 
-  void _addMember() {
+  Future<void> _addMember() async{
     setState(() {
-      if (_controller.text.isEmpty) {
+      if (_controller.text.trim().isEmpty) {
         _errorMessage = 'メンバーを入力してください';
       } else {
         _errorMessage = null;
-        // TODO: メンバーを追加するロジック
       }
     });
+
+    try {
+      await ref.read(memberProvider.notifier).addMember(widget.eventId, _controller.text.trim());
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('メンバーを追加しました')),
+      );
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'メンバーの追加に失敗しました';
+      });
+    }
   }
 
   @override
