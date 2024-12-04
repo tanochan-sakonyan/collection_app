@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 
 class DeleteEventDialog extends StatelessWidget {
-  final String eventId;
+  final int? eventId;
   const DeleteEventDialog({required this.eventId, super.key});
 
   get eventRepository => null;
