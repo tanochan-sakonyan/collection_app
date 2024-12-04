@@ -25,7 +25,7 @@ class MemberNotifier extends StateNotifier<List<Member>> {
 
   final MemberService _memberService;
 
-  Future<void> addMember(int eventId, String newMemberName) async {
+  Future<void> addMember(int? eventId, String newMemberName) async {
     try {
       final newMember = await _memberService.addMember(eventId, newMemberName);
       state = [...state, newMember];

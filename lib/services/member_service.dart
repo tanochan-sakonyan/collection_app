@@ -6,7 +6,7 @@ class MemberService {
 
   MemberService({required this.memberRepository});
 
-  Future<Member> addMember(int eventId, String newMemberName) {
+  Future<Member> addMember(int? eventId, String newMemberName) {
     return memberRepository.addMember(eventId, newMemberName);
   }
 
