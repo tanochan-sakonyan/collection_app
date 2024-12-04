@@ -18,9 +18,7 @@ dependencies:
   freezed_annotation: ^2.4.1
   json_annotation: ^4.9.0
   http: ^1.2.2
-  path_provider: ^2.0.11
-  flutter_line_sdk: 
-    path: C:/Users/sugar/tanochan/flutter_line_sdk
+  flutter_line_sdk: ^2.3.8
 
 dev_dependencies:
   flutter_test:
