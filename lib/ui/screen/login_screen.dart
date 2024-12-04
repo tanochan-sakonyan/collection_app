@@ -14,11 +14,16 @@ import 'package:mr_collection/ui/screen/terms_of_service_screen.dart';
 
 final checkboxProvider = StateProvider<bool>((ref) => false);
 
-class LoginScreen extends ConsumerWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends ConsumerState<LoginScreen> {
+  @override
+  Widget build(BuildContext context) {
     bool isChecked = ref.watch(checkboxProvider);
     debugPrint('isChecked: $isChecked');
 
@@ -54,36 +59,38 @@ class LoginScreen extends ConsumerWidget {
                           accessToken;
 
                       User? user;
-                      while (user == null) {
+                      while (user == null && mounted) {
                         await Future.delayed(const Duration(milliseconds: 100));
                         user = ref.read(userProvider);
                       }
 
-                      debugPrint('LoginScreenからHomeScreenに遷移します。user: $user');
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              HomeScreen(title: '集金くん', user: user),
-                        ),
-                      );
+                      if (mounted && user != null) {
+                        debugPrint('LoginScreenからHomeScreenに遷移します。user: $user');
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                HomeScreen(title: '集金くん', user: user),
+                          ),
+                        );
+                      }
                     } on PlatformException catch (e) {
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: const Text('ログイン失敗'),
-                          content:
-                              Text('エラーコード: ${e.code}\nメッセージ: ${e.message}'),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.of(context).pop(),
-                              child: const Text('OK'),
-                            ),
-                          ],
-                        ),
-                      );
+                      if (mounted) {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('ログイン失敗'),
+                            content:
+                                Text('エラーコード: ${e.code}\nメッセージ: ${e.message}'),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
                     }
-                  } else {
-                    null;
                   }
                 },
                 child: Row(
