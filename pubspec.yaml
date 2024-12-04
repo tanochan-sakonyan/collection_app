@@ -19,6 +19,7 @@ dependencies:
   json_annotation: ^4.9.0
   http: ^1.2.2
   flutter_line_sdk: ^2.3.8
+  shared_preferences: ^2.3.3
 
 dev_dependencies:
   flutter_test:

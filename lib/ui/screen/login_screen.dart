@@ -1,12 +1,16 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_line_sdk/flutter_line_sdk.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mr_collection/data/model/freezed/user.dart';
 import 'package:mr_collection/provider/access_token_provider.dart';
-import 'package:mr_collection/screen/home_screen.dart';
-import 'package:mr_collection/screen/privacy_policy_screen.dart';
-import 'package:mr_collection/screen/terms_of_service_screen.dart';
+import 'package:mr_collection/provider/user_provider.dart';
+import 'package:mr_collection/ui/screen/home_screen.dart';
+import 'package:mr_collection/ui/screen/privacy_policy_screen.dart';
+import 'package:mr_collection/ui/screen/terms_of_service_screen.dart';
 
 final checkboxProvider = StateProvider<bool>((ref) => false);
 
@@ -16,6 +20,7 @@ class LoginScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     bool isChecked = ref.watch(checkboxProvider);
+    debugPrint('isChecked: $isChecked');
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -23,53 +28,64 @@ class LoginScreen extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: 100),
-            Text("集金くん",
+            const SizedBox(height: 100),
+            const Text("集金くん",
                 style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
-            SizedBox(height: 100),
+            const SizedBox(height: 100),
             SizedBox(
               width: 300,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF06C755),
+                  backgroundColor: isChecked
+                      ? const Color(0xFF06C755)
+                      : const Color(0xFFD7D7D7),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                   padding:
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 ),
-                onPressed: isChecked
-                    ? () async {
-                        try {
-                          final result = await LineSDK.instance.login();
-                          final accessToken = result.accessToken;
-                          ref.read(accessTokenProvider.notifier).state =
-                              accessToken.value;
+                onPressed: () async {
+                  if (isChecked) {
+                    try {
+                      final result = await LineSDK.instance.login();
+                      final accessToken = result.accessToken.value;
+                      ref.read(accessTokenProvider.notifier).state =
+                          accessToken;
 
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const HomeScreen(title: '集金くん'),
-                            ),
-                          );
-                        } on PlatformException catch (e) {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text('ログイン失敗'),
-                              content: Text(
-                                  'エラーコード: ${e.code}\nメッセージ: ${e.message}'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.of(context).pop(),
-                                  child: const Text('OK'),
-                                ),
-                              ],
-                            ),
-                          );
-                        }
+                      User? user;
+                      while (user == null) {
+                        await Future.delayed(const Duration(milliseconds: 100));
+                        user = ref.read(userProvider);
                       }
-                    : null,
+
+                      debugPrint('LoginScreenからHomeScreenに遷移します。user: $user');
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              HomeScreen(title: '集金くん', user: user),
+                        ),
+                      );
+                    } on PlatformException catch (e) {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('ログイン失敗'),
+                          content:
+                              Text('エラーコード: ${e.code}\nメッセージ: ${e.message}'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                  } else {
+                    null;
+                  }
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [

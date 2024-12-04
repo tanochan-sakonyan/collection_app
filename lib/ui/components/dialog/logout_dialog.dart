@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_line_sdk/flutter_line_sdk.dart';
-import 'package:mr_collection/screen/login_screen.dart';
+import 'package:mr_collection/ui/screen/login_screen.dart';
 
 class LogoutDialog extends StatelessWidget {
   const LogoutDialog({

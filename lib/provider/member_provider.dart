@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mr_collection/constants/base_url.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/repository/member_repository.dart';
 import 'package:mr_collection/services/member_service.dart';
 
 final memberRepositoryProvider = Provider<MemberRepository>((ref) {
-  const baseUrl =
-      'https://your-api-base-url.com'; // TODO: 実際のAPIベースURLに置き換えてください
   return MemberRepository(baseUrl: baseUrl);
 });
 

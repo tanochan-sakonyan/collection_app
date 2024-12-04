@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mr_collection/components/dialog/add_event_dialog.dart';
-import 'package:mr_collection/components/dialog/delete_event_dialog.dart';
-import 'package:mr_collection/components/member_list.dart';
-import 'package:mr_collection/components/tanochan_drawer.dart';
+import 'package:mr_collection/provider/tab_titles_provider.dart';
+import 'package:mr_collection/ui/components/dialog/add_event_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/delete_event_dialog.dart';
+import 'package:mr_collection/ui/components/member_list.dart';
+import 'package:mr_collection/ui/components/tanochan_drawer.dart';
 import 'package:mr_collection/data/mock/mock_user.dart';
-import 'package:mr_collection/data/mock/tab_titles.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
+import 'package:mr_collection/data/model/freezed/user.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
-  const HomeScreen({super.key, required this.title});
+  const HomeScreen({super.key, required this.title, required this.user});
 
   final String title;
+  final User? user;
 
   @override
   ConsumerState<HomeScreen> createState() => HomeScreenState();
@@ -24,10 +26,14 @@ class HomeScreenState extends ConsumerState<HomeScreen>
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  List<String> _tabTitles = [];
+
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+
+    _tabTitles = ref.read(tabTitlesProvider);
+    _tabController = TabController(length: _tabTitles.length, vsync: this);
   }
 
   @override
@@ -36,8 +42,28 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     super.dispose();
   }
 
+  void _updateTabController(int newLength) {
+    _tabController.dispose();
+    _tabController = TabController(length: newLength, vsync: this);
+  }
+
   @override
   Widget build(BuildContext context) {
+    debugPrint('HomeScreenのbuildメソッドが呼ばれました。user: ${widget.user}');
+    final tabTitles = ref.watch(tabTitlesProvider);
+
+    if (tabTitles.length != _tabController.length) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          setState(() {
+            _updateTabController(tabTitles.length);
+            _tabTitles = tabTitles;
+          });
+        }
+      });
+    } else {
+      _tabTitles = tabTitles;
+    }
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.white,
@@ -95,12 +121,12 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                           isScrollable: true,
                           controller: _tabController,
                           tabs: tabTitles.map((eventName) {
-                            final event = mockUser.events.firstWhere(
+                            final event = widget.user?.events.firstWhere(
                               (e) => e.eventName == eventName,
                               orElse: () => const Event(
                                   eventId: -1, eventName: '', members: []),
                             );
-                            final eventId = event.eventId;
+                            final eventId = event?.eventId;
 
                             return GestureDetector(
                               onLongPress: () => showDialog(
@@ -171,8 +197,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         controller: _tabController,
         children: tabTitles.map((memberId) {
           return MemberList(
-            members: mockUser.events[0].members,
-            eventId: mockUser.events[0].eventId.toString(),
+            members: widget.user?.events[0].members,
+            eventId: widget.user?.events[0].eventId.toString(),
           );
         }).toList(),
       ),
