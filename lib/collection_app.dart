@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mr_collection/ui/screen/access_token_screen.dart';
+import 'package:mr_collection/provider/user_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mr_collection/ui/screen/home_screen.dart';
+import 'package:mr_collection/ui/screen/login_screen.dart';
 
-class CollectionApp extends StatelessWidget {
+class CollectionApp extends ConsumerWidget {
   const CollectionApp({super.key});
 
+  Future<bool> _checkLoginStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('isLoggedIn') ?? false;
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final baseTextTheme = GoogleFonts.montserratTextTheme();
 
     final collectionAppTextTheme = baseTextTheme.copyWith(
@@ -27,8 +36,28 @@ class CollectionApp extends StatelessWidget {
         brightness: Brightness.light,
         textTheme: collectionAppTextTheme,
       ),
-      home: AccessTokenScreen(),
       debugShowCheckedModeBanner: false,
+      home: FutureBuilder<bool>(
+        future: _checkLoginStatus(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('エラーが発生しました: ${snapshot.error}'));
+          } else {
+            final isLoggedIn = snapshot.data ?? false;
+            final user = ref.watch(userProvider);
+            if (isLoggedIn) {
+              return HomeScreen(
+                title: '集金くん',
+                user: user,
+              );
+            } else {
+              return const LoginScreen();
+            }
+          }
+        },
+      ),
     );
   }
 }

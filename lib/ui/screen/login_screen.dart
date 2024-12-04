@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_line_sdk/flutter_line_sdk.dart';
@@ -39,39 +41,40 @@ class LoginScreen extends ConsumerWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 ),
-                onPressed: isChecked
-                    ? () async {
-                        try {
-                          final result = await LineSDK.instance.login();
-                          final accessToken = result.accessToken;
-                          final user = ref.watch(userProvider);
-                          ref.read(accessTokenProvider.notifier).state =
-                              accessToken.value;
+                onPressed: () async {
+                  if (isChecked) {
+                    try {
+                      final result = await LineSDK.instance.login();
+                      final accessToken = result.accessToken;
+                      ref.read(accessTokenProvider.notifier).state =
+                          accessToken.value;
+                      final user = ref.watch(userProvider);
 
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  HomeScreen(title: '集金くん', user: user),
+                      debugPrint('LoginScreenからHomeScreenに遷移します。user: $user');
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              HomeScreen(title: '集金くん', user: user),
+                        ),
+                      );
+                    } on PlatformException catch (e) {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('ログイン失敗'),
+                          content:
+                              Text('エラーコード: ${e.code}\nメッセージ: ${e.message}'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: const Text('OK'),
                             ),
-                          );
-                        } on PlatformException catch (e) {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text('ログイン失敗'),
-                              content: Text(
-                                  'エラーコード: ${e.code}\nメッセージ: ${e.message}'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.of(context).pop(),
-                                  child: const Text('OK'),
-                                ),
-                              ],
-                            ),
-                          );
-                        }
-                      }
-                    : null,
+                          ],
+                        ),
+                      );
+                    }
+                  }
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [

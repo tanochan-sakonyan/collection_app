@@ -50,6 +50,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('HomeScreenのbuildメソッドが呼ばれました。user: ${widget.user}');
     final tabTitles = ref.watch(tabTitlesProvider);
 
     // タブタイトルが変更された場合、タブコントローラーを更新
