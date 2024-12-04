@@ -21,7 +21,7 @@ class MemberService {
     }
   }
 
-  Future<Member> updateMemberStatus(int eventId, int memberId, int status) {
+  Future<Member> updateMemberStatus(int? eventId, int? memberId, int? status) {
     return memberRepository.updateMemberStatus(eventId, memberId, status);
   }
 }

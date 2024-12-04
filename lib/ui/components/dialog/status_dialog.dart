@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class StatusDialog extends StatelessWidget {
-  final int eventId;
-  final int memberId;
-  final String member;
-  final Function(int, int, int) onStatusChange;
+  final int? eventId;
+  final int? memberId;
+  final String? member;
+  final Function(int?, int?, int) onStatusChange;
 
   const StatusDialog({
     super.key,

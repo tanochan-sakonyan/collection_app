@@ -122,7 +122,8 @@ class __$$EventImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class _$EventImpl implements _Event {
   const _$EventImpl(
       {required this.eventId,
