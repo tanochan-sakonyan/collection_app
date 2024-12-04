@@ -9,13 +9,13 @@ import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 
 class MemberList extends ConsumerWidget {
-  final List<Member> members;
-  final String eventId;
+  final List<Member>? members;
+  final String? eventId;
 
   const MemberList({super.key, required this.members, required this.eventId});
 
   Future<void> _changeStatus(
-      WidgetRef ref, String eventId, String memberId, int status) async {
+      WidgetRef ref, String? eventId, String memberId, int status) async {
     try {
       final userRepository = ref.read(userRepositoryProvider);
       await userRepository.changeStatus(eventId, memberId, status);
@@ -71,24 +71,20 @@ class MemberList extends ConsumerWidget {
                     ),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.4,
-                      child: ListView.separated(
-                        itemCount: members.length,
-                        separatorBuilder: (context, index) => const Divider(
-                          thickness: 1,
-                          height: 1,
-                        ),
+                      child: ListView.builder(
+                        itemCount: members?.length,
                         itemBuilder: (context, index) {
-                          final member = members[index];
+                          final member = members?[index];
                           return GestureDetector(
                             onTap: () {
                               showDialog(
                                 context: context,
                                 builder: (context) => StatusDialog(
                                   eventId: eventId,
-                                  memberId: member.memberId,
-                                  member: member.memberName,
-                                  onStatusChange: (String eventId, int memberId,
-                                      int status) {
+                                  memberId: member?.memberId,
+                                  member: member?.memberName,
+                                  onStatusChange: (String? eventId,
+                                      int? memberId, int status) {
                                     _changeStatus(ref, eventId,
                                         memberId.toString(), status);
                                   },
@@ -97,17 +93,18 @@ class MemberList extends ConsumerWidget {
                             },
                             child: ListTile(
                               minTileHeight: 32,
-                              title: Text(
-                                member.memberName.length > 17
-                                    ? '${member.memberName.substring(0, 10)}...'
-                                    : member.memberName,
-                                style: TextStyle(
-                                  color: member.status == PaymentStatus.absence
-                                      ? Colors.grey
-                                      : Colors.black,
-                                ),
-                              ),
-                              trailing: _buildStatusIcon(member.status),
+                              title: member?.memberName != null
+                                  ? Text(
+                                      member!.memberName,
+                                      style: TextStyle(
+                                        color: member.status ==
+                                                PaymentStatus.absence
+                                            ? Colors.grey
+                                            : Colors.black,
+                                      ),
+                                    )
+                                  : null,
+                              trailing: _buildStatusIcon(member?.status),
                             ),
                           );
                         },
@@ -268,7 +265,7 @@ class MemberList extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatusIcon(PaymentStatus status) {
+  Widget _buildStatusIcon(PaymentStatus? status) {
     switch (status) {
       case PaymentStatus.paid:
         return const Icon(Icons.check, color: Color(0xFF5AFF9C));

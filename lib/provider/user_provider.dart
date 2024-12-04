@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/constants/base_url.dart';
 import 'package:mr_collection/data/model/freezed/user.dart';
@@ -37,9 +38,10 @@ class UserNotifier extends StateNotifier<User?> {
   Future<void> fetchUser(String accessToken) async {
     try {
       final user = await userService.fetchUser(accessToken);
+      debugPrint('取得したユーザー情報: $user');
       state = user;
     } catch (e) {
-      print('ユーザー情報の取得に失敗しました: $e');
+      debugPrint('ユーザー情報の取得の際にエラーが発生しました。: $e');
       state = null;
     }
   }

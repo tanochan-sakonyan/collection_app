@@ -32,7 +32,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   void initState() {
     super.initState();
 
-    // 初期のタブタイトルを取得してタブコントローラーを初期化
     _tabTitles = ref.read(tabTitlesProvider);
     _tabController = TabController(length: _tabTitles.length, vsync: this);
   }
@@ -53,7 +52,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     debugPrint('HomeScreenのbuildメソッドが呼ばれました。user: ${widget.user}');
     final tabTitles = ref.watch(tabTitlesProvider);
 
-    // タブタイトルが変更された場合、タブコントローラーを更新
     if (tabTitles.length != _tabController.length) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
@@ -123,12 +121,12 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                           isScrollable: true,
                           controller: _tabController,
                           tabs: tabTitles.map((eventName) {
-                            final event = mockUser.events.firstWhere(
+                            final event = widget.user?.events.firstWhere(
                               (e) => e.eventName == eventName,
                               orElse: () => const Event(
                                   eventId: -1, eventName: '', members: []),
                             );
-                            final eventId = event.eventId;
+                            final eventId = event?.eventId;
 
                             return GestureDetector(
                               onLongPress: () => showDialog(
@@ -199,8 +197,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         controller: _tabController,
         children: tabTitles.map((memberId) {
           return MemberList(
-            members: mockUser.events[0].members,
-            eventId: mockUser.events[0].eventId.toString(),
+            members: widget.user?.events[0].members,
+            eventId: widget.user?.events[0].eventId.toString(),
           );
         }).toList(),
       ),

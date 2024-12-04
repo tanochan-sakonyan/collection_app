@@ -9,7 +9,7 @@ class UserRepository {
   UserRepository({required this.baseUrl});
 
   // アクセストークンを送って、ユーザー情報を取得する
-  Future<User> fetchUser(String accessToken) async {
+  Future<User?> fetchUser(String accessToken) async {
     debugPrint('fetchUser関数が呼ばれました。');
     final url = Uri.parse('$baseUrl/users');
 
@@ -23,8 +23,18 @@ class UserRepository {
     debugPrint('Response body: ${response.body}');
 
     if (response.statusCode == 201 || response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return User.fromJson(data);
+      try {
+        final data = jsonDecode(response.body);
+        debugPrint('デコード成功: $data');
+
+        final user = User.fromJson(data);
+        debugPrint('User.fromJson成功: $user');
+        return user;
+      } catch (e, stackTrace) {
+        debugPrint('JSONデコード中にエラー: $e');
+        debugPrint('スタックトレース: $stackTrace');
+        rethrow;
+      }
     } else {
       try {
         final errorData = jsonDecode(response.body);
@@ -53,7 +63,8 @@ class UserRepository {
     }
   }
 
-  Future<User> changeStatus(String eventId, String memberId, int status) async {
+  Future<User> changeStatus(
+      String? eventId, String memberId, int status) async {
     final url = Uri.parse('$baseUrl/events/$eventId/members/$memberId/status');
     final response = await http.post(
       url,
