@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mr_collection/data/model/freezed/member.dart';
 
@@ -51,7 +52,13 @@ class MemberRepository {
 
   Future<Member> updateMemberStatus(
       int? eventId, int? memberId, int? status) async {
-    final url = Uri.parse('$baseUrl/events/$eventId/members/$memberId/status');
+    final url = Uri.parse('$baseUrl/members/$memberId/status');
+
+    final requestBody = jsonEncode({'status': status});
+    debugPrint('リクエストURL: $url');
+    debugPrint('リクエストヘッダー: ${{'Content-Type': 'application/json'}}');
+    debugPrint('リクエストボディ: $requestBody');
+
     final response = await http.put(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -62,7 +69,12 @@ class MemberRepository {
       final data = jsonDecode(response.body);
       return Member.fromJson(data);
     } else {
-      throw Exception('メンバーのステータス更新に失敗しました');
+      final errorBody = response.body;
+      throw Exception(
+        'メンバーのステータス更新に失敗しました: '
+        'ステータスコード: ${response.statusCode}, '
+        'レスポンス: $errorBody',
+      );
     }
   }
 }

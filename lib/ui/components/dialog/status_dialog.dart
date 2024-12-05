@@ -79,6 +79,7 @@ class StatusDialog extends StatelessWidget {
     return GestureDetector(
       onTap: () async {
         Navigator.pop(context);
+        debugPrint('eventId: $eventId, memberId: $memberId, status: $status');
         await onStatusChange(eventId, memberId, status);
       },
       child: Container(
