@@ -79,7 +79,23 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
                     icon: SvgPicture.asset("assets/icons/line.svg"),
                     color: const Color(0xFF06C755),
                     onPressed: () {
-                      // TODO
+                      //LINE認証申請前の臨時ダイアログ
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 56.0, horizontal: 24.0),
+                          content: const Text(
+                            'LINEへの認証申請中のため、\n機能解禁までしばらくお待ちください',
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      );
+                      //TODO LINE認証申請が通ったらこちらに戻す
+                      /*showDialog(
+                        context: context,
+                        builder: (context) => const ConfirmationDialog(),
+                      );*/
                     },
                   ),
                   SizedBox(

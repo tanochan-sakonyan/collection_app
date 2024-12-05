@@ -106,7 +106,8 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                 ),
                 child: Column(
                   children: [
-                    ListTile(
+                    //TODO: 現状まだ実装できていないが、今後実装予定
+                    /*ListTile(
                       title: const Text('参加者引継ぎ'),
                       trailing: ToggleButton(
                         initialValue: isToggleOn,
@@ -116,7 +117,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                           });
                         },
                       ),
-                    ),
+                    ),*/
                     const Divider(height: 1, color: Color(0xFFE8E8E8)),
                     ListTile(
                       title: const Text('LINEから参加者取得'),
@@ -127,7 +128,23 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                           height: 28,
                         ),
                         onPressed: () {
-                          // TODO: LINE から参加者取得のロジック
+                          //LINE認証申請前の臨時ダイアログ
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 56.0, horizontal: 24.0),
+                              content: const Text(
+                                'LINEへの認証申請中のため、\n機能解禁までしばらくお待ちください',
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          );
+                          //TODO LINE認証申請が通ったらこちらに戻す
+                          /*showDialog(
+                            context: context,
+                            builder: (context) => const ConfirmationDialog(),
+                          );*/
                         },
                       ),
                     ),
