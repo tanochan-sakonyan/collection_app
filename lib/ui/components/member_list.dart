@@ -34,14 +34,11 @@ class MemberList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    /*final int? attendanceCount =
+    final int? attendanceCount =
         members?.where((member) => member.status == PaymentStatus.paid).length;
     final int? unpaidCount = members
         ?.where((member) => member.status == PaymentStatus.unpaid)
-        .length;*/
-
-    final int? attendanceCount = 3;
-    final int? unpaidCount = 2;
+        .length;
 
     final double iconSize = 30.0;
 
