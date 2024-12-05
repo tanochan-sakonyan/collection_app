@@ -6,16 +6,26 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mr_collection/ui/screen/home_screen.dart';
 import 'package:mr_collection/ui/screen/login_screen.dart';
 
-class CollectionApp extends ConsumerWidget {
+class CollectionApp extends ConsumerStatefulWidget {
   const CollectionApp({super.key});
 
+  @override
+  ConsumerState<CollectionApp> createState() => _CollectionAppState();
+}
+
+class _CollectionAppState extends ConsumerState<CollectionApp> {
   Future<bool> _checkLoginStatus() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool('isLoggedIn') ?? false;
   }
 
+  Future<int?> _getUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('userId');
+  }
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final baseTextTheme = GoogleFonts.montserratTextTheme();
 
     final collectionAppTextTheme = baseTextTheme.copyWith(
@@ -46,13 +56,37 @@ class CollectionApp extends ConsumerWidget {
             return Center(child: Text('エラーが発生しました: ${snapshot.error}'));
           } else {
             final isLoggedIn = snapshot.data ?? false;
-            final user = ref.watch(userProvider);
             if (isLoggedIn) {
-              return HomeScreen(
-                title: '集金くん',
-                user: user,
+              return FutureBuilder<int?>(
+                future: _getUserId(),
+                builder: (context, userIdSnapshot) {
+                  if (userIdSnapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (userIdSnapshot.hasError) {
+                    return Center(
+                        child: Text('エラーが発生しました: ${userIdSnapshot.error}'));
+                  } else {
+                    final userId = userIdSnapshot.data;
+                    if (userId != null) {
+                      ref.read(userProvider.notifier).fetchUserById(userId);
+                      final user = ref.watch(userProvider);
+                      if (user != null) {
+                        return HomeScreen(
+                          title: '集金くん',
+                          user: user,
+                        );
+                      } else {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                    } else {
+                      return const LoginScreen();
+                    }
+                  }
+                },
               );
             } else {
+              debugPrint('isLoggedINがfalseのため、LoginScreenに遷移します。');
               return const LoginScreen();
             }
           }

@@ -9,4 +9,8 @@ class UserService {
   Future<User?> registerUser(String accessToken) async {
     return userRepository.registerUser(accessToken);
   }
+
+  Future<User?> fetchUserById(int userId) {
+    return userRepository.fetchUserById(userId);
+  }
 }

@@ -25,6 +25,44 @@ class UserRepository {
     if (response.statusCode == 201 || response.statusCode == 200) {
       try {
         final data = jsonDecode(response.body);
+        debugPrint('デコード成功');
+
+        final user = User.fromJson(data);
+        debugPrint('User.fromJson成功');
+        return user;
+      } catch (e, stackTrace) {
+        debugPrint('JSONデコード中にエラー: $e');
+        debugPrint('スタックトレース: $stackTrace');
+        rethrow;
+      }
+    } else {
+      try {
+        final errorData = jsonDecode(response.body);
+        final errorMessage = errorData['message'] ?? 'ユーザー情報の取得に失敗しました';
+        throw Exception(
+            'エラー: $errorMessage (ステータスコード: ${response.statusCode})');
+      } catch (e) {
+        throw Exception(
+            'その他のエラー：ユーザー情報の取得に失敗しました (ステータスコード: ${response.statusCode})');
+      }
+    }
+  }
+
+  Future<User?> fetchUserById(int userId) async {
+    debugPrint('fetchUserById関数が呼ばれました。');
+    final url = Uri.parse('$baseUrl/users/$userId');
+
+    final response = await http.get(
+      url,
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    debugPrint('Response status: ${response.statusCode}');
+    debugPrint('Response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      try {
+        final data = jsonDecode(response.body);
         debugPrint('デコード成功: $data');
 
         final user = User.fromJson(data);

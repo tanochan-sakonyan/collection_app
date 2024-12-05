@@ -11,6 +11,7 @@ import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/screen/home_screen.dart';
 import 'package:mr_collection/ui/screen/privacy_policy_screen.dart';
 import 'package:mr_collection/ui/screen/terms_of_service_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final checkboxProvider = StateProvider<bool>((ref) => false);
 
@@ -52,43 +53,75 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 onPressed: () async {
                   if (isChecked) {
-                    try {
-                      final result = await LineSDK.instance.login();
-                      final accessToken = result.accessToken.value;
-                      ref.read(accessTokenProvider.notifier).state =
-                          accessToken;
+                    final prefs = await SharedPreferences.getInstance();
+                    final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+                    debugPrint('isLoggedIn: $isLoggedIn');
+                    final userId = prefs.getInt('userId');
 
-                      User? user;
-                      while (user == null && mounted) {
-                        await Future.delayed(const Duration(milliseconds: 100));
-                        user = ref.read(userProvider);
-                      }
+                    if (isLoggedIn && userId != null) {
+                      try {
+                        await ref
+                            .read(userProvider.notifier)
+                            .fetchUserById(userId);
 
-                      if (mounted && user != null) {
-                        debugPrint('LoginScreenからHomeScreenに遷移します。user: $user');
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                HomeScreen(title: '集金くん', user: user),
-                          ),
-                        );
+                        final user = ref.read(userProvider);
+                        if (mounted && user != null) {
+                          debugPrint('既存ユーザーでHomeScreenに遷移します。user: $user');
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  HomeScreen(title: '集金くん', user: user),
+                            ),
+                          );
+                        }
+                      } catch (e) {
+                        debugPrint('ユーザー情報の取得に失敗しました。: $e');
                       }
-                    } on PlatformException catch (e) {
-                      if (mounted) {
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: const Text('ログイン失敗'),
-                            content:
-                                Text('エラーコード: ${e.code}\nメッセージ: ${e.message}'),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.of(context).pop(),
-                                child: const Text('OK'),
-                              ),
-                            ],
-                          ),
-                        );
+                    } else {
+                      try {
+                        final result = await LineSDK.instance.login();
+                        final accessToken = result.accessToken.value;
+                        ref.read(accessTokenProvider.notifier).state =
+                            accessToken;
+
+                        final user = await ref
+                            .read(userProvider.notifier)
+                            .registerUser(accessToken);
+
+                        if (user != null) {
+                          prefs.setInt('userId', user.userId);
+                          prefs.setBool('isLoggedIn', true);
+                        } else {
+                          debugPrint('ユーザー情報がnullです');
+                        }
+
+                        if (mounted && user != null) {
+                          debugPrint(
+                              'LoginScreenからHomeScreenに遷移します。user: $user');
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  HomeScreen(title: '集金くん', user: user),
+                            ),
+                          );
+                        }
+                      } on PlatformException catch (e) {
+                        if (mounted) {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('ログイン失敗'),
+                              content: Text(
+                                  'エラーコード: ${e.code}\nメッセージ: ${e.message}'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  child: const Text('OK'),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
                       }
                     }
                   }

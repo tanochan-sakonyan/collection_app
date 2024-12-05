@@ -35,10 +35,22 @@ class UserNotifier extends StateNotifier<User?> {
     });
   }
 
-  Future<void> registerUser(String accessToken) async {
+  Future<User?> registerUser(String accessToken) async {
     try {
       final user = await userService.registerUser(accessToken);
       debugPrint('取得したユーザー情報: $user');
+      state = user;
+      debugPrint('state: $state');
+      return user;
+    } catch (e) {
+      debugPrint('ユーザー登録の際にエラーが発生しました。: $e');
+      state = null;
+    }
+  }
+
+  Future<void> fetchUserById(int userId) async {
+    try {
+      final user = await userService.fetchUserById(userId);
       state = user;
     } catch (e) {
       debugPrint('ユーザー情報の取得の際にエラーが発生しました。: $e');
