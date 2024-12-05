@@ -2,16 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/constants/base_url.dart';
 import 'package:mr_collection/data/model/freezed/user.dart';
+import 'package:mr_collection/data/repository/event_repository.dart';
 import 'package:mr_collection/data/repository/member_repository.dart';
 import 'package:mr_collection/data/repository/user_repository.dart';
 import 'package:mr_collection/provider/access_token_provider.dart';
+import 'package:mr_collection/provider/event_provider.dart';
 import 'package:mr_collection/provider/member_provider.dart';
 import 'package:mr_collection/services/user_service.dart';
 
 final userProvider = StateNotifierProvider<UserNotifier, User?>((ref) {
   final userService = ref.read(userServiceProvider);
+  final eventRepository = ref.read(eventRepositoryProvider);
   final memberRepository = ref.read(memberRepositoryProvider);
-  return UserNotifier(memberRepository, userService, ref);
+  return UserNotifier(eventRepository, memberRepository, userService, ref);
 });
 
 final userRepositoryProvider = Provider<UserRepository>((ref) {
@@ -27,8 +30,10 @@ class UserNotifier extends StateNotifier<User?> {
   final UserService userService;
   final Ref ref;
   final MemberRepository memberRepository;
+  final EventRepository eventRepository;
 
-  UserNotifier(this.memberRepository, this.userService, this.ref)
+  UserNotifier(
+      this.eventRepository, this.memberRepository, this.userService, this.ref)
       : super(null) {
     // アクセストークンが変更された際にユーザー情報を取得
     ref.listen<String?>(accessTokenProvider, (previous, next) {
@@ -99,6 +104,18 @@ class UserNotifier extends StateNotifier<User?> {
       state = updatedUser;
     } catch (e) {
       debugPrint('メンバーのステータス更新中にエラーが発生しました: $e');
+    }
+  }
+
+  Future<void> createEvent(String eventName, int userId) async {
+    try {
+      final newEvent = await eventRepository.createEvent(eventName, userId);
+      final updatedUser = state?.copyWith(
+        events: [...state!.events, newEvent],
+      );
+      state = updatedUser;
+    } catch (e) {
+      debugPrint('イベントの作成中にエラーが発生しました: $e');
     }
   }
 }

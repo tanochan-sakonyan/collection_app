@@ -189,10 +189,14 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       drawer: const TanochanDrawer(),
       body: TabBarView(
         controller: _tabController,
-        children: tabTitles.map((memberId) {
+        children: tabTitles.map((eventName) {
+          final event = user?.events.firstWhere(
+            (e) => e.eventName == eventName,
+            orElse: () => const Event(eventId: -1, eventName: '', members: []),
+          );
           return MemberList(
-            members: user?.events[0].members,
-            eventId: user?.events[0].eventId,
+            members: event?.members,
+            eventId: event?.eventId,
           );
         }).toList(),
       ),

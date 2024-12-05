@@ -6,8 +6,8 @@ class EventService {
 
   EventService({required this.eventRepository});
 
-  Future<Event> createEvent(String eventName, bool isCopy) async {
-    return await eventRepository.createEvent(eventName, isCopy);
+  Future<Event> createEvent(String eventName, int userId) async {
+    return await eventRepository.createEvent(eventName, userId);
   }
 
   Future<Event> editEventName(int eventId, String newEventName) async {

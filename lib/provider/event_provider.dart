@@ -24,9 +24,9 @@ class EventNotifier extends StateNotifier<List<Event>> {
 
   EventNotifier(this.eventService) : super([]);
 
-  Future<void> createEvent(String eventName, bool isCopy) async {
+  Future<void> createEvent(String eventName, int userId) async {
     try {
-      final newEvent = await eventService.createEvent(eventName, isCopy);
+      final newEvent = await eventService.createEvent(eventName, userId);
       state = [...state, newEvent];
     } catch (e) {
       debugPrint('Error: $e');

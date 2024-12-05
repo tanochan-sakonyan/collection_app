@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/constants/base_url.dart';
+import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/button/toggle_button.dart';
 import 'package:mr_collection/data/repository/event_repository.dart';
 import 'package:mr_collection/provider/event_provider.dart';
@@ -20,17 +21,16 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
 
   Future<void> _createEvent(TextEditingController controller) async {
     final eventName = controller.text;
-    final isCopy = isToggleOn;
+    // final isCopy = isToggleOn;
+    final userId = ref.read(userProvider)!.userId;
 
     if (eventName.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('イベント名を入力してください')),
-      );
       return;
     }
 
     try {
-      ref.read(eventProvider.notifier).createEvent(eventName, isCopy);
+      debugPrint('イベント名: $eventName, ユーザーID: $userId');
+      ref.read(userProvider.notifier).createEvent(eventName, userId);
       Navigator.of(context).pop();
     } catch (error) {
       debugPrint('イベントの追加に失敗しました: $error');

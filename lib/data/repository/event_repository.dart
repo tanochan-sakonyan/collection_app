@@ -7,12 +7,12 @@ class EventRepository {
 
   EventRepository({required this.baseUrl});
 
-  Future<Event> createEvent(String eventName, isCopy) async {
+  Future<Event> createEvent(String eventName, int userId) async {
     final url = Uri.parse('$baseUrl/events');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'eventName': eventName, 'isCopy': isCopy}),
+      body: jsonEncode({'eventName': eventName, 'userId': userId}),
     );
 
     if (response.statusCode == 200) {
