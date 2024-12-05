@@ -199,59 +199,21 @@ class MemberList extends ConsumerWidget {
               ),
               const SizedBox(height: 24),
               //TODO メンバーのステータスによって表示を変える
-              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                const SizedBox(height: 11),
-                Text(
-                  "出席",
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-                const SizedBox(width: 30),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 60,
+                        child:Text(
+                          "未払い",
+                          style: Theme.of(context).textTheme.bodyLarge,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                 Container(
-                  width: MediaQuery.of(context).size.width * 0.3,
-                  height: iconSize,
-                  child: Stack(
-                    children: attendanceCount != null
-                        ? List.generate(
-                            attendanceCount,
-                            (index) {
-                              double spacing = (attendanceCount > 1)
-                                  ? (MediaQuery.of(context).size.width * 0.3 -
-                                          iconSize) /
-                                      (attendanceCount - 1)
-                                  : 0;
-                              double left = (attendanceCount > 1)
-                                  ? index * spacing
-                                  : (MediaQuery.of(context).size.width * 0.3 -
-                                          iconSize) /
-                                      2;
-                              return Positioned(
-                                left: left,
-                                child: SvgPicture.asset(
-                                  'assets/icons/flag.svg',
-                                  width: iconSize,
-                                  height: iconSize,
-                                ),
-                              );
-                            },
-                          )
-                        : const <Widget>[],
-                  ),
-                ),
-                const SizedBox(width: 4),
-                const Text("・・・・・・"),
-                const SizedBox(width: 26),
-                Text("$attendanceCount人"),
-              ]),
-              const SizedBox(height: 20),
-              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                const SizedBox(height: 11),
-                Text(
-                  "未払い",
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-                const SizedBox(width: 30),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.3,
+                  width: MediaQuery.of(context).size.width * 0.25,
                   height: iconSize,
                   child: Stack(
                     children: unpaidCount != null
@@ -286,6 +248,58 @@ class MemberList extends ConsumerWidget {
                 const SizedBox(width: 26),
                 Text("$unpaidCount人"),
               ]),
+    ),
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 60,
+                        child: Text(
+                          "出席",
+                          style: Theme.of(context).textTheme.bodyLarge,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.25,
+                  height: iconSize,
+                  child: Stack(
+                    children: attendanceCount != null
+                        ? List.generate(
+                      attendanceCount,
+                          (index) {
+                        double spacing = (attendanceCount > 1)
+                            ? (MediaQuery.of(context).size.width * 0.3 -
+                            iconSize) /
+                            (attendanceCount - 1)
+                            : 0;
+                        double left = (attendanceCount > 1)
+                            ? index * spacing
+                            : (MediaQuery.of(context).size.width * 0.3 -
+                            iconSize) /
+                            2;
+                        return Positioned(
+                          left: left,
+                          child: SvgPicture.asset(
+                            'assets/icons/flag.svg',
+                            width: iconSize,
+                            height: iconSize,
+                          ),
+                        );
+                      },
+                    )
+                        : const <Widget>[],
+                  ),
+                ),
+                const SizedBox(width: 4),
+                const Text("・・・・・・"),
+                const SizedBox(width: 26),
+                Text("$attendanceCount人"),
+              ]),
+    ),
             ],
           ),
           Positioned(
