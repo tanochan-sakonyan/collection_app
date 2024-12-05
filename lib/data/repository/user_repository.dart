@@ -9,7 +9,7 @@ class UserRepository {
   UserRepository({required this.baseUrl});
 
   // アクセストークンを送って、ユーザー情報を取得する
-  Future<User?> fetchUser(String accessToken) async {
+  Future<User?> registerUser(String accessToken) async {
     debugPrint('fetchUser関数が呼ばれました。');
     final url = Uri.parse('$baseUrl/users');
 

@@ -6,7 +6,7 @@ class UserService {
 
   UserService(this.userRepository);
 
-  Future<User?> fetchUser(String accessToken) async {
-    return userRepository.fetchUser(accessToken);
+  Future<User?> registerUser(String accessToken) async {
+    return userRepository.registerUser(accessToken);
   }
 }
