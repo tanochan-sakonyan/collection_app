@@ -300,10 +300,23 @@ class MemberList extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(48),
                 ),
                 onPressed: () {
+                  //LINE認証申請前の臨時ダイアログ
                   showDialog(
                     context: context,
-                    builder: (context) => const ConfirmationDialog(),
+                    builder: (context) => AlertDialog(
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 56.0, horizontal: 24.0),
+                      content: const Text(
+                          'LINEへの認証申請中のため、\n機能解禁までしばらくお待ちください',
+                          textAlign: TextAlign.center,
+                      ),
+                    ),
                   );
+                  //TODO LINE認証申請が通ったらこちらに戻す
+                  /*showDialog(
+                    context: context,
+                    builder: (context) => const ConfirmationDialog(),
+                  );*/
                 },
                 child: Center(
                   child: Stack(
