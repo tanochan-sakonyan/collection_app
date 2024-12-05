@@ -28,17 +28,29 @@ class UserNotifier extends StateNotifier<User?> {
     // アクセストークンが変更された際にユーザー情報を取得
     ref.listen<String?>(accessTokenProvider, (previous, next) {
       if (next != null) {
-        fetchUser(next);
+        registerUser(next);
       } else {
         state = null;
       }
     });
   }
 
-  Future<void> fetchUser(String accessToken) async {
+  Future<User?> registerUser(String accessToken) async {
     try {
-      final user = await userService.fetchUser(accessToken);
+      final user = await userService.registerUser(accessToken);
       debugPrint('取得したユーザー情報: $user');
+      state = user;
+      debugPrint('state: $state');
+      return user;
+    } catch (e) {
+      debugPrint('ユーザー登録の際にエラーが発生しました。: $e');
+      state = null;
+    }
+  }
+
+  Future<void> fetchUserById(int userId) async {
+    try {
+      final user = await userService.fetchUserById(userId);
       state = user;
     } catch (e) {
       debugPrint('ユーザー情報の取得の際にエラーが発生しました。: $e');
