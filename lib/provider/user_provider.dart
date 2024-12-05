@@ -48,13 +48,15 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
-  Future<void> fetchUserById(int userId) async {
+  Future<User?> fetchUserById(int userId) async {
     try {
       final user = await userService.fetchUserById(userId);
       state = user;
+      return user;
     } catch (e) {
       debugPrint('ユーザー情報の取得の際にエラーが発生しました。: $e');
       state = null;
+      return null;
     }
   }
 

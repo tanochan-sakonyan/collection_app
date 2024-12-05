@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mr_collection/data/model/freezed/user.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mr_collection/ui/screen/home_screen.dart';
@@ -69,17 +70,34 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                   } else {
                     final userId = userIdSnapshot.data;
                     if (userId != null) {
-                      ref.read(userProvider.notifier).fetchUserById(userId);
-                      final user = ref.watch(userProvider);
-                      if (user != null) {
-                        return HomeScreen(
-                          title: '集金くん',
-                          user: user,
-                        );
-                      } else {
-                        return const Center(child: CircularProgressIndicator());
-                      }
+                      return FutureBuilder<User?>(
+                        future: ref
+                            .read(userProvider.notifier)
+                            .fetchUserById(userId),
+                        builder: (context, userSnapshot) {
+                          if (userSnapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          } else if (userSnapshot.hasError) {
+                            return Center(
+                                child:
+                                    Text('ユーザー取得エラー: ${userSnapshot.error}'));
+                          } else {
+                            final user = userSnapshot.data;
+                            if (user != null) {
+                              return HomeScreen(
+                                title: '集金くん',
+                                user: user,
+                              );
+                            } else {
+                              return const LoginScreen();
+                            }
+                          }
+                        },
+                      );
                     } else {
+                      debugPrint('userIdが存在しないため、LoginScreenに遷移します。');
                       return const LoginScreen();
                     }
                   }
