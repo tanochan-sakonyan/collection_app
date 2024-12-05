@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/paypay_dialog.dart';
-import 'package:mr_collection/data/mock/mock_user.dart';
 
-class ConfirmationDialog extends StatelessWidget {
+class ConfirmationDialog extends ConsumerWidget {
   const ConfirmationDialog({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider);
+
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
@@ -47,7 +50,7 @@ class ConfirmationDialog extends StatelessWidget {
                   width: 272,
                   child: ElevatedButton(
                     onPressed: () {
-                      if (mockUser.paypayUrl == null) {
+                      if (user?.paypayUrl == null) {
                         showDialog(
                           context: context,
                           builder: (context) => PayPayDialog(),
