@@ -45,10 +45,6 @@ class UserNotifier extends StateNotifier<User?> {
     });
   }
 
-  void setUser(User user) {
-    state = user;
-  }
-
   Future<User?> registerUser(String accessToken) async {
     try {
       final user = await userService.registerUser(accessToken);
