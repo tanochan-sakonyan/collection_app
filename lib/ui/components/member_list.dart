@@ -34,7 +34,7 @@ class MemberList extends ConsumerWidget {
         ?.where((member) => member.status == PaymentStatus.unpaid)
         .length;
 
-    const double iconSize = 30.0;
+    final double iconSize = 30.0;
 
     return Padding(
       padding: const EdgeInsets.only(top: 16, left: 29, right: 29),
@@ -205,7 +205,7 @@ class MemberList extends ConsumerWidget {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  SizedBox(
+                  Container(
                     width: MediaQuery.of(context).size.width * 0.25,
                     height: iconSize,
                     child: Stack(
@@ -213,16 +213,16 @@ class MemberList extends ConsumerWidget {
                           ? List.generate(
                               unpaidCount,
                               (index) {
+                                double containerWidth =
+                                    MediaQuery.of(context).size.width *
+                                        0.25; // 固定幅を変数に格納
                                 double spacing = (unpaidCount > 1)
-                                    ? (MediaQuery.of(context).size.width * 0.3 -
-                                            iconSize) /
-                                        (unpaidCount - 1)
+                                    ? (containerWidth - iconSize) /
+                                        (unpaidCount - 1) // 修正: コンテナの幅を使用
                                     : 0;
                                 double left = (unpaidCount > 1)
                                     ? index * spacing
-                                    : (MediaQuery.of(context).size.width * 0.3 -
-                                            iconSize) /
-                                        2;
+                                    : (containerWidth - iconSize) / 2;
                                 return Positioned(
                                   left: left,
                                   child: SvgPicture.asset(
@@ -255,7 +255,7 @@ class MemberList extends ConsumerWidget {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  SizedBox(
+                  Container(
                     width: MediaQuery.of(context).size.width * 0.25,
                     height: iconSize,
                     child: Stack(
@@ -263,16 +263,16 @@ class MemberList extends ConsumerWidget {
                           ? List.generate(
                               attendanceCount,
                               (index) {
+                                double containerWidth =
+                                    MediaQuery.of(context).size.width *
+                                        0.25; // 固定幅を変数に格納
                                 double spacing = (attendanceCount > 1)
-                                    ? (MediaQuery.of(context).size.width * 0.3 -
-                                            iconSize) /
-                                        (attendanceCount - 1)
+                                    ? (containerWidth - iconSize) /
+                                        (attendanceCount - 1) // 修正: コンテナの幅を使用
                                     : 0;
                                 double left = (attendanceCount > 1)
                                     ? index * spacing
-                                    : (MediaQuery.of(context).size.width * 0.3 -
-                                            iconSize) /
-                                        2;
+                                    : (containerWidth - iconSize) / 2;
                                 return Positioned(
                                   left: left,
                                   child: SvgPicture.asset(
@@ -309,10 +309,10 @@ class MemberList extends ConsumerWidget {
                   //LINE認証申請前の臨時ダイアログ
                   showDialog(
                     context: context,
-                    builder: (context) => const AlertDialog(
-                      contentPadding: EdgeInsets.symmetric(
+                    builder: (context) => AlertDialog(
+                      contentPadding: const EdgeInsets.symmetric(
                           vertical: 56.0, horizontal: 24.0),
-                      content: Text(
+                      content: const Text(
                         'LINEへの認証申請中のため、\n機能解禁までしばらくお待ちください',
                         textAlign: TextAlign.center,
                       ),
