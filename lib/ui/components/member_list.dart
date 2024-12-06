@@ -3,10 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
-import 'package:mr_collection/provider/member_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/add_member_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/confirmation_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/status_dialog.dart';
 
 class MemberList extends ConsumerWidget {
@@ -19,16 +17,12 @@ class MemberList extends ConsumerWidget {
       WidgetRef ref, int? eventId, int? memberId, int? status) async {
     try {
       await ref
-          .read(memberProvider.notifier)
-          .updateMemberStatus(eventId, memberId, status);
+          .read(userProvider.notifier)
+          .updateMemberStatus(eventId!, memberId!, status!);
 
-      ScaffoldMessenger.of(ref.context).showSnackBar(
-        const SnackBar(content: Text('ステータスが更新されました')),
-      );
+      debugPrint('ステータスが更新されました。');
     } catch (error) {
-      ScaffoldMessenger.of(ref.context).showSnackBar(
-        const SnackBar(content: Text('ステータスの更新に失敗しました')),
-      );
+      debugPrint('ステータス更新中にエラーが発生しました。 $error');
     }
   }
 
@@ -40,7 +34,7 @@ class MemberList extends ConsumerWidget {
         ?.where((member) => member.status == PaymentStatus.unpaid)
         .length;
 
-    final double iconSize = 30.0;
+    const double iconSize = 30.0;
 
     return Padding(
       padding: const EdgeInsets.only(top: 16, left: 29, right: 29),
@@ -158,7 +152,7 @@ class MemberList extends ConsumerWidget {
                               showDialog(
                                 context: context,
                                 builder: (context) => AddMemberDialog(
-                                  eventId: eventId,
+                                  eventId: eventId!,
                                 ),
                               );
                             },
@@ -201,105 +195,103 @@ class MemberList extends ConsumerWidget {
               //TODO メンバーのステータスによって表示を変える
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: 60,
-                        child:Text(
-                          "未払い",
-                          style: Theme.of(context).textTheme.bodyLarge,
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.25,
-                  height: iconSize,
-                  child: Stack(
-                    children: unpaidCount != null
-                        ? List.generate(
-                            unpaidCount,
-                            (index) {
-                              double spacing = (unpaidCount > 1)
-                                  ? (MediaQuery.of(context).size.width * 0.3 -
-                                          iconSize) /
-                                      (unpaidCount - 1)
-                                  : 0;
-                              double left = (unpaidCount > 1)
-                                  ? index * spacing
-                                  : (MediaQuery.of(context).size.width * 0.3 -
-                                          iconSize) /
-                                      2;
-                              return Positioned(
-                                left: left,
-                                child: SvgPicture.asset(
-                                  'assets/icons/sad_face.svg',
-                                  width: iconSize,
-                                  height: iconSize,
-                                ),
-                              );
-                            },
-                          )
-                        : const <Widget>[],
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  SizedBox(
+                    width: 60,
+                    child: Text(
+                      "未払い",
+                      style: Theme.of(context).textTheme.bodyLarge,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 4),
-                const Text("・・・・・・"),
-                const SizedBox(width: 26),
-                Text("$unpaidCount人"),
-              ]),
-    ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.25,
+                    height: iconSize,
+                    child: Stack(
+                      children: unpaidCount != null
+                          ? List.generate(
+                              unpaidCount,
+                              (index) {
+                                double spacing = (unpaidCount > 1)
+                                    ? (MediaQuery.of(context).size.width * 0.3 -
+                                            iconSize) /
+                                        (unpaidCount - 1)
+                                    : 0;
+                                double left = (unpaidCount > 1)
+                                    ? index * spacing
+                                    : (MediaQuery.of(context).size.width * 0.3 -
+                                            iconSize) /
+                                        2;
+                                return Positioned(
+                                  left: left,
+                                  child: SvgPicture.asset(
+                                    'assets/icons/sad_face.svg',
+                                    width: iconSize,
+                                    height: iconSize,
+                                  ),
+                                );
+                              },
+                            )
+                          : const <Widget>[],
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  const Text("・・・・・・"),
+                  const SizedBox(width: 26),
+                  Text("$unpaidCount人"),
+                ]),
+              ),
               const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: 60,
-                        child: Text(
-                          "出席",
-                          style: Theme.of(context).textTheme.bodyLarge,
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.25,
-                  height: iconSize,
-                  child: Stack(
-                    children: attendanceCount != null
-                        ? List.generate(
-                      attendanceCount,
-                          (index) {
-                        double spacing = (attendanceCount > 1)
-                            ? (MediaQuery.of(context).size.width * 0.3 -
-                            iconSize) /
-                            (attendanceCount - 1)
-                            : 0;
-                        double left = (attendanceCount > 1)
-                            ? index * spacing
-                            : (MediaQuery.of(context).size.width * 0.3 -
-                            iconSize) /
-                            2;
-                        return Positioned(
-                          left: left,
-                          child: SvgPicture.asset(
-                            'assets/icons/flag.svg',
-                            width: iconSize,
-                            height: iconSize,
-                          ),
-                        );
-                      },
-                    )
-                        : const <Widget>[],
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  SizedBox(
+                    width: 60,
+                    child: Text(
+                      "出席",
+                      style: Theme.of(context).textTheme.bodyLarge,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 4),
-                const Text("・・・・・・"),
-                const SizedBox(width: 26),
-                Text("$attendanceCount人"),
-              ]),
-    ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.25,
+                    height: iconSize,
+                    child: Stack(
+                      children: attendanceCount != null
+                          ? List.generate(
+                              attendanceCount,
+                              (index) {
+                                double spacing = (attendanceCount > 1)
+                                    ? (MediaQuery.of(context).size.width * 0.3 -
+                                            iconSize) /
+                                        (attendanceCount - 1)
+                                    : 0;
+                                double left = (attendanceCount > 1)
+                                    ? index * spacing
+                                    : (MediaQuery.of(context).size.width * 0.3 -
+                                            iconSize) /
+                                        2;
+                                return Positioned(
+                                  left: left,
+                                  child: SvgPicture.asset(
+                                    'assets/icons/flag.svg',
+                                    width: iconSize,
+                                    height: iconSize,
+                                  ),
+                                );
+                              },
+                            )
+                          : const <Widget>[],
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  const Text("・・・・・・"),
+                  const SizedBox(width: 26),
+                  Text("$attendanceCount人"),
+                ]),
+              ),
             ],
           ),
           Positioned(
@@ -317,12 +309,12 @@ class MemberList extends ConsumerWidget {
                   //LINE認証申請前の臨時ダイアログ
                   showDialog(
                     context: context,
-                    builder: (context) => AlertDialog(
-                      contentPadding: const EdgeInsets.symmetric(
+                    builder: (context) => const AlertDialog(
+                      contentPadding: EdgeInsets.symmetric(
                           vertical: 56.0, horizontal: 24.0),
-                      content: const Text(
-                          'LINEへの認証申請中のため、\n機能解禁までしばらくお待ちください',
-                          textAlign: TextAlign.center,
+                      content: Text(
+                        'LINEへの認証申請中のため、\n機能解禁までしばらくお待ちください',
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   );

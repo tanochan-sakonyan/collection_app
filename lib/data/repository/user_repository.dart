@@ -25,10 +25,8 @@ class UserRepository {
     if (response.statusCode == 201 || response.statusCode == 200) {
       try {
         final data = jsonDecode(response.body);
-        debugPrint('デコード成功');
 
         final user = User.fromJson(data);
-        debugPrint('User.fromJson成功');
         return user;
       } catch (e, stackTrace) {
         debugPrint('JSONデコード中にエラー: $e');
@@ -63,10 +61,8 @@ class UserRepository {
     if (response.statusCode == 200) {
       try {
         final data = jsonDecode(response.body);
-        debugPrint('デコード成功: $data');
 
         final user = User.fromJson(data);
-        debugPrint('User.fromJson成功: $user');
         return user;
       } catch (e, stackTrace) {
         debugPrint('JSONデコード中にエラー: $e');
