@@ -1,35 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:mr_collection/data/model/freezed/event.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mr_collection/provider/user_provider.dart';
 
-class DeleteEventDialog extends StatelessWidget {
+class DeleteEventDialog extends ConsumerWidget {
   final int? eventId;
   const DeleteEventDialog({required this.eventId, super.key});
 
   get eventRepository => null;
 
-  Future<void> _deleteEvent(BuildContext context, String id) async {
-    final eventId = id;
-
-    if (eventId.isEmpty) {
-      return;
-    }
-
+  Future<void> _deleteEvent(ref, int eventId) async {
     try {
-      final event = await eventRepository.sendPaypayLink(eventId);
-      Navigator.of(context).pop(event);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('イベントを削除しました')),
-      );
+      await ref.read(userProvider.notifier).deleteEvent(eventId);
+      Navigator.of(ref).pop();
     } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('イベントの削除に失敗しました')),
-      );
+      debugPrint('イベントの削除に失敗しました: $error');
     }
   }
 
   @override
-  Widget build(BuildContext context) {
-    final List<Event> events;
+  Widget build(BuildContext context, WidgetRef ref) {
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
@@ -44,15 +33,15 @@ class DeleteEventDialog extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              '{一次会}を削除しますか？', //TODO 実際にイベント名を取得
+            const Text(
+              'このイベントを削除しますか？', //TODO 実際にイベント名を取得
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
                 color: Colors.black,
               ),
             ),
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -62,7 +51,7 @@ class DeleteEventDialog extends StatelessWidget {
                   width: 107,
                   child: ElevatedButton(
                     onPressed: () {
-                      // TODO
+                      Navigator.of(context).pop();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFD7D7D7),
@@ -83,7 +72,7 @@ class DeleteEventDialog extends StatelessWidget {
                   width: 107,
                   child: ElevatedButton(
                     onPressed: () {
-                      // TODO
+                      _deleteEvent(context, eventId!);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFF2F2F2),

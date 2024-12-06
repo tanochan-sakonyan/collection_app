@@ -25,6 +25,25 @@ class EventRepository {
     }
   }
 
+  Future<Event> deleteEvent(int eventId) async {
+    final url = Uri.parse('$baseUrl/events');
+    final response = await http.delete(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'eventIdList': [eventId]
+      }),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      debugPrint('イベントの削除に成功しました。');
+      final data = jsonDecode(response.body);
+      return Event.fromJson(data);
+    } else {
+      throw Exception('イベントの削除に失敗しました');
+    }
+  }
+
   Future<Event> editEventName(int eventId, String newEventName) async {
     final url = Uri.parse('$baseUrl/events/$eventId');
     final response = await http.put(
@@ -38,19 +57,6 @@ class EventRepository {
       return Event.fromJson(data);
     } else {
       throw Exception('イベント名の編集に失敗しました');
-    }
-  }
-
-  Future<void> deleteEvent(List<int> eventIdList) async {
-    final url = Uri.parse('$baseUrl/events');
-    final response = await http.delete(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'eventIdList': eventIdList}),
-    );
-
-    if (response.statusCode != 200) {
-      throw Exception('イベントの削除に失敗しました');
     }
   }
 }
