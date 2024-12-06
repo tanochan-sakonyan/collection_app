@@ -157,4 +157,29 @@ class UserNotifier extends StateNotifier<User?> {
       debugPrint('メンバーの作成中にエラーが発生しました: $e');
     }
   }
+
+  Future<void> deleteMember(int memberId) async {
+    try {
+      final isDeleted = await memberRepository.deleteMember(memberId);
+
+      if (!isDeleted) {
+        throw Exception('メンバーの削除に失敗しました');
+      }
+
+      final updatedEvents = state?.events.map((event) {
+            final updatedMembers = event.members
+                .where((member) => member.memberId != memberId)
+                .toList();
+            return event.copyWith(members: updatedMembers);
+          }).toList() ??
+          [];
+
+      final updatedUser = state?.copyWith(events: updatedEvents);
+      state = updatedUser;
+
+      debugPrint('メンバーの削除に成功しました: $memberId');
+    } catch (e) {
+      debugPrint('メンバーの削除中にエラーが発生しました: $e');
+    }
+  }
 }

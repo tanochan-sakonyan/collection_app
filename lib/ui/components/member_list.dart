@@ -5,6 +5,7 @@ import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/add_member_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/delete_member_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/status_dialog.dart';
 
 class MemberList extends ConsumerWidget {
@@ -93,6 +94,14 @@ class MemberList extends ConsumerWidget {
                                     _updateMemberStatus(
                                         ref, eventId, memberId, status);
                                   },
+                                ),
+                              );
+                            },
+                            onLongPress: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => DeleteMemberDialog(
+                                  memberId: member?.memberId,
                                 ),
                               );
                             },

@@ -44,20 +44,4 @@ class EventRepository {
       throw Exception('イベントの削除に失敗しました');
     }
   }
-
-  Future<Event> editEventName(int eventId, String newEventName) async {
-    final url = Uri.parse('$baseUrl/events/$eventId');
-    final response = await http.put(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'newEventName': newEventName}),
-    );
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return Event.fromJson(data);
-    } else {
-      throw Exception('イベント名の編集に失敗しました');
-    }
-  }
 }

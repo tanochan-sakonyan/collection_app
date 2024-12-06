@@ -30,9 +30,6 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
           .read(userProvider.notifier)
           .createMember(widget.eventId, _controller.text.trim());
       Navigator.of(context).pop();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('メンバーを追加しました')),
-      );
     } catch (e) {
       setState(() {
         _errorMessage = 'メンバーの追加に失敗しました';
