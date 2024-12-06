@@ -23,15 +23,12 @@ class HomeScreen extends ConsumerStatefulWidget {
 class HomeScreenState extends ConsumerState<HomeScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   List<String> _tabTitles = [];
 
   @override
   void initState() {
     super.initState();
-
     _tabTitles = ref.read(tabTitlesProvider);
     _tabController = TabController(length: _tabTitles.length, vsync: this);
   }
@@ -121,7 +118,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                         child: TabBar(
                           isScrollable: true,
                           controller: _tabController,
-                          tabs: tabTitles.map((eventName) {
+                          tabs: _tabTitles.map((eventName) {
                             final event = user?.events.firstWhere(
                               (e) => e.eventName == eventName,
                               orElse: () => const Event(
@@ -189,14 +186,14 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       drawer: const TanochanDrawer(),
       body: TabBarView(
         controller: _tabController,
-        children: tabTitles.map((eventName) {
+        children: _tabTitles.map((eventName) {
           final event = user?.events.firstWhere(
             (e) => e.eventName == eventName,
             orElse: () => const Event(eventId: -1, eventName: '', members: []),
           );
           return MemberList(
-            members: event?.members,
-            eventId: event?.eventId,
+            members: event!.eventId != -1 ? event.members : [],
+            eventId: event.eventId != -1 ? event.eventId : null,
           );
         }).toList(),
       ),

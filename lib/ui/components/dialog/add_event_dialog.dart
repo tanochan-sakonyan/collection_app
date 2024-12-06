@@ -30,7 +30,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
 
     try {
       debugPrint('イベント名: $eventName, ユーザーID: $userId');
-      ref.read(userProvider.notifier).createEvent(eventName, userId);
+      await ref.read(userProvider.notifier).createEvent(eventName, userId);
       Navigator.of(context).pop();
     } catch (error) {
       debugPrint('イベントの追加に失敗しました: $error');
