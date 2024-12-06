@@ -8,7 +8,7 @@ class MemberRepository {
 
   MemberRepository({required this.baseUrl});
 
-  Future<Member> addMember(int? eventId, String newMemberName) async {
+  Future<Member> createMember(int eventId, String newMemberName) async {
     final url = Uri.parse('$baseUrl/events/$eventId/members');
     final response = await http.post(
       url,

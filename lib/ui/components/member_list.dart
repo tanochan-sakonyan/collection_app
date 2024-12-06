@@ -152,7 +152,7 @@ class MemberList extends ConsumerWidget {
                               showDialog(
                                 context: context,
                                 builder: (context) => AddMemberDialog(
-                                  eventId: eventId,
+                                  eventId: eventId!,
                                 ),
                               );
                             },

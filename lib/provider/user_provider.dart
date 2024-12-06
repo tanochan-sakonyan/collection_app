@@ -6,8 +6,8 @@ import 'package:mr_collection/data/repository/event_repository.dart';
 import 'package:mr_collection/data/repository/member_repository.dart';
 import 'package:mr_collection/data/repository/user_repository.dart';
 import 'package:mr_collection/provider/access_token_provider.dart';
-import 'package:mr_collection/provider/event_provider.dart';
-import 'package:mr_collection/provider/member_provider.dart';
+import 'package:mr_collection/provider/event_repository_provider.dart';
+import 'package:mr_collection/provider/member_repository_provider.dart';
 import 'package:mr_collection/services/user_service.dart';
 
 final userProvider = StateNotifierProvider<UserNotifier, User?>((ref) {
@@ -116,6 +116,27 @@ class UserNotifier extends StateNotifier<User?> {
       state = updatedUser;
     } catch (e) {
       debugPrint('イベントの作成中にエラーが発生しました: $e');
+    }
+  }
+
+  Future<void> createMember(int eventId, String memberName) async {
+    try {
+      final newMember =
+          await memberRepository.createMember(eventId, memberName);
+      final updatedUser = state?.copyWith(
+        events: state?.events.map((event) {
+              if (event.eventId == eventId) {
+                return event.copyWith(
+                  members: [...event.members, newMember],
+                );
+              }
+              return event;
+            }).toList() ??
+            [],
+      );
+      state = updatedUser;
+    } catch (e) {
+      debugPrint('メンバーの作成中にエラーが発生しました: $e');
     }
   }
 }

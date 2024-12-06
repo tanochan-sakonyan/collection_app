@@ -5,7 +5,6 @@ import 'package:mr_collection/constants/base_url.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/button/toggle_button.dart';
 import 'package:mr_collection/data/repository/event_repository.dart';
-import 'package:mr_collection/provider/event_provider.dart';
 
 class AddEventDialog extends ConsumerStatefulWidget {
   const AddEventDialog({super.key});
