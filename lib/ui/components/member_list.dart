@@ -5,6 +5,7 @@ import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/add_member_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/delete_member_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/status_dialog.dart';
 
 class MemberList extends ConsumerWidget {
@@ -34,7 +35,7 @@ class MemberList extends ConsumerWidget {
         ?.where((member) => member.status == PaymentStatus.unpaid)
         .length;
 
-    final double iconSize = 30.0;
+    const double iconSize = 30.0;
 
     return Padding(
       padding: const EdgeInsets.only(top: 16, left: 29, right: 29),
@@ -93,6 +94,14 @@ class MemberList extends ConsumerWidget {
                                     _updateMemberStatus(
                                         ref, eventId, memberId, status);
                                   },
+                                ),
+                              );
+                            },
+                            onLongPress: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => DeleteMemberDialog(
+                                  memberId: member?.memberId,
                                 ),
                               );
                             },
@@ -205,7 +214,7 @@ class MemberList extends ConsumerWidget {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  Container(
+                  SizedBox(
                     width: MediaQuery.of(context).size.width * 0.25,
                     height: iconSize,
                     child: Stack(
@@ -214,11 +223,10 @@ class MemberList extends ConsumerWidget {
                               unpaidCount,
                               (index) {
                                 double containerWidth =
-                                    MediaQuery.of(context).size.width *
-                                        0.25; // 固定幅を変数に格納
+                                    MediaQuery.of(context).size.width * 0.25;
                                 double spacing = (unpaidCount > 1)
                                     ? (containerWidth - iconSize) /
-                                        (unpaidCount - 1) // 修正: コンテナの幅を使用
+                                        (unpaidCount - 1)
                                     : 0;
                                 double left = (unpaidCount > 1)
                                     ? index * spacing
@@ -255,7 +263,7 @@ class MemberList extends ConsumerWidget {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  Container(
+                  SizedBox(
                     width: MediaQuery.of(context).size.width * 0.25,
                     height: iconSize,
                     child: Stack(
@@ -264,11 +272,10 @@ class MemberList extends ConsumerWidget {
                               attendanceCount,
                               (index) {
                                 double containerWidth =
-                                    MediaQuery.of(context).size.width *
-                                        0.25; // 固定幅を変数に格納
+                                    MediaQuery.of(context).size.width * 0.25;
                                 double spacing = (attendanceCount > 1)
                                     ? (containerWidth - iconSize) /
-                                        (attendanceCount - 1) // 修正: コンテナの幅を使用
+                                        (attendanceCount - 1)
                                     : 0;
                                 double left = (attendanceCount > 1)
                                     ? index * spacing
@@ -306,13 +313,12 @@ class MemberList extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(48),
                 ),
                 onPressed: () {
-                  //LINE認証申請前の臨時ダイアログ
                   showDialog(
                     context: context,
-                    builder: (context) => AlertDialog(
-                      contentPadding: const EdgeInsets.symmetric(
+                    builder: (context) => const AlertDialog(
+                      contentPadding: EdgeInsets.symmetric(
                           vertical: 56.0, horizontal: 24.0),
-                      content: const Text(
+                      content: Text(
                         'LINEへの認証申請中のため、\n機能解禁までしばらくお待ちください',
                         textAlign: TextAlign.center,
                       ),

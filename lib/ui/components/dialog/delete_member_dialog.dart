@@ -2,15 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 
-class DeleteEventDialog extends ConsumerWidget {
-  final int? eventId;
-  const DeleteEventDialog({required this.eventId, super.key});
+class DeleteMemberDialog extends ConsumerWidget {
+  final int? memberId;
+  const DeleteMemberDialog({required this.memberId, super.key});
 
-  get eventRepository => null;
-
-  Future<void> _deleteEvent(ref, int eventId) async {
+  Future<void> _deleteMember(ref, int memberId) async {
     try {
-      await ref.read(userProvider.notifier).deleteEvent(eventId);
+      await ref.read(userProvider.notifier).deleteMember(memberId);
       Navigator.of(ref).pop();
     } catch (error) {
       debugPrint('イベントの削除に失敗しました: $error');
@@ -34,7 +32,7 @@ class DeleteEventDialog extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              'このイベントを削除しますか？', //TODO 実際にイベント名を取得
+              'このメンバーを削除しますか？', //TODO 実際にメンバー名を取得
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
@@ -72,7 +70,7 @@ class DeleteEventDialog extends ConsumerWidget {
                   width: 107,
                   child: ElevatedButton(
                     onPressed: () {
-                      _deleteEvent(context, eventId!);
+                      _deleteMember(context, memberId!);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFF2F2F2),
