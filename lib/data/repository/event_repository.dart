@@ -25,7 +25,7 @@ class EventRepository {
     }
   }
 
-  Future<Event> deleteEvent(int eventId) async {
+  Future<Map<String, bool>> deleteEvent(int eventId) async {
     final url = Uri.parse('$baseUrl/events');
     final response = await http.delete(
       url,
@@ -38,7 +38,8 @@ class EventRepository {
     if (response.statusCode == 200 || response.statusCode == 201) {
       debugPrint('イベントの削除に成功しました。');
       final data = jsonDecode(response.body);
-      return Event.fromJson(data);
+      debugPrint('data: $data');
+      return Map<String, bool>.from(data);
     } else {
       throw Exception('イベントの削除に失敗しました');
     }

@@ -48,6 +48,7 @@ class UserNotifier extends StateNotifier<User?> {
   Future<User?> registerUser(String accessToken) async {
     try {
       final user = await userService.registerUser(accessToken);
+      debugPrint('accessToken: $accessToken');
       debugPrint('取得したユーザー情報: $user');
       state = user;
       debugPrint('state: $state');
@@ -117,11 +118,20 @@ class UserNotifier extends StateNotifier<User?> {
 
   Future<void> deleteEvent(int eventId) async {
     try {
-      final newEvent = await eventRepository.deleteEvent(eventId);
-      final updatedUser = state?.copyWith(
-        events: [...state!.events, newEvent],
-      );
+      final deleteResult = await eventRepository.deleteEvent(eventId);
+
+      final isDeleted = deleteResult[eventId.toString()] ?? false;
+      if (!isDeleted) {
+        throw Exception('イベントの削除に失敗しました');
+      }
+
+      final updatedEvents =
+          state!.events.where((event) => event.eventId != eventId).toList();
+
+      final updatedUser = state?.copyWith(events: updatedEvents);
       state = updatedUser;
+
+      debugPrint('イベントの削除に成功しました: $eventId');
     } catch (e) {
       debugPrint('イベントの削除中にエラーが発生しました: $e');
     }
