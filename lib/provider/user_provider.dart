@@ -2,13 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/constants/base_url.dart';
 import 'package:mr_collection/data/model/freezed/user.dart';
+import 'package:mr_collection/data/repository/event_repository.dart';
+import 'package:mr_collection/data/repository/member_repository.dart';
 import 'package:mr_collection/data/repository/user_repository.dart';
 import 'package:mr_collection/provider/access_token_provider.dart';
+import 'package:mr_collection/provider/event_repository_provider.dart';
+import 'package:mr_collection/provider/member_repository_provider.dart';
 import 'package:mr_collection/services/user_service.dart';
 
 final userProvider = StateNotifierProvider<UserNotifier, User?>((ref) {
   final userService = ref.read(userServiceProvider);
-  return UserNotifier(userService, ref);
+  final eventRepository = ref.read(eventRepositoryProvider);
+  final memberRepository = ref.read(memberRepositoryProvider);
+  return UserNotifier(eventRepository, memberRepository, userService, ref);
 });
 
 final userRepositoryProvider = Provider<UserRepository>((ref) {
@@ -23,8 +29,12 @@ final userServiceProvider = Provider<UserService>((ref) {
 class UserNotifier extends StateNotifier<User?> {
   final UserService userService;
   final Ref ref;
+  final MemberRepository memberRepository;
+  final EventRepository eventRepository;
 
-  UserNotifier(this.userService, this.ref) : super(null) {
+  UserNotifier(
+      this.eventRepository, this.memberRepository, this.userService, this.ref)
+      : super(null) {
     // アクセストークンが変更された際にユーザー情報を取得
     ref.listen<String?>(accessTokenProvider, (previous, next) {
       if (next != null) {
@@ -62,5 +72,67 @@ class UserNotifier extends StateNotifier<User?> {
 
   void logoutUser() {
     state = null;
+  }
+
+  Future<void> updateMemberStatus(
+      int eventId, int memberId, int newStatus) async {
+    try {
+      final updatedMember = await memberRepository.updateMemberStatus(
+          eventId, memberId, newStatus);
+
+      final updatedUser = state?.copyWith(
+        events: state?.events.map((event) {
+              if (event.eventId == eventId) {
+                return event.copyWith(
+                  members: event.members.map((member) {
+                    if (member.memberId == memberId) {
+                      return updatedMember;
+                    }
+                    return member;
+                  }).toList(),
+                );
+              }
+              return event;
+            }).toList() ??
+            [],
+      );
+
+      state = updatedUser;
+    } catch (e) {
+      debugPrint('メンバーのステータス更新中にエラーが発生しました: $e');
+    }
+  }
+
+  Future<void> createEvent(String eventName, int userId) async {
+    try {
+      final newEvent = await eventRepository.createEvent(eventName, userId);
+      final updatedUser = state?.copyWith(
+        events: [...state!.events, newEvent],
+      );
+      state = updatedUser;
+    } catch (e) {
+      debugPrint('イベントの作成中にエラーが発生しました: $e');
+    }
+  }
+
+  Future<void> createMember(int eventId, String memberName) async {
+    try {
+      final newMember =
+          await memberRepository.createMember(eventId, memberName);
+      final updatedUser = state?.copyWith(
+        events: state?.events.map((event) {
+              if (event.eventId == eventId) {
+                return event.copyWith(
+                  members: [...event.members, newMember],
+                );
+              }
+              return event;
+            }).toList() ??
+            [],
+      );
+      state = updatedUser;
+    } catch (e) {
+      debugPrint('メンバーの作成中にエラーが発生しました: $e');
+    }
   }
 }

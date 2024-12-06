@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mr_collection/provider/member_provider.dart';
+import 'package:mr_collection/provider/user_provider.dart';
 
 class AddMemberDialog extends ConsumerStatefulWidget {
-  final int? eventId;
+  final int eventId;
 
   const AddMemberDialog({required this.eventId, super.key});
 
@@ -16,7 +16,7 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
   final TextEditingController _controller = TextEditingController();
   String? _errorMessage;
 
-  Future<void> _addMember() async {
+  Future<void> _createMember() async {
     setState(() {
       if (_controller.text.trim().isEmpty) {
         _errorMessage = 'メンバーを入力してください';
@@ -27,8 +27,8 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
 
     try {
       await ref
-          .read(memberProvider.notifier)
-          .addMember(widget.eventId, _controller.text.trim());
+          .read(userProvider.notifier)
+          .createMember(widget.eventId, _controller.text.trim());
       Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('メンバーを追加しました')),
@@ -79,14 +79,30 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
                     icon: SvgPicture.asset("assets/icons/line.svg"),
                     color: const Color(0xFF06C755),
                     onPressed: () {
-                      // TODO
+                      //LINE認証申請前の臨時ダイアログ
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 56.0, horizontal: 24.0),
+                          content: const Text(
+                            'LINEへの認証申請中のため、\n機能解禁までしばらくお待ちください',
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      );
+                      //TODO LINE認証申請が通ったらこちらに戻す
+                      /*showDialog(
+                        context: context,
+                        builder: (context) => const ConfirmationDialog(),
+                      );*/
                     },
                   ),
                   SizedBox(
                     width: 118,
                     height: 36,
                     child: ElevatedButton(
-                      onPressed: _addMember,
+                      onPressed: _createMember,
                       style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF5AFF9C),
                           shape: RoundedRectangleBorder(

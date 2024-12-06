@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/provider/tab_titles_provider.dart';
+import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/add_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/delete_event_dialog.dart';
 import 'package:mr_collection/ui/components/member_list.dart';
@@ -10,7 +11,7 @@ import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/user.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
-  const HomeScreen({super.key, required this.title, required this.user});
+  const HomeScreen({super.key, required this.title, this.user});
 
   final String title;
   final User? user;
@@ -20,17 +21,14 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class HomeScreenState extends ConsumerState<HomeScreen>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late TabController _tabController;
-
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   List<String> _tabTitles = [];
 
   @override
   void initState() {
     super.initState();
-
     _tabTitles = ref.read(tabTitlesProvider);
     _tabController = TabController(length: _tabTitles.length, vsync: this);
   }
@@ -48,7 +46,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('HomeScreenのbuildメソッドが呼ばれました。user: ${widget.user}');
+    final user = ref.watch(userProvider);
     final tabTitles = ref.watch(tabTitlesProvider);
 
     if (tabTitles.length != _tabController.length) {
@@ -63,6 +61,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     } else {
       _tabTitles = tabTitles;
     }
+
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.white,
@@ -119,8 +118,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                         child: TabBar(
                           isScrollable: true,
                           controller: _tabController,
-                          tabs: tabTitles.map((eventName) {
-                            final event = widget.user?.events.firstWhere(
+                          tabs: _tabTitles.map((eventName) {
+                            final event = user?.events.firstWhere(
                               (e) => e.eventName == eventName,
                               orElse: () => const Event(
                                   eventId: -1, eventName: '', members: []),
@@ -187,10 +186,14 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       drawer: const TanochanDrawer(),
       body: TabBarView(
         controller: _tabController,
-        children: tabTitles.map((memberId) {
+        children: _tabTitles.map((eventName) {
+          final event = user?.events.firstWhere(
+            (e) => e.eventName == eventName,
+            orElse: () => const Event(eventId: -1, eventName: '', members: []),
+          );
           return MemberList(
-            members: widget.user?.events[0].members,
-            eventId: widget.user?.events[0].eventId,
+            members: event!.eventId != -1 ? event.members : [],
+            eventId: event.eventId != -1 ? event.eventId : null,
           );
         }).toList(),
       ),

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mr_collection/data/model/freezed/event.dart';
 
@@ -7,15 +8,16 @@ class EventRepository {
 
   EventRepository({required this.baseUrl});
 
-  Future<Event> createEvent(String eventName, isCopy) async {
+  Future<Event> createEvent(String eventName, int userId) async {
     final url = Uri.parse('$baseUrl/events');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'eventName': eventName, 'isCopy': isCopy}),
+      body: jsonEncode({'eventName': eventName, 'userId': userId}),
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      debugPrint('イベントの作成に成功しました。');
       final data = jsonDecode(response.body);
       return Event.fromJson(data);
     } else {

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mr_collection/constants/base_url.dart';
+import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/button/toggle_button.dart';
 import 'package:mr_collection/data/repository/event_repository.dart';
-import 'package:mr_collection/provider/event_provider.dart';
 
 class AddEventDialog extends ConsumerStatefulWidget {
   const AddEventDialog({super.key});
@@ -15,30 +16,23 @@ class AddEventDialog extends ConsumerStatefulWidget {
 class AddEventDialogState extends ConsumerState<AddEventDialog> {
   bool isToggleOn = true;
 
-  final EventRepository eventRepository =
-      EventRepository(baseUrl: 'https://shukinkun-086ea89ed514.herokuapp.com/');
+  final EventRepository eventRepository = EventRepository(baseUrl: baseUrl);
 
   Future<void> _createEvent(TextEditingController controller) async {
     final eventName = controller.text;
-    final isCopy = isToggleOn;
+    // final isCopy = isToggleOn;
+    final userId = ref.read(userProvider)!.userId;
 
     if (eventName.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('イベント名を入力してください')),
-      );
       return;
     }
 
     try {
-      ref.read(eventProvider.notifier).createEvent(eventName, isCopy);
+      debugPrint('イベント名: $eventName, ユーザーID: $userId');
+      await ref.read(userProvider.notifier).createEvent(eventName, userId);
       Navigator.of(context).pop();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('イベントが作成されました')),
-      );
     } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('イベント作成に失敗しました')),
-      );
+      debugPrint('イベントの追加に失敗しました: $error');
     }
   }
 
@@ -106,7 +100,8 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                 ),
                 child: Column(
                   children: [
-                    ListTile(
+                    //TODO: 現状まだ実装できていないが、今後実装予定
+                    /*ListTile(
                       title: const Text('参加者引継ぎ'),
                       trailing: ToggleButton(
                         initialValue: isToggleOn,
@@ -116,7 +111,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                           });
                         },
                       ),
-                    ),
+                    ),*/
                     const Divider(height: 1, color: Color(0xFFE8E8E8)),
                     ListTile(
                       title: const Text('LINEから参加者取得'),
@@ -127,7 +122,23 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                           height: 28,
                         ),
                         onPressed: () {
-                          // TODO: LINE から参加者取得のロジック
+                          //LINE認証申請前の臨時ダイアログ
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 56.0, horizontal: 24.0),
+                              content: const Text(
+                                'LINEへの認証申請中のため、\n機能解禁までしばらくお待ちください',
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          );
+                          //TODO LINE認証申請が通ったらこちらに戻す
+                          /*showDialog(
+                            context: context,
+                            builder: (context) => const ConfirmationDialog(),
+                          );*/
                         },
                       ),
                     ),

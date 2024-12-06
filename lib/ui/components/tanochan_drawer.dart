@@ -38,9 +38,20 @@ class TanochanDrawer extends StatelessWidget {
               text: "PayPay連携",
               icon: SvgPicture.asset("assets/icons/drawer_yen.svg"),
               onTap: () {
+                // showDialog(
+                //   context: context,
+                //   builder: (context) => PayPayDialog(),
+                // );
                 showDialog(
                   context: context,
-                  builder: (context) => PayPayDialog(),
+                  builder: (context) => const AlertDialog(
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 56.0, horizontal: 24.0),
+                    content: Text(
+                      'LINEへの認証申請中のため、\n機能解禁までしばらくお待ちください',
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
                 );
               },
             ),
