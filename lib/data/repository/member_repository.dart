@@ -16,7 +16,7 @@ class MemberRepository {
       body: jsonEncode({'newMemberName': newMemberName}),
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       final data = jsonDecode(response.body);
       return Member.fromJson(data);
     } else {
