@@ -154,6 +154,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             const SizedBox(height: 20),
             ElevatedButton(
                 onPressed: () async {
+                  String nonce([int length = 32]) {
+                    const charset =
+                        '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
+                    final random = Random.secure();
+                    final randomStr = List.generate(length,
+                        (_) => charset[random.nextInt(charset.length)]).join();
+                    return randomStr;
+                  }
+
+                  String state([int length = 32]) {
+                    const charset =
+                        '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
+                    final random = Random.secure();
+                    final randomStr = List.generate(length,
+                        (_) => charset[random.nextInt(charset.length)]).join();
+                    return randomStr;
+                  }
+
                   final credential = await SignInWithApple.getAppleIDCredential(
                     scopes: [
                       AppleIDAuthorizationScopes.email,
@@ -167,8 +185,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               'https://shukinkun-086ea89ed514.herokuapp.com/callbacks/sign_in_with_apple',
                             ),
                     ),
-                    nonce: 'snrkANkbGRjnaLIwfIWEF9#(;)gerew',
-                    state: 'gneigfoaie))82w#SknDewoi0{QW:be[0',
+                    nonce: nonce(),
+                    state: state(),
                   );
 
                   print(credential);
