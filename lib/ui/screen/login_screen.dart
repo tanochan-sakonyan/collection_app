@@ -146,6 +146,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
             ),
             const SizedBox(height: 20),
+            ElevatedButton(
+                onPressed: () => {}, child: const Text('Appleでログイン')),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
