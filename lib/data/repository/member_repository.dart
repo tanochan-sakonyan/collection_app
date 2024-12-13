@@ -24,32 +24,6 @@ class MemberRepository {
     }
   }
 
-  Future<Member> editMemberName(
-      int eventId, int memberId, String newMemberName) async {
-    final url = Uri.parse('$baseUrl/events/$eventId/members/$memberId');
-    final response = await http.put(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'newMemberName': newMemberName}),
-    );
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return Member.fromJson(data);
-    } else {
-      throw Exception('メンバー名の編集に失敗しました');
-    }
-  }
-
-  Future<void> deleteMember(int eventId, int memberId) async {
-    final url = Uri.parse('$baseUrl/events/$eventId/members/$memberId');
-    final response = await http.delete(url);
-
-    if (response.statusCode != 200) {
-      throw Exception('メンバーの削除に失敗しました');
-    }
-  }
-
   Future<Member> updateMemberStatus(
       int? eventId, int? memberId, int? status) async {
     final url = Uri.parse('$baseUrl/members/$memberId/status');
@@ -75,6 +49,21 @@ class MemberRepository {
         'ステータスコード: ${response.statusCode}, '
         'レスポンス: $errorBody',
       );
+    }
+  }
+
+  Future<bool> deleteMember(int memberId) async {
+    final url = Uri.parse('$baseUrl/members/$memberId');
+    final response = await http.delete(
+      url,
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final data = jsonDecode(response.body);
+      return data['isSuccessful'] as bool;
+    } else {
+      throw Exception('メンバーの削除に失敗しました');
     }
   }
 }

@@ -24,5 +24,5 @@ Map<String, dynamic> _$$MemberImplToJson(_$MemberImpl instance) =>
 const _$PaymentStatusEnumMap = {
   PaymentStatus.paid: 1,
   PaymentStatus.unpaid: 2,
-  PaymentStatus.absence: 0,
+  PaymentStatus.absence: 3,
 };
