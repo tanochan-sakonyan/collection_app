@@ -303,7 +303,7 @@ class MemberList extends ConsumerWidget {
           ),
           Positioned(
             right: 4,
-            bottom: 163,
+            bottom: 90,
             child: SizedBox(
               height: 60,
               width: 60,
