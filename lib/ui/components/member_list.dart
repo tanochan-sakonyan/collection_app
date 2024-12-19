@@ -81,44 +81,56 @@ class MemberList extends ConsumerWidget {
                         itemCount: members?.length,
                         itemBuilder: (context, index) {
                           final member = members?[index];
-                          return GestureDetector(
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => StatusDialog(
-                                  eventId: eventId,
-                                  memberId: member?.memberId,
-                                  member: member?.memberName,
-                                  onStatusChange: (int? eventId, int? memberId,
-                                      int status) {
-                                    _updateMemberStatus(
-                                        ref, eventId, memberId, status);
-                                  },
-                                ),
-                              );
-                            },
-                            onLongPress: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => DeleteMemberDialog(
-                                  memberId: member?.memberId,
-                                ),
-                              );
-                            },
-                            child: ListTile(
-                              minTileHeight: 32,
-                              title: (member?.memberName != null)
-                                  ? Text(
-                                      member!.memberName,
-                                      style: TextStyle(
-                                        color: member.status ==
-                                                PaymentStatus.absence
-                                            ? Colors.grey
-                                            : Colors.black,
+                          return Padding(
+                            padding: const EdgeInsets.only(left: 16, right: 16),
+                            child: Column(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => StatusDialog(
+                                        eventId: eventId,
+                                        memberId: member?.memberId,
+                                        member: member?.memberName,
+                                        onStatusChange: (int? eventId,
+                                            int? memberId, int status) {
+                                          _updateMemberStatus(
+                                              ref, eventId, memberId, status);
+                                        },
                                       ),
-                                    )
-                                  : null,
-                              trailing: _buildStatusIcon(member?.status),
+                                    );
+                                  },
+                                  onLongPress: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => DeleteMemberDialog(
+                                        memberId: member?.memberId,
+                                      ),
+                                    );
+                                  },
+                                  child: ListTile(
+                                    minTileHeight: 32,
+                                    title: (member?.memberName != null)
+                                        ? Text(
+                                            member!.memberName,
+                                            style: TextStyle(
+                                              color: member.status ==
+                                                      PaymentStatus.absence
+                                                  ? Colors.grey
+                                                  : Colors.black,
+                                            ),
+                                          )
+                                        : null,
+                                    trailing: _buildStatusIcon(member?.status),
+                                  ),
+                                ),
+                                const Divider(
+                                  thickness: 1,
+                                  height: 1,
+                                  color: Color(0xFFE8E8E8),
+                                ),
+                              ],
                             ),
                           );
                         },
@@ -258,7 +270,7 @@ class MemberList extends ConsumerWidget {
                   SizedBox(
                     width: 60,
                     child: Text(
-                      "出席",
+                      "払い済",
                       style: Theme.of(context).textTheme.bodyLarge,
                       textAlign: TextAlign.center,
                     ),
