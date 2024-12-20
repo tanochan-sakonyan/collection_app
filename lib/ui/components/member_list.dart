@@ -270,7 +270,7 @@ class MemberList extends ConsumerWidget {
                   SizedBox(
                     width: 60,
                     child: Text(
-                      "払い済",
+                      "支払済",
                       style: Theme.of(context).textTheme.bodyLarge,
                       textAlign: TextAlign.center,
                     ),
