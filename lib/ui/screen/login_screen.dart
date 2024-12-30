@@ -148,7 +148,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
             const SizedBox(height: 12),
 
-            // Appleでサインインボタンを追加
             SizedBox(
               width: 300,
               child: ElevatedButton(
@@ -164,10 +163,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 onPressed: () async {
                   if (isChecked) {
                     // Appleサインインの実装をここに追加
-                    // 例: Appleサインインのロジック
-                    // ここではダミーの処理を示します
                     debugPrint('Appleでサインインボタンが押されました。');
-                    // 実際のサインイン処理を実装してください
                   }
                 },
                 child: Row(

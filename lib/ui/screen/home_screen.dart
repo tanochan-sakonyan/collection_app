@@ -62,9 +62,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       _tabTitles = tabTitles;
     }
 
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.white,
@@ -73,12 +70,11 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            SizedBox(width: screenWidth * 0.13),
+            const SizedBox(width: 50),
             Text(
               widget.title,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.bold,
-                    fontSize: screenWidth * 0.05,
                   ),
             ),
           ],
@@ -88,21 +84,17 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           Row(
             children: [
               IconButton(
-                icon: SvgPicture.asset(
-                  'assets/icons/settings.svg',
-                  width: screenWidth * 0.05,
-                  height: screenWidth * 0.05,
-                ),
+                icon: SvgPicture.asset('assets/icons/settings.svg'),
                 onPressed: () {
                   _scaffoldKey.currentState?.openDrawer();
                 },
               ),
-              SizedBox(width: screenWidth * 0.0417),
+              const SizedBox(width: 16),
             ],
           ),
         ],
         bottom: PreferredSize(
-          preferredSize: Size(screenWidth, 36),
+          preferredSize: const Size.fromHeight(36),
           child: Stack(
             children: [
               Container(
