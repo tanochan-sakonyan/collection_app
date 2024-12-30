@@ -145,7 +145,54 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ),
             ),
+
+            const SizedBox(height: 12),
+
+            // Appleでサインインボタンを追加
+            SizedBox(
+              width: 300,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: isChecked
+                      ? const Color(0xFF000000)
+                      : const Color(0xFFD7D7D7),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                ),
+                onPressed: () async {
+                  if (isChecked) {
+                    // Appleサインインの実装をここに追加
+                    // 例: Appleサインインのロジック
+                    // ここではダミーの処理を示します
+                    debugPrint('Appleでサインインボタンが押されました。');
+                    // 実際のサインイン処理を実装してください
+                  }
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SvgPicture.asset(
+                      'assets/icons/apple-logo.svg',
+                      width: 50,
+                      height: 50,
+                    ),
+                    const SizedBox(width: 40),
+                    const Text(
+                      'Appleでサインイン',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
             const SizedBox(height: 20),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
