@@ -1,5 +1,8 @@
+import 'dart:io';
 import 'dart:math';
+import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_line_sdk/flutter_line_sdk.dart';
@@ -12,6 +15,7 @@ import 'package:mr_collection/ui/screen/home_screen.dart';
 import 'package:mr_collection/ui/screen/privacy_policy_screen.dart';
 import 'package:mr_collection/ui/screen/terms_of_service_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 final checkboxProvider = StateProvider<bool>((ref) => false);
 
@@ -23,6 +27,8 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
+  get http => null;
+
   @override
   Widget build(BuildContext context) {
     bool isChecked = ref.watch(checkboxProvider);
@@ -148,6 +154,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
             const SizedBox(height: 12),
 
+            
             SizedBox(
               width: 300,
               child: ElevatedButton(
@@ -160,12 +167,70 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                 ),
+                
+                
                 onPressed: () async {
-                  if (isChecked) {
-                    // Appleサインインの実装をここに追加
-                    debugPrint('Appleでサインインボタンが押されました。');
+                  String nonce([int length = 32]) {
+                    const charset =
+                        '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
+                    final random = Random.secure();
+                    final randomStr = List.generate(length,
+                        (_) => charset[random.nextInt(charset.length)]).join();
+                    return randomStr;
                   }
+
+                  String state([int length = 32]) {
+                    const charset =
+                        '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
+                    final random = Random.secure();
+                    final randomStr = List.generate(length,
+                        (_) => charset[random.nextInt(charset.length)]).join();
+                    return randomStr;
+                  }
+
+                  final credential = await SignInWithApple.getAppleIDCredential(
+                    scopes: [
+                      AppleIDAuthorizationScopes.email,
+                      AppleIDAuthorizationScopes.fullName,
+                    ],
+                    webAuthenticationOptions: WebAuthenticationOptions(
+                      clientId: 'com.tanotyan.syukinkun.service',
+                      redirectUri: kIsWeb
+                          ? Uri.parse('https://${Uri.base.host}/')
+                          : Uri.parse(
+                              'https://shukinkun-086ea89ed514.herokuapp.com/callbacks/sign_in_with_apple',
+                            ),
+                    ),
+                    nonce: nonce(),
+                    state: state(),
+                  );
+
+                  print(credential);
+
+                  final signInWithAppleEndpoint = Uri(
+                    scheme: 'https',
+                    host: 'shukinkun-086ea89ed514.herokuapp.com',
+                    path: '/sign_in_with_apple',
+                    queryParameters: <String, String>{
+                      'code': credential.authorizationCode,
+                      if (credential.givenName != null)
+                        'firstName': credential.givenName!,
+                      if (credential.familyName != null)
+                        'lastName': credential.familyName!,
+                      'useBundleId':
+                          !kIsWeb && (Platform.isIOS || Platform.isMacOS)
+                              ? 'true'
+                              : 'false',
+                      if (credential.state != null) 'state': credential.state!,
+                    },
+                  );
+
+                  final session = await http.Client().post(
+                    signInWithAppleEndpoint,
+                  );
+                  debugPrint(session);
                 },
+                
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [

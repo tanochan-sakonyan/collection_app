@@ -16,6 +16,7 @@
   "eslint.workingDirectories": ["./functions"],
   "cSpell.words": [
     "cupertino",
+    "herokuapp",
     "Ikeo",
     "Kanta",
     "Kusaba",
@@ -24,7 +25,9 @@
     "prefs",
     "Rina",
     "riverpod",
+    "shukinkun",
     "Tanochan",
+    "tanotyan",
     "Unagami",
     "vsync"
   ]
