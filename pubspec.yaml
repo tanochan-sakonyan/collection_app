@@ -20,11 +20,13 @@ dependencies:
   http: ^1.2.2
   flutter_line_sdk: ^2.3.8
   shared_preferences: ^2.3.3
+  path_provider: ^2.0.11
   sign_in_with_apple: ^6.1.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
   flutter_lints: ^4.0.0
   build_runner: ^2.4.13
   freezed: ^2.5.2
@@ -49,6 +51,7 @@ flutter:
     - assets/icons/delete.svg
     - assets/icons/plus.svg
     - assets/icons/line-login.svg
+    - assets/icons/apple_logo.svg
     - assets/icons/sort.svg
     - assets/icons/user-add.svg
     - assets/icons/chat_bubble.svg
