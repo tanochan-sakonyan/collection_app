@@ -165,7 +165,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 ),
                 
                 
@@ -235,9 +235,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     SvgPicture.asset(
-                      'assets/icons/apple-logo.svg',
-                      width: 50,
-                      height: 50,
+                      'assets/icons/apple_logo.svg',
+                      height: 24,
                     ),
                     const SizedBox(width: 40),
                     const Text(
