@@ -48,6 +48,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
     final tabTitles = ref.watch(tabTitlesProvider);
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
 
     if (tabTitles.length != _tabController.length) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -70,11 +72,14 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const SizedBox(width: 50),
+            SizedBox(
+              width: screenWidth * 0.05,
+            ),
             Text(
               widget.title,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.bold,
+                    //TODO fontSize: screenWidth * 0.05,
                   ),
             ),
           ],
@@ -84,21 +89,27 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           Row(
             children: [
               IconButton(
-                icon: SvgPicture.asset('assets/icons/settings.svg'),
+                icon: SvgPicture.asset(
+                    'assets/icons/settings.svg',
+                    //TODO width: screenWidth * 0.07,
+                    //TODO height: screenWidth * 0.07,
+                   ),
                 onPressed: () {
                   _scaffoldKey.currentState?.openDrawer();
                 },
               ),
-              const SizedBox(width: 16),
+              SizedBox(
+                width: screenWidth * 0.04,
+              ),
             ],
           ),
         ],
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(36),
+          preferredSize: Size.fromHeight(screenHeight * 0.04),
           child: Stack(
             children: [
               Container(
-                height: 36,
+                height: screenHeight * 0.04,
                 decoration: const BoxDecoration(
                   border: Border(
                     bottom: BorderSide(
@@ -109,7 +120,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                 ),
               ),
               SizedBox(
-                height: 36,
+                height: screenHeight * 0.04,
                 child: Row(
                   children: [
                     Expanded(
@@ -136,12 +147,14 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                 },
                               ),
                               child: SizedBox(
-                                width: 52,
+                                width: screenWidth * 0.13,
                                 child: Tab(
                                   child: Text(
                                     eventName,
                                     style:
-                                        Theme.of(context).textTheme.bodySmall,
+                                        Theme.of(context).textTheme.bodySmall?.copyWith(
+                                          fontSize: screenWidth * 0.04, // Responsive font size
+                                        ),
                                   ),
                                 ),
                               ),
@@ -155,7 +168,11 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                     Row(
                       children: [
                         IconButton(
-                          icon: SvgPicture.asset('assets/icons/plus.svg'),
+                          icon: SvgPicture.asset(
+                              'assets/icons/plus.svg',
+                              width: screenWidth * 0.07, // Responsive icon size
+                              height: screenWidth * 0.07,
+                          ),
                           onPressed: () {
                             showDialog(
                               context: context,
@@ -165,7 +182,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                             );
                           },
                         ),
-                        const SizedBox(width: 16),
+                        SizedBox(
+                          width: screenWidth * 0.04,
+                        ),
                         // TODO リリース初期段階では、一括削除機能のボタンは非表示
                         // IconButton(
                         //   onPressed: () {
