@@ -79,7 +79,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
               widget.title,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.bold,
-                    //TODO fontSize: screenWidth * 0.05,
+                    fontSize: screenWidth * 0.05,
                   ),
             ),
           ],
@@ -91,8 +91,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
               IconButton(
                 icon: SvgPicture.asset(
                     'assets/icons/settings.svg',
-                    //TODO width: screenWidth * 0.07,
-                    //TODO height: screenWidth * 0.07,
+                    width: screenWidth * 0.07,
+                    height: screenWidth * 0.07,
                    ),
                 onPressed: () {
                   _scaffoldKey.currentState?.openDrawer();
