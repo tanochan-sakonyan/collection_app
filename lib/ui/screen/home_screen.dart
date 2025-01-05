@@ -203,18 +203,24 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         ),
       ),
       drawer: const TanochanDrawer(),
-      body: TabBarView(
-        controller: _tabController,
-        children: _tabTitles.map((eventName) {
-          final event = user?.events.firstWhere(
-            (e) => e.eventName == eventName,
-            orElse: () => const Event(eventId: -1, eventName: '', members: []),
-          );
-          return MemberList(
-            members: event!.eventId != -1 ? event.members : [],
-            eventId: event.eventId != -1 ? event.eventId : null,
-          );
-        }).toList(),
+      body: Column(
+        children : [
+          Expanded(
+            child : TabBarView(
+             controller: _tabController,
+             children: _tabTitles.map((eventName) {
+               final event = user?.events.firstWhere(
+                (e) => e.eventName == eventName,
+                orElse: () => const Event(eventId: -1, eventName: '', members: []),
+                );
+                return MemberList(
+                  members: event!.eventId != -1 ? event.members : [],
+                  eventId: event.eventId != -1 ? event.eventId : null,
+                );
+             }).toList(),
+            ),
+          ),
+        ],
       ),
     );
   }
