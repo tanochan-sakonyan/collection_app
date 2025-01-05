@@ -153,7 +153,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                     eventName,
                                     style:
                                         Theme.of(context).textTheme.bodySmall?.copyWith(
-                                          fontSize: screenWidth * 0.04, // Responsive font size
+                                          fontSize: screenWidth * 0.04,
                                         ),
                                   ),
                                 ),
@@ -170,7 +170,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                         IconButton(
                           icon: SvgPicture.asset(
                               'assets/icons/plus.svg',
-                              width: screenWidth * 0.07, // Responsive icon size
+                              width: screenWidth * 0.07,
                               height: screenWidth * 0.07,
                           ),
                           onPressed: () {

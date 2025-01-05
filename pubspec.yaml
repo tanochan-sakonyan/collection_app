@@ -51,6 +51,7 @@ flutter:
     - assets/icons/delete.svg
     - assets/icons/plus.svg
     - assets/icons/line-login.svg
+    - assets/icons/apple_logo.svg
     - assets/icons/sort.svg
     - assets/icons/user-add.svg
     - assets/icons/chat_bubble.svg
