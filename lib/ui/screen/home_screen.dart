@@ -153,7 +153,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                     eventName,
                                     style:
                                         Theme.of(context).textTheme.bodySmall?.copyWith(
-                                          fontSize: screenWidth * 0.04,
+                                          fontSize: screenWidth * 0.03,
                                         ),
                                   ),
                                 ),
