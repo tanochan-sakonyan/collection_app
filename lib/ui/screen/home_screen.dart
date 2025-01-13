@@ -48,8 +48,14 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
     final tabTitles = ref.watch(tabTitlesProvider);
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
+    final screenHeight = MediaQuery
+        .of(context)
+        .size
+        .height;
 
     if (tabTitles.length != _tabController.length) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -77,10 +83,14 @@ class HomeScreenState extends ConsumerState<HomeScreen>
             ),
             Text(
               widget.title,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    fontSize: screenWidth * 0.05,
-                  ),
+              style: Theme
+                  .of(context)
+                  .textTheme
+                  .bodyLarge
+                  ?.copyWith(
+                fontWeight: FontWeight.bold,
+                fontSize: screenWidth * 0.05,
+              ),
             ),
           ],
         ),
@@ -90,10 +100,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
             children: [
               IconButton(
                 icon: SvgPicture.asset(
-                    'assets/icons/settings.svg',
-                    width: screenWidth * 0.07,
-                    height: screenWidth * 0.07,
-                   ),
+                  'assets/icons/settings.svg',
+                  width: screenWidth * 0.07,
+                  height: screenWidth * 0.07,
+                ),
                 onPressed: () {
                   _scaffoldKey.currentState?.openDrawer();
                 },
@@ -131,30 +141,36 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                           controller: _tabController,
                           tabs: _tabTitles.map((eventName) {
                             final event = user?.events.firstWhere(
-                              (e) => e.eventName == eventName,
-                              orElse: () => const Event(
+                                  (e) => e.eventName == eventName,
+                              orElse: () =>
+                              const Event(
                                   eventId: -1, eventName: '', members: []),
                             );
                             final eventId = event?.eventId;
 
                             return GestureDetector(
-                              onLongPress: () => showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return DeleteEventDialog(
-                                    eventId: eventId,
-                                  );
-                                },
-                              ),
+                              onLongPress: () =>
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return DeleteEventDialog(
+                                        eventId: eventId,
+                                      );
+                                    },
+                                  ),
                               child: SizedBox(
                                 width: screenWidth * 0.13,
                                 child: Tab(
-                                  child: Text(
-                                    eventName,
-                                    style:
-                                        Theme.of(context).textTheme.bodySmall?.copyWith(
-                                          fontSize: screenWidth * 0.03,
-                                        ),
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      eventName,
+                                      style:
+                                      Theme
+                                          .of(context)
+                                          .textTheme
+                                          .bodySmall,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -169,9 +185,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                       children: [
                         IconButton(
                           icon: SvgPicture.asset(
-                              'assets/icons/plus.svg',
-                              width: screenWidth * 0.07,
-                              height: screenWidth * 0.07,
+                            'assets/icons/plus.svg',
+                            width: screenWidth * 0.07,
+                            height: screenWidth * 0.07,
                           ),
                           onPressed: () {
                             showDialog(
@@ -204,20 +220,21 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       ),
       drawer: const TanochanDrawer(),
       body: Column(
-        children : [
+        children: [
           Expanded(
-            child : TabBarView(
-             controller: _tabController,
-             children: _tabTitles.map((eventName) {
-               final event = user?.events.firstWhere(
-                (e) => e.eventName == eventName,
-                orElse: () => const Event(eventId: -1, eventName: '', members: []),
+            child: TabBarView(
+              controller: _tabController,
+              children: _tabTitles.map((eventName) {
+                final event = user?.events.firstWhere(
+                      (e) => e.eventName == eventName,
+                  orElse: () =>
+                  const Event(eventId: -1, eventName: '', members: []),
                 );
                 return MemberList(
                   members: event!.eventId != -1 ? event.members : [],
                   eventId: event.eventId != -1 ? event.eventId : null,
                 );
-             }).toList(),
+              }).toList(),
             ),
           ),
         ],
