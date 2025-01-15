@@ -48,6 +48,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
     final tabTitles = ref.watch(tabTitlesProvider);
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
 
     if (tabTitles.length != _tabController.length) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -70,12 +72,15 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const SizedBox(width: 50),
+            SizedBox(
+              width: screenWidth * 0.05,
+            ),
             Text(
               widget.title,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+                fontSize: screenWidth * 0.05,
+              ),
             ),
           ],
         ),
@@ -84,21 +89,27 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           Row(
             children: [
               IconButton(
-                icon: SvgPicture.asset('assets/icons/settings.svg'),
+                icon: SvgPicture.asset(
+                  'assets/icons/settings.svg',
+                  width: screenWidth * 0.07,
+                  height: screenWidth * 0.07,
+                ),
                 onPressed: () {
                   _scaffoldKey.currentState?.openDrawer();
                 },
               ),
-              const SizedBox(width: 16),
+              SizedBox(
+                width: screenWidth * 0.04,
+              ),
             ],
           ),
         ],
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(36),
+          preferredSize: Size.fromHeight(screenHeight * 0.04),
           child: Stack(
             children: [
               Container(
-                height: 36,
+                height: screenHeight * 0.04,
                 decoration: const BoxDecoration(
                   border: Border(
                     bottom: BorderSide(
@@ -109,7 +120,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                 ),
               ),
               SizedBox(
-                height: 36,
+                height: screenHeight * 0.04,
                 child: Row(
                   children: [
                     Expanded(
@@ -120,29 +131,30 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                           controller: _tabController,
                           tabs: _tabTitles.map((eventName) {
                             final event = user?.events.firstWhere(
-                              (e) => e.eventName == eventName,
-                              orElse: () => const Event(
+                                  (e) => e.eventName == eventName,
+                              orElse: () =>
+                              const Event(
                                   eventId: -1, eventName: '', members: []),
                             );
                             final eventId = event?.eventId;
 
                             return GestureDetector(
-                              onLongPress: () => showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return DeleteEventDialog(
-                                    eventId: eventId,
-                                  );
-                                },
-                              ),
-                              child: SizedBox(
-                                width: 52,
-                                child: Tab(
-                                  child: Text(
-                                    eventName,
-                                    style:
-                                        Theme.of(context).textTheme.bodySmall,
+                              onLongPress: () =>
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return DeleteEventDialog(
+                                        eventId: eventId,
+                                      );
+                                    },
                                   ),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Tab(
+                                    child: Text(
+                                      eventName,
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 14,)
+                                    ),
                                 ),
                               ),
                             );
@@ -155,7 +167,11 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                     Row(
                       children: [
                         IconButton(
-                          icon: SvgPicture.asset('assets/icons/plus.svg'),
+                          icon: SvgPicture.asset(
+                            'assets/icons/plus.svg',
+                            width: screenWidth * 0.07,
+                            height: screenWidth * 0.07,
+                          ),
                           onPressed: () {
                             showDialog(
                               context: context,
@@ -165,7 +181,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                             );
                           },
                         ),
-                        const SizedBox(width: 16),
+                        SizedBox(
+                          width: screenWidth * 0.04,
+                        ),
                         // TODO リリース初期段階では、一括削除機能のボタンは非表示
                         // IconButton(
                         //   onPressed: () {
@@ -184,18 +202,25 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         ),
       ),
       drawer: const TanochanDrawer(),
-      body: TabBarView(
-        controller: _tabController,
-        children: _tabTitles.map((eventName) {
-          final event = user?.events.firstWhere(
-            (e) => e.eventName == eventName,
-            orElse: () => const Event(eventId: -1, eventName: '', members: []),
-          );
-          return MemberList(
-            members: event!.eventId != -1 ? event.members : [],
-            eventId: event.eventId != -1 ? event.eventId : null,
-          );
-        }).toList(),
+      body: Column(
+        children: [
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: _tabTitles.map((eventName) {
+                final event = user?.events.firstWhere(
+                      (e) => e.eventName == eventName,
+                  orElse: () =>
+                  const Event(eventId: -1, eventName: '', members: []),
+                );
+                return MemberList(
+                  members: event!.eventId != -1 ? event.members : [],
+                  eventId: event.eventId != -1 ? event.eventId : null,
+                );
+              }).toList(),
+            ),
+          ),
+        ],
       ),
     );
   }
