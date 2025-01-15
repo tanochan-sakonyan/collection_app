@@ -48,14 +48,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
     final tabTitles = ref.watch(tabTitlesProvider);
-    final screenWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
-    final screenHeight = MediaQuery
-        .of(context)
-        .size
-        .height;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
 
     if (tabTitles.length != _tabController.length) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -83,11 +77,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
             ),
             Text(
               widget.title,
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .bodyLarge
-                  ?.copyWith(
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 fontWeight: FontWeight.bold,
                 fontSize: screenWidth * 0.05,
               ),
@@ -158,20 +148,13 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                       );
                                     },
                                   ),
-                              child: SizedBox(
-                                width: screenWidth * 0.13,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                 child: Tab(
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
                                     child: Text(
                                       eventName,
-                                      style:
-                                      Theme
-                                          .of(context)
-                                          .textTheme
-                                          .bodySmall,
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 14,)
                                     ),
-                                  ),
                                 ),
                               ),
                             );
