@@ -11,12 +11,14 @@ class UserRepository {
   // アクセストークンを送って、ユーザー情報を取得する
   Future<User?> registerUser(String accessToken) async {
     debugPrint('fetchUser関数が呼ばれました。');
-    final url = Uri.parse('$baseUrl/users');
+    debugPrint('アクセストークン: $accessToken');
+    final url = Uri.parse('$baseUrl/users/test');
 
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'line_token': accessToken}),
+      body: jsonEncode({}),
+      // body: jsonEncode({'line_token': accessToken}),
     );
 
     debugPrint('Response status: ${response.statusCode}');
@@ -52,7 +54,7 @@ class UserRepository {
 
     final response = await http.get(
       url,
-      headers: {'Content-Type': 'application/json'},
+      // headers: {'Content-Type': 'application/json'},
     );
 
     debugPrint('Response status: ${response.statusCode}');
