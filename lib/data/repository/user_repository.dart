@@ -27,7 +27,6 @@ class UserRepository {
     if (response.statusCode == 201 || response.statusCode == 200) {
       try {
         final data = jsonDecode(response.body);
-
         final user = User.fromJson(data);
         return user;
       } catch (e, stackTrace) {

@@ -95,7 +95,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             .registerUser(accessToken);
 
                         if (user != null) {
-                          prefs.setInt('userId', user.userId);
+                          prefs.setString('userId', user.userId);
                           prefs.setBool('isLoggedIn', true);
                         } else {
                           debugPrint('ユーザー情報がnullです');
@@ -151,10 +151,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ),
             ),
-
             const SizedBox(height: 12),
-
-            
             SizedBox(
               width: 300,
               child: ElevatedButton(
@@ -165,10 +162,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 ),
-                
-                
                 onPressed: () async {
                   String nonce([int length = 32]) {
                     const charset =
@@ -230,7 +226,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   );
                   debugPrint(session);
                 },
-                
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -250,9 +245,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ),
             ),
-
             const SizedBox(height: 20),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

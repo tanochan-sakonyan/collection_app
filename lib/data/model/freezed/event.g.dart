@@ -7,7 +7,7 @@ part of 'event.dart';
 // **************************************************************************
 
 _$EventImpl _$$EventImplFromJson(Map<String, dynamic> json) => _$EventImpl(
-      eventId: (json['event_id'] as num).toInt(),
+      eventId: json['event_id'] as String,
       eventName: json['event_name'] as String,
       members: (json['members'] as List<dynamic>)
           .map((e) => Member.fromJson(e as Map<String, dynamic>))

@@ -8,8 +8,9 @@ part 'user.g.dart';
 class User with _$User {
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
   const factory User({
-    required int userId,
-    required String lineUserId,
+    required String userId,
+    required String? appleId,
+    required String? lineUserId,
     required String? paypayUrl,
     required List<String>? belongingLineGroupIds,
     required List<Event> events,

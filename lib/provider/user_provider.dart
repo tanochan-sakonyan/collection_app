@@ -104,7 +104,7 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
-  Future<void> createEvent(String eventName, int userId) async {
+  Future<void> createEvent(String eventName, String userId) async {
     try {
       final newEvent = await eventRepository.createEvent(eventName, userId);
       final updatedUser = state?.copyWith(

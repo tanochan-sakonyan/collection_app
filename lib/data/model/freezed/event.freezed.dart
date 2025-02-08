@@ -20,7 +20,7 @@ Event _$EventFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Event {
-  int get eventId => throw _privateConstructorUsedError;
+  String get eventId => throw _privateConstructorUsedError;
   String get eventName => throw _privateConstructorUsedError;
   List<Member> get members => throw _privateConstructorUsedError;
 
@@ -38,7 +38,7 @@ abstract class $EventCopyWith<$Res> {
   factory $EventCopyWith(Event value, $Res Function(Event) then) =
       _$EventCopyWithImpl<$Res, Event>;
   @useResult
-  $Res call({int eventId, String eventName, List<Member> members});
+  $Res call({String eventId, String eventName, List<Member> members});
 }
 
 /// @nodoc
@@ -64,7 +64,7 @@ class _$EventCopyWithImpl<$Res, $Val extends Event>
       eventId: null == eventId
           ? _value.eventId
           : eventId // ignore: cast_nullable_to_non_nullable
-              as int,
+              as String,
       eventName: null == eventName
           ? _value.eventName
           : eventName // ignore: cast_nullable_to_non_nullable
@@ -84,7 +84,7 @@ abstract class _$$EventImplCopyWith<$Res> implements $EventCopyWith<$Res> {
       __$$EventImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int eventId, String eventName, List<Member> members});
+  $Res call({String eventId, String eventName, List<Member> members});
 }
 
 /// @nodoc
@@ -108,7 +108,7 @@ class __$$EventImplCopyWithImpl<$Res>
       eventId: null == eventId
           ? _value.eventId
           : eventId // ignore: cast_nullable_to_non_nullable
-              as int,
+              as String,
       eventName: null == eventName
           ? _value.eventName
           : eventName // ignore: cast_nullable_to_non_nullable
@@ -135,7 +135,7 @@ class _$EventImpl implements _Event {
       _$$EventImplFromJson(json);
 
   @override
-  final int eventId;
+  final String eventId;
   @override
   final String eventName;
   final List<Member> _members;
@@ -185,14 +185,14 @@ class _$EventImpl implements _Event {
 
 abstract class _Event implements Event {
   const factory _Event(
-      {required final int eventId,
+      {required final String eventId,
       required final String eventName,
       required final List<Member> members}) = _$EventImpl;
 
   factory _Event.fromJson(Map<String, dynamic> json) = _$EventImpl.fromJson;
 
   @override
-  int get eventId;
+  String get eventId;
   @override
   String get eventName;
   @override
