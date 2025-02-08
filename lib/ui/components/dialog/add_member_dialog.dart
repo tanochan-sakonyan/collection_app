@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 
 class AddMemberDialog extends ConsumerStatefulWidget {
-  final int eventId;
+  final String eventId;
 
   const AddMemberDialog({required this.eventId, super.key});
 

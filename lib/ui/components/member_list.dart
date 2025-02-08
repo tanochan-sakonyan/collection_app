@@ -10,16 +10,16 @@ import 'package:mr_collection/ui/components/dialog/status_dialog.dart';
 
 class MemberList extends ConsumerWidget {
   final List<Member>? members;
-  final int? eventId;
+  final String eventId;
 
   const MemberList({super.key, required this.members, required this.eventId});
 
   Future<void> _updateMemberStatus(
-      WidgetRef ref, int? eventId, int? memberId, int? status) async {
+      WidgetRef ref, String eventId, String memberId, int? status) async {
     try {
       await ref
           .read(userProvider.notifier)
-          .updateMemberStatus(eventId!, memberId!, status!);
+          .updateMemberStatus(eventId, memberId, status!);
 
       debugPrint('ステータスが更新されました。');
     } catch (error) {
@@ -90,11 +90,11 @@ class MemberList extends ConsumerWidget {
                                     showDialog(
                                       context: context,
                                       builder: (context) => StatusDialog(
-                                        eventId: eventId,
-                                        memberId: member?.memberId,
-                                        member: member?.memberName,
-                                        onStatusChange: (int? eventId,
-                                            int? memberId, int status) {
+                                        eventId: eventId.toString(),
+                                        memberId: member!.memberId,
+                                        member: member.memberName,
+                                        onStatusChange: (String eventId,
+                                            String memberId, int status) {
                                           _updateMemberStatus(
                                               ref, eventId, memberId, status);
                                         },
@@ -105,7 +105,7 @@ class MemberList extends ConsumerWidget {
                                     showDialog(
                                       context: context,
                                       builder: (context) => DeleteMemberDialog(
-                                        memberId: member?.memberId,
+                                        memberId: member!.memberId,
                                       ),
                                     );
                                   },
@@ -173,7 +173,7 @@ class MemberList extends ConsumerWidget {
                               showDialog(
                                 context: context,
                                 builder: (context) => AddMemberDialog(
-                                  eventId: eventId!,
+                                  eventId: eventId!.toString(),
                                 ),
                               );
                             },
