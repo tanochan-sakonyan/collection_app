@@ -137,10 +137,11 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
-  Future<void> createMember(String eventId, String memberName) async {
+  Future<void> createMember(
+      String userId, String eventId, String memberName) async {
     try {
       final newMember =
-          await memberRepository.createMember(eventId, memberName);
+          await memberRepository.createMember(userId, eventId, memberName);
       final updatedUser = state?.copyWith(
         events: state?.events.map((event) {
               if (event.eventId == eventId) {
