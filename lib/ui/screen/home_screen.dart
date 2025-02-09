@@ -78,9 +78,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
             Text(
               widget.title,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-                fontSize: screenWidth * 0.05,
-              ),
+                    fontWeight: FontWeight.bold,
+                    fontSize: screenWidth * 0.05,
+                  ),
             ),
           ],
         ),
@@ -138,22 +138,25 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                             final eventId = event!.eventId;
 
                             return GestureDetector(
-                              onLongPress: () =>
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return DeleteEventDialog(
-                                        eventId: eventId,
-                                      );
-                                    },
-                                  ),
+                              onLongPress: () => showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return DeleteEventDialog(
+                                    eventId: eventId,
+                                  );
+                                },
+                              ),
                               child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
                                 child: Tab(
-                                    child: Text(
-                                      eventName,
-                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 14,)
-                                    ),
+                                  child: Text(eventName,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.copyWith(
+                                            fontSize: 14,
+                                          )),
                                 ),
                               ),
                             );
@@ -208,13 +211,13 @@ class HomeScreenState extends ConsumerState<HomeScreen>
               controller: _tabController,
               children: _tabTitles.map((eventName) {
                 final event = user!.events.firstWhere(
-                      (e) => e.eventName == eventName,
+                  (e) => e.eventName == eventName,
                   orElse: () =>
-                  const Event(eventId: "", eventName: '', members: []),
+                      const Event(eventId: "", eventName: '', members: []),
                 );
                 return MemberList(
                   members: event.eventId != "" ? event.members : [],
-                  eventId: event.eventId != "" ? event.eventId : null,
+                  eventId: event.eventId != "" ? event.eventId : "",
                 );
               }).toList(),
             ),
