@@ -8,7 +8,7 @@ part 'event.g.dart';
 class Event with _$Event {
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
   const factory Event({
-    required int eventId,
+    required String eventId,
     required String eventName,
     required List<Member> members,
   }) = _Event;

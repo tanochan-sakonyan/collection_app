@@ -76,7 +76,7 @@ class UserNotifier extends StateNotifier<User?> {
   }
 
   Future<void> updateMemberStatus(
-      int eventId, int memberId, int newStatus) async {
+      String eventId, String memberId, int newStatus) async {
     try {
       final updatedMember = await memberRepository.updateMemberStatus(
           eventId, memberId, newStatus);
@@ -104,7 +104,7 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
-  Future<void> createEvent(String eventName, int userId) async {
+  Future<void> createEvent(String eventName, String userId) async {
     try {
       final newEvent = await eventRepository.createEvent(eventName, userId);
       final updatedUser = state?.copyWith(
@@ -137,7 +137,7 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
-  Future<void> createMember(int eventId, String memberName) async {
+  Future<void> createMember(String eventId, String memberName) async {
     try {
       final newMember =
           await memberRepository.createMember(eventId, memberName);

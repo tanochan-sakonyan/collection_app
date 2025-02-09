@@ -131,12 +131,11 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                           controller: _tabController,
                           tabs: _tabTitles.map((eventName) {
                             final event = user?.events.firstWhere(
-                                  (e) => e.eventName == eventName,
-                              orElse: () =>
-                              const Event(
-                                  eventId: -1, eventName: '', members: []),
+                              (e) => e.eventName == eventName,
+                              orElse: () => const Event(
+                                  eventId: "", eventName: '', members: []),
                             );
-                            final eventId = event?.eventId;
+                            final eventId = event!.eventId;
 
                             return GestureDetector(
                               onLongPress: () =>
@@ -208,14 +207,14 @@ class HomeScreenState extends ConsumerState<HomeScreen>
             child: TabBarView(
               controller: _tabController,
               children: _tabTitles.map((eventName) {
-                final event = user?.events.firstWhere(
+                final event = user!.events.firstWhere(
                       (e) => e.eventName == eventName,
                   orElse: () =>
-                  const Event(eventId: -1, eventName: '', members: []),
+                  const Event(eventId: "", eventName: '', members: []),
                 );
                 return MemberList(
-                  members: event!.eventId != -1 ? event.members : [],
-                  eventId: event.eventId != -1 ? event.eventId : null,
+                  members: event.eventId != "" ? event.members : [],
+                  eventId: event.eventId != "" ? event.eventId : null,
                 );
               }).toList(),
             ),

@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 
 class DeleteMemberDialog extends ConsumerWidget {
-  final int? memberId;
+  final String memberId;
   const DeleteMemberDialog({required this.memberId, super.key});
 
-  Future<void> _deleteMember(ref, int memberId) async {
+  Future<void> _deleteMember(ref, String memberId) async {
     try {
       await ref.read(userProvider.notifier).deleteMember(memberId);
       Navigator.of(ref).pop();
@@ -70,7 +70,7 @@ class DeleteMemberDialog extends ConsumerWidget {
                   width: 107,
                   child: ElevatedButton(
                     onPressed: () {
-                      _deleteMember(context, memberId!);
+                      _deleteMember(context, memberId);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFF2F2F2),

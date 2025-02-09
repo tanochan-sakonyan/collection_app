@@ -3,12 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 
 class DeleteEventDialog extends ConsumerWidget {
-  final int? eventId;
+  final String eventId;
   const DeleteEventDialog({required this.eventId, super.key});
 
   get eventRepository => null;
 
-  Future<void> _deleteEvent(ref, int eventId) async {
+  Future<void> _deleteEvent(ref, String eventId) async {
     try {
       await ref.read(userProvider.notifier).deleteEvent(eventId);
       Navigator.of(ref).pop();

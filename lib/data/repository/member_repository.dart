@@ -8,7 +8,7 @@ class MemberRepository {
 
   MemberRepository({required this.baseUrl});
 
-  Future<Member> createMember(int eventId, String newMemberName) async {
+  Future<Member> createMember(String eventId, String newMemberName) async {
     final url = Uri.parse('$baseUrl/events/$eventId/members');
     final response = await http.post(
       url,
@@ -25,7 +25,7 @@ class MemberRepository {
   }
 
   Future<Member> updateMemberStatus(
-      int? eventId, int? memberId, int? status) async {
+      String eventId, String memberId, int? status) async {
     final url = Uri.parse('$baseUrl/members/$memberId/status');
 
     final requestBody = jsonEncode({'status': status});

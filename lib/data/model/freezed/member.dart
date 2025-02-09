@@ -8,7 +8,7 @@ part 'member.g.dart';
 class Member with _$Member {
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
   const factory Member({
-    required int memberId,
+    required String memberId,
     required String memberName,
     String? lineUserId,
     required PaymentStatus status,

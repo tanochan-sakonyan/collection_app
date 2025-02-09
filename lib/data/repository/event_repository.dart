@@ -8,7 +8,7 @@ class EventRepository {
 
   EventRepository({required this.baseUrl});
 
-  Future<Event> createEvent(String eventName, int userId) async {
+  Future<Event> createEvent(String eventName, String userId) async {
     final url = Uri.parse('$baseUrl/events');
     final response = await http.post(
       url,
