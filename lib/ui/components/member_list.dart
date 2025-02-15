@@ -173,7 +173,8 @@ class MemberList extends ConsumerWidget {
                               showDialog(
                                 context: context,
                                 builder: (context) => AddMemberDialog(
-                                  eventId: eventId!.toString(),
+                                  userId: ref.read(userProvider)!.userId,
+                                  eventId: eventId.toString(),
                                 ),
                               );
                             },
