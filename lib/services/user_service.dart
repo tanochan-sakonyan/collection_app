@@ -10,7 +10,7 @@ class UserService {
     return userRepository.registerUser(accessToken);
   }
 
-  Future<User?> fetchUserById(int userId) {
+  Future<User?> fetchUserById(String userId) {
     return userRepository.fetchUserById(userId);
   }
 }
