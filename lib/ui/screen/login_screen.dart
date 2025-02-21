@@ -62,7 +62,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     final prefs = await SharedPreferences.getInstance();
                     final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
                     debugPrint('isLoggedIn: $isLoggedIn');
-                    final userId = prefs.getInt('userId');
+                    final userId = prefs.getString('userId');
 
                     if (isLoggedIn && userId != null) {
                       try {

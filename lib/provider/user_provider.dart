@@ -59,7 +59,7 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
-  Future<User?> fetchUserById(int userId) async {
+  Future<User?> fetchUserById(String userId) async {
     try {
       final user = await userService.fetchUserById(userId);
       state = user;

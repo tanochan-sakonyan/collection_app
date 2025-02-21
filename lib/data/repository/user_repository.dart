@@ -47,7 +47,7 @@ class UserRepository {
     }
   }
 
-  Future<User?> fetchUserById(int userId) async {
+  Future<User?> fetchUserById(String userId) async {
     debugPrint('fetchUserById関数が呼ばれました。');
     final url = Uri.parse('$baseUrl/users/$userId');
 

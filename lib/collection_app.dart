@@ -20,9 +20,9 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
     return prefs.getBool('isLoggedIn') ?? false;
   }
 
-  Future<int?> _getUserId() async {
+  Future<String?> _getUserId() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getInt('userId');
+    return prefs.getString("userId");
   }
 
   @override
@@ -58,7 +58,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
           } else {
             final isLoggedIn = snapshot.data ?? false;
             if (isLoggedIn) {
-              return FutureBuilder<int?>(
+              return FutureBuilder<String?>(
                 future: _getUserId(),
                 builder: (context, userIdSnapshot) {
                   if (userIdSnapshot.connectionState ==
