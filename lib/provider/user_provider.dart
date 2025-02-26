@@ -159,9 +159,11 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
-  Future<void> deleteMember(int memberId) async {
+  Future<void> deleteMember(
+      String userId, String eventId, String memberId) async {
     try {
-      final isDeleted = await memberRepository.deleteMember(memberId);
+      final isDeleted =
+          await memberRepository.deleteMember(userId, eventId, memberId);
 
       if (!isDeleted) {
         throw Exception('メンバーの削除に失敗しました');
