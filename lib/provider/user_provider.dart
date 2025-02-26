@@ -133,7 +133,7 @@ class UserNotifier extends StateNotifier<User?> {
 
       debugPrint('イベントの削除に成功しました: $eventId');
     } catch (e) {
-      debugPrint('イベントの削除中にエラーが発生しました: $e : user_provider.dart');
+      debugPrint('イベントの削除中にエラーが発生しました: $e');
     }
   }
 
