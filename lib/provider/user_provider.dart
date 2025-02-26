@@ -116,11 +116,11 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
-  Future<void> deleteEvent(int eventId) async {
+  Future<void> deleteEvent(String userId, String eventId) async {
     try {
-      final deleteResult = await eventRepository.deleteEvent(eventId);
+      final deleteResult = await eventRepository.deleteEvent(userId, eventId);
 
-      final isDeleted = deleteResult[eventId.toString()] ?? false;
+      final isDeleted = deleteResult[eventId] ?? false;
       if (!isDeleted) {
         throw Exception('イベントの削除に失敗しました');
       }

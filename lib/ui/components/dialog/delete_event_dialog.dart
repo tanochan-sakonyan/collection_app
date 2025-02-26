@@ -3,14 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 
 class DeleteEventDialog extends ConsumerWidget {
+  final String userId;
   final String eventId;
-  const DeleteEventDialog({required this.eventId, super.key});
+  const DeleteEventDialog({required this.userId, required this.eventId, super.key});
 
   get eventRepository => null;
 
-  Future<void> _deleteEvent(ref, String eventId) async {
+  Future<void> _deleteEvent(ref, String userId, String eventId) async {
     try {
-      await ref.read(userProvider.notifier).deleteEvent(eventId);
+      await ref.read(userProvider.notifier).deleteEvent(userId, eventId);
       Navigator.of(ref).pop();
     } catch (error) {
       debugPrint('イベントの削除に失敗しました: $error');
@@ -72,7 +73,7 @@ class DeleteEventDialog extends ConsumerWidget {
                   width: 107,
                   child: ElevatedButton(
                     onPressed: () {
-                      _deleteEvent(context, eventId!);
+                      _deleteEvent(context, userId, eventId);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFF2F2F2),
