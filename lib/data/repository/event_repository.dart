@@ -25,8 +25,8 @@ class EventRepository {
     }
   }
 
-  Future<Map<String, bool>> deleteEvent(int eventId) async {
-    final url = Uri.parse('$baseUrl/events');
+  Future<Map<String, bool>> deleteEvent(String userId, String eventId) async {
+    final url = Uri.parse('$baseUrl/users/$userId/events');
     final response = await http.delete(
       url,
       headers: {'Content-Type': 'application/json'},

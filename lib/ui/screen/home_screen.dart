@@ -142,6 +142,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                 context: context,
                                 builder: (BuildContext context) {
                                   return DeleteEventDialog(
+                                    userId: ref.read(userProvider)!.userId,
                                     eventId: eventId,
                                   );
                                 },

@@ -116,11 +116,11 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
-  Future<void> deleteEvent(int eventId) async {
+  Future<void> deleteEvent(String userId, String eventId) async {
     try {
-      final deleteResult = await eventRepository.deleteEvent(eventId);
+      final deleteResult = await eventRepository.deleteEvent(userId, eventId);
 
-      final isDeleted = deleteResult[eventId.toString()] ?? false;
+      final isDeleted = deleteResult[eventId] ?? false;
       if (!isDeleted) {
         throw Exception('イベントの削除に失敗しました');
       }
@@ -133,7 +133,7 @@ class UserNotifier extends StateNotifier<User?> {
 
       debugPrint('イベントの削除に成功しました: $eventId');
     } catch (e) {
-      debugPrint('イベントの削除中にエラーが発生しました: $e');
+      debugPrint('イベントの削除中にエラーが発生しました: $e : user_provider.dart');
     }
   }
 
