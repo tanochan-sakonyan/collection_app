@@ -76,10 +76,10 @@ class UserNotifier extends StateNotifier<User?> {
   }
 
   Future<void> updateMemberStatus(
-      String eventId, String memberId, int newStatus) async {
+      String userId, String eventId, String memberId, int newStatus) async {
     try {
       final updatedMember = await memberRepository.updateMemberStatus(
-          eventId, memberId, newStatus);
+          userId, eventId, memberId, newStatus);
 
       final updatedUser = state?.copyWith(
         events: state?.events.map((event) {
