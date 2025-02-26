@@ -7,7 +7,9 @@ import 'package:mr_collection/ui/components/button/toggle_button.dart';
 import 'package:mr_collection/data/repository/event_repository.dart';
 
 class AddEventDialog extends ConsumerStatefulWidget {
-  const AddEventDialog({super.key});
+  final String userId;
+
+  const AddEventDialog({required this.userId,super.key});
 
   @override
   AddEventDialogState createState() => AddEventDialogState();
