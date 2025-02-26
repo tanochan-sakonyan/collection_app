@@ -14,14 +14,12 @@ class MemberList extends ConsumerWidget {
 
   const MemberList({super.key, required this.members, required this.eventId});
 
-  Future<void> _updateMemberStatus(
-      WidgetRef ref, String eventId, String memberId, int? status) async {
+  Future<void> _updateMemberStatus(WidgetRef ref, String userId, String eventId,
+      String memberId, int? status) async {
     try {
       await ref
           .read(userProvider.notifier)
-          .updateMemberStatus(eventId, memberId, status!);
-
-      debugPrint('ステータスが更新されました。');
+          .updateMemberStatus(userId, eventId, memberId, status!);
     } catch (error) {
       debugPrint('ステータス更新中にエラーが発生しました。 $error');
     }
@@ -90,13 +88,16 @@ class MemberList extends ConsumerWidget {
                                     showDialog(
                                       context: context,
                                       builder: (context) => StatusDialog(
+                                        userId: ref.read(userProvider)!.userId,
                                         eventId: eventId.toString(),
                                         memberId: member!.memberId,
                                         member: member.memberName,
-                                        onStatusChange: (String eventId,
-                                            String memberId, int status) {
-                                          _updateMemberStatus(
-                                              ref, eventId, memberId, status);
+                                        onStatusChange: (String userId,
+                                            String eventId,
+                                            String memberId,
+                                            int status) {
+                                          _updateMemberStatus(ref, userId,
+                                              eventId, memberId, status);
                                         },
                                       ),
                                     );

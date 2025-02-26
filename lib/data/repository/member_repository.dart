@@ -26,8 +26,9 @@ class MemberRepository {
   }
 
   Future<Member> updateMemberStatus(
-      String eventId, String memberId, int? status) async {
-    final url = Uri.parse('$baseUrl/members/$memberId/status');
+      String userId, String eventId, String memberId, int status) async {
+    final url = Uri.parse(
+        '$baseUrl/users/$userId/events/$eventId/members/$memberId/status');
 
     final requestBody = jsonEncode({'status': status});
     debugPrint('リクエストURL: $url');
@@ -40,7 +41,7 @@ class MemberRepository {
       body: jsonEncode({'status': status}),
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       final data = jsonDecode(response.body);
       return Member.fromJson(data);
     } else {

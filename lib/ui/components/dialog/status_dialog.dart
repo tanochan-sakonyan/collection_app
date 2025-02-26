@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
 class StatusDialog extends StatelessWidget {
+  final String userId;
   final String eventId;
   final String memberId;
   final String member;
-  final Function(String, String, int) onStatusChange;
+  final Function(String, String, String, int) onStatusChange;
 
   const StatusDialog({
     super.key,
+    required this.userId,
     required this.eventId,
     required this.memberId,
     required this.member,
@@ -80,7 +82,7 @@ class StatusDialog extends StatelessWidget {
       onTap: () async {
         Navigator.pop(context);
         debugPrint('eventId: $eventId, memberId: $memberId, status: $status');
-        await onStatusChange(eventId, memberId, status);
+        await onStatusChange(userId, eventId, memberId, status);
       },
       child: Container(
         decoration: BoxDecoration(
