@@ -53,18 +53,24 @@ class MemberRepository {
     }
   }
 
-  Future<bool> deleteMember(int memberId) async {
-    final url = Uri.parse('$baseUrl/members/$memberId');
+  // メンバーを単体で削除する場合
+  Future<bool> deleteMember(
+      String userId, String eventId, String memberId) async {
+    final url = Uri.parse('$baseUrl/users/$userId/events/$eventId/members');
     final response = await http.delete(
       url,
       headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'memberIdList': memberId}),
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       final data = jsonDecode(response.body);
       return data['isSuccessful'] as bool;
     } else {
-      throw Exception('メンバーの削除に失敗しました');
+      throw Exception(
+        'メンバーの削除に失敗しました: '
+        'ステータスコード: ${response.statusCode}, ',
+      );
     }
   }
 }

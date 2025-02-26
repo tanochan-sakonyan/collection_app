@@ -105,6 +105,8 @@ class MemberList extends ConsumerWidget {
                                     showDialog(
                                       context: context,
                                       builder: (context) => DeleteMemberDialog(
+                                        userId: ref.read(userProvider)!.userId,
+                                        eventId: eventId,
                                         memberId: member!.memberId,
                                       ),
                                     );
