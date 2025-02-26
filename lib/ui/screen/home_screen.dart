@@ -178,7 +178,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
-                                return const AddEventDialog();
+                                return AddEventDialog(
+                                  userId:ref.read(userProvider)!.userId,
+                                );
                               },
                             );
                           },
