@@ -8,7 +8,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_line_sdk/flutter_line_sdk.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mr_collection/data/model/freezed/user.dart';
 import 'package:mr_collection/provider/access_token_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/screen/home_screen.dart';
@@ -16,6 +15,7 @@ import 'package:mr_collection/ui/screen/privacy_policy_screen.dart';
 import 'package:mr_collection/ui/screen/terms_of_service_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:http/http.dart' as http;
 
 final checkboxProvider = StateProvider<bool>((ref) => false);
 
@@ -27,8 +27,6 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
-  get http => null;
-
   @override
   Widget build(BuildContext context) {
     bool isChecked = ref.watch(checkboxProvider);
@@ -166,65 +164,113 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 ),
                 onPressed: () async {
-                  String nonce([int length = 32]) {
-                    const charset =
-                        '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
-                    final random = Random.secure();
-                    final randomStr = List.generate(length,
-                        (_) => charset[random.nextInt(charset.length)]).join();
-                    return randomStr;
-                  }
+                  try {
+                    // Appleサインインの認証情報を取得
+                    final credential =
+                        await SignInWithApple.getAppleIDCredential(
+                      scopes: [
+                        AppleIDAuthorizationScopes.email,
+                        AppleIDAuthorizationScopes.fullName,
+                      ],
+                      webAuthenticationOptions: WebAuthenticationOptions(
+                        clientId: 'com.tanotyan.syukinkun.service',
+                        redirectUri: kIsWeb
+                            ? Uri.parse('https://${Uri.base.host}/')
+                            : Uri.parse(
+                                'https://shukinkun-49fb12fd2191.herokuapp.com/auth/apple/callback',
+                              ),
+                      ),
+                    );
 
-                  String state([int length = 32]) {
-                    const charset =
-                        '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
-                    final random = Random.secure();
-                    final randomStr = List.generate(length,
-                        (_) => charset[random.nextInt(charset.length)]).join();
-                    return randomStr;
-                  }
+                    debugPrint("Appleサインイン認証情報: $credential");
 
-                  final credential = await SignInWithApple.getAppleIDCredential(
-                    scopes: [
-                      AppleIDAuthorizationScopes.email,
-                      AppleIDAuthorizationScopes.fullName,
-                    ],
-                    webAuthenticationOptions: WebAuthenticationOptions(
-                      clientId: 'com.tanotyan.syukinkun.service',
-                      redirectUri: kIsWeb
-                          ? Uri.parse('https://${Uri.base.host}/')
-                          : Uri.parse(
-                              'https://shukinkun-086ea89ed514.herokuapp.com/callbacks/sign_in_with_apple',
+                    final url = Uri.https(
+                        'shukinkun-49fb12fd2191.herokuapp.com', '/auth/apple');
+
+                    final response = await http.get(
+                      url,
+                      headers: {'Content-Type': 'application/json'},
+                    );
+
+                    if (response.statusCode == 200 ||
+                        response.statusCode == 201) {
+                      final user = await ref
+                          .read(userProvider.notifier)
+                          .registerUser(response.body);
+
+                      if (user != null) {
+                        final prefs = await SharedPreferences.getInstance();
+                        prefs.setString('userId', user.userId);
+                        prefs.setBool('isLoggedIn', true);
+
+                        if (mounted) {
+                          debugPrint(
+                              'Appleサインイン成功。HomeScreenへ遷移します。user: $user');
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  HomeScreen(title: '集金くん', user: user),
                             ),
-                    ),
-                    nonce: nonce(),
-                    state: state(),
-                  );
-
-                  print(credential);
-
-                  final signInWithAppleEndpoint = Uri(
-                    scheme: 'https',
-                    host: 'shukinkun-086ea89ed514.herokuapp.com',
-                    path: '/sign_in_with_apple',
-                    queryParameters: <String, String>{
-                      'code': credential.authorizationCode,
-                      if (credential.givenName != null)
-                        'firstName': credential.givenName!,
-                      if (credential.familyName != null)
-                        'lastName': credential.familyName!,
-                      'useBundleId':
-                          !kIsWeb && (Platform.isIOS || Platform.isMacOS)
-                              ? 'true'
-                              : 'false',
-                      if (credential.state != null) 'state': credential.state!,
-                    },
-                  );
-
-                  final session = await http.Client().post(
-                    signInWithAppleEndpoint,
-                  );
-                  debugPrint(session);
+                          );
+                        }
+                      } else {
+                        debugPrint('ユーザー情報がnullです');
+                      }
+                    } else {
+                      debugPrint(
+                          'Appleサインインエンドポイントエラー: ${response.statusCode}');
+                      if (mounted) {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('サインイン失敗'),
+                            content: Text(
+                                'Appleサインインに失敗しました。エラーコード: ${response.statusCode}'),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                    }
+                  } on PlatformException catch (e) {
+                    if (mounted) {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('サインイン失敗'),
+                          content:
+                              Text('エラーコード: ${e.code}\nメッセージ: ${e.message}'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                  } catch (e) {
+                    debugPrint('Appleサインイン中にエラーが発生: $e');
+                    if (mounted) {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('サインイン失敗'),
+                          content: Text('エラーが発生しました: $e'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                  }
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
