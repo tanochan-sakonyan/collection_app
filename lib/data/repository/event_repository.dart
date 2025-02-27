@@ -8,8 +8,8 @@ class EventRepository {
 
   EventRepository({required this.baseUrl});
 
-  Future<Event> createEvent(String eventName, int userId) async {
-    final url = Uri.parse('$baseUrl/events');
+  Future<Event> createEvent(String eventName, String userId) async {
+    final url = Uri.parse('$baseUrl/users/$userId/events');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -25,8 +25,8 @@ class EventRepository {
     }
   }
 
-  Future<Map<String, bool>> deleteEvent(int eventId) async {
-    final url = Uri.parse('$baseUrl/events');
+  Future<Map<String, bool>> deleteEvent(String userId, String eventId) async {
+    final url = Uri.parse('$baseUrl/users/$userId/events');
     final response = await http.delete(
       url,
       headers: {'Content-Type': 'application/json'},

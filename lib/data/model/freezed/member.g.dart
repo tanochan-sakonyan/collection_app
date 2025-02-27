@@ -7,7 +7,7 @@ part of 'member.dart';
 // **************************************************************************
 
 _$MemberImpl _$$MemberImplFromJson(Map<String, dynamic> json) => _$MemberImpl(
-      memberId: (json['member_id'] as num).toInt(),
+      memberId: json['member_id'] as String,
       memberName: json['member_name'] as String,
       lineUserId: json['line_user_id'] as String?,
       status: $enumDecode(_$PaymentStatusEnumMap, json['status']),

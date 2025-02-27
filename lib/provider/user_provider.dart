@@ -9,6 +9,8 @@ import 'package:mr_collection/provider/access_token_provider.dart';
 import 'package:mr_collection/provider/event_repository_provider.dart';
 import 'package:mr_collection/provider/member_repository_provider.dart';
 import 'package:mr_collection/services/user_service.dart';
+import 'package:mr_collection/data/model/freezed/member.dart';
+import 'package:mr_collection/data/model/payment_status.dart';
 
 final userProvider = StateNotifierProvider<UserNotifier, User?>((ref) {
   final userService = ref.read(userServiceProvider);
@@ -59,7 +61,7 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
-  Future<User?> fetchUserById(int userId) async {
+  Future<User?> fetchUserById(String userId) async {
     try {
       final user = await userService.fetchUserById(userId);
       state = user;
@@ -76,10 +78,10 @@ class UserNotifier extends StateNotifier<User?> {
   }
 
   Future<void> updateMemberStatus(
-      int eventId, int memberId, int newStatus) async {
+      String userId, String eventId, String memberId, int newStatus) async {
     try {
       final updatedMember = await memberRepository.updateMemberStatus(
-          eventId, memberId, newStatus);
+          userId, eventId, memberId, newStatus);
 
       final updatedUser = state?.copyWith(
         events: state?.events.map((event) {
@@ -104,7 +106,7 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
-  Future<void> createEvent(String eventName, int userId) async {
+  Future<void> createEvent(String eventName, String userId) async {
     try {
       final newEvent = await eventRepository.createEvent(eventName, userId);
       final updatedUser = state?.copyWith(
@@ -116,11 +118,11 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
-  Future<void> deleteEvent(int eventId) async {
+  Future<void> deleteEvent(String userId, String eventId) async {
     try {
-      final deleteResult = await eventRepository.deleteEvent(eventId);
+      final deleteResult = await eventRepository.deleteEvent(userId, eventId);
 
-      final isDeleted = deleteResult[eventId.toString()] ?? false;
+      final isDeleted = deleteResult[eventId] ?? false;
       if (!isDeleted) {
         throw Exception('イベントの削除に失敗しました');
       }
@@ -137,10 +139,11 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
-  Future<void> createMember(int eventId, String memberName) async {
+  Future<void> createMember(
+      String userId, String eventId, String memberName) async {
     try {
       final newMember =
-          await memberRepository.createMember(eventId, memberName);
+          await memberRepository.createMember(userId, eventId, memberName);
       final updatedUser = state?.copyWith(
         events: state?.events.map((event) {
               if (event.eventId == eventId) {
@@ -158,9 +161,11 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
-  Future<void> deleteMember(int memberId) async {
+  Future<void> deleteMember(
+      String userId, String eventId, String memberId) async {
     try {
-      final isDeleted = await memberRepository.deleteMember(memberId);
+      final isDeleted =
+          await memberRepository.deleteMember(userId, eventId, memberId);
 
       if (!isDeleted) {
         throw Exception('メンバーの削除に失敗しました');
@@ -181,5 +186,34 @@ class UserNotifier extends StateNotifier<User?> {
     } catch (e) {
       debugPrint('メンバーの削除中にエラーが発生しました: $e');
     }
+  }
+
+  int getStatusRank(PaymentStatus status) {
+    switch (status) {
+      case PaymentStatus.unpaid:
+        return 0;
+      case PaymentStatus.paid:
+        return 1;
+      case PaymentStatus.absence:
+      default:
+        return 2;
+    }
+  }
+
+  Future<void> sortingMembers( String eventId ) async {
+    if (state == null) return;
+
+    final updatedEvents = state!.events.map((event) {
+      if (event.eventId == eventId) {
+        final sortedMembers = List<Member>.from(event.members);
+        sortedMembers.sort((a, b) =>
+            getStatusRank(a.status).compareTo(getStatusRank(b.status)));
+        return event.copyWith(members: sortedMembers);
+      } else {
+        return event;
+      }
+    }).toList();
+
+    state = state!.copyWith(events: updatedEvents);
   }
 }

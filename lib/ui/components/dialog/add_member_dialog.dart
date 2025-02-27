@@ -4,9 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 
 class AddMemberDialog extends ConsumerStatefulWidget {
-  final int eventId;
+  final String userId;
+  final String eventId;
 
-  const AddMemberDialog({required this.eventId, super.key});
+  const AddMemberDialog(
+      {required this.userId, required this.eventId, super.key});
 
   @override
   AddMemberDialogState createState() => AddMemberDialogState();
@@ -28,7 +30,7 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
     try {
       await ref
           .read(userProvider.notifier)
-          .createMember(widget.eventId, _controller.text.trim());
+          .createMember(widget.userId, widget.eventId, _controller.text.trim());
       Navigator.of(context).pop();
     } catch (e) {
       setState(() {

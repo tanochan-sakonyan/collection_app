@@ -10,18 +10,16 @@ import 'package:mr_collection/ui/components/dialog/status_dialog.dart';
 
 class MemberList extends ConsumerWidget {
   final List<Member>? members;
-  final int? eventId;
+  final String eventId;
 
   const MemberList({super.key, required this.members, required this.eventId});
 
-  Future<void> _updateMemberStatus(
-      WidgetRef ref, int? eventId, int? memberId, int? status) async {
+  Future<void> _updateMemberStatus(WidgetRef ref, String userId, String eventId,
+      String memberId, int? status) async {
     try {
       await ref
           .read(userProvider.notifier)
-          .updateMemberStatus(eventId!, memberId!, status!);
-
-      debugPrint('ステータスが更新されました。');
+          .updateMemberStatus(userId, eventId, memberId, status!);
     } catch (error) {
       debugPrint('ステータス更新中にエラーが発生しました。 $error');
     }
@@ -70,7 +68,14 @@ class MemberList extends ConsumerWidget {
                           const Spacer(),
                           const Text('支払い状況'),
                           const SizedBox(width: 3),
-                          SvgPicture.asset('assets/icons/sort.svg'),
+                          GestureDetector(
+                            onTap: () {
+                              ref
+                                  .read(userProvider.notifier)
+                                  .sortingMembers(eventId);
+                            },
+                            child: SvgPicture.asset('assets/icons/sort.svg'),
+                          ),
                           const SizedBox(width: 28),
                         ],
                       ),
@@ -81,44 +86,61 @@ class MemberList extends ConsumerWidget {
                         itemCount: members?.length,
                         itemBuilder: (context, index) {
                           final member = members?[index];
-                          return GestureDetector(
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => StatusDialog(
-                                  eventId: eventId,
-                                  memberId: member?.memberId,
-                                  member: member?.memberName,
-                                  onStatusChange: (int? eventId, int? memberId,
-                                      int status) {
-                                    _updateMemberStatus(
-                                        ref, eventId, memberId, status);
-                                  },
-                                ),
-                              );
-                            },
-                            onLongPress: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => DeleteMemberDialog(
-                                  memberId: member?.memberId,
-                                ),
-                              );
-                            },
-                            child: ListTile(
-                              minTileHeight: 32,
-                              title: (member?.memberName != null)
-                                  ? Text(
-                                      member!.memberName,
-                                      style: TextStyle(
-                                        color: member.status ==
-                                                PaymentStatus.absence
-                                            ? Colors.grey
-                                            : Colors.black,
+                          return Padding(
+                            padding: const EdgeInsets.only(left: 16, right: 16),
+                            child: Column(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => StatusDialog(
+                                        userId: ref.read(userProvider)!.userId,
+                                        eventId: eventId.toString(),
+                                        memberId: member!.memberId,
+                                        member: member.memberName,
+                                        onStatusChange: (String userId,
+                                            String eventId,
+                                            String memberId,
+                                            int status) {
+                                          _updateMemberStatus(ref, userId,
+                                              eventId, memberId, status);
+                                        },
                                       ),
-                                    )
-                                  : null,
-                              trailing: _buildStatusIcon(member?.status),
+                                    );
+                                  },
+                                  onLongPress: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => DeleteMemberDialog(
+                                        userId: ref.read(userProvider)!.userId,
+                                        eventId: eventId,
+                                        memberId: member!.memberId,
+                                      ),
+                                    );
+                                  },
+                                  child: ListTile(
+                                    minTileHeight: 32,
+                                    title: (member?.memberName != null)
+                                        ? Text(
+                                            member!.memberName,
+                                            style: TextStyle(
+                                              color: member.status ==
+                                                      PaymentStatus.absence
+                                                  ? Colors.grey
+                                                  : Colors.black,
+                                            ),
+                                          )
+                                        : null,
+                                    trailing: _buildStatusIcon(member?.status),
+                                  ),
+                                ),
+                                const Divider(
+                                  thickness: 1,
+                                  height: 1,
+                                  color: Color(0xFFE8E8E8),
+                                ),
+                              ],
                             ),
                           );
                         },
@@ -161,7 +183,8 @@ class MemberList extends ConsumerWidget {
                               showDialog(
                                 context: context,
                                 builder: (context) => AddMemberDialog(
-                                  eventId: eventId!,
+                                  userId: ref.read(userProvider)!.userId,
+                                  eventId: eventId,
                                 ),
                               );
                             },
@@ -258,7 +281,7 @@ class MemberList extends ConsumerWidget {
                   SizedBox(
                     width: 60,
                     child: Text(
-                      "出席",
+                      "支払済",
                       style: Theme.of(context).textTheme.bodyLarge,
                       textAlign: TextAlign.center,
                     ),
@@ -303,7 +326,7 @@ class MemberList extends ConsumerWidget {
           ),
           Positioned(
             right: 4,
-            bottom: 90,
+            bottom: 100,
             child: SizedBox(
               height: 60,
               width: 60,

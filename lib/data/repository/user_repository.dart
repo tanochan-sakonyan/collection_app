@@ -11,12 +11,14 @@ class UserRepository {
   // アクセストークンを送って、ユーザー情報を取得する
   Future<User?> registerUser(String accessToken) async {
     debugPrint('fetchUser関数が呼ばれました。');
-    final url = Uri.parse('$baseUrl/users');
+    debugPrint('アクセストークン: $accessToken');
+    final url = Uri.parse('$baseUrl/users/test');
 
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'line_token': accessToken}),
+      body: jsonEncode({}),
+      // body: jsonEncode({'line_token': accessToken}),
     );
 
     debugPrint('Response status: ${response.statusCode}');
@@ -25,7 +27,6 @@ class UserRepository {
     if (response.statusCode == 201 || response.statusCode == 200) {
       try {
         final data = jsonDecode(response.body);
-
         final user = User.fromJson(data);
         return user;
       } catch (e, stackTrace) {
@@ -46,13 +47,13 @@ class UserRepository {
     }
   }
 
-  Future<User?> fetchUserById(int userId) async {
+  Future<User?> fetchUserById(String userId) async {
     debugPrint('fetchUserById関数が呼ばれました。');
     final url = Uri.parse('$baseUrl/users/$userId');
 
     final response = await http.get(
       url,
-      headers: {'Content-Type': 'application/json'},
+      // headers: {'Content-Type': 'application/json'},
     );
 
     debugPrint('Response status: ${response.statusCode}');
@@ -94,21 +95,6 @@ class UserRepository {
       return User.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('PayPayリンクの送信に失敗しました');
-    }
-  }
-
-  Future<User> changeStatus(int? eventId, String memberId, int? status) async {
-    final url = Uri.parse('$baseUrl/events/$eventId/members/$memberId/status');
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'status': status}),
-    );
-
-    if (response.statusCode == 200) {
-      return User.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('ステータスの更新に失敗しました');
     }
   }
 }

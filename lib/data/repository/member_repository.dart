@@ -8,8 +8,9 @@ class MemberRepository {
 
   MemberRepository({required this.baseUrl});
 
-  Future<Member> createMember(int eventId, String newMemberName) async {
-    final url = Uri.parse('$baseUrl/events/$eventId/members');
+  Future<Member> createMember(
+      String userId, String eventId, String newMemberName) async {
+    final url = Uri.parse('$baseUrl/users/$userId/events/$eventId/members');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -25,8 +26,9 @@ class MemberRepository {
   }
 
   Future<Member> updateMemberStatus(
-      int? eventId, int? memberId, int? status) async {
-    final url = Uri.parse('$baseUrl/members/$memberId/status');
+      String userId, String eventId, String memberId, int status) async {
+    final url = Uri.parse(
+        '$baseUrl/users/$userId/events/$eventId/members/$memberId/status');
 
     final requestBody = jsonEncode({'status': status});
     debugPrint('リクエストURL: $url');
@@ -39,7 +41,7 @@ class MemberRepository {
       body: jsonEncode({'status': status}),
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       final data = jsonDecode(response.body);
       return Member.fromJson(data);
     } else {
@@ -52,18 +54,24 @@ class MemberRepository {
     }
   }
 
-  Future<bool> deleteMember(int memberId) async {
-    final url = Uri.parse('$baseUrl/members/$memberId');
+  // メンバーを単体で削除する場合
+  Future<bool> deleteMember(
+      String userId, String eventId, String memberId) async {
+    final url = Uri.parse('$baseUrl/users/$userId/events/$eventId/members');
     final response = await http.delete(
       url,
       headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'memberIdList': [memberId]}),
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       final data = jsonDecode(response.body);
       return data['isSuccessful'] as bool;
     } else {
-      throw Exception('メンバーの削除に失敗しました');
+      throw Exception(
+        'メンバーの削除に失敗しました: '
+        'ステータスコード: ${response.statusCode}, ',
+      );
     }
   }
 }
