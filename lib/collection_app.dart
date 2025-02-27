@@ -15,14 +15,24 @@ class CollectionApp extends ConsumerStatefulWidget {
 }
 
 class _CollectionAppState extends ConsumerState<CollectionApp> {
-  Future<bool> _checkLoginStatus() async {
+  Future<Map<String, bool>> _checkLoginStatus() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool('isLoggedIn') ?? false;
+    bool isLineLoggedIn = prefs.getBool('isLineLoggedIn') ?? false;
+    bool isAppleLoggedIn = prefs.getBool('isAppleLoggedIn') ?? false;
+    return {
+      'isLineLoggedIn': isLineLoggedIn,
+      'isAppleLoggedIn': isAppleLoggedIn,
+    };
   }
 
-  Future<String?> _getUserId() async {
+  Future<String?> _getLineUserId() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString("userId");
+    return prefs.getString("lineUserId");
+  }
+
+  Future<String?> _getAppleUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString("appleUserId");
   }
 
   @override
@@ -48,7 +58,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
         textTheme: collectionAppTextTheme,
       ),
       debugShowCheckedModeBanner: false,
-      home: FutureBuilder<bool>(
+      home: FutureBuilder<Map<String, bool>>(
         future: _checkLoginStatus(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -56,10 +66,14 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
           } else if (snapshot.hasError) {
             return Center(child: Text('エラーが発生しました: ${snapshot.error}'));
           } else {
-            final isLoggedIn = snapshot.data ?? false;
-            if (isLoggedIn) {
+            final data = snapshot.data ?? {};
+            final isLineLoggedIn = data['isLineLoggedIn'] ?? false;
+            final isAppleLoggedIn = data['isAppleLoggedIn'] ?? false;
+
+            if (isLineLoggedIn) {
+              // LINEログインの場合の処理
               return FutureBuilder<String?>(
-                future: _getUserId(),
+                future: _getLineUserId(),
                 builder: (context, userIdSnapshot) {
                   if (userIdSnapshot.connectionState ==
                       ConnectionState.waiting) {
@@ -69,6 +83,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                         child: Text('エラーが発生しました: ${userIdSnapshot.error}'));
                   } else {
                     final userId = userIdSnapshot.data;
+                    debugPrint('userId: $userId');
                     if (userId != null) {
                       return FutureBuilder<User?>(
                         future: ref
@@ -86,10 +101,52 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                           } else {
                             final user = userSnapshot.data;
                             if (user != null) {
-                              return HomeScreen(
-                                title: '集金くん',
-                                user: user,
-                              );
+                              return HomeScreen(title: '集金くん', user: user);
+                            } else {
+                              return const LoginScreen();
+                            }
+                          }
+                        },
+                      );
+                    } else {
+                      debugPrint('userIdが存在しないため、LoginScreenに遷移します。');
+                      return const LoginScreen();
+                    }
+                  }
+                },
+              );
+            } else if (isAppleLoggedIn) {
+              // Appleログインの場合の処理
+              return FutureBuilder<String?>(
+                future: _getAppleUserId(),
+                builder: (context, userIdSnapshot) {
+                  if (userIdSnapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (userIdSnapshot.hasError) {
+                    return Center(
+                        child: Text('エラーが発生しました: ${userIdSnapshot.error}'));
+                  } else {
+                    final userId = userIdSnapshot.data;
+                    debugPrint('userId: $userId');
+                    if (userId != null) {
+                      return FutureBuilder<User?>(
+                        future: ref
+                            .read(userProvider.notifier)
+                            .fetchUserById(userId),
+                        builder: (context, userSnapshot) {
+                          if (userSnapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          } else if (userSnapshot.hasError) {
+                            return Center(
+                                child:
+                                    Text('ユーザー取得エラー: ${userSnapshot.error}'));
+                          } else {
+                            final user = userSnapshot.data;
+                            if (user != null) {
+                              return HomeScreen(title: '集金くん', user: user);
                             } else {
                               return const LoginScreen();
                             }
@@ -104,7 +161,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                 },
               );
             } else {
-              debugPrint('isLoggedINがfalseのため、LoginScreenに遷移します。');
+              // どちらもログイン状態でなければ、LoginScreenに遷移
               return const LoginScreen();
             }
           }
