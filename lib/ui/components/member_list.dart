@@ -69,10 +69,12 @@ class MemberList extends ConsumerWidget {
                           const Text('支払い状況'),
                           const SizedBox(width: 3),
                           GestureDetector(
-                            onTap: (){
-                              ref.read(userProvider.notifier).sortingMembers(eventId);
-                          },
-                          child : SvgPicture.asset('assets/icons/sort.svg'),
+                            onTap: () {
+                              ref
+                                  .read(userProvider.notifier)
+                                  .sortingMembers(eventId);
+                            },
+                            child: SvgPicture.asset('assets/icons/sort.svg'),
                           ),
                           const SizedBox(width: 28),
                         ],
@@ -182,7 +184,7 @@ class MemberList extends ConsumerWidget {
                                 context: context,
                                 builder: (context) => AddMemberDialog(
                                   userId: ref.read(userProvider)!.userId,
-                                  eventId: eventId.toString(),
+                                  eventId: eventId,
                                 ),
                               );
                             },

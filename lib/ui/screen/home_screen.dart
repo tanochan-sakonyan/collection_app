@@ -180,7 +180,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                               context: context,
                               builder: (BuildContext context) {
                                 return AddEventDialog(
-                                  userId:ref.read(userProvider)!.userId,
+                                  userId: ref.read(userProvider)!.userId,
                                 );
                               },
                             );
