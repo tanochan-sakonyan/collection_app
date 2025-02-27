@@ -9,6 +9,8 @@ import 'package:mr_collection/provider/access_token_provider.dart';
 import 'package:mr_collection/provider/event_repository_provider.dart';
 import 'package:mr_collection/provider/member_repository_provider.dart';
 import 'package:mr_collection/services/user_service.dart';
+import 'package:mr_collection/data/model/freezed/member.dart';
+import 'package:mr_collection/data/model/payment_status.dart';
 
 final userProvider = StateNotifierProvider<UserNotifier, User?>((ref) {
   final userService = ref.read(userServiceProvider);
@@ -184,5 +186,34 @@ class UserNotifier extends StateNotifier<User?> {
     } catch (e) {
       debugPrint('メンバーの削除中にエラーが発生しました: $e');
     }
+  }
+
+  int getStatusRank(PaymentStatus status) {
+    switch (status) {
+      case PaymentStatus.unpaid:
+        return 0;
+      case PaymentStatus.paid:
+        return 1;
+      case PaymentStatus.absence:
+      default:
+        return 2;
+    }
+  }
+
+  Future<void> sortingMembers( String eventId ) async {
+    if (state == null) return;
+
+    final updatedEvents = state!.events.map((event) {
+      if (event.eventId == eventId) {
+        final sortedMembers = List<Member>.from(event.members);
+        sortedMembers.sort((a, b) =>
+            getStatusRank(a.status).compareTo(getStatusRank(b.status)));
+        return event.copyWith(members: sortedMembers);
+      } else {
+        return event;
+      }
+    }).toList();
+
+    state = state!.copyWith(events: updatedEvents);
   }
 }

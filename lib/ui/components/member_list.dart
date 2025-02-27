@@ -68,7 +68,12 @@ class MemberList extends ConsumerWidget {
                           const Spacer(),
                           const Text('支払い状況'),
                           const SizedBox(width: 3),
-                          SvgPicture.asset('assets/icons/sort.svg'),
+                          GestureDetector(
+                            onTap: (){
+                              ref.read(userProvider.notifier).sortingMembers(eventId);
+                          },
+                          child : SvgPicture.asset('assets/icons/sort.svg'),
+                          ),
                           const SizedBox(width: 28),
                         ],
                       ),
