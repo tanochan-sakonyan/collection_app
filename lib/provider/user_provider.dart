@@ -9,9 +9,8 @@ import 'package:mr_collection/provider/access_token_provider.dart';
 import 'package:mr_collection/provider/event_repository_provider.dart';
 import 'package:mr_collection/provider/member_repository_provider.dart';
 import 'package:mr_collection/services/user_service.dart';
-
-import '../data/model/freezed/member.dart';
-import '../data/model/payment_status.dart';
+import 'package:mr_collection/data/model/freezed/member.dart';
+import 'package:mr_collection/data/model/payment_status.dart';
 
 final userProvider = StateNotifierProvider<UserNotifier, User?>((ref) {
   final userService = ref.read(userServiceProvider);
