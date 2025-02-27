@@ -192,12 +192,12 @@ class UserNotifier extends StateNotifier<User?> {
   int getStatusRank(PaymentStatus status) {
     switch (status) {
       case PaymentStatus.unpaid:
-        return 0; // 未払いを最優先
+        return 0;
       case PaymentStatus.paid:
-        return 1; // 次に支払い済み
+        return 1;
       case PaymentStatus.absence:
       default:
-        return 2; // 欠席を最後に
+        return 2;
     }
   }
 
