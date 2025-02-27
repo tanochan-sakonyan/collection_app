@@ -58,11 +58,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 onPressed: () async {
                   if (isChecked) {
                     final prefs = await SharedPreferences.getInstance();
-                    final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-                    debugPrint('isLoggedIn: $isLoggedIn');
-                    final userId = prefs.getString('userId');
+                    final isLineLoggedIn =
+                        prefs.getBool('isLineLoggedIn') ?? false;
+                    debugPrint('isLineLoggedIn: $isLineLoggedIn');
+                    final userId = prefs.getString('lineUserId');
 
-                    if (isLoggedIn && userId != null) {
+                    if (isLineLoggedIn && userId != null) {
                       try {
                         await ref
                             .read(userProvider.notifier)
@@ -70,7 +71,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                         final user = ref.read(userProvider);
                         if (mounted && user != null) {
-                          debugPrint('既存ユーザーでHomeScreenに遷移します。user: $user');
+                          debugPrint('既存LINEユーザーでHomeScreenに遷移します。user: $user');
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
                               builder: (context) =>
@@ -93,8 +94,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             .registerUser(accessToken);
 
                         if (user != null) {
-                          prefs.setString('userId', user.userId);
-                          prefs.setBool('isLoggedIn', true);
+                          prefs.setString('lineUserId', user.userId);
+                          prefs.setBool('isLineLoggedIn', true);
                         } else {
                           debugPrint('ユーザー情報がnullです');
                         }
@@ -164,48 +165,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 ),
                 onPressed: () async {
-                  try {
-                    // Appleサインインの認証情報を取得
-                    final credential =
-                        await SignInWithApple.getAppleIDCredential(
-                      scopes: [
-                        AppleIDAuthorizationScopes.email,
-                        AppleIDAuthorizationScopes.fullName,
-                      ],
-                      webAuthenticationOptions: WebAuthenticationOptions(
-                        clientId: 'com.tanotyan.syukinkun.service',
-                        redirectUri: kIsWeb
-                            ? Uri.parse('https://${Uri.base.host}/')
-                            : Uri.parse(
-                                'https://shukinkun-49fb12fd2191.herokuapp.com/auth/apple/callback',
-                              ),
-                      ),
-                    );
+                  if (isChecked) {
+                    final prefs = await SharedPreferences.getInstance();
+                    final isAppleLoggedIn =
+                        prefs.getBool('isAppleLoggedIn') ?? false;
+                    debugPrint('isAppleLoggedIn: $isAppleLoggedIn');
+                    final userId = prefs.getString('appleUserId');
 
-                    debugPrint("Appleサインイン認証情報: $credential");
+                    if (isAppleLoggedIn && userId != null) {
+                      try {
+                        await ref
+                            .read(userProvider.notifier)
+                            .fetchUserById(userId);
 
-                    final url = Uri.https(
-                        'shukinkun-49fb12fd2191.herokuapp.com', '/auth/apple');
-
-                    final response = await http.get(
-                      url,
-                      headers: {'Content-Type': 'application/json'},
-                    );
-
-                    if (response.statusCode == 200 ||
-                        response.statusCode == 201) {
-                      final user = await ref
-                          .read(userProvider.notifier)
-                          .registerUser(response.body);
-
-                      if (user != null) {
-                        final prefs = await SharedPreferences.getInstance();
-                        prefs.setString('userId', user.userId);
-                        prefs.setBool('isLoggedIn', true);
-
-                        if (mounted) {
-                          debugPrint(
-                              'Appleサインイン成功。HomeScreenへ遷移します。user: $user');
+                        final user = ref.read(userProvider);
+                        if (mounted && user != null) {
+                          debugPrint('既存ユーザーでHomeScreenに遷移します。user: $user');
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
                               builder: (context) =>
@@ -213,62 +188,118 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             ),
                           );
                         }
-                      } else {
-                        debugPrint('ユーザー情報がnullです');
+                      } catch (e) {
+                        debugPrint('ユーザー情報の取得に失敗しました。: $e');
                       }
                     } else {
-                      debugPrint(
-                          'Appleサインインエンドポイントエラー: ${response.statusCode}');
-                      if (mounted) {
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: const Text('サインイン失敗'),
-                            content: Text(
-                                'Appleサインインに失敗しました。エラーコード: ${response.statusCode}'),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.of(context).pop(),
-                                child: const Text('OK'),
-                              ),
-                            ],
+                      try {
+                        final credential =
+                            await SignInWithApple.getAppleIDCredential(
+                          scopes: [
+                            AppleIDAuthorizationScopes.email,
+                            AppleIDAuthorizationScopes.fullName,
+                          ],
+                          webAuthenticationOptions: WebAuthenticationOptions(
+                            clientId: 'com.tanotyan.syukinkun.service',
+                            redirectUri: kIsWeb
+                                ? Uri.parse('https://${Uri.base.host}/')
+                                : Uri.parse(
+                                    'https://shukinkun-49fb12fd2191.herokuapp.com/auth/apple/callback',
+                                  ),
                           ),
                         );
+
+                        debugPrint("Appleサインイン認証情報: $credential");
+
+                        final url = Uri.https(
+                            'shukinkun-49fb12fd2191.herokuapp.com',
+                            '/auth/apple');
+
+                        final response = await http.get(
+                          url,
+                          headers: {'Content-Type': 'application/json'},
+                        );
+
+                        if (response.statusCode == 200 ||
+                            response.statusCode == 201) {
+                          final user = await ref
+                              .read(userProvider.notifier)
+                              .registerUser(response.body);
+
+                          if (user != null) {
+                            final prefs = await SharedPreferences.getInstance();
+                            prefs.setString('appleUserId', user.userId);
+                            prefs.setBool('isAppleLoggedIn', true);
+
+                            if (mounted) {
+                              debugPrint(
+                                  'Appleサインイン成功。HomeScreenへ遷移します。user: $user');
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      HomeScreen(title: '集金くん', user: user),
+                                ),
+                              );
+                            }
+                          } else {
+                            debugPrint('ユーザー情報がnullです');
+                          }
+                        } else {
+                          debugPrint(
+                              'Appleサインインエンドポイントエラー: ${response.statusCode}');
+                          if (mounted) {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('サインイン失敗'),
+                                content: Text(
+                                    'Appleサインインに失敗しました。エラーコード: ${response.statusCode}'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                        }
+                      } on PlatformException catch (e) {
+                        if (mounted) {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('サインイン失敗'),
+                              content: Text(
+                                  'エラーコード: ${e.code}\nメッセージ: ${e.message}'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  child: const Text('OK'),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                      } catch (e) {
+                        debugPrint('Appleサインイン中にエラーが発生: $e');
+                        if (mounted) {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('サインイン失敗'),
+                              content: Text('エラーが発生しました: $e'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  child: const Text('OK'),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
                       }
-                    }
-                  } on PlatformException catch (e) {
-                    if (mounted) {
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: const Text('サインイン失敗'),
-                          content:
-                              Text('エラーコード: ${e.code}\nメッセージ: ${e.message}'),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.of(context).pop(),
-                              child: const Text('OK'),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-                  } catch (e) {
-                    debugPrint('Appleサインイン中にエラーが発生: $e');
-                    if (mounted) {
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: const Text('サインイン失敗'),
-                          content: Text('エラーが発生しました: $e'),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.of(context).pop(),
-                              child: const Text('OK'),
-                            ),
-                          ],
-                        ),
-                      );
                     }
                   }
                 },

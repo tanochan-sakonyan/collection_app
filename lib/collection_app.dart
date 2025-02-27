@@ -17,7 +17,7 @@ class CollectionApp extends ConsumerStatefulWidget {
 class _CollectionAppState extends ConsumerState<CollectionApp> {
   Future<bool> _checkLoginStatus() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool('isLoggedIn') ?? false;
+    return prefs.getBool('isLineLoggedIn') ?? false;
   }
 
   Future<String?> _getUserId() async {
@@ -56,8 +56,9 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
           } else if (snapshot.hasError) {
             return Center(child: Text('エラーが発生しました: ${snapshot.error}'));
           } else {
-            final isLoggedIn = snapshot.data ?? false;
-            if (isLoggedIn) {
+            final isLineLoggedIn = snapshot.data ?? false;
+            final isAppleLoggedIn = snapshot.data ?? false;
+            if (isLineLoggedIn || isAppleLoggedIn == true) {
               return FutureBuilder<String?>(
                 future: _getUserId(),
                 builder: (context, userIdSnapshot) {
@@ -104,7 +105,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                 },
               );
             } else {
-              debugPrint('isLoggedINがfalseのため、LoginScreenに遷移します。');
+              debugPrint('isLineLoggedINがfalseのため、LoginScreenに遷移します。');
               return const LoginScreen();
             }
           }
