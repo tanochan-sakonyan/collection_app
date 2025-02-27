@@ -61,7 +61,7 @@ class MemberRepository {
     final response = await http.delete(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'memberIdList': memberId}),
+      body: jsonEncode({'memberIdList': [memberId]}),
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
