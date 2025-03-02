@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mr_collection/ui/components/dialog/delete_complete_dialog.dart';
 
 class DeleteAccountDialog extends StatefulWidget {
   const DeleteAccountDialog({super.key});
@@ -116,9 +117,16 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
                     child: ElevatedButton(
                       onPressed: _checked
                           ? () {
-                              Navigator.of(context).pop(true);
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) =>
+                                    const DeleteCompleteDialog(),
+                              );
                             }
-                          : null, //TODO 削除機能を実装 //TODO 削除が完了しましたのポップアップに遷移
+                          : () {
+                              Navigator.of(context).pop(true);
+                            },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: _checked
                             ? const Color(0xFFF2F2F2)
