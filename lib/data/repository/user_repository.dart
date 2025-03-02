@@ -97,12 +97,10 @@ class UserRepository {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      final message = data['message'];
       if (data['isSuccessful'] == true) {
         debugPrint('ユーザー削除成功: $data : user_repository.dart');
         return null;
       } else {
-        // 予期しないレスポンスの場合
         throw Exception('Unexpected response: $data');
       }
     } else if(response.statusCode == 404) {
