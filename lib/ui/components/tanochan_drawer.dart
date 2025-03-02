@@ -1,9 +1,8 @@
 // lib/custom_drawer.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mr_collection/ui/components/dialog/confirmation_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/delete_account_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/logout_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/paypay_dialog.dart';
 import 'package:mr_collection/ui/screen/privacy_policy_screen.dart';
 import 'package:mr_collection/ui/screen/terms_of_service_screen.dart';
 
@@ -105,7 +104,17 @@ class TanochanDrawer extends StatelessWidget {
               },
               icon: SvgPicture.asset("assets/icons/drawer_file.svg"),
             ),
-            const SizedBox(height: 100),
+            const SizedBox(height: 20),
+            _buildMenuItem(
+              context,
+              text: "アカウントの削除",
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (context) => const DeleteAccountDialog());
+              },
+              icon: SvgPicture.asset("assets/icons/drawer_delete_account.svg"),
+            ),
           ],
         ),
       ),
