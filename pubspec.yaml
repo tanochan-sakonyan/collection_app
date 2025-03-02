@@ -60,5 +60,6 @@ flutter:
     - assets/icons/drawer_star.svg
     - assets/icons/drawer_key.svg
     - assets/icons/drawer_file.svg
+    - assets/icons/drawer_delete_account.svg
 
   uses-material-design: true
