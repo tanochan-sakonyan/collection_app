@@ -119,14 +119,12 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
                           ? () {
                               showDialog(
                                 context: context,
-                                barrierDismissible: false,
+                                barrierDismissible: true,
                                 builder: (context) =>
                                     const DeleteCompleteDialog(),
                               );
                             }
-                          : () {
-                              Navigator.of(context).pop(true);
-                            },
+                          : null,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: _checked
                             ? const Color(0xFFF2F2F2)
