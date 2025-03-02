@@ -119,7 +119,7 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
                           ? () {
                               showDialog(
                                 context: context,
-                                barrierDismissible: true,
+                                barrierDismissible: true, //最後にfalseに直す
                                 builder: (context) =>
                                     const DeleteCompleteDialog(),
                               );
