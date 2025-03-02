@@ -83,6 +83,40 @@ class UserRepository {
     }
   }
 
+  Future<User?> deleteUser(String userId) async {
+    debugPrint('deleteUser関数が呼ばれました。ユーザーID: $userId : user_repository.dart');
+    final url = Uri.parse('$baseUrl/users/$userId');
+
+    final response = await http.delete(
+      url,
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    debugPrint('Response status: ${response.statusCode}');
+    debugPrint('Response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final message = data['message'];
+      if (data['isSuccessful'] == true) {
+        debugPrint('ユーザー削除成功: $data : user_repository.dart');
+        return null;
+      } else {
+        // 予期しないレスポンスの場合
+        throw Exception('Unexpected response: $data');
+      }
+    } else if(response.statusCode == 404) {
+      final data = jsonDecode(response.body);
+      final message = data['message'] ?? 'User not found';
+      throw Exception('User not found: $message');
+    } else{
+      final data = jsonDecode(response.body);
+      final message = data['message'] ?? 'Internal Server Error';
+      throw Exception(
+          'Error deleting user: $message (status code: ${response.statusCode})');
+    }
+  }
+
   Future<User> sendPaypayLink(String? userId, String paypayLink) async {
     final url = Uri.parse('$baseUrl/users/$userId/paypay-link');
     final response = await http.post(

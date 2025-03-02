@@ -77,6 +77,16 @@ class UserNotifier extends StateNotifier<User?> {
     state = null;
   }
 
+  Future<void> deleteUser( String userId ) async{
+    try {
+      await ref.read(userRepositoryProvider).deleteUser(userId);
+      state = null;
+    } catch (e) {
+      debugPrint('ユーザーの削除中にエラーが発生しました: $e: user_provider.dart ');
+      rethrow;
+    }
+  }
+
   Future<void> updateMemberStatus(
       String userId, String eventId, String memberId, int newStatus) async {
     try {
