@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mr_collection/ui/screen/login_screen.dart';
 
 class DeleteCompleteDialog extends StatelessWidget {
   const DeleteCompleteDialog({super.key});
@@ -31,8 +32,10 @@ class DeleteCompleteDialog extends StatelessWidget {
               width: 272,
               child: ElevatedButton(
                 onPressed: () {
-                  // LoginScreenに遷移
-                  // isLoggedInをfalseにする
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginScreen()));
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFF2F2F2),
