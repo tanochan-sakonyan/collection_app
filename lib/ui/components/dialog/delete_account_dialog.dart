@@ -1,15 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/ui/components/dialog/delete_complete_dialog.dart';
 
-class DeleteAccountDialog extends StatefulWidget {
-  const DeleteAccountDialog({super.key});
+import '../../../provider/user_provider.dart';
+
+class DeleteAccountDialog extends ConsumerStatefulWidget {
+  final String userId;
+  const DeleteAccountDialog({required this.userId, super.key});
 
   @override
-  State<DeleteAccountDialog> createState() => _DeleteAccountDialogState();
+  ConsumerState<DeleteAccountDialog> createState() => _DeleteAccountDialogState();
 }
 
-class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
+class _DeleteAccountDialogState extends ConsumerState<DeleteAccountDialog> {
   bool _checked = false;
+
+  Future<void> _deleteUser(String userId) async {
+    try {
+      await ref.read(userProvider.notifier).deleteUser(userId);
+      showDialog(
+        context: context,
+        barrierDismissible: true, //最後にfalseに直す
+        builder: (context) =>
+        const DeleteCompleteDialog(),
+      );
+    } catch (error) {
+      debugPrint('ユーザーの削除に失敗しました: $error: delete_account_dialog.dart');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,14 +135,8 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
                     child: ElevatedButton(
                       onPressed: _checked
                           ? () {
-                              showDialog(
-                                context: context,
-                                barrierDismissible: true, //最後にfalseに直す
-                                builder: (context) =>
-                                    const DeleteCompleteDialog(),
-                              );
-                            }
-                          : null,
+                        _deleteUser(widget.userId);
+                      }: null,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: _checked
                             ? const Color(0xFFF2F2F2)
