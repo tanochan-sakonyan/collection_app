@@ -1,7 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:mr_collection/ui/screen/login_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DeleteCompleteDialog extends StatelessWidget {
   const DeleteCompleteDialog({super.key});
+
+  Future<String> _getCurrentLoginMedia() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('currentLoginMedia') ?? '';
+  }
+
+  Future<void> _updatePrefsAfterUserDeletion() async {
+    final currentLoginMedia = await _getCurrentLoginMedia();
+    if (currentLoginMedia == 'line') {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isLineLoggedIn', false);
+      await prefs.remove('lineUserId');
+    } else if (currentLoginMedia == 'apple') {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isAppleLoggedIn', false);
+      await prefs.remove('appleUserId');
+    } else {
+      debugPrint('ログインメディアが不明です: delete_complete_dialog.dart');
+      debugPrint('currentLoginMedia: $currentLoginMedia');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +54,11 @@ class DeleteCompleteDialog extends StatelessWidget {
               width: 272,
               child: ElevatedButton(
                 onPressed: () {
-                  // LoginScreenに遷移
-                  // isLoggedInをfalseにする
+                  _updatePrefsAfterUserDeletion();
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginScreen()));
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFF2F2F2),

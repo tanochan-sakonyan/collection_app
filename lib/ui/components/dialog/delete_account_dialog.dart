@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/delete_complete_dialog.dart';
-
-import '../../../provider/user_provider.dart';
 
 class DeleteAccountDialog extends ConsumerStatefulWidget {
   final String userId;
   const DeleteAccountDialog({required this.userId, super.key});
 
   @override
-  ConsumerState<DeleteAccountDialog> createState() => _DeleteAccountDialogState();
+  ConsumerState<DeleteAccountDialog> createState() =>
+      _DeleteAccountDialogState();
 }
 
 class _DeleteAccountDialogState extends ConsumerState<DeleteAccountDialog> {
@@ -20,9 +20,8 @@ class _DeleteAccountDialogState extends ConsumerState<DeleteAccountDialog> {
       await ref.read(userProvider.notifier).deleteUser(userId);
       showDialog(
         context: context,
-        barrierDismissible: true, //最後にfalseに直す
-        builder: (context) =>
-        const DeleteCompleteDialog(),
+        barrierDismissible: false,
+        builder: (context) => const DeleteCompleteDialog(),
       );
     } catch (error) {
       debugPrint('ユーザーの削除に失敗しました: $error: delete_account_dialog.dart');
@@ -135,8 +134,9 @@ class _DeleteAccountDialogState extends ConsumerState<DeleteAccountDialog> {
                     child: ElevatedButton(
                       onPressed: _checked
                           ? () {
-                        _deleteUser(widget.userId);
-                      }: null,
+                              _deleteUser(widget.userId);
+                            }
+                          : null,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: _checked
                             ? const Color(0xFFF2F2F2)
