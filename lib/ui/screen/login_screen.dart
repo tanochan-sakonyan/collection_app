@@ -26,6 +26,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     bool isChecked = ref.watch(checkboxProvider);
+
+    Future<void> _updateCurrentLoginMedia(String media) async {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('currentLoginMedia', media);
+      debugPrint('currentLoginMedia: $media');
+    }
+
     debugPrint('isChecked: $isChecked');
 
     return Scaffold(
@@ -68,6 +75,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         final user = ref.read(userProvider);
                         if (mounted && user != null) {
                           debugPrint('既存LINEユーザーでHomeScreenに遷移します。user: $user');
+                          _updateCurrentLoginMedia('line');
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
                               builder: (context) =>
@@ -99,6 +107,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         if (mounted && user != null) {
                           debugPrint(
                               'LoginScreenからHomeScreenに遷移します。user: $user');
+                          _updateCurrentLoginMedia('line');
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
                               builder: (context) =>
@@ -176,7 +185,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                         final user = ref.read(userProvider);
                         if (mounted && user != null) {
-                          debugPrint('既存ユーザーでHomeScreenに遷移します。user: $user');
+                          _updateCurrentLoginMedia('apple');
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
                               builder: (context) =>
@@ -230,6 +239,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             if (mounted) {
                               debugPrint(
                                   'Appleサインイン成功。HomeScreenへ遷移します。user: $user');
+                              _updateCurrentLoginMedia('apple');
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                   builder: (context) =>

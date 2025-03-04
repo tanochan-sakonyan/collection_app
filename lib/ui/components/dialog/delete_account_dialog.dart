@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/delete_complete_dialog.dart';
-
-import '../../../provider/user_provider.dart';
 
 class DeleteAccountDialog extends ConsumerStatefulWidget {
   final String userId;
