@@ -2,12 +2,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/delete_account_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/logout_dialog.dart';
 import 'package:mr_collection/ui/screen/privacy_policy_screen.dart';
 import 'package:mr_collection/ui/screen/terms_of_service_screen.dart';
-
-import '../../provider/user_provider.dart';
 
 class TanochanDrawer extends StatelessWidget {
   const TanochanDrawer({super.key});
@@ -108,22 +107,23 @@ class TanochanDrawer extends StatelessWidget {
               icon: SvgPicture.asset("assets/icons/drawer_file.svg"),
             ),
             const SizedBox(height: 20),
-    Consumer(builder: (context, ref, child) {
-      final user = ref.watch(userProvider);
-      return _buildMenuItem(
-        context,
-        text: "アカウントの削除",
-        onTap: () {
-          if (user != null) {
-          showDialog(
-              context: context,
-              builder: (context) =>
-              DeleteAccountDialog(userId: user.userId));
-        }
-    },
-        icon: SvgPicture.asset("assets/icons/drawer_delete_account.svg"),
-      );
-    }),
+            Consumer(builder: (context, ref, child) {
+              final user = ref.watch(userProvider);
+              return _buildMenuItem(
+                context,
+                text: "アカウントの削除",
+                onTap: () {
+                  if (user != null) {
+                    showDialog(
+                        context: context,
+                        builder: (context) =>
+                            DeleteAccountDialog(userId: user.userId));
+                  }
+                },
+                icon:
+                    SvgPicture.asset("assets/icons/drawer_delete_account.svg"),
+              );
+            }),
           ],
         ),
       ),
