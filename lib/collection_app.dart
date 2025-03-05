@@ -35,6 +35,12 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
     return prefs.getString("appleUserId");
   }
 
+  Future<void> _updateCurrentLoginMedia(String media) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('currentLoginMedia', media);
+    debugPrint('currentLoginMedia: $media');
+  }
+
   @override
   Widget build(BuildContext context) {
     final baseTextTheme = GoogleFonts.montserratTextTheme();
@@ -101,6 +107,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                           } else {
                             final user = userSnapshot.data;
                             if (user != null) {
+                              _updateCurrentLoginMedia('line');
                               return HomeScreen(title: '集金くん', user: user);
                             } else {
                               return const LoginScreen();
@@ -146,6 +153,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                           } else {
                             final user = userSnapshot.data;
                             if (user != null) {
+                              _updateCurrentLoginMedia('apple');
                               return HomeScreen(title: '集金くん', user: user);
                             } else {
                               return const LoginScreen();
