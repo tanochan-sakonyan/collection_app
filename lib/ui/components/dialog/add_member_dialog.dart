@@ -17,8 +17,15 @@ class AddMemberDialog extends ConsumerStatefulWidget {
 class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
   final TextEditingController _controller = TextEditingController();
   String? _errorMessage;
+  bool _isButtonEnabled = true;
 
   Future<void> _createMember() async {
+    if (!_isButtonEnabled) return;
+
+    setState(() {
+      _isButtonEnabled = false;
+    });
+
     setState(() {
       if (_controller.text.trim().isEmpty) {
         _errorMessage = 'メンバーを入力してください';
@@ -31,6 +38,11 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
       await ref
           .read(userProvider.notifier)
           .createMember(widget.userId, widget.eventId, _controller.text.trim());
+      Future.delayed(const Duration(seconds: 2), () {
+        setState(() {
+          _isButtonEnabled = true;
+        });
+      });
       Navigator.of(context).pop();
     } catch (e) {
       setState(() {
@@ -81,10 +93,10 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
                       //LINE認証申請前の臨時ダイアログ
                       showDialog(
                         context: context,
-                        builder: (context) => AlertDialog(
-                          contentPadding: const EdgeInsets.symmetric(
+                        builder: (context) => const AlertDialog(
+                          contentPadding: EdgeInsets.symmetric(
                               vertical: 56.0, horizontal: 24.0),
-                          content: const Text(
+                          content: Text(
                             'LINEへの認証申請中のため、\n機能解禁までしばらくお待ちください',
                             textAlign: TextAlign.center,
                           ),
@@ -101,7 +113,7 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
                     width: 118,
                     height: 36,
                     child: ElevatedButton(
-                      onPressed: _createMember,
+                      onPressed: _isButtonEnabled ? _createMember : null,
                       style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF5AFF9C),
                           shape: RoundedRectangleBorder(
