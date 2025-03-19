@@ -19,12 +19,15 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
   String? _errorMessage;
 
   Future<void> _createMember() async {
-    setState(() {
-      if (_controller.text.trim().isEmpty) {
+    if (_controller.text.trim().isEmpty) {
+      setState(() {
         _errorMessage = 'メンバーを入力してください';
-      } else {
-        _errorMessage = null;
-      }
+      });
+      return;
+    }
+
+    setState(() {
+      _errorMessage = null;
     });
 
     try {
@@ -81,10 +84,10 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
                       //LINE認証申請前の臨時ダイアログ
                       showDialog(
                         context: context,
-                        builder: (context) => AlertDialog(
-                          contentPadding: const EdgeInsets.symmetric(
+                        builder: (context) => const AlertDialog(
+                          contentPadding: EdgeInsets.symmetric(
                               vertical: 56.0, horizontal: 24.0),
-                          content: const Text(
+                          content: Text(
                             'LINEへの認証申請中のため、\n機能解禁までしばらくお待ちください',
                             textAlign: TextAlign.center,
                           ),
