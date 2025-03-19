@@ -2,30 +2,48 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 
-class DeleteMemberDialog extends ConsumerWidget {
+class DeleteMemberDialog extends ConsumerStatefulWidget {
   final String userId;
   final String eventId;
   final String memberId;
-  const DeleteMemberDialog(
-      {required this.userId,
-      required this.eventId,
-      required this.memberId,
-      super.key});
+  const DeleteMemberDialog({
+    required this.userId,
+    required this.eventId,
+    required this.memberId,
+    super.key,
+  });
 
-  Future<void> _deleteMember(
-      ref, String userId, String eventId, String memberId) async {
+  @override
+  ConsumerState<DeleteMemberDialog> createState() => _DeleteMemberDialogState();
+}
+
+class _DeleteMemberDialogState extends ConsumerState<DeleteMemberDialog> {
+  bool isButtonEnabled = true;
+
+  Future<void> _deleteMember() async {
+    if (!isButtonEnabled) return;
+
+    setState(() {
+      isButtonEnabled = false;
+    });
+
     try {
       await ref
           .read(userProvider.notifier)
-          .deleteMember(userId, eventId, memberId);
-      Navigator.of(ref).pop();
+          .deleteMember(widget.userId, widget.eventId, widget.memberId);
+      Navigator.of(context).pop();
     } catch (error) {
-      debugPrint('イベントの削除に失敗しました: $error');
+      debugPrint('メンバー削除に失敗しました: $error');
+      Future.delayed(const Duration(seconds: 2), () {
+        setState(() {
+          isButtonEnabled = true;
+        });
+      });
     }
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
@@ -41,7 +59,7 @@ class DeleteMemberDialog extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              'このメンバーを削除しますか？', //TODO 実際にメンバー名を取得
+              'このメンバーを削除しますか？',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
@@ -78,9 +96,7 @@ class DeleteMemberDialog extends ConsumerWidget {
                   height: 36,
                   width: 107,
                   child: ElevatedButton(
-                    onPressed: () {
-                      _deleteMember(context, userId, eventId, memberId);
-                    },
+                    onPressed: isButtonEnabled ? _deleteMember : null,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFF2F2F2),
                       elevation: 2,
