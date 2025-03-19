@@ -18,13 +18,13 @@ class DeleteMemberDialog extends ConsumerStatefulWidget {
 }
 
 class _DeleteMemberDialogState extends ConsumerState<DeleteMemberDialog> {
-  bool isButtonEnabled = true;
+  bool _isButtonEnabled = true;
 
   Future<void> _deleteMember() async {
-    if (!isButtonEnabled) return;
+    if (!_isButtonEnabled) return;
 
     setState(() {
-      isButtonEnabled = false;
+      _isButtonEnabled = false;
     });
 
     try {
@@ -36,7 +36,7 @@ class _DeleteMemberDialogState extends ConsumerState<DeleteMemberDialog> {
       debugPrint('メンバー削除に失敗しました: $error');
       Future.delayed(const Duration(seconds: 2), () {
         setState(() {
-          isButtonEnabled = true;
+          _isButtonEnabled = true;
         });
       });
     }
@@ -96,7 +96,7 @@ class _DeleteMemberDialogState extends ConsumerState<DeleteMemberDialog> {
                   height: 36,
                   width: 107,
                   child: ElevatedButton(
-                    onPressed: isButtonEnabled ? _deleteMember : null,
+                    onPressed: _isButtonEnabled ? _deleteMember : null,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFF2F2F2),
                       elevation: 2,

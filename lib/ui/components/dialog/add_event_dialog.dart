@@ -3,7 +3,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/constants/base_url.dart';
 import 'package:mr_collection/provider/user_provider.dart';
-import 'package:mr_collection/ui/components/button/toggle_button.dart';
 import 'package:mr_collection/data/repository/event_repository.dart';
 
 class AddEventDialog extends ConsumerStatefulWidget {
@@ -16,6 +15,7 @@ class AddEventDialog extends ConsumerStatefulWidget {
 }
 
 class AddEventDialogState extends ConsumerState<AddEventDialog> {
+  bool _isButtonEnabled = true;
   bool isToggleOn = true;
 
   final EventRepository eventRepository = EventRepository(baseUrl: baseUrl);
@@ -24,6 +24,11 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
     final eventName = controller.text;
     // final isCopy = isToggleOn;
     final userId = ref.read(userProvider)!.userId;
+
+    if (!_isButtonEnabled) return;
+    setState(() {
+      _isButtonEnabled = false;
+    });
 
     if (eventName.isEmpty) {
       return;
@@ -73,7 +78,9 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                   ),
                   IconButton(
                       icon: SvgPicture.asset("assets/icons/check_circle.svg"),
-                      onPressed: () => _createEvent(controller)),
+                      onPressed: _isButtonEnabled
+                          ? () => _createEvent(controller)
+                          : null),
                 ],
               ),
               const SizedBox(height: 12),
@@ -127,10 +134,10 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                           //LINE認証申請前の臨時ダイアログ
                           showDialog(
                             context: context,
-                            builder: (context) => AlertDialog(
-                              contentPadding: const EdgeInsets.symmetric(
+                            builder: (context) => const AlertDialog(
+                              contentPadding: EdgeInsets.symmetric(
                                   vertical: 56.0, horizontal: 24.0),
-                              content: const Text(
+                              content: Text(
                                 'LINEへの認証申請中のため、\n機能解禁までしばらくお待ちください',
                                 textAlign: TextAlign.center,
                               ),
