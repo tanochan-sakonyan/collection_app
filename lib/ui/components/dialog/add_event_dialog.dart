@@ -20,19 +20,41 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
 
   final EventRepository eventRepository = EventRepository(baseUrl: baseUrl);
 
-  Future<void> _createEvent(TextEditingController controller) async {
-    final eventName = controller.text;
+  final TextEditingController _controller = TextEditingController();
+  String? _errorText;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(() {
+      if (_controller.text.length > 8) {
+        setState(() {
+          _errorText = '最大8文字まで入力可能です';
+        });
+      } else {
+        setState(() {
+          _errorText = null;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Future<void> _createEvent() async {
+    final eventName = _controller.text;
     // final isCopy = isToggleOn;
     final userId = ref.read(userProvider)!.userId;
 
-    if (!_isButtonEnabled) return;
+    if (!_isButtonEnabled || eventName.isEmpty || eventName.length > 8) return;
+
     setState(() {
       _isButtonEnabled = false;
     });
-
-    if (eventName.isEmpty) {
-      return;
-    }
 
     try {
       debugPrint('イベント名: $eventName, ユーザーID: $userId');
@@ -45,7 +67,6 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
 
   @override
   Widget build(BuildContext context) {
-    var controller = TextEditingController();
     return Dialog(
       backgroundColor: const Color(0xFFF2F2F2),
       shape: RoundedRectangleBorder(
@@ -78,8 +99,8 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                   ),
                   IconButton(
                       icon: SvgPicture.asset("assets/icons/check_circle.svg"),
-                      onPressed: _isButtonEnabled
-                          ? () => _createEvent(controller)
+                      onPressed: _isButtonEnabled && _controller.text.length <= 8
+                          ? () => _createEvent()
                           : null),
                 ],
               ),
@@ -92,10 +113,11 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                   border: Border.all(color: Colors.black),
                 ),
                 child: TextField(
-                  controller: controller,
-                  decoration: const InputDecoration(
+                  controller: _controller,
+                  decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: 'イベント名を入力',
+                    errorText: _errorText,
                   ),
                 ),
               ),
