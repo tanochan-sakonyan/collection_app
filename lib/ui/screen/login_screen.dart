@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mr_collection/provider/access_token_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
+import 'package:mr_collection/ui/components/dialog/login_error_dialog.dart';
 import 'package:mr_collection/ui/screen/home_screen.dart';
 import 'package:mr_collection/ui/screen/privacy_policy_screen.dart';
 import 'package:mr_collection/ui/screen/terms_of_service_screen.dart';
@@ -118,20 +119,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         }
                       } on PlatformException catch (e) {
                         if (mounted) {
+                          debugPrint("エラーが発生: $e");
                           showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text('ログイン失敗'),
-                              content: Text(
-                                  'エラーコード: ${e.code}\nメッセージ: ${e.message}'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.of(context).pop(),
-                                  child: const Text('OK'),
-                                ),
-                              ],
-                            ),
-                          );
+                              context: context,
+                              builder: (context) => const LoginErrorDialog());
                         }
                       }
                     }
@@ -262,57 +253,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 'Appleサインインエンドポイントエラー: ${response.statusCode}');
                             if (mounted) {
                               showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  title: const Text('サインイン失敗'),
-                                  content: Text(
-                                      'Appleサインインに失敗しました。エラーコード: ${response.statusCode}'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(),
-                                      child: const Text('OK'),
-                                    ),
-                                  ],
-                                ),
-                              );
+                                  context: context,
+                                  builder: (context) =>
+                                      const LoginErrorDialog());
                             }
                           }
                         } on PlatformException catch (e) {
                           if (mounted) {
+                            debugPrint("エラーが発生 :$e");
                             showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                title: const Text('サインイン失敗'),
-                                content: Text(
-                                    'エラーコード: ${e.code}\nメッセージ: ${e.message}'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(),
-                                    child: const Text('OK'),
-                                  ),
-                                ],
-                              ),
-                            );
+                                context: context,
+                                builder: (context) => const LoginErrorDialog());
                           }
                         } catch (e) {
                           debugPrint('Appleサインイン中にエラーが発生: $e');
                           if (mounted) {
                             showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                title: const Text('サインイン失敗'),
-                                content: Text('エラーが発生しました: $e'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(),
-                                    child: const Text('OK'),
-                                  ),
-                                ],
-                              ),
-                            );
+                                context: context,
+                                builder: (context) => const LoginErrorDialog());
                           }
                         }
                       }
@@ -384,7 +342,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 const Text(' に同意します。'),
               ],
             ),
-            const SizedBox(height: 100)
+            const SizedBox(height: 100),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginErrorDialog()));
+                },
+                child: const Text("LoginErrorDialogを表示"))
           ],
         ),
       ),
