@@ -96,7 +96,7 @@ class TanochanDrawer extends StatelessWidget {
             const SizedBox(height: 20),
             _buildMenuItem(
               context,
-              text: "プライパシーポリシー",
+              text: "プライバシーポリシー",
               onTap: () {
                 Navigator.push(
                   context,
