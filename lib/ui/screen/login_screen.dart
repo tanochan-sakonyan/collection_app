@@ -342,15 +342,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 const Text(' に同意します。'),
               ],
             ),
-            const SizedBox(height: 100),
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const LoginErrorDialog()));
-                },
-                child: const Text("LoginErrorDialogを表示"))
           ],
         ),
       ),
