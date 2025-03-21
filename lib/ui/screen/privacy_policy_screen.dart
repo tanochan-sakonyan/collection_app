@@ -32,6 +32,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   "tanochan34@gmail.com",
                   style: DefaultTextStyle.of(context).style.copyWith(
                     color: Colors.blue,
+                    fontFamily: 'SF',
                     fontSize: 14,
                     fontWeight: FontWeight.normal,
                     decoration: TextDecoration.none,
@@ -44,6 +45,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   "tanochan34@gmail.com",
                   style: DefaultTextStyle.of(context).style.copyWith(
                     color: Colors.blue,
+                    fontFamily: 'SF',
                     fontSize: 14,
                     fontWeight: FontWeight.normal,
                     decoration: TextDecoration.none,
@@ -56,6 +58,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                       "tanochan34@gmail.com",
                       style: DefaultTextStyle.of(context).style.copyWith(
                         color: Colors.blue,
+                        fontFamily: 'SF',
                         fontSize: 14,
                         fontWeight: FontWeight.normal,
                         decoration: TextDecoration.none,
