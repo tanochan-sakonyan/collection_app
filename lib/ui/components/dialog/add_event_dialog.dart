@@ -17,6 +17,7 @@ class AddEventDialog extends ConsumerStatefulWidget {
 class AddEventDialogState extends ConsumerState<AddEventDialog> {
   bool _isButtonEnabled = true;
   bool isToggleOn = true;
+  bool _isEventNameEmptyError = false;
 
   final EventRepository eventRepository = EventRepository(baseUrl: baseUrl);
 
@@ -31,6 +32,10 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
     });
 
     if (eventName.isEmpty) {
+      setState(() {
+        _isButtonEnabled = true;
+        _isEventNameEmptyError = true;
+      });
       return;
     }
 
@@ -99,7 +104,23 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              _isEventNameEmptyError
+                  ? const Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(4.0),
+                          child: Text(
+                            'イベント名を入力してください',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  : const SizedBox(height: 24),
               // Options Section
               Container(
                 decoration: BoxDecoration(
