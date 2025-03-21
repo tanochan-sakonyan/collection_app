@@ -26,7 +26,6 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
     final userId = ref.read(userProvider)!.userId;
 
     if (!_isButtonEnabled) return;
-
     setState(() {
       _isButtonEnabled = false;
     });
