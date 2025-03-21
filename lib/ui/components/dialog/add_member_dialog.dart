@@ -19,20 +19,52 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
   String? _errorMessage;
   bool _isButtonEnabled = true;
 
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(() {
+      final text = _controller.text.trim();
+      if (text.length > 13) {
+        setState(() {
+          _errorMessage = '最大13文字まで入力可能です';
+        });
+      } else {
+        setState(() {
+          _errorMessage = null;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   Future<void> _createMember() async {
+    final memberName = _controller.text.trim();
     if (!_isButtonEnabled) return;
 
     setState(() {
       _isButtonEnabled = false;
-    });
-
-    setState(() {
-      if (_controller.text.trim().isEmpty) {
+      if (memberName.isEmpty) {
         _errorMessage = 'メンバーを入力してください';
-      } else {
+      }
+      else if (memberName.length > 13) {
+        _errorMessage = '最大13文字まで入力可能です';
+      }
+      else {
         _errorMessage = null;
       }
     });
+
+    if (memberName.isEmpty || memberName.length > 13) {
+      setState(() {
+        _isButtonEnabled = true;
+      });
+      return;
+    }
 
     try {
       await ref
