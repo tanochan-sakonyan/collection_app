@@ -1,7 +1,18 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PrivacyPolicyScreen extends StatelessWidget {
   const PrivacyPolicyScreen({super.key});
+
+  Future<void> _launchURL(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +33,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   style: DefaultTextStyle.of(context).style.copyWith(
                     color: Colors.blue,
                     fontSize: 14,
+                    fontWeight: FontWeight.normal,
                     decoration: TextDecoration.none,
                   ),
                 ),
@@ -33,6 +45,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   style: DefaultTextStyle.of(context).style.copyWith(
                     color: Colors.blue,
                     fontSize: 14,
+                    fontWeight: FontWeight.normal,
                     decoration: TextDecoration.none,
                   ),
                 ),
@@ -44,10 +57,27 @@ class PrivacyPolicyScreen extends StatelessWidget {
                       style: DefaultTextStyle.of(context).style.copyWith(
                         color: Colors.blue,
                         fontSize: 14,
-                          decoration: TextDecoration.none,
+                        fontWeight: FontWeight.normal,
+                        decoration: TextDecoration.none,
                       ),
                     ),
                   ),
+              const TextSpan(
+                text: "）またはウェブサイト（",
+              ),
+              TextSpan(
+                text: "https://tanochan.studio.site/",
+                style: const TextStyle(
+                  color: Colors.blue,
+                  fontSize: 14,
+                  decoration: TextDecoration.underline,
+                ),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () {
+                    print("URL tapped");
+                    _launchURL("https://tanochan.studio.site/");
+                  },
+              ),
                   const TextSpan(text: "）でお問い合わせください。\n\nこのプライバシーポリシーページは、アプリプライバシーポリシージェネレーターによって生成され、一部をアプリの具体的な機能に応じてカスタマイズしています。"),
                 ],
               ),
