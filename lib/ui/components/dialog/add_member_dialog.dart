@@ -24,9 +24,9 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
     super.initState();
     _controller.addListener(() {
       final text = _controller.text.trim();
-      if (text.length > 13) {
+      if (text.length > 9) {
         setState(() {
-          _errorMessage = '最大13文字まで入力可能です';
+          _errorMessage = '最大9文字まで入力可能です';
         });
       } else {
         setState(() {
@@ -51,15 +51,15 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
       if (memberName.isEmpty) {
         _errorMessage = 'メンバーを入力してください';
       }
-      else if (memberName.length > 13) {
-        _errorMessage = '最大13文字まで入力可能です';
+      else if (memberName.length > 9) {
+        _errorMessage = '最大9文字まで入力可能です';
       }
       else {
         _errorMessage = null;
       }
     });
 
-    if (memberName.isEmpty || memberName.length > 13) {
+    if (memberName.isEmpty || memberName.length > 9) {
       setState(() {
         _isButtonEnabled = true;
       });
