@@ -15,14 +15,38 @@ class AddEventDialog extends ConsumerStatefulWidget {
 }
 
 class AddEventDialogState extends ConsumerState<AddEventDialog> {
+  final TextEditingController _controller = TextEditingController();
+  String? _errorMessage;
   bool _isButtonEnabled = true;
   bool isToggleOn = true;
-  bool _isEventNameEmptyError = false;
 
   final EventRepository eventRepository = EventRepository(baseUrl: baseUrl);
 
-  Future<void> _createEvent(TextEditingController controller) async {
-    final eventName = controller.text;
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(() {
+      final text = _controller.text.trim();
+      if (text.length > 8) {
+        setState(() {
+          _errorMessage = '最大8文字まで入力可能です';
+        });
+      } else {
+        setState(() {
+          _errorMessage = null;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Future<void> _createEvent() async {
+    final eventName = _controller.text.trim();
     // final isCopy = isToggleOn;
     final userId = ref.read(userProvider)!.userId;
 
@@ -32,9 +56,18 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
     });
 
     if (eventName.isEmpty) {
+      _errorMessage = "イベント名を入力してください";
+    }
+    else if(eventName.length > 8){
+      _errorMessage = "イベント名は最大8文字までです";
+    }
+    else{
+      _errorMessage = null;
+    }
+
+    if(eventName.isEmpty || eventName.length > 8){
       setState(() {
         _isButtonEnabled = true;
-        _isEventNameEmptyError = true;
       });
       return;
     }
@@ -50,7 +83,6 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
 
   @override
   Widget build(BuildContext context) {
-    var controller = TextEditingController();
     return Dialog(
       backgroundColor: const Color(0xFFF2F2F2),
       shape: RoundedRectangleBorder(
@@ -84,7 +116,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                   IconButton(
                       icon: SvgPicture.asset("assets/icons/check_circle.svg"),
                       onPressed: _isButtonEnabled
-                          ? () => _createEvent(controller)
+                          ? () => _createEvent()
                           : null),
                 ],
               ),
@@ -97,30 +129,31 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                   border: Border.all(color: Colors.black),
                 ),
                 child: TextField(
-                  controller: controller,
+                  controller: _controller,
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                     hintText: 'イベント名を入力',
                   ),
                 ),
               ),
-              _isEventNameEmptyError
-                  ? const Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(4.0),
-                          child: Text(
-                            'イベント名を入力してください',
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 12,
-                            ),
+              if (_errorMessage != null)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                Padding(
+                  padding: EdgeInsets.all(4.0),
+                  child:
+                    Text(
+                      _errorMessage!,
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: Colors.red,
+                        fontSize: 10,
                           ),
                         ),
-                      ],
-                    )
-                  : const SizedBox(height: 24),
+                      ),
+                    ],
+                  )
+              else const SizedBox(height: 24),
               // Options Section
               Container(
                 decoration: BoxDecoration(
