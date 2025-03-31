@@ -47,7 +47,7 @@ class StatusDialog extends StatelessWidget {
                 context,
                 label: '支払い済み',
                 icon: Icons.check,
-                iconColor: const Color(0xFF5AFF9C),
+                iconColor: const Color(0xFF35C759),
                 status: 1,
               ),
               const SizedBox(height: 32),
