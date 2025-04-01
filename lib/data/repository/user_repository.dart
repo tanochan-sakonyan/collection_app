@@ -12,13 +12,12 @@ class UserRepository {
   Future<User?> registerUser(String accessToken) async {
     debugPrint('fetchUser関数が呼ばれました。');
     debugPrint('アクセストークン: $accessToken');
-    final url = Uri.parse('$baseUrl/users/test');
+    final url = Uri.parse('$baseUrl/users');
 
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({}),
-      // body: jsonEncode({'line_token': accessToken}),
+      body: jsonEncode({'line_token': accessToken}),
     );
 
     debugPrint('Response status: ${response.statusCode}');
