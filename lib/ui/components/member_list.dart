@@ -385,7 +385,7 @@ class MemberList extends ConsumerWidget {
   Widget _buildStatusIcon(PaymentStatus? status) {
     switch (status) {
       case PaymentStatus.paid:
-        return const Icon(Icons.check, color: Color(0xFF5AFF9C));
+        return const Icon(Icons.check, color: Color(0xFF35C759));
       case PaymentStatus.unpaid:
         return const Icon(Icons.close, color: Colors.red);
       case PaymentStatus.absence:
