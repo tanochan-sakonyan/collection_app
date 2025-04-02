@@ -2,14 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 
-class DeleteEventDialog extends ConsumerWidget {
+class DeleteEventDialog extends ConsumerStatefulWidget {
   final String userId;
   final String eventId;
-  const DeleteEventDialog({required this.userId, required this.eventId, super.key});
+  const DeleteEventDialog(
+      {required this.userId, required this.eventId, super.key});
 
   get eventRepository => null;
 
+  @override
+  ConsumerState<DeleteEventDialog> createState() => _DeleteEventDialogState();
+}
+
+class _DeleteEventDialogState extends ConsumerState<DeleteEventDialog> {
+  bool _isButtonEnabled = true;
   Future<void> _deleteEvent(ref, String userId, String eventId) async {
+    if (!_isButtonEnabled) return;
+    setState(() {
+      _isButtonEnabled = false;
+    });
     try {
       await ref.read(userProvider.notifier).deleteEvent(userId, eventId);
       Navigator.of(ref).pop();
@@ -19,7 +30,7 @@ class DeleteEventDialog extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
@@ -72,9 +83,9 @@ class DeleteEventDialog extends ConsumerWidget {
                   height: 36,
                   width: 107,
                   child: ElevatedButton(
-                    onPressed: () {
-                      _deleteEvent(context, userId, eventId);
-                    },
+                    onPressed: _isButtonEnabled
+                        ? () => _deleteEvent(ref, widget.userId, widget.eventId)
+                        : null,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFF2F2F2),
                       elevation: 2,

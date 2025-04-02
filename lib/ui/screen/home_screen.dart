@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/provider/tab_titles_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/add_event_dialog.dart';
@@ -136,6 +137,16 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                   eventId: "", eventName: '', members: []),
                             );
                             final eventId = event!.eventId;
+                            final bool isFullyPaid = event.members.isNotEmpty &&
+                                event.members.every((member) =>
+                                    member.status != PaymentStatus.unpaid);
+                            final Color tabTextColor = isFullyPaid
+                                ? const Color(0xFF35C759)
+                                : Theme.of(context)
+                                        .textTheme
+                                        .bodySmall
+                                        ?.color ??
+                                    Colors.black;
 
                             return GestureDetector(
                               onLongPress: () => showDialog(
@@ -156,8 +167,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                           .textTheme
                                           .bodySmall
                                           ?.copyWith(
-                                            fontSize: 14,
-                                          )),
+                                              fontSize: 14,
+                                              color: tabTextColor)),
                                 ),
                               ),
                             );

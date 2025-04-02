@@ -17,20 +17,64 @@ class AddMemberDialog extends ConsumerStatefulWidget {
 class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
   final TextEditingController _controller = TextEditingController();
   String? _errorMessage;
+  bool _isButtonEnabled = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(() {
+      final text = _controller.text.trim();
+      if (text.length > 9) {
+        setState(() {
+          _errorMessage = '最大9文字まで入力可能です';
+        });
+      } else {
+        setState(() {
+          _errorMessage = null;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   Future<void> _createMember() async {
+    final memberName = _controller.text.trim();
+    if (!_isButtonEnabled) return;
+
     setState(() {
-      if (_controller.text.trim().isEmpty) {
+      _isButtonEnabled = false;
+      if (memberName.isEmpty) {
         _errorMessage = 'メンバーを入力してください';
-      } else {
+      }
+      else if (memberName.length > 9) {
+        _errorMessage = '最大9文字まで入力可能です';
+      }
+      else {
         _errorMessage = null;
       }
     });
+
+    if (memberName.isEmpty || memberName.length > 9) {
+      setState(() {
+        _isButtonEnabled = true;
+      });
+      return;
+    }
 
     try {
       await ref
           .read(userProvider.notifier)
           .createMember(widget.userId, widget.eventId, _controller.text.trim());
+      Future.delayed(const Duration(seconds: 2), () {
+        setState(() {
+          _isButtonEnabled = true;
+        });
+      });
       Navigator.of(context).pop();
     } catch (e) {
       setState(() {
@@ -81,10 +125,10 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
                       //LINE認証申請前の臨時ダイアログ
                       showDialog(
                         context: context,
-                        builder: (context) => AlertDialog(
-                          contentPadding: const EdgeInsets.symmetric(
+                        builder: (context) => const AlertDialog(
+                          contentPadding: EdgeInsets.symmetric(
                               vertical: 56.0, horizontal: 24.0),
-                          content: const Text(
+                          content: Text(
                             'LINEへの認証申請中のため、\n機能解禁までしばらくお待ちください',
                             textAlign: TextAlign.center,
                           ),
@@ -101,7 +145,7 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
                     width: 118,
                     height: 36,
                     child: ElevatedButton(
-                      onPressed: _createMember,
+                      onPressed: _isButtonEnabled ? _createMember : null,
                       style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF5AFF9C),
                           shape: RoundedRectangleBorder(

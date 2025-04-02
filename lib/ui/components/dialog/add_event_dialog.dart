@@ -3,7 +3,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/constants/base_url.dart';
 import 'package:mr_collection/provider/user_provider.dart';
-import 'package:mr_collection/ui/components/button/toggle_button.dart';
 import 'package:mr_collection/data/repository/event_repository.dart';
 
 class AddEventDialog extends ConsumerStatefulWidget {
@@ -16,16 +15,60 @@ class AddEventDialog extends ConsumerStatefulWidget {
 }
 
 class AddEventDialogState extends ConsumerState<AddEventDialog> {
+  final TextEditingController _controller = TextEditingController();
+  String? _errorMessage;
+  bool _isButtonEnabled = true;
   bool isToggleOn = true;
 
   final EventRepository eventRepository = EventRepository(baseUrl: baseUrl);
 
-  Future<void> _createEvent(TextEditingController controller) async {
-    final eventName = controller.text;
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(() {
+      final text = _controller.text.trim();
+      if (text.length > 8) {
+        setState(() {
+          _errorMessage = '最大8文字まで入力可能です';
+        });
+      } else {
+        setState(() {
+          _errorMessage = null;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Future<void> _createEvent() async {
+    final eventName = _controller.text.trim();
     // final isCopy = isToggleOn;
     final userId = ref.read(userProvider)!.userId;
 
+    if (!_isButtonEnabled) return;
+    setState(() {
+      _isButtonEnabled = false;
+    });
+
     if (eventName.isEmpty) {
+      _errorMessage = "イベント名を入力してください";
+    }
+    else if(eventName.length > 8){
+      _errorMessage = "イベント名は最大8文字までです";
+    }
+    else{
+      _errorMessage = null;
+    }
+
+    if(eventName.isEmpty || eventName.length > 8){
+      setState(() {
+        _isButtonEnabled = true;
+      });
       return;
     }
 
@@ -40,7 +83,6 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
 
   @override
   Widget build(BuildContext context) {
-    var controller = TextEditingController();
     return Dialog(
       backgroundColor: const Color(0xFFF2F2F2),
       shape: RoundedRectangleBorder(
@@ -73,7 +115,9 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                   ),
                   IconButton(
                       icon: SvgPicture.asset("assets/icons/check_circle.svg"),
-                      onPressed: () => _createEvent(controller)),
+                      onPressed: _isButtonEnabled
+                          ? () => _createEvent()
+                          : null),
                 ],
               ),
               const SizedBox(height: 12),
@@ -85,14 +129,31 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                   border: Border.all(color: Colors.black),
                 ),
                 child: TextField(
-                  controller: controller,
+                  controller: _controller,
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                     hintText: 'イベント名を入力',
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              if (_errorMessage != null)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                Padding(
+                  padding: EdgeInsets.all(4.0),
+                  child:
+                    Text(
+                      _errorMessage!,
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: Colors.red,
+                        fontSize: 10,
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+              else const SizedBox(height: 24),
               // Options Section
               Container(
                 decoration: BoxDecoration(
@@ -127,10 +188,10 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                           //LINE認証申請前の臨時ダイアログ
                           showDialog(
                             context: context,
-                            builder: (context) => AlertDialog(
-                              contentPadding: const EdgeInsets.symmetric(
+                            builder: (context) => const AlertDialog(
+                              contentPadding: EdgeInsets.symmetric(
                                   vertical: 56.0, horizontal: 24.0),
-                              content: const Text(
+                              content: Text(
                                 'LINEへの認証申請中のため、\n機能解禁までしばらくお待ちください',
                                 textAlign: TextAlign.center,
                               ),
