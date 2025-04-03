@@ -59,7 +59,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
       _errorMessage = "イベント名を入力してください";
     }
     else if(eventName.length > 8){
-      _errorMessage = "イベント名は最大8文字までです";
+      _errorMessage = "最大8文字まで入力可能です";
     }
     else{
       _errorMessage = null;
