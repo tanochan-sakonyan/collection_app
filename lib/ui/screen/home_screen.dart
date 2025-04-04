@@ -40,7 +40,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           !_tabController.indexIsChanging) {
         _currentTabIndex = _tabController.index;
         _saveTabIndex(_currentTabIndex);
-        debugPrint('Changed tab index: $_currentTabIndex');
       }
     });
 
@@ -49,7 +48,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         if (_tabController.index != _currentTabIndex) {
           _currentTabIndex = _tabController.index;
           _saveTabIndex(_currentTabIndex);
-          debugPrint('Swipe: Saved tab index $_currentTabIndex');
         }
       }
     });
@@ -86,7 +84,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   Future<void> _saveTabIndex(int index) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('lastTabIndex', index);
-    debugPrint('Saved tab index: $index');
   }
 
   Future<void> _loadSavedTabIndex() async {
@@ -95,7 +92,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     if (mounted && savedIndex < _tabController.length) {
       _currentTabIndex = savedIndex;
       _tabController.animateTo(savedIndex);
-      debugPrint('Loaded saved tab index: $savedIndex');
     }
   }
 
