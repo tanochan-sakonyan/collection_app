@@ -10,6 +10,7 @@ import 'package:mr_collection/ui/components/member_list.dart';
 import 'package:mr_collection/ui/components/tanochan_drawer.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key, required this.title, this.user});
@@ -26,12 +27,34 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   late TabController _tabController;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<String> _tabTitles = [];
+  int _currentTabIndex = 0;
 
   @override
   void initState() {
     super.initState();
     _tabTitles = ref.read(tabTitlesProvider);
     _tabController = TabController(length: _tabTitles.length, vsync: this);
+
+    _tabController.addListener(() {
+      if (_tabController.index != _currentTabIndex &&
+          !_tabController.indexIsChanging) {
+        _currentTabIndex = _tabController.index;
+        _saveTabIndex(_currentTabIndex);
+        debugPrint('Changed tab index: $_currentTabIndex');
+      }
+    });
+
+    _tabController.animation?.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        if (_tabController.index != _currentTabIndex) {
+          _currentTabIndex = _tabController.index;
+          _saveTabIndex(_currentTabIndex);
+          debugPrint('Swipe: Saved tab index $_currentTabIndex');
+        }
+      }
+    });
+
+    _loadSavedTabIndex();
   }
 
   @override
@@ -43,6 +66,37 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   void _updateTabController(int newLength) {
     _tabController.dispose();
     _tabController = TabController(length: newLength, vsync: this);
+    _tabController.addListener(() {
+      if (_tabController.index != _currentTabIndex &&
+          !_tabController.indexIsChanging) {
+        _currentTabIndex = _tabController.index;
+        _saveTabIndex(_currentTabIndex);
+      }
+    });
+    _tabController.animation?.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        if (_tabController.index != _currentTabIndex) {
+          _currentTabIndex = _tabController.index;
+          _saveTabIndex(_currentTabIndex);
+        }
+      }
+    });
+  }
+
+  Future<void> _saveTabIndex(int index) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('lastTabIndex', index);
+    debugPrint('Saved tab index: $index');
+  }
+
+  Future<void> _loadSavedTabIndex() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedIndex = prefs.getInt('lastTabIndex') ?? 0;
+    if (mounted && savedIndex < _tabController.length) {
+      _currentTabIndex = savedIndex;
+      _tabController.animateTo(savedIndex);
+      debugPrint('Loaded saved tab index: $savedIndex');
+    }
   }
 
   @override
@@ -58,6 +112,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           setState(() {
             _updateTabController(tabTitles.length);
             _tabTitles = tabTitles;
+            _loadSavedTabIndex();
           });
         }
       });
