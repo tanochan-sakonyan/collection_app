@@ -144,8 +144,9 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                         builder: (context, userSnapshot) {
                           if (userSnapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return const Center(
-                                child: CircularProgressIndicator());
+                            return Center(
+                                child: Image.asset(
+                                    'assets/images/loading_image.png'));
                           } else if (userSnapshot.hasError) {
                             return Center(
                                 child:
