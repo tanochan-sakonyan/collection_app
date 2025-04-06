@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/constants/base_url.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/data/repository/event_repository.dart';
+import 'package:mr_collection/ui/components/button/toggle_button.dart';
 
 class AddEventDialog extends ConsumerStatefulWidget {
   final String userId;
@@ -125,17 +126,13 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.black),
+                  border: Border.all(color: const Color(0xFFE8E8E8)),
                 ),
                 child: TextField(
                   controller: _controller,
                   textAlignVertical: TextAlignVertical.center,
                   decoration: const InputDecoration(
                     border: InputBorder.none,
-                    hintText: 'イベント名を入力',
-                    hintStyle: TextStyle( // 修正: フォントサイズを指定
-                      fontSize: 16.0,
-                    ),
                   ),
                 ),
               ),
@@ -166,9 +163,16 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                 ),
                 child: Column(
                   children: [
-                    //TODO: 現状まだ実装できていないが、今後実装予定
-                    /*ListTile(
-                      title: const Text('参加者引継ぎ'),
+                    SizedBox(
+                      width: 272,
+                      height: 48,
+                      child: ListTile(
+                      title: const Text(
+                          '参加者引継ぎ',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14.0,
+                        ),),
                       trailing: ToggleButton(
                         initialValue: isToggleOn,
                         onChanged: (bool isOn) {
@@ -177,30 +181,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                           });
                         },
                       ),
-                    ),*/
-                    const Divider(height: 1, color: Color(0xFFE8E8E8)),
-                    SizedBox(
-                      width: 272,
-                      height: 48,
-                      child: ListTile(
-                        dense: true,
-                        title: const Text(
-                            '参加者引継ぎ',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 14.0,
-                          ),
-                        ),
-                        trailing: Switch(
-                          activeColor: const Color(0xFF34C759),
-                          value: isToggleOn,
-                          onChanged: (bool value) {
-                            setState(() {
-                              isToggleOn = value;
-                            });
-                          },
-                        ),
-                      ),
+                    ),
                     ),
                     const Divider(height: 1, color: Color(0xFFE8E8E8)),
                     SizedBox(
