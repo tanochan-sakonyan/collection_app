@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
@@ -80,7 +81,8 @@ class MemberList extends ConsumerWidget {
                         ],
                       ),
                     ),
-                    SizedBox(
+                    ClipRect(
+                    child: SizedBox(
                       height: MediaQuery.of(context).size.height * 0.4,
                       child: ListView.builder(
                         itemCount: members?.length,
@@ -90,40 +92,44 @@ class MemberList extends ConsumerWidget {
                             padding: const EdgeInsets.only(left: 16, right: 16),
                             child: Column(
                               children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) => StatusDialog(
-                                        userId: ref.read(userProvider)!.userId,
-                                        eventId: eventId.toString(),
-                                        memberId: member!.memberId,
-                                        member: member.memberName,
-                                        onStatusChange: (String userId,
-                                            String eventId,
-                                            String memberId,
-                                            int status) {
-                                          _updateMemberStatus(ref, userId,
-                                              eventId, memberId, status);
+                                Slidable(
+                                  key: ValueKey(member!.memberId),
+                                  endActionPane: ActionPane(
+                                    motion: const ScrollMotion(),
+                                    children: [
+                                      SlidableAction(
+                                        onPressed: (context) {
+                                          // TODO: メンバー名編集機能の実装
+                                          debugPrint('編集ボタンが押されました: ${member.memberId}');
                                         },
+                                        backgroundColor: Colors.grey,
+                                        foregroundColor: Colors.white,
+                                        label: '編集',
                                       ),
-                                    );
-                                  },
-                                  onLongPress: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) => DeleteMemberDialog(
-                                        userId: ref.read(userProvider)!.userId,
-                                        eventId: eventId,
-                                        memberId: member!.memberId,
+                                      SlidableAction(
+                                        onPressed: (context) {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) => DeleteMemberDialog(
+                                            userId: ref.read(userProvider)!.userId,
+                                            eventId: eventId,
+                                            memberId: member!.memberId,
+                                            ),
+                                          );
+                                        },
+                                        backgroundColor: Colors.red,
+                                        foregroundColor: Colors.white,
+                                        label: '削除',
                                       ),
-                                    );
-                                  },
+                                    ],
+                                  ),
                                   child: ListTile(
                                     minTileHeight: 32,
                                     title: (member?.memberName != null)
                                         ? Text(
                                             member!.memberName,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
                                               color: member.status ==
                                                       PaymentStatus.absence
@@ -133,6 +139,24 @@ class MemberList extends ConsumerWidget {
                                           )
                                         : null,
                                     trailing: _buildStatusIcon(member?.status),
+                                    onTap: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => StatusDialog(
+                                          userId: ref.read(userProvider)!.userId,
+                                          eventId: eventId.toString(),
+                                          memberId: member!.memberId,
+                                          member: member.memberName,
+                                          onStatusChange: (String userId,
+                                              String eventId,
+                                              String memberId,
+                                              int status) {
+                                            _updateMemberStatus(ref, userId,
+                                                eventId, memberId, status);
+                                          },
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ),
                                 const Divider(
@@ -145,6 +169,7 @@ class MemberList extends ConsumerWidget {
                           );
                         },
                       ),
+                    ),
                     ),
                     const Divider(
                       color: Colors.black,
