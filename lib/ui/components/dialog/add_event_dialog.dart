@@ -18,7 +18,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
   final TextEditingController _controller = TextEditingController();
   String? _errorMessage;
   bool _isButtonEnabled = true;
-  bool isToggleOn = true;
+  bool isToggleOn = false;
 
   final EventRepository eventRepository = EventRepository(baseUrl: baseUrl);
 
@@ -91,37 +91,36 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
       child: Padding(
         padding: const EdgeInsets.only(top: 8, left: 24, right: 24),
         child: Container(
-          width: 328,
-          height: 270,
+          width: 320,
+          height: 330,
           color: const Color(0xFFF2F2F2),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    icon: SvgPicture.asset("assets/icons/close_circle.svg"),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
+              Center(
+                child:Text(
+                  'イベント追加',
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
                   ),
-                  Text(
-                    'イベントの追加',
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                  IconButton(
-                      icon: SvgPicture.asset("assets/icons/check_circle.svg"),
-                      onPressed: _isButtonEnabled
-                          ? () => _createEvent()
-                          : null),
-                ],
+                ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 8),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Event",
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    fontSize: 10.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
               Container(
+                width: 272,
+                height: 40,
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -130,9 +129,13 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                 ),
                 child: TextField(
                   controller: _controller,
+                  textAlignVertical: TextAlignVertical.center,
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                     hintText: 'イベント名を入力',
+                    hintStyle: TextStyle( // 修正: フォントサイズを指定
+                      fontSize: 16.0,
+                    ),
                   ),
                 ),
               ),
@@ -176,10 +179,44 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                       ),
                     ),*/
                     const Divider(height: 1, color: Color(0xFFE8E8E8)),
-                    ListTile(
-                      title: const Text('LINEから参加者取得'),
-                      trailing: IconButton(
-                        icon: SvgPicture.asset(
+                    SizedBox(
+                      width: 272,
+                      height: 48,
+                      child: ListTile(
+                        dense: true,
+                        title: const Text(
+                            '参加者引継ぎ',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14.0,
+                          ),
+                        ),
+                        trailing: Switch(
+                          activeColor: const Color(0xFF34C759),
+                          value: isToggleOn,
+                          onChanged: (bool value) {
+                            setState(() {
+                              isToggleOn = value;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    const Divider(height: 1, color: Color(0xFFE8E8E8)),
+                    SizedBox(
+                      width: 272,
+                      height: 48,
+                      child: ListTile(
+                        dense: true,
+                        title: const Text(
+                            'LINEから参加者取得',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14.0,
+                          ),
+                        ),
+                        trailing: IconButton(
+                          icon: SvgPicture.asset(
                           'assets/icons/line.svg',
                           width: 28,
                           height: 28,
@@ -205,10 +242,33 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                         },
                       ),
                     ),
+                    ),
                   ],
                 ),
               ),
-              const SizedBox(height: 29)
+              const SizedBox(height: 24),
+              SizedBox(
+                width: 272,
+                height: 40,
+                child: ElevatedButton(
+                  onPressed: _isButtonEnabled
+                      ? () => _createEvent()
+                      : null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFF2F2F2),
+                    elevation: 4,
+                    shape: const StadiumBorder(),
+                  ),
+                  child: const Text(
+                    '決定',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 14.0,
+                    ),
+                  ),
+              ),
+              ),
+              const SizedBox(height: 20),
             ],
           ),
         ),
