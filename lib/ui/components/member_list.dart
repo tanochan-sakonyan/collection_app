@@ -97,16 +97,29 @@ class MemberList extends ConsumerWidget {
                                   endActionPane: ActionPane(
                                     motion: const ScrollMotion(),
                                     children: [
-                                      SlidableAction(
+                                      /*
+                                      CustomSlidableAction(
                                         onPressed: (context) {
                                           // TODO: メンバー名編集機能の実装
                                           debugPrint('編集ボタンが押されました: ${member.memberId}');
                                         },
                                         backgroundColor: Colors.grey,
-                                        foregroundColor: Colors.white,
-                                        label: '編集',
+                                        child: const Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            SizedBox(height: 4),
+                                            Text(
+                                              '編集',
+                                              style: TextStyle(
+                                                fontSize: 14, // 14px に指定
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                      SlidableAction(
+                                       */
+                                      CustomSlidableAction(
                                         onPressed: (context) {
                                           showDialog(
                                             context: context,
@@ -118,8 +131,19 @@ class MemberList extends ConsumerWidget {
                                           );
                                         },
                                         backgroundColor: Colors.red,
-                                        foregroundColor: Colors.white,
-                                        label: '削除',
+                                        child: const Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            SizedBox(height: 4),
+                                            Text(
+                                              '削除',
+                                              style: TextStyle(
+                                                fontSize: 14, // 14px に指定
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   ),
