@@ -1,6 +1,6 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
-export "FLUTTER_ROOT=/Users/yuma/programming/Flutter/flutter"
+export "FLUTTER_ROOT=/opt/homebrew/Caskroom/flutter/3.10.5/flutter"
 export "FLUTTER_APPLICATION_PATH=/Users/yuma/programming/Flutter/collection_app"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_BUILD_DIR=build"
