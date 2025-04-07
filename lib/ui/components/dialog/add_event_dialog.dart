@@ -58,15 +58,13 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
 
     if (eventName.isEmpty) {
       _errorMessage = "イベント名を入力してください";
-    }
-    else if(eventName.length > 8){
+    } else if (eventName.length > 8) {
       _errorMessage = "最大8文字まで入力可能です";
-    }
-    else{
+    } else {
       _errorMessage = null;
     }
 
-    if(eventName.isEmpty || eventName.length > 8){
+    if (eventName.isEmpty || eventName.length > 8) {
       setState(() {
         _isButtonEnabled = true;
       });
@@ -100,12 +98,12 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Center(
-                child:Text(
+                child: Text(
                   'イベント追加',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                  ),
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
               ),
               const SizedBox(height: 8),
@@ -114,9 +112,9 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                 child: Text(
                   "Event",
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontSize: 10.0,
-                    fontWeight: FontWeight.bold,
-                  ),
+                        fontSize: 10.0,
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
               ),
               Container(
@@ -140,20 +138,20 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                Padding(
-                  padding: EdgeInsets.all(4.0),
-                  child:
-                    Text(
-                      _errorMessage!,
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: Colors.red,
-                        fontSize: 10,
-                          ),
-                        ),
+                    Padding(
+                      padding: EdgeInsets.all(4.0),
+                      child: Text(
+                        _errorMessage!,
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              color: Colors.red,
+                              fontSize: 10,
+                            ),
                       ),
-                    ],
-                  )
-              else const SizedBox(height: 24),
+                    ),
+                  ],
+                )
+              else
+                const SizedBox(height: 24),
               // Options Section
               Container(
                 decoration: BoxDecoration(
@@ -167,21 +165,22 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                       width: 272,
                       height: 48,
                       child: ListTile(
-                      title: const Text(
+                        title: const Text(
                           '参加者引継ぎ',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 14.0,
-                        ),),
-                      trailing: ToggleButton(
-                        initialValue: isToggleOn,
-                        onChanged: (bool isOn) {
-                          setState(() {
-                            isToggleOn = isOn;
-                          });
-                        },
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14.0,
+                          ),
+                        ),
+                        trailing: ToggleButton(
+                          initialValue: isToggleOn,
+                          onChanged: (bool isOn) {
+                            setState(() {
+                              isToggleOn = isOn;
+                            });
+                          },
+                        ),
                       ),
-                    ),
                     ),
                     const Divider(height: 1, color: Color(0xFFE8E8E8)),
                     SizedBox(
@@ -190,7 +189,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                       child: ListTile(
                         dense: true,
                         title: const Text(
-                            'LINEから参加者取得',
+                          'LINEから参加者取得',
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 14.0,
@@ -198,31 +197,31 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                         ),
                         trailing: IconButton(
                           icon: SvgPicture.asset(
-                          'assets/icons/line.svg',
-                          width: 28,
-                          height: 28,
-                        ),
-                        onPressed: () {
-                          //LINE認証申請前の臨時ダイアログ
-                          showDialog(
-                            context: context,
-                            builder: (context) => const AlertDialog(
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 56.0, horizontal: 24.0),
-                              content: Text(
-                                'LINEへの認証申請中のため、\n機能解禁までしばらくお待ちください',
-                                textAlign: TextAlign.center,
+                            'assets/icons/line.svg',
+                            width: 28,
+                            height: 28,
+                          ),
+                          onPressed: () {
+                            //LINE認証申請前の臨時ダイアログ
+                            showDialog(
+                              context: context,
+                              builder: (context) => const AlertDialog(
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 56.0, horizontal: 24.0),
+                                content: Text(
+                                  'LINEへの認証申請中のため、\n機能解禁までしばらくお待ちください',
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
-                            ),
-                          );
-                          //TODO LINE認証申請が通ったらこちらに戻す
-                          /*showDialog(
+                            );
+                            //TODO LINE認証申請が通ったらこちらに戻す
+                            /*showDialog(
                             context: context,
                             builder: (context) => const ConfirmationDialog(),
                           );*/
-                        },
+                          },
+                        ),
                       ),
-                    ),
                     ),
                   ],
                 ),
@@ -232,12 +231,10 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                 width: 272,
                 height: 40,
                 child: ElevatedButton(
-                  onPressed: _isButtonEnabled
-                      ? () => _createEvent()
-                      : null,
+                  onPressed: _isButtonEnabled ? () => _createEvent() : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFF2F2F2),
-                    elevation: 4,
+                    elevation: 2,
                     shape: const StadiumBorder(),
                   ),
                   child: const Text(
@@ -247,7 +244,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                       fontSize: 14.0,
                     ),
                   ),
-              ),
+                ),
               ),
               const SizedBox(height: 20),
             ],
