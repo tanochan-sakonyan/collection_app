@@ -119,7 +119,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
               ),
               Container(
                 width: 272,
-                height: 40,
+                height: 48,
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -128,7 +128,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                 ),
                 child: TextField(
                   controller: _controller,
-                  textAlignVertical: TextAlignVertical.center,
+                  // textAlignVertical: TextAlignVertical.center,
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                   ),
