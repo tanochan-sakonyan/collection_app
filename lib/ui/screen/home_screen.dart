@@ -181,13 +181,12 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                         child: TabBar(
                           isScrollable: true,
                           controller: _tabController,
-                          tabs: _tabTitles.map((eventName) {
-                            final event = user?.events.firstWhere(
-                              (e) => e.eventName == eventName,
+                          tabs: _tabTitles.map((eventId) {
+                            final event = user!.events.firstWhere(
+                              (e) => e.eventId == eventId,
                               orElse: () => const Event(
                                   eventId: "", eventName: '', members: []),
                             );
-                            final eventId = event!.eventId;
                             final bool isFullyPaid = event.members.isNotEmpty &&
                                 event.members.every((member) =>
                                     member.status != PaymentStatus.unpaid);
@@ -213,7 +212,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 8.0),
                                 child: Tab(
-                                  child: Text(eventName,
+                                  child: Text(event.eventName,
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodySmall
@@ -274,9 +273,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           Expanded(
             child: TabBarView(
               controller: _tabController,
-              children: _tabTitles.map((eventName) {
+              children: _tabTitles.map((eventId) {
                 final event = user!.events.firstWhere(
-                  (e) => e.eventName == eventName,
+                  (e) => e.eventId == eventId,
                   orElse: () =>
                       const Event(eventId: "", eventName: '', members: []),
                 );
