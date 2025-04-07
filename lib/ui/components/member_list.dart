@@ -82,22 +82,25 @@ class MemberList extends ConsumerWidget {
                       ),
                     ),
                     ClipRect(
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.4,
-                      child: ListView.builder(
-                        itemCount: members?.length,
-                        itemBuilder: (context, index) {
-                          final member = members?[index];
-                          return Padding(
-                            padding: const EdgeInsets.only(left: 16, right: 16),
-                            child: Column(
-                              children: [
-                                Slidable(
-                                  key: ValueKey(member!.memberId),
-                                  endActionPane: ActionPane(
-                                    motion: const ScrollMotion(),
-                                    children: [
-                                      /*
+                      child: SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.4,
+                        child: SlidableAutoCloseBehavior(
+                          child: ListView.builder(
+                            itemCount: members?.length,
+                            itemBuilder: (context, index) {
+                              final member = members?[index];
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 16, right: 16),
+                                child: Column(
+                                  children: [
+                                    Slidable(
+                                      key: ValueKey(member!.memberId),
+                                      endActionPane: ActionPane(
+                                        motion: const ScrollMotion(),
+                                        extentRatio: 0.26,
+                                        children: [
+                                          /*
                                       CustomSlidableAction(
                                         onPressed: (context) {
                                           // TODO: メンバー名編集機能の実装
@@ -119,81 +122,89 @@ class MemberList extends ConsumerWidget {
                                         ),
                                       ),
                                        */
-                                      CustomSlidableAction(
-                                        onPressed: (context) {
+                                          CustomSlidableAction(
+                                            onPressed: (context) {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) =>
+                                                    DeleteMemberDialog(
+                                                  userId: ref
+                                                      .read(userProvider)!
+                                                      .userId,
+                                                  eventId: eventId,
+                                                  memberId: member!.memberId,
+                                                ),
+                                              );
+                                            },
+                                            backgroundColor: Colors.red,
+                                            child: const Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                SizedBox(height: 4),
+                                                Text(
+                                                  '削除',
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      child: ListTile(
+                                        minTileHeight: 32,
+                                        title: (member?.memberName != null)
+                                            ? Text(
+                                                member!.memberName,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  color: member.status ==
+                                                          PaymentStatus.absence
+                                                      ? Colors.grey
+                                                      : Colors.black,
+                                                ),
+                                              )
+                                            : null,
+                                        trailing:
+                                            _buildStatusIcon(member?.status),
+                                        onTap: () {
                                           showDialog(
                                             context: context,
-                                            builder: (context) => DeleteMemberDialog(
-                                            userId: ref.read(userProvider)!.userId,
-                                            eventId: eventId,
-                                            memberId: member!.memberId,
+                                            builder: (context) => StatusDialog(
+                                              userId: ref
+                                                  .read(userProvider)!
+                                                  .userId,
+                                              eventId: eventId.toString(),
+                                              memberId: member!.memberId,
+                                              member: member.memberName,
+                                              onStatusChange: (String userId,
+                                                  String eventId,
+                                                  String memberId,
+                                                  int status) {
+                                                _updateMemberStatus(ref, userId,
+                                                    eventId, memberId, status);
+                                              },
                                             ),
                                           );
                                         },
-                                        backgroundColor: Colors.red,
-                                        child: const Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            SizedBox(height: 4),
-                                            Text(
-                                              '削除',
-                                              style: TextStyle(
-                                                fontSize: 14, // 14px に指定
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
                                       ),
-                                    ],
-                                  ),
-                                  child: ListTile(
-                                    minTileHeight: 32,
-                                    title: (member?.memberName != null)
-                                        ? Text(
-                                            member!.memberName,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                              color: member.status ==
-                                                      PaymentStatus.absence
-                                                  ? Colors.grey
-                                                  : Colors.black,
-                                            ),
-                                          )
-                                        : null,
-                                    trailing: _buildStatusIcon(member?.status),
-                                    onTap: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) => StatusDialog(
-                                          userId: ref.read(userProvider)!.userId,
-                                          eventId: eventId.toString(),
-                                          memberId: member!.memberId,
-                                          member: member.memberName,
-                                          onStatusChange: (String userId,
-                                              String eventId,
-                                              String memberId,
-                                              int status) {
-                                            _updateMemberStatus(ref, userId,
-                                                eventId, memberId, status);
-                                          },
-                                        ),
-                                      );
-                                    },
-                                  ),
+                                    ),
+                                    const Divider(
+                                      thickness: 1,
+                                      height: 1,
+                                      color: Color(0xFFE8E8E8),
+                                    ),
+                                  ],
                                 ),
-                                const Divider(
-                                  thickness: 1,
-                                  height: 1,
-                                  color: Color(0xFFE8E8E8),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
+                              );
+                            },
+                          ),
+                        ),
                       ),
-                    ),
                     ),
                     const Divider(
                       color: Colors.black,
