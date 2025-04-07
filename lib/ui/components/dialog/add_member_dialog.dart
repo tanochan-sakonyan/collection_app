@@ -84,14 +84,14 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: const Color(0xFFF2F2F2),
+      backgroundColor: const Color(0xFFFFFFFF),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Container(
-          color: const Color(0xFFF2F2F2),
+          color: const Color(0xFFFFFFFF),
           height: 260,
           width: 320,
           child: Column(
@@ -124,7 +124,20 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
                   ),
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 4),
+              if (_errorMessage != null)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      _errorMessage!,
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            color: Colors.red,
+                          ),
+                    ),
+                  ],
+                ),
+              const SizedBox(height: 4),
               Row(children: [
                 Text("LINEグループから自動追加",
                     style: Theme.of(context).textTheme.bodyMedium),
@@ -173,18 +186,6 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
                   ),
                 ),
               ),
-              if (_errorMessage != null)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      _errorMessage!,
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color: Colors.red,
-                          ),
-                    ),
-                  ],
-                ),
             ],
           ),
         ),
