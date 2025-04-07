@@ -246,10 +246,10 @@ packages:
   flutter_line_sdk:
     dependency: "direct main"
     description:
-      path: "C:\\Users\\sugar\\tanochan\\flutter_line_sdk"
-      relative: false
+      path: "packages/flutter_line_sdk"
+      relative: true
     source: path
-    version: "2.3.8"
+    version: "2.5.1"
   flutter_lints:
     dependency: "direct dev"
     description:
