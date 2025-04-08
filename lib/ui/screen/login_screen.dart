@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_line_sdk/flutter_line_sdk.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mr_collection/data/model/freezed/user.dart';
 import 'package:mr_collection/provider/access_token_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/login_error_dialog.dart';
@@ -213,20 +216,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                           debugPrint("Appleサインイン認証情報: $credential");
 
-                          final url = Uri.https(
-                              'shukinkun-49fb12fd2191.herokuapp.com',
-                              '/auth/apple');
+                          final url = Uri.http(
+                              '127.0.0.1:5000', '/auth/apple/callback');
 
-                          final response = await http.get(
-                            url,
-                            headers: {'Content-Type': 'application/json'},
-                          );
+                          final response = await http.post(url,
+                              headers: {'Content-Type': 'application/json'},
+                              body: jsonEncode({
+                                'identifyToken': credential.userIdentifier,
+                              }));
 
                           if (response.statusCode == 200 ||
                               response.statusCode == 201) {
-                            final user = await ref
-                                .read(userProvider.notifier)
-                                .registerUser(response.body);
+                            final data = jsonDecode(response.body);
+
+                            final user = User.fromJson(data);
 
                             if (user != null) {
                               final prefs =
