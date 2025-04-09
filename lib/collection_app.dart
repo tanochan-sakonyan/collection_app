@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/data/model/freezed/user.dart';
 import 'package:mr_collection/provider/user_provider.dart';
@@ -68,7 +69,11 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
         future: _checkLoginStatus(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return Container(
+              color: const Color(0xFF75DCC6),
+              child: Center(
+                  child: SvgPicture.asset('assets/images/loading_image.svg')),
+            );
           } else if (snapshot.hasError) {
             return Center(child: Text('エラーが発生しました: ${snapshot.error}'));
           } else {
@@ -83,7 +88,12 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                 builder: (context, userIdSnapshot) {
                   if (userIdSnapshot.connectionState ==
                       ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                    return Container(
+                      color: const Color(0xFF75DCC6),
+                      child: Center(
+                          child: SvgPicture.asset(
+                              'assets/images/loading_image.svg')),
+                    );
                   } else if (userIdSnapshot.hasError) {
                     return Center(
                         child: Text('エラーが発生しました: ${userIdSnapshot.error}'));
@@ -98,8 +108,12 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                         builder: (context, userSnapshot) {
                           if (userSnapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return const Center(
-                                child: CircularProgressIndicator());
+                            return Container(
+                              color: const Color(0xFF75DCC6),
+                              child: Center(
+                                  child: SvgPicture.asset(
+                                      'assets/images/loading_image.svg')),
+                            );
                           } else if (userSnapshot.hasError) {
                             return Center(
                                 child:
@@ -129,7 +143,12 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                 builder: (context, userIdSnapshot) {
                   if (userIdSnapshot.connectionState ==
                       ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                    return Container(
+                      color: const Color(0xFF75DCC6),
+                      child: Center(
+                          child: SvgPicture.asset(
+                              'assets/images/loading_image.svg')),
+                    );
                   } else if (userIdSnapshot.hasError) {
                     return Center(
                         child: Text('エラーが発生しました: ${userIdSnapshot.error}'));
@@ -144,8 +163,12 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                         builder: (context, userSnapshot) {
                           if (userSnapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return const Center(
-                                child: CircularProgressIndicator());
+                            return Container(
+                              color: const Color(0xFF75DCC6),
+                              child: Center(
+                                  child: SvgPicture.asset(
+                                      'assets/images/loading_image.svg')),
+                            );
                           } else if (userSnapshot.hasError) {
                             return Center(
                                 child:

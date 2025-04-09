@@ -90,7 +90,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       }
                     } else {
                       try {
-                        final result = await LineSDK.instance.login();
+                        final result = await LineSDK.instance
+                            .login(option: LoginOption(false, 'aggressive'));
                         final accessToken = result.accessToken.value;
                         ref.read(accessTokenProvider.notifier).state =
                             accessToken;
