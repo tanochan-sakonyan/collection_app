@@ -1,5 +1,5 @@
 // This is a generated file; do not edit or check into version control.
-FLUTTER_ROOT=/opt/homebrew/Caskroom/flutter/3.10.5/flutter
+FLUTTER_ROOT=/Users/yuma/programming/Flutter/flutter
 FLUTTER_APPLICATION_PATH=/Users/yuma/programming/Flutter/collection_app
 COCOAPODS_PARALLEL_CODE_SIGN=true
 FLUTTER_BUILD_DIR=build

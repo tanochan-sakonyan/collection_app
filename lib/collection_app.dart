@@ -88,7 +88,12 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                 builder: (context, userIdSnapshot) {
                   if (userIdSnapshot.connectionState ==
                       ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                    return Container(
+                      color: const Color(0xFF75DCC6),
+                      child: Center(
+                          child: SvgPicture.asset(
+                              'assets/images/loading_image.svg')),
+                    );
                   } else if (userIdSnapshot.hasError) {
                     return Center(
                         child: Text('エラーが発生しました: ${userIdSnapshot.error}'));
@@ -138,7 +143,12 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                 builder: (context, userIdSnapshot) {
                   if (userIdSnapshot.connectionState ==
                       ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                    return Container(
+                      color: const Color(0xFF75DCC6),
+                      child: Center(
+                          child: SvgPicture.asset(
+                              'assets/images/loading_image.svg')),
+                    );
                   } else if (userIdSnapshot.hasError) {
                     return Center(
                         child: Text('エラーが発生しました: ${userIdSnapshot.error}'));
@@ -153,8 +163,12 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                         builder: (context, userSnapshot) {
                           if (userSnapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return const Center(
-                                child: CircularProgressIndicator());
+                            return Container(
+                              color: const Color(0xFF75DCC6),
+                              child: Center(
+                                  child: SvgPicture.asset(
+                                      'assets/images/loading_image.svg')),
+                            );
                           } else if (userSnapshot.hasError) {
                             return Center(
                                 child:
