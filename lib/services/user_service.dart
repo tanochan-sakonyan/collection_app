@@ -10,6 +10,10 @@ class UserService {
     return userRepository.registerUser(accessToken);
   }
 
+  Future<User?> registerUserByApple() async {
+    return userRepository.registerUserByApple();
+  }
+
   Future<User?> fetchUserById(String userId) {
     return userRepository.fetchUserById(userId);
   }

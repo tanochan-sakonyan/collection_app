@@ -61,6 +61,19 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
+  Future<User?> registerUserByApple() async {
+    try {
+      final user = await userService.registerUserByApple();
+      debugPrint('取得したユーザー情報: $user');
+      state = user;
+      debugPrint('state: $state');
+      return user;
+    } catch (e) {
+      debugPrint('ユーザー登録の際にエラーが発生しました。: $e');
+      state = null;
+    }
+  }
+
   Future<User?> fetchUserById(String userId) async {
     try {
       final user = await userService.fetchUserById(userId);
@@ -77,7 +90,7 @@ class UserNotifier extends StateNotifier<User?> {
     state = null;
   }
 
-  Future<void> deleteUser( String userId ) async{
+  Future<void> deleteUser(String userId) async {
     try {
       await ref.read(userRepositoryProvider).deleteUser(userId);
       state = null;
@@ -210,7 +223,7 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
-  Future<void> sortingMembers( String eventId ) async {
+  Future<void> sortingMembers(String eventId) async {
     if (state == null) return;
 
     final updatedEvents = state!.events.map((event) {

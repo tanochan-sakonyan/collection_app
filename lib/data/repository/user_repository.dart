@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:mr_collection/data/model/freezed/user.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class UserRepository {
   final String baseUrl;
@@ -25,6 +26,51 @@ class UserRepository {
     debugPrint('Response body: ${response.body}');
 
     if (response.statusCode == 201 || response.statusCode == 200) {
+      try {
+        final data = jsonDecode(response.body);
+        final user = User.fromJson(data);
+        return user;
+      } catch (e, stackTrace) {
+        debugPrint('JSONデコード中にエラー: $e');
+        debugPrint('スタックトレース: $stackTrace');
+        rethrow;
+      }
+    } else {
+      try {
+        final errorData = jsonDecode(response.body);
+        final errorMessage = errorData['message'] ?? 'ユーザー情報の取得に失敗しました';
+        throw Exception(
+            'エラー: $errorMessage (ステータスコード: ${response.statusCode})');
+      } catch (e) {
+        throw Exception(
+            'その他のエラー：ユーザー情報の取得に失敗しました (ステータスコード: ${response.statusCode})');
+      }
+    }
+  }
+
+  Future<User?> registerUserByApple() async {
+    final credential = await SignInWithApple.getAppleIDCredential(
+      scopes: [
+        AppleIDAuthorizationScopes.email,
+        AppleIDAuthorizationScopes.fullName,
+      ],
+      webAuthenticationOptions: WebAuthenticationOptions(
+        clientId: 'com.tanotyan.syukinkun.service',
+        redirectUri: kIsWeb
+            ? Uri.parse('https://${Uri.base.host}/')
+            : Uri.parse(
+                'https://shukinkun-49fb12fd2191.herokuapp.com/auth/apple/callback',
+              ),
+      ),
+    );
+    final url = Uri.parse('$baseUrl/auth/apple/callback');
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'identityToken': credential.userIdentifier}),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
       try {
         final data = jsonDecode(response.body);
         final user = User.fromJson(data);
@@ -103,11 +149,11 @@ class UserRepository {
       } else {
         throw Exception('Unexpected response: $data');
       }
-    } else if(response.statusCode == 404) {
+    } else if (response.statusCode == 404) {
       final data = jsonDecode(response.body);
       final message = data['message'] ?? 'User not found';
       throw Exception('User not found: $message');
-    } else{
+    } else {
       final data = jsonDecode(response.body);
       final message = data['message'] ?? 'Internal Server Error';
       throw Exception(

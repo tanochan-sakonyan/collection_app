@@ -1,12 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_line_sdk/flutter_line_sdk.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mr_collection/data/model/freezed/user.dart';
 import 'package:mr_collection/provider/access_token_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/login_error_dialog.dart';
@@ -14,8 +11,6 @@ import 'package:mr_collection/ui/screen/home_screen.dart';
 import 'package:mr_collection/ui/screen/privacy_policy_screen.dart';
 import 'package:mr_collection/ui/screen/terms_of_service_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import 'package:http/http.dart' as http;
 
 final checkboxProvider = StateProvider<bool>((ref) => false);
 
@@ -198,75 +193,30 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         }
                       } else {
                         try {
-                          final credential =
-                              await SignInWithApple.getAppleIDCredential(
-                            scopes: [
-                              AppleIDAuthorizationScopes.email,
-                              AppleIDAuthorizationScopes.fullName,
-                            ],
-                            webAuthenticationOptions: WebAuthenticationOptions(
-                              clientId: 'com.tanotyan.syukinkun.service',
-                              redirectUri: kIsWeb
-                                  ? Uri.parse('https://${Uri.base.host}/')
-                                  : Uri.parse(
-                                      'https://shukinkun-49fb12fd2191.herokuapp.com/auth/apple/callback',
-                                    ),
-                            ),
-                          );
+                          await ref
+                              .read(userProvider.notifier)
+                              .registerUserByApple();
 
-                          debugPrint("Appleサインイン認証情報: $credential");
+                          final user = ref.read(userProvider);
 
-                          final url = Uri.http(
-                              '127.0.0.1:5000', '/auth/apple/callback');
+                          if (user != null) {
+                            final prefs = await SharedPreferences.getInstance();
+                            prefs.setString('appleUserId', user.userId);
+                            prefs.setBool('isAppleLoggedIn', true);
 
-                          final response = await http.post(url,
-                              headers: {'Content-Type': 'application/json'},
-                              body: jsonEncode({
-                                'identifyToken': credential.userIdentifier,
-                              }));
-
-                          if (response.statusCode == 200 ||
-                              response.statusCode == 201) {
-                            final data = jsonDecode(response.body);
-
-                            final user = User.fromJson(data);
-
-                            if (user != null) {
-                              final prefs =
-                                  await SharedPreferences.getInstance();
-                              prefs.setString('appleUserId', user.userId);
-                              prefs.setBool('isAppleLoggedIn', true);
-
-                              if (mounted) {
-                                debugPrint(
-                                    'Appleサインイン成功。HomeScreenへ遷移します。user: $user');
-                                _updateCurrentLoginMedia('apple');
-                                Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        HomeScreen(title: '集金くん', user: user),
-                                  ),
-                                );
-                              }
-                            } else {
-                              debugPrint('ユーザー情報がnullです');
+                            if (mounted) {
+                              debugPrint(
+                                  'Appleサインイン成功。HomeScreenへ遷移します。user: $user');
+                              _updateCurrentLoginMedia('apple');
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      HomeScreen(title: '集金くん', user: user),
+                                ),
+                              );
                             }
                           } else {
-                            debugPrint(
-                                'Appleサインインエンドポイントエラー: ${response.statusCode}');
-                            if (mounted) {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) =>
-                                      const LoginErrorDialog());
-                            }
-                          }
-                        } on PlatformException catch (e) {
-                          if (mounted) {
-                            debugPrint("エラーが発生 :$e");
-                            showDialog(
-                                context: context,
-                                builder: (context) => const LoginErrorDialog());
+                            debugPrint('ユーザー情報がnullです');
                           }
                         } catch (e) {
                           debugPrint('Appleサインイン中にエラーが発生: $e');
