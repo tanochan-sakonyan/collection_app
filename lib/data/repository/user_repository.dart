@@ -59,7 +59,7 @@ class UserRepository {
         redirectUri: kIsWeb
             ? Uri.parse('https://${Uri.base.host}/')
             : Uri.parse(
-                'https://shukinkun-49fb12fd2191.herokuapp.com/auth/apple/callback',
+                '$baseUrl/auth/apple/callback',
               ),
       ),
     );
