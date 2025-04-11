@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/constants/base_url.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/data/repository/event_repository.dart';
+import 'package:mr_collection/ui/components/button/toggle_button.dart';
 
 class AddEventDialog extends ConsumerStatefulWidget {
   final String userId;
@@ -18,7 +19,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
   final TextEditingController _controller = TextEditingController();
   String? _errorMessage;
   bool _isButtonEnabled = true;
-  bool isToggleOn = true;
+  bool isToggleOn = false;
 
   final EventRepository eventRepository = EventRepository(baseUrl: baseUrl);
 
@@ -57,15 +58,13 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
 
     if (eventName.isEmpty) {
       _errorMessage = "イベント名を入力してください";
-    }
-    else if(eventName.length > 8){
-      _errorMessage = "イベント名は最大8文字までです";
-    }
-    else{
+    } else if (eventName.length > 8) {
+      _errorMessage = "最大8文字まで入力可能です";
+    } else {
       _errorMessage = null;
     }
 
-    if(eventName.isEmpty || eventName.length > 8){
+    if (eventName.isEmpty || eventName.length > 8) {
       setState(() {
         _isButtonEnabled = true;
       });
@@ -91,48 +90,47 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
       child: Padding(
         padding: const EdgeInsets.only(top: 8, left: 24, right: 24),
         child: Container(
-          width: 328,
-          height: 270,
+          width: 320,
+          height: 330,
           color: const Color(0xFFF2F2F2),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    icon: SvgPicture.asset("assets/icons/close_circle.svg"),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  Text(
-                    'イベントの追加',
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                  IconButton(
-                      icon: SvgPicture.asset("assets/icons/check_circle.svg"),
-                      onPressed: _isButtonEnabled
-                          ? () => _createEvent()
-                          : null),
-                ],
+              Center(
+                child: Text(
+                  'イベント追加',
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 8),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Event",
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        fontSize: 10.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ),
               Container(
+                width: 272,
+                height: 48,
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.black),
+                  border: Border.all(color: const Color(0xFFE8E8E8)),
                 ),
                 child: TextField(
                   controller: _controller,
+                  // textAlignVertical: TextAlignVertical.center,
                   decoration: const InputDecoration(
                     border: InputBorder.none,
-                    hintText: 'イベント名を入力',
                   ),
                 ),
               ),
@@ -140,20 +138,20 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                Padding(
-                  padding: EdgeInsets.all(4.0),
-                  child:
-                    Text(
-                      _errorMessage!,
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: Colors.red,
-                        fontSize: 10,
-                          ),
-                        ),
+                    Padding(
+                      padding: EdgeInsets.all(4.0),
+                      child: Text(
+                        _errorMessage!,
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              color: Colors.red,
+                              fontSize: 10,
+                            ),
                       ),
-                    ],
-                  )
-              else const SizedBox(height: 24),
+                    ),
+                  ],
+                )
+              else
+                const SizedBox(height: 24),
               // Options Section
               Container(
                 decoration: BoxDecoration(
@@ -163,52 +161,92 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                 ),
                 child: Column(
                   children: [
-                    //TODO: 現状まだ実装できていないが、今後実装予定
-                    /*ListTile(
-                      title: const Text('参加者引継ぎ'),
-                      trailing: ToggleButton(
-                        initialValue: isToggleOn,
-                        onChanged: (bool isOn) {
-                          setState(() {
-                            isToggleOn = isOn;
-                          });
-                        },
-                      ),
-                    ),*/
-                    const Divider(height: 1, color: Color(0xFFE8E8E8)),
-                    ListTile(
-                      title: const Text('LINEから参加者取得'),
-                      trailing: IconButton(
-                        icon: SvgPicture.asset(
-                          'assets/icons/line.svg',
-                          width: 28,
-                          height: 28,
+                    // SizedBox(
+                    //   width: 272,
+                    //   height: 48,
+                    //   child: ListTile(
+                    //     title: const Text(
+                    //       '参加者引継ぎ',
+                    //       style: TextStyle(
+                    //         color: Colors.black,
+                    //         fontSize: 14.0,
+                    //       ),
+                    //     ),
+                    //     trailing: ToggleButton(
+                    //       initialValue: isToggleOn,
+                    //       onChanged: (bool isOn) {
+                    //         setState(() {
+                    //           isToggleOn = isOn;
+                    //         });
+                    //       },
+                    //     ),
+                    //   ),
+                    // ),
+                    // const Divider(height: 1, color: Color(0xFFE8E8E8)),
+                    SizedBox(
+                      width: 272,
+                      height: 48,
+                      child: ListTile(
+                        dense: true,
+                        title: const Text(
+                          'LINEから参加者取得',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14.0,
+                          ),
                         ),
-                        onPressed: () {
-                          //LINE認証申請前の臨時ダイアログ
-                          showDialog(
-                            context: context,
-                            builder: (context) => const AlertDialog(
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 56.0, horizontal: 24.0),
-                              content: Text(
-                                'LINEへの認証申請中のため、\n機能解禁までしばらくお待ちください',
-                                textAlign: TextAlign.center,
+                        trailing: IconButton(
+                          icon: SvgPicture.asset(
+                            'assets/icons/line.svg',
+                            width: 28,
+                            height: 28,
+                          ),
+                          onPressed: () {
+                            //LINE認証申請前の臨時ダイアログ
+                            showDialog(
+                              context: context,
+                              builder: (context) => const AlertDialog(
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 56.0, horizontal: 24.0),
+                                content: Text(
+                                  'LINEへの認証申請中のため、\n機能解禁までしばらくお待ちください',
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
-                            ),
-                          );
-                          //TODO LINE認証申請が通ったらこちらに戻す
-                          /*showDialog(
+                            );
+                            //TODO LINE認証申請が通ったらこちらに戻す
+                            /*showDialog(
                             context: context,
                             builder: (context) => const ConfirmationDialog(),
                           );*/
-                        },
+                          },
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 29)
+              const SizedBox(height: 24),
+              SizedBox(
+                width: 272,
+                height: 40,
+                child: ElevatedButton(
+                  onPressed: _isButtonEnabled ? () => _createEvent() : null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFF2F2F2),
+                    elevation: 2,
+                    shape: const StadiumBorder(),
+                  ),
+                  child: const Text(
+                    '決定',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 14.0,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
             ],
           ),
         ),

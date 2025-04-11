@@ -2,7 +2,7 @@ name: mr_collection
 description: "集金くん"
 publish_to: 'none'
 
-version: 1.1.0
+version: 1.1.1
 
 environment:
   sdk: ^3.5.3
@@ -14,6 +14,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   google_fonts: ^6.2.1
   flutter_riverpod: ^2.6.1
+  flutter_slidable: ^3.1.0
   flutter_svg: ^2.0.14
   freezed_annotation: ^2.4.1
   json_annotation: ^4.9.0
@@ -41,6 +42,7 @@ flutter_launcher_icons:
 
 flutter:
   assets: 
+    - assets/images/loading_image.svg
     - assets/icons/filter.svg
     - assets/icons/circle_plus.svg
     - assets/icons/settings.svg
