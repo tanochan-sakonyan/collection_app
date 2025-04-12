@@ -78,6 +78,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       });
       debugPrint('Tutorial shown');
     } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _showTutorial();
+      });
       debugPrint('Tutorial already shown');
     }
   }
@@ -86,7 +89,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     _createTargets();
     tutorialCoachMark = TutorialCoachMark(
       targets: targets,
-      colorShadow: Colors.black.withValues(),
+      colorShadow: const Color(0xFFE0E0E0),
       textSkip: "スキップ",
       paddingFocus: 10,
       onFinish: () async {
@@ -100,18 +103,32 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   void _createTargets() {
     targets.clear();
     targets.addAll([
-      // 1. HomeScreen内のIconButton(assets/icons/plus.svg)
       TargetFocus(
         identify: "plus_button",
         keyTarget: plusKey,
         contents: [
           TargetContent(
             align: ContentAlign.bottom,
-            child: const Text("こちらをタップでイベントを追加できます"),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: const Color(0xFFFFFFFF),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 16,
+                  horizontal: 8,
+                ),
+                child: Text(
+                  "こちらをタップでイベントを\n追加できます",
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
+            ),
           ),
         ],
       ),
-      // 2. HomeScreen内の、一番左のタブ
       TargetFocus(
         identify: "left_tab",
         keyTarget: leftTabKey,
@@ -122,7 +139,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           ),
         ],
       ),
-      // 3. MemberList内のSizedBox(member-addアイコン)
       TargetFocus(
         identify: "member_add",
         keyTarget: memberAddKey,
@@ -133,7 +149,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           ),
         ],
       ),
-      // 4. MemberList内のSlidable(メンバー表示部分)
       TargetFocus(
         identify: "slidable",
         keyTarget: slidableKey,
@@ -144,7 +159,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           ),
         ],
       ),
-      // 5. icons/sortのGestureDetector
       TargetFocus(
         identify: "sort_icon",
         keyTarget: sortKey,
@@ -155,7 +169,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           ),
         ],
       ),
-      // 6. HomeScreenのFAB
       TargetFocus(
         identify: "fab",
         keyTarget: fabKey,
