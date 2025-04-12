@@ -13,7 +13,20 @@ class MemberList extends ConsumerWidget {
   final List<Member>? members;
   final String eventId;
 
-  const MemberList({super.key, required this.members, required this.eventId});
+  final GlobalKey? userAddKey;
+  final GlobalKey? slidableKey;
+  final GlobalKey? sortKey;
+  final GlobalKey? fabKey;
+
+  const MemberList({
+    super.key,
+    required this.members,
+    required this.eventId,
+    this.userAddKey,
+    this.slidableKey,
+    this.sortKey,
+    this.fabKey,
+  });
 
   Future<void> _updateMemberStatus(WidgetRef ref, String userId, String eventId,
       String memberId, int? status) async {
@@ -70,6 +83,7 @@ class MemberList extends ConsumerWidget {
                           const Text('支払い状況'),
                           const SizedBox(width: 3),
                           GestureDetector(
+                            key: sortKey,
                             onTap: () {
                               ref
                                   .read(userProvider.notifier)
@@ -154,43 +168,53 @@ class MemberList extends ConsumerWidget {
                                           ),
                                         ],
                                       ),
-                                      child: ListTile(
-                                        minTileHeight: 32,
-                                        title: (member?.memberName != null)
-                                            ? Text(
-                                                member!.memberName,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  color: member.status ==
-                                                          PaymentStatus.absence
-                                                      ? Colors.grey
-                                                      : Colors.black,
-                                                ),
-                                              )
-                                            : null,
-                                        trailing:
-                                            _buildStatusIcon(member?.status),
-                                        onTap: () {
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) => StatusDialog(
-                                              userId: ref
-                                                  .read(userProvider)!
-                                                  .userId,
-                                              eventId: eventId.toString(),
-                                              memberId: member!.memberId,
-                                              member: member.memberName,
-                                              onStatusChange: (String userId,
-                                                  String eventId,
-                                                  String memberId,
-                                                  int status) {
-                                                _updateMemberStatus(ref, userId,
-                                                    eventId, memberId, status);
-                                              },
-                                            ),
-                                          );
-                                        },
+                                      child: Container(
+                                        key: (index == 0) ? slidableKey : null,
+                                        child: ListTile(
+                                          minTileHeight: 32,
+                                          title: (member?.memberName != null)
+                                              ? Text(
+                                                  member!.memberName,
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    color: member.status ==
+                                                            PaymentStatus
+                                                                .absence
+                                                        ? Colors.grey
+                                                        : Colors.black,
+                                                  ),
+                                                )
+                                              : null,
+                                          trailing:
+                                              _buildStatusIcon(member?.status),
+                                          onTap: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  StatusDialog(
+                                                userId: ref
+                                                    .read(userProvider)!
+                                                    .userId,
+                                                eventId: eventId.toString(),
+                                                memberId: member!.memberId,
+                                                member: member.memberName,
+                                                onStatusChange: (String userId,
+                                                    String eventId,
+                                                    String memberId,
+                                                    int status) {
+                                                  _updateMemberStatus(
+                                                      ref,
+                                                      userId,
+                                                      eventId,
+                                                      memberId,
+                                                      status);
+                                                },
+                                              ),
+                                            );
+                                          },
+                                        ),
                                       ),
                                     ),
                                     const Divider(
@@ -258,6 +282,7 @@ class MemberList extends ConsumerWidget {
                             child: Row(
                               children: [
                                 SizedBox(
+                                    key: userAddKey,
                                     height: 24,
                                     width: 24,
                                     child: SvgPicture.asset(
@@ -391,6 +416,7 @@ class MemberList extends ConsumerWidget {
               height: 60,
               width: 60,
               child: FloatingActionButton(
+                key: fabKey,
                 backgroundColor: const Color(0xFFBABABA),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(48),

@@ -11,6 +11,7 @@ import 'package:mr_collection/ui/components/tanochan_drawer.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key, required this.title, this.user});
@@ -28,6 +29,17 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<String> _tabTitles = [];
   int _currentTabIndex = 0;
+
+  final GlobalKey plusKey = GlobalKey();
+  final GlobalKey leftTabKey = GlobalKey();
+
+  final GlobalKey memberAddKey = GlobalKey();
+  final GlobalKey slidableKey = GlobalKey();
+  final GlobalKey sortKey = GlobalKey();
+  final GlobalKey fabKey = GlobalKey();
+
+  late TutorialCoachMark tutorialCoachMark;
+  List<TargetFocus> targets = [];
 
   @override
   void initState() {
@@ -53,6 +65,110 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     });
 
     _loadSavedTabIndex();
+    _checkTutorialStatus();
+  }
+
+  Future<void> _checkTutorialStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isTutorialShown = prefs.getBool('isTutorialShown') ?? false;
+
+    if (!isTutorialShown) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _showTutorial();
+      });
+      debugPrint('Tutorial shown');
+    } else {
+      debugPrint('Tutorial already shown');
+    }
+  }
+
+  void _showTutorial() {
+    _createTargets();
+    tutorialCoachMark = TutorialCoachMark(
+      targets: targets,
+      colorShadow: Colors.black.withValues(),
+      textSkip: "スキップ",
+      paddingFocus: 10,
+      onFinish: () async {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('isTutorialShown', true);
+      },
+    );
+    tutorialCoachMark.show(context: context);
+  }
+
+  void _createTargets() {
+    targets.clear();
+    targets.addAll([
+      // 1. HomeScreen内のIconButton(assets/icons/plus.svg)
+      TargetFocus(
+        identify: "plus_button",
+        keyTarget: plusKey,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: const Text("こちらをタップでイベントを追加できます"),
+          ),
+        ],
+      ),
+      // 2. HomeScreen内の、一番左のタブ
+      TargetFocus(
+        identify: "left_tab",
+        keyTarget: leftTabKey,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            child: const Text("長押しでイベントを削除できます"),
+          ),
+        ],
+      ),
+      // 3. MemberList内のSizedBox(member-addアイコン)
+      TargetFocus(
+        identify: "member_add",
+        keyTarget: memberAddKey,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: const Text("こちらをタップでメンバーを追加できます"),
+          ),
+        ],
+      ),
+      // 4. MemberList内のSlidable(メンバー表示部分)
+      TargetFocus(
+        identify: "slidable",
+        keyTarget: slidableKey,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: const Text("スワイプでメンバーを削除できます"),
+          ),
+        ],
+      ),
+      // 5. icons/sortのGestureDetector
+      TargetFocus(
+        identify: "sort_icon",
+        keyTarget: sortKey,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            child: const Text("こちらをタップで支払い状況順に並び変えることができます"),
+          ),
+        ],
+      ),
+      // 6. HomeScreenのFAB
+      TargetFocus(
+        identify: "fab",
+        keyTarget: fabKey,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            child: const Text(
+              "こちらをタップで催促メッセージを送信できます\n(現在機能申請中ですのでアップデートをお待ちください。)",
+            ),
+          ),
+        ],
+      ),
+    ]);
   }
 
   @override
@@ -181,7 +297,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                         child: TabBar(
                           isScrollable: true,
                           controller: _tabController,
-                          tabs: _tabTitles.map((eventId) {
+                          tabs: _tabTitles.asMap().entries.map((entry) {
+                            final index = entry.key;
+                            final eventId = entry.value;
                             final event = user!.events.firstWhere(
                               (e) => e.eventId == eventId,
                               orElse: () => const Event(
@@ -190,6 +308,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                             final bool isFullyPaid = event.members.isNotEmpty &&
                                 event.members.every((member) =>
                                     member.status != PaymentStatus.unpaid);
+
                             final Color tabTextColor = isFullyPaid
                                 ? const Color(0xFF35C759)
                                 : Theme.of(context)
@@ -198,7 +317,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                         ?.color ??
                                     Colors.black;
 
+                            final bool isFirstTab = (index == 0);
+
                             return GestureDetector(
+                              key: isFirstTab ? leftTabKey : null,
                               onLongPress: () => showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
@@ -231,6 +353,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                     Row(
                       children: [
                         IconButton(
+                          key: plusKey,
                           icon: SvgPicture.asset(
                             'assets/icons/plus.svg',
                             width: screenWidth * 0.07,
@@ -280,6 +403,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                       const Event(eventId: "", eventName: '', members: []),
                 );
                 return MemberList(
+                  userAddKey: memberAddKey,
+                  slidableKey: slidableKey,
+                  sortKey: sortKey,
+                  fabKey: fabKey,
                   members: event.eventId != "" ? event.members : [],
                   eventId: event.eventId != "" ? event.eventId : "",
                 );
