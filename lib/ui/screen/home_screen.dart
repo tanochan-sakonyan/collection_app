@@ -91,6 +91,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       targets: targets,
       colorShadow: const Color(0xFFE0E0E0),
       textSkip: "スキップ",
+      textStyleSkip: const TextStyle(
+        color: Colors.black,
+        fontSize: 16,
+      ),
       paddingFocus: 10,
       onFinish: () async {
         final prefs = await SharedPreferences.getInstance();
