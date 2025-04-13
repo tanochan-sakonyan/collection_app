@@ -68,7 +68,20 @@ class TanochanDrawer extends StatelessWidget {
             //           builder: (context) => const TermsOfServiceScreen()),
             //     );
             //   },
-            // ),
+            // ),// const SizedBox(height: 20),
+            _buildMenuItem(
+              context,
+              text: "アンケート",
+              icon: SvgPicture.asset(
+                  "assets/icons/drawer_star.svg"), //TODO: アイコン変更
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const TermsOfServiceScreen()),
+                );
+              },
+            ),
             const SizedBox(height: 20),
             _buildMenuItem(
               context,

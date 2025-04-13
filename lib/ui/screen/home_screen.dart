@@ -7,7 +7,7 @@ import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/add_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/delete_event_dialog.dart';
 import 'package:mr_collection/ui/components/member_list.dart';
-import 'package:mr_collection/ui/components/tanochan_drawer.dart';
+import 'package:mr_collection/ui/components/drawer.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
