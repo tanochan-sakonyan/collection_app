@@ -13,7 +13,7 @@ class MemberList extends ConsumerWidget {
   final List<Member>? members;
   final String eventId;
 
-  final GlobalKey? userAddKey;
+  final GlobalKey? memberAddKey;
   final GlobalKey? slidableKey;
   final GlobalKey? sortKey;
   final GlobalKey? fabKey;
@@ -22,7 +22,7 @@ class MemberList extends ConsumerWidget {
     super.key,
     required this.members,
     required this.eventId,
-    this.userAddKey,
+    this.memberAddKey,
     this.slidableKey,
     this.sortKey,
     this.fabKey,
@@ -280,9 +280,9 @@ class MemberList extends ConsumerWidget {
                               ),
                             ),
                             child: Row(
+                              key: memberAddKey,
                               children: [
                                 SizedBox(
-                                    key: userAddKey,
                                     height: 24,
                                     width: 24,
                                     child: SvgPicture.asset(
