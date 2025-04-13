@@ -91,7 +91,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         color: Colors.black,
         fontSize: 16,
       ),
-      paddingFocus: 10,
+      paddingFocus: 6,
       onFinish: () => _setTutorialShown(),
       onSkip: () {
         _setTutorialShown();
@@ -117,6 +117,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       TargetFocus(
         identify: "plus_button",
         keyTarget: plusKey,
+        shape: ShapeLightFocus.RRect,
+        radius: 12,
         contents: [
           TargetContent(
             align: ContentAlign.bottom,
@@ -227,6 +229,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       TargetFocus(
         identify: "sort_icon",
         keyTarget: sortKey,
+        shape: ShapeLightFocus.RRect,
+        radius: 12,
         contents: [
           TargetContent(
             align: ContentAlign.bottom,
@@ -253,6 +257,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       TargetFocus(
         identify: "fab",
         keyTarget: fabKey,
+        shape: ShapeLightFocus.RRect,
+        radius: 12,
         contents: [
           TargetContent(
             align: ContentAlign.top,
@@ -348,9 +354,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            SizedBox(
-              width: screenWidth * 0.05,
-            ),
             IconButton(
               onPressed: () {
                 _resetTutorial();
