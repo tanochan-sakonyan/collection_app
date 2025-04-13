@@ -188,10 +188,28 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       TargetFocus(
         identify: "slidable",
         keyTarget: slidableKey,
+        shape: ShapeLightFocus.RRect,
+        radius: 12,
         contents: [
           TargetContent(
             align: ContentAlign.bottom,
-            child: const Text("スワイプでメンバーを削除できます"),
+            child: Align(
+              alignment: Alignment.center,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: const Color(0xFFFFFFFF),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 16,
+                  horizontal: 8,
+                ),
+                child: Text(
+                  "スワイプでメンバーを削除\nできます",
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
+            ),
           ),
         ],
       ),
@@ -200,8 +218,24 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         keyTarget: sortKey,
         contents: [
           TargetContent(
-            align: ContentAlign.top,
-            child: const Text("こちらをタップで支払い状況順に並び変えることができます"),
+            align: ContentAlign.bottom,
+            child: Align(
+              alignment: Alignment.topRight,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: const Color(0xFFFFFFFF),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 16,
+                  horizontal: 8,
+                ),
+                child: Text(
+                  "こちらをタップで支払い状況順に\n並び変えることができます",
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
+            ),
           ),
         ],
       ),
@@ -211,8 +245,22 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         contents: [
           TargetContent(
             align: ContentAlign.top,
-            child: const Text(
-              "こちらをタップで催促メッセージを送信できます\n(現在機能申請中ですのでアップデートをお待ちください。)",
+            child: Align(
+              alignment: Alignment.topRight,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: const Color(0xFFFFFFFF),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 16,
+                  horizontal: 8,
+                ),
+                child: Text(
+                  "こちらをタップで催促メッセージを\n送信できます\n(現在機能申請中ですのでアップデートを\nお待ちください)",
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
             ),
           ),
         ],
