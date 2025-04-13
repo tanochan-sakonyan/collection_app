@@ -14,9 +14,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
-  const HomeScreen({super.key, required this.title, this.user});
+  const HomeScreen({super.key, this.user});
 
-  final String title;
   final User? user;
 
   @override
@@ -78,9 +77,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       });
       debugPrint('Tutorial shown');
     } else {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _showTutorial();
-      });
       debugPrint('Tutorial already shown');
     }
   }
@@ -96,12 +92,23 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         fontSize: 16,
       ),
       paddingFocus: 10,
-      onFinish: () async {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setBool('isTutorialShown', true);
+      onFinish: () => _setTutorialShown(),
+      onSkip: () {
+        _setTutorialShown();
+        return true;
       },
     );
     tutorialCoachMark.show(context: context);
+  }
+
+  void _setTutorialShown() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isTutorialShown', true);
+  }
+
+  void _resetTutorial() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isTutorialShown', false);
   }
 
   void _createTargets() {
@@ -344,12 +351,18 @@ class HomeScreenState extends ConsumerState<HomeScreen>
             SizedBox(
               width: screenWidth * 0.05,
             ),
-            Text(
-              widget.title,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    fontSize: screenWidth * 0.05,
-                  ),
+            IconButton(
+              onPressed: () {
+                _resetTutorial();
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  _showTutorial();
+                });
+              },
+              icon: SvgPicture.asset(
+                'assets/icons/question_circle.svg',
+                width: 24,
+                height: 24,
+              ),
             ),
           ],
         ),

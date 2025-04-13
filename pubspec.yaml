@@ -60,6 +60,7 @@ flutter:
     - assets/icons/user-add.svg
     - assets/icons/chat_bubble.svg
     - assets/icons/yen.svg
+    - assets/icons/question_circle.svg
     - assets/icons/drawer_yen.svg
     - assets/icons/drawer_star.svg
     - assets/icons/drawer_key.svg

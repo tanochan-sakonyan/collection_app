@@ -80,8 +80,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           _updateCurrentLoginMedia('line');
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  HomeScreen(title: '集金くん', user: user),
+                              builder: (context) => HomeScreen(user: user),
                             ),
                           );
                         }
@@ -113,8 +112,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           _updateCurrentLoginMedia('line');
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  HomeScreen(title: '集金くん', user: user),
+                              builder: (context) => HomeScreen(user: user),
                             ),
                           );
                         }
@@ -186,8 +184,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             _updateCurrentLoginMedia('apple');
                             Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    HomeScreen(title: '集金くん', user: user),
+                                builder: (context) => HomeScreen(user: user),
                               ),
                             );
                           }
@@ -242,7 +239,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        HomeScreen(title: '集金くん', user: user),
+                                        HomeScreen(user: user),
                                   ),
                                 );
                               }
