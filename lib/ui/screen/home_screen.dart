@@ -134,8 +134,24 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         keyTarget: leftTabKey,
         contents: [
           TargetContent(
-            align: ContentAlign.top,
-            child: const Text("長押しでイベントを削除できます"),
+            align: ContentAlign.bottom,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: const Color(0xFFFFFFFF),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 16,
+                  horizontal: 8,
+                ),
+                child: Text(
+                  "長押しでイベントを削除\nできます",
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
+            ),
           ),
         ],
       ),
