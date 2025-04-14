@@ -69,9 +69,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
 
   Future<void> _checkTutorialStatus() async {
     final prefs = await SharedPreferences.getInstance();
-    final isTutorialShown = prefs.getBool('isTutorialShown') ?? false;
+    final isTutorialShown112 = prefs.getBool('isTutorialShown112') ?? false;
 
-    if (!isTutorialShown) {
+    if (!isTutorialShown112) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _showTutorial();
       });
@@ -103,12 +103,12 @@ class HomeScreenState extends ConsumerState<HomeScreen>
 
   void _setTutorialShown() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isTutorialShown', true);
+    await prefs.setBool('isTutorialShown112', true);
   }
 
   void _resetTutorial() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isTutorialShown', false);
+    await prefs.setBool('isTutorialShown112', false);
   }
 
   void _createTargets() {
