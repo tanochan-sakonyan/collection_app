@@ -10,14 +10,13 @@ import 'package:mr_collection/ui/components/member_list.dart';
 import 'package:mr_collection/ui/components/tanochan_drawer.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/user.dart';
+import 'package:mr_collection/ui/tutorial/tutorial_targets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key, this.user});
-
   final User? user;
-
   @override
   ConsumerState<HomeScreen> createState() => HomeScreenState();
 }
@@ -31,7 +30,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
 
   final GlobalKey plusKey = GlobalKey();
   final GlobalKey leftTabKey = GlobalKey();
-
   final GlobalKey memberAddKey = GlobalKey();
   final GlobalKey slidableKey = GlobalKey();
   final GlobalKey sortKey = GlobalKey();
@@ -62,7 +60,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         }
       }
     });
-
     _loadSavedTabIndex();
     _checkTutorialStatus();
   }
@@ -70,7 +67,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   Future<void> _checkTutorialStatus() async {
     final prefs = await SharedPreferences.getInstance();
     final isTutorialShown112 = prefs.getBool('isTutorialShown112') ?? false;
-
     if (!isTutorialShown112) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _showTutorial();
@@ -82,7 +78,15 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   void _showTutorial() {
-    _createTargets();
+    targets = TutorialTargets.createTargets(
+      context: context,
+      plusKey: plusKey,
+      leftTabKey: leftTabKey,
+      memberAddKey: memberAddKey,
+      slidableKey: slidableKey,
+      sortKey: sortKey,
+      fabKey: fabKey,
+    );
     tutorialCoachMark = TutorialCoachMark(
       targets: targets,
       colorShadow: const Color(0xFFE0E0E0),
@@ -109,180 +113,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   void _resetTutorial() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isTutorialShown112', false);
-  }
-
-  void _createTargets() {
-    targets.clear();
-    targets.addAll([
-      TargetFocus(
-        identify: "plus_button",
-        keyTarget: plusKey,
-        shape: ShapeLightFocus.RRect,
-        radius: 12,
-        contents: [
-          TargetContent(
-            align: ContentAlign.bottom,
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: const Color(0xFFFFFFFF),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  vertical: 16,
-                  horizontal: 8,
-                ),
-                child: Text(
-                  "こちらをタップでイベントを\n追加できます",
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-      TargetFocus(
-        identify: "left_tab",
-        keyTarget: leftTabKey,
-        shape: ShapeLightFocus.RRect,
-        radius: 16,
-        contents: [
-          TargetContent(
-            align: ContentAlign.bottom,
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: const Color(0xFFFFFFFF),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  vertical: 16,
-                  horizontal: 8,
-                ),
-                child: Text(
-                  "長押しでイベントを削除\nできます",
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-      TargetFocus(
-        identify: "member_add",
-        keyTarget: memberAddKey,
-        shape: ShapeLightFocus.RRect,
-        radius: 12,
-        contents: [
-          TargetContent(
-            align: ContentAlign.top,
-            child: Align(
-              alignment: Alignment.center,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: const Color(0xFFFFFFFF),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  vertical: 16,
-                  horizontal: 8,
-                ),
-                child: Text(
-                  "こちらをタップでメンバーを\n追加できます",
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-      TargetFocus(
-        identify: "slidable",
-        keyTarget: slidableKey,
-        shape: ShapeLightFocus.RRect,
-        radius: 12,
-        contents: [
-          TargetContent(
-            align: ContentAlign.bottom,
-            child: Align(
-              alignment: Alignment.center,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: const Color(0xFFFFFFFF),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  vertical: 16,
-                  horizontal: 8,
-                ),
-                child: Text(
-                  "スワイプでメンバーを削除\nできます",
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-      TargetFocus(
-        identify: "sort_icon",
-        keyTarget: sortKey,
-        shape: ShapeLightFocus.RRect,
-        radius: 12,
-        contents: [
-          TargetContent(
-            align: ContentAlign.bottom,
-            child: Align(
-              alignment: Alignment.topRight,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: const Color(0xFFFFFFFF),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  vertical: 16,
-                  horizontal: 8,
-                ),
-                child: Text(
-                  "こちらをタップで支払い状況順に\n並び変えることができます",
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-      TargetFocus(
-        identify: "fab",
-        keyTarget: fabKey,
-        shape: ShapeLightFocus.RRect,
-        radius: 12,
-        contents: [
-          TargetContent(
-            align: ContentAlign.top,
-            child: Align(
-              alignment: Alignment.topRight,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: const Color(0xFFFFFFFF),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  vertical: 16,
-                  horizontal: 8,
-                ),
-                child: Text(
-                  "こちらをタップで催促メッセージを\n送信できます\n(現在機能申請中ですのでアップデートを\nお待ちください)",
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    ]);
   }
 
   @override
