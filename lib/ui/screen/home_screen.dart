@@ -343,17 +343,20 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           Expanded(
             child: TabBarView(
               controller: _tabController,
-              children: _tabTitles.map((eventId) {
+              children: _tabTitles.asMap().entries.map((entry) {
+                final index = entry.key;
+                final eventId = entry.value;
                 final event = user!.events.firstWhere(
                   (e) => e.eventId == eventId,
                   orElse: () =>
                       const Event(eventId: "", eventName: '', members: []),
                 );
                 return MemberList(
-                  memberAddKey: memberAddKey,
-                  slidableKey: slidableKey,
-                  sortKey: sortKey,
-                  fabKey: fabKey,
+                  memberAddKey:
+                      (_currentTabIndex == index) ? memberAddKey : null,
+                  slidableKey: (_currentTabIndex == index) ? slidableKey : null,
+                  sortKey: (_currentTabIndex == index) ? sortKey : null,
+                  fabKey: (_currentTabIndex == index) ? fabKey : null,
                   members: event.eventId != "" ? event.members : [],
                   eventId: event.eventId != "" ? event.eventId : "",
                 );
