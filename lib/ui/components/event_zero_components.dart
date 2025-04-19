@@ -18,25 +18,25 @@ class EventZeroComponents extends ConsumerWidget {
           const SizedBox(height: 160),
           Text(
             '集金管理するイベントを',
-            style: GoogleFonts.montserrat(
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
               fontSize: 20,
               fontWeight: FontWeight.w900,
             ),
           ),
           Text(
             '登録してみよう',
-            style: GoogleFonts.montserrat(
-              fontSize: 20,
-              fontWeight: FontWeight.w900,
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                fontSize: 20,
+                fontWeight: FontWeight.w900,
             ),
           ),
           const SizedBox(height: 28),
           Text(
-            '例)　飲み会、カラオケ、旅行 etc...',
-            style: GoogleFonts.montserrat(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xFF383838)
+            '例) 飲み会、カラオケ、旅行 etc...',
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: const Color(0xFF383838)
             ),
           ),
           const SizedBox(height: 40),
@@ -55,7 +55,7 @@ class EventZeroComponents extends ConsumerWidget {
             ),
             label: Text(
                 'イベントを追加',
-                style: GoogleFonts.montserrat(
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 fontSize: 16,
                 fontWeight: FontWeight.w900,
                 color: const Color(0xFF76DCC6)
