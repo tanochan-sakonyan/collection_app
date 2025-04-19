@@ -11,6 +11,7 @@ import 'package:mr_collection/ui/components/tanochan_drawer.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mr_collection/ui/components/event_zero_components.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key, required this.title, this.user});
@@ -271,20 +272,22 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       body: Column(
         children: [
           Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: _tabTitles.map((eventId) {
-                final event = user!.events.firstWhere(
-                  (e) => e.eventId == eventId,
-                  orElse: () =>
-                      const Event(eventId: "", eventName: '', members: []),
-                );
-                return MemberList(
-                  members: event.eventId != "" ? event.members : [],
-                  eventId: event.eventId != "" ? event.eventId : "",
-                );
-              }).toList(),
-            ),
+            child: tabTitles.isEmpty
+                ? EventZeroComponents()
+                : TabBarView(
+                    controller: _tabController,
+                    children: _tabTitles.map((eventId) {
+                      final event = user!.events.firstWhere(
+                        (e) => e.eventId == eventId,
+                        orElse: () =>
+                          const Event(eventId: "", eventName: '', members: []),
+                      );
+                    return MemberList(
+                      members: event.eventId != "" ? event.members : [],
+                      eventId: event.eventId != "" ? event.eventId : "",
+                    );
+                    }).toList(),
+                ),
           ),
         ],
       ),
