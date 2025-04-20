@@ -6,6 +6,7 @@ import 'package:mr_collection/provider/tab_titles_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/add_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/delete_event_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/update_dialog/updateDialogFor112.dart';
 import 'package:mr_collection/ui/components/member_list.dart';
 import 'package:mr_collection/ui/components/tanochan_drawer.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
@@ -28,6 +29,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<String> _tabTitles = [];
   int _currentTabIndex = 0;
+  static const String _versionForUpdateDialog =
+      "1.1.2"; // アップデートポップアップを出すときに使用。今後も手動で変更
 
   @override
   void initState() {
@@ -53,6 +56,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     });
 
     _loadSavedTabIndex();
+    _checkAndShowUpdateDialog();
   }
 
   @override
@@ -92,6 +96,27 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     if (mounted && savedIndex < _tabController.length) {
       _currentTabIndex = savedIndex;
       _tabController.animateTo(savedIndex);
+    }
+  }
+
+  Future<void> _checkAndShowUpdateDialog() async {
+    final prefs = await SharedPreferences.getInstance();
+    final shownVersion = prefs.getString('shownUpdateDialogVersion') ?? "";
+    debugPrint(
+        'shownVersion: $shownVersion, _versionForUpdateDialog: $_versionForUpdateDialog');
+    if (shownVersion != _versionForUpdateDialog) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return const UpdateDialogFor112();
+        },
+      );
+      await prefs.setString(
+          'shownUpdateDialogVersion', _versionForUpdateDialog);
+      debugPrint('Update dialog shown for version $_versionForUpdateDialog');
+    } else {
+      debugPrint(
+          'Update dialog already shown for version $_versionForUpdateDialog');
     }
   }
 
