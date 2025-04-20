@@ -8,6 +8,7 @@ import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/add_member_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/delete_member_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/status_dialog.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MemberList extends ConsumerWidget {
   final List<Member>? members;
@@ -65,9 +66,23 @@ class MemberList extends ConsumerWidget {
                       child: Row(
                         children: [
                           const SizedBox(width: 24),
-                          const Text('メンバー'),
+                          Text(
+                              'メンバー',
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black
+                            ),
+                          ),
                           const Spacer(),
-                          const Text('支払い状況'),
+                          Text(
+                              '支払い状況',
+                            style: GoogleFonts.notoSansJp(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black
+                            ),
+                          ),
                           const SizedBox(width: 3),
                           GestureDetector(
                             onTap: () {
@@ -113,9 +128,10 @@ class MemberList extends ConsumerWidget {
                                             SizedBox(height: 4),
                                             Text(
                                               '編集',
-                                              style: TextStyle(
-                                                fontSize: 14, // 14px に指定
-                                                color: Colors.white,
+                                              style: GoogleFonts.inter(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Colors.white,
                                               ),
                                             ),
                                           ],
@@ -137,15 +153,16 @@ class MemberList extends ConsumerWidget {
                                               );
                                             },
                                             backgroundColor: Colors.red,
-                                            child: const Column(
+                                            child: Column(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
                                               children: [
-                                                SizedBox(height: 4),
+                                                const SizedBox(height: 4),
                                                 Text(
                                                   '削除',
-                                                  style: TextStyle(
+                                                  style: GoogleFonts.inter(
                                                     fontSize: 14,
+                                                    fontWeight: FontWeight.w400,
                                                     color: Colors.white,
                                                   ),
                                                 ),
@@ -161,7 +178,9 @@ class MemberList extends ConsumerWidget {
                                                 member!.memberName,
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
+                                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w500,
                                                   color: member.status ==
                                                           PaymentStatus.absence
                                                       ? Colors.grey
@@ -265,11 +284,10 @@ class MemberList extends ConsumerWidget {
                                 const SizedBox(width: 4),
                                 Text(
                                   'メンバー追加',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
-                                      ?.copyWith(
-                                        color: Colors.black,
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black,
                                       ),
                                 ),
                               ],
@@ -293,7 +311,11 @@ class MemberList extends ConsumerWidget {
                     width: 60,
                     child: Text(
                       "未払い",
-                      style: Theme.of(context).textTheme.bodyLarge,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -330,7 +352,14 @@ class MemberList extends ConsumerWidget {
                   const SizedBox(width: 4),
                   const Text("・・・・・・"),
                   const SizedBox(width: 26),
-                  Text("$unpaidCount人"),
+                  Text(
+                      "$unpaidCount人",
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                    ),
+                  ),
                 ]),
               ),
               const SizedBox(height: 20),
@@ -342,7 +371,11 @@ class MemberList extends ConsumerWidget {
                     width: 60,
                     child: Text(
                       "支払済",
-                      style: Theme.of(context).textTheme.bodyLarge,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -379,7 +412,14 @@ class MemberList extends ConsumerWidget {
                   const SizedBox(width: 4),
                   const Text("・・・・・・"),
                   const SizedBox(width: 26),
-                  Text("$attendanceCount人"),
+                  Text(
+                      "$attendanceCount人",
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                    ),
+                  ),
                 ]),
               ),
             ],
@@ -398,12 +438,17 @@ class MemberList extends ConsumerWidget {
                 onPressed: () {
                   showDialog(
                     context: context,
-                    builder: (context) => const AlertDialog(
-                      contentPadding: EdgeInsets.symmetric(
+                    builder: (context) => AlertDialog(
+                      contentPadding: const EdgeInsets.symmetric(
                           vertical: 56.0, horizontal: 24.0),
                       content: Text(
                         'LINEへの認証申請中のため、\n機能解禁までしばらくお待ちください',
                         textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
                   );

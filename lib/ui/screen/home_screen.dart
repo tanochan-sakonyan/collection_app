@@ -11,6 +11,8 @@ import 'package:mr_collection/ui/components/tanochan_drawer.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key, required this.title, this.user});
@@ -213,10 +215,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                     const EdgeInsets.symmetric(horizontal: 8.0),
                                 child: Tab(
                                   child: Text(event.eventName,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall
-                                          ?.copyWith(
+                                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                               fontSize: 14,
                                               color: tabTextColor)),
                                 ),
