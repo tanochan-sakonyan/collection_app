@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class StatusDialog extends StatelessWidget {
   final String userId;
@@ -37,9 +38,9 @@ class StatusDialog extends StatelessWidget {
             children: [
               Text(
                 '$memberは',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16,
                 ),
               ),
               const SizedBox(height: 20),
@@ -49,6 +50,11 @@ class StatusDialog extends StatelessWidget {
                 icon: Icons.check,
                 iconColor: const Color(0xFF35C759),
                 status: 1,
+                labelStyle: GoogleFonts.notoSansJp(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black,
+                ),
               ),
               const SizedBox(height: 32),
               _buildStatusButton(
@@ -57,6 +63,11 @@ class StatusDialog extends StatelessWidget {
                 icon: Icons.close,
                 iconColor: Colors.red,
                 status: 2,
+                labelStyle: GoogleFonts.notoSansJp(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black,
+                ),
               ),
               const SizedBox(height: 32),
               _buildStatusButton(
@@ -65,6 +76,11 @@ class StatusDialog extends StatelessWidget {
                 icon: Icons.remove,
                 iconColor: const Color(0xFFC0C0C0),
                 status: 3,
+                labelStyle: GoogleFonts.notoSansJp(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black,
+                ),
               ),
             ],
           ),
@@ -77,7 +93,9 @@ class StatusDialog extends StatelessWidget {
       {required String label,
       required IconData icon,
       required Color iconColor,
-      required int status}) {
+      required int status,
+      TextStyle? labelStyle,
+      }) {
     return GestureDetector(
       onTap: () async {
         Navigator.pop(context);

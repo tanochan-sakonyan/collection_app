@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/delete_complete_dialog.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class DeleteAccountDialog extends ConsumerStatefulWidget {
   final String userId;
@@ -42,38 +43,41 @@ class _DeleteAccountDialogState extends ConsumerState<DeleteAccountDialog> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
+              Text(
                 'アカウントの削除',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.w700,
                   fontSize: 16,
+                  color: Colors.black,
                 ),
               ),
               const SizedBox(height: 12),
-              const Text(
+              Text(
                 '※ 注意 ※',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontWeight: FontWeight.bold,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.w700,
                   fontSize: 16,
+                  color: Colors.red,
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
+              Text(
                 'アカウントを削除した場合、\nすべてのデータが初期化されます。\n'
                 'データの復旧を行うことは\nできません。',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
                   fontSize: 14,
+                  color: Colors.black,
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
+              Text(
                 '本当によろしいですか？',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
                   fontSize: 14,
+                  color: Colors.black,
                 ),
               ),
               const SizedBox(height: 8),
@@ -94,12 +98,13 @@ class _DeleteAccountDialogState extends ConsumerState<DeleteAccountDialog> {
                       });
                     },
                   ),
-                  const Expanded(
+                  Expanded(
                     child: Text(
                       '上記を確認し、削除を希望する',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.w700,
                         fontSize: 12,
+                        color: Colors.black,
                       ),
                     ),
                   ),
@@ -123,7 +128,11 @@ class _DeleteAccountDialogState extends ConsumerState<DeleteAccountDialog> {
                       ),
                       child: Text(
                         'いいえ',
-                        style: Theme.of(context).textTheme.bodyMedium,
+                        style: GoogleFonts.notoSansJp(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
                   ),
@@ -144,7 +153,11 @@ class _DeleteAccountDialogState extends ConsumerState<DeleteAccountDialog> {
                       ),
                       child: Text(
                         'はい',
-                        style: Theme.of(context).textTheme.bodyMedium,
+                        style: GoogleFonts.notoSansJp(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
                   ),
