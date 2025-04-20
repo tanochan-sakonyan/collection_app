@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/delete_account_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/logout_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/questionnaire_dialog.dart';
 import 'package:mr_collection/ui/screen/privacy_policy_screen.dart';
 import 'package:mr_collection/ui/screen/terms_of_service_screen.dart';
 
@@ -72,15 +73,14 @@ class TanochanDrawer extends StatelessWidget {
             const SizedBox(height: 20),
             _buildMenuItem(
               context,
-              text: "アンケート",
-              icon: SvgPicture.asset(
-                  "assets/icons/drawer_star.svg"), //TODO: アイコン変更
+              text: "目安箱",
+              icon: SvgPicture.asset("assets/icons/drawer_envelope.svg"),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const TermsOfServiceScreen()),
-                );
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return const QuestionnaireDialog();
+                    });
               },
             ),
             const SizedBox(height: 20),
