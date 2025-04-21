@@ -8,6 +8,7 @@ import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/add_member_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/delete_member_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/status_dialog.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class MemberList extends ConsumerWidget {
   final List<Member>? members;
@@ -38,69 +39,70 @@ class MemberList extends ConsumerWidget {
 
     return Padding(
       padding: const EdgeInsets.only(top: 16, left: 29, right: 29),
-      child: Stack(
-        children: [
-          Column(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.black),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  children: [
-                    Container(
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFE8E8E8),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(12),
-                          topRight: Radius.circular(12),
-                        ),
-                        border: Border(
-                          bottom: BorderSide(color: Colors.black),
-                        ),
-                      ),
-                      height: 32,
-                      child: Row(
-                        children: [
-                          const SizedBox(width: 24),
-                          const Text('メンバー'),
-                          const Spacer(),
-                          const Text('支払い状況'),
-                          const SizedBox(width: 3),
-                          GestureDetector(
-                            onTap: () {
-                              ref
-                                  .read(userProvider.notifier)
-                                  .sortingMembers(eventId);
-                            },
-                            child: SvgPicture.asset('assets/icons/sort.svg'),
+      child: Column(children: [
+        Stack(
+          children: [
+            Column(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: Colors.black),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFE8E8E8),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(12),
+                            topRight: Radius.circular(12),
                           ),
-                          const SizedBox(width: 28),
-                        ],
+                          border: Border(
+                            bottom: BorderSide(color: Colors.black),
+                          ),
+                        ),
+                        height: 32,
+                        child: Row(
+                          children: [
+                            const SizedBox(width: 24),
+                            const Text('メンバー'),
+                            const Spacer(),
+                            const Text('支払い状況'),
+                            const SizedBox(width: 3),
+                            GestureDetector(
+                              onTap: () {
+                                ref
+                                    .read(userProvider.notifier)
+                                    .sortingMembers(eventId);
+                              },
+                              child: SvgPicture.asset('assets/icons/sort.svg'),
+                            ),
+                            const SizedBox(width: 28),
+                          ],
+                        ),
                       ),
-                    ),
-                    ClipRect(
-                      child: SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.4,
-                        child: SlidableAutoCloseBehavior(
-                          child: ListView.builder(
-                            itemCount: members?.length,
-                            itemBuilder: (context, index) {
-                              final member = members?[index];
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 16, right: 16),
-                                child: Column(
-                                  children: [
-                                    Slidable(
-                                      key: ValueKey(member!.memberId),
-                                      endActionPane: ActionPane(
-                                        motion: const ScrollMotion(),
-                                        extentRatio: 0.26,
-                                        children: [
-                                          /*
+                      ClipRect(
+                        child: SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.4,
+                          child: SlidableAutoCloseBehavior(
+                            child: ListView.builder(
+                              itemCount: members?.length,
+                              itemBuilder: (context, index) {
+                                final member = members?[index];
+                                return Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 16, right: 16),
+                                  child: Column(
+                                    children: [
+                                      Slidable(
+                                        key: ValueKey(member!.memberId),
+                                        endActionPane: ActionPane(
+                                          motion: const ScrollMotion(),
+                                          extentRatio: 0.26,
+                                          children: [
+                                            /*
                                       CustomSlidableAction(
                                         onPressed: (context) {
                                           // TODO: メンバー名編集機能の実装
@@ -122,272 +124,285 @@ class MemberList extends ConsumerWidget {
                                         ),
                                       ),
                                        */
-                                          CustomSlidableAction(
-                                            onPressed: (context) {
-                                              showDialog(
-                                                context: context,
-                                                builder: (context) =>
-                                                    DeleteMemberDialog(
-                                                  userId: ref
-                                                      .read(userProvider)!
-                                                      .userId,
-                                                  eventId: eventId,
-                                                  memberId: member!.memberId,
-                                                ),
-                                              );
-                                            },
-                                            backgroundColor: Colors.red,
-                                            child: const Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                SizedBox(height: 4),
-                                                Text(
-                                                  '削除',
-                                                  style: TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors.white,
+                                            CustomSlidableAction(
+                                              onPressed: (context) {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      DeleteMemberDialog(
+                                                    userId: ref
+                                                        .read(userProvider)!
+                                                        .userId,
+                                                    eventId: eventId,
+                                                    memberId: member!.memberId,
                                                   ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      child: ListTile(
-                                        minTileHeight: 32,
-                                        title: (member?.memberName != null)
-                                            ? Text(
-                                                member!.memberName,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  color: member.status ==
-                                                          PaymentStatus.absence
-                                                      ? Colors.grey
-                                                      : Colors.black,
-                                                ),
-                                              )
-                                            : null,
-                                        trailing:
-                                            _buildStatusIcon(member?.status),
-                                        onTap: () {
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) => StatusDialog(
-                                              userId: ref
-                                                  .read(userProvider)!
-                                                  .userId,
-                                              eventId: eventId.toString(),
-                                              memberId: member!.memberId,
-                                              member: member.memberName,
-                                              onStatusChange: (String userId,
-                                                  String eventId,
-                                                  String memberId,
-                                                  int status) {
-                                                _updateMemberStatus(ref, userId,
-                                                    eventId, memberId, status);
+                                                );
                                               },
+                                              backgroundColor: Colors.red,
+                                              child: const Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  SizedBox(height: 4),
+                                                  AutoSizeText(
+                                                    '削除',
+                                                    maxLines: 1,
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
-                                          );
-                                        },
+                                          ],
+                                        ),
+                                        child: ListTile(
+                                          minTileHeight: 32,
+                                          title: (member?.memberName != null)
+                                              ? Text(
+                                                  member!.memberName,
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    color: member.status ==
+                                                            PaymentStatus
+                                                                .absence
+                                                        ? Colors.grey
+                                                        : Colors.black,
+                                                  ),
+                                                )
+                                              : null,
+                                          trailing:
+                                              _buildStatusIcon(member?.status),
+                                          onTap: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  StatusDialog(
+                                                userId: ref
+                                                    .read(userProvider)!
+                                                    .userId,
+                                                eventId: eventId.toString(),
+                                                memberId: member!.memberId,
+                                                member: member.memberName,
+                                                onStatusChange: (String userId,
+                                                    String eventId,
+                                                    String memberId,
+                                                    int status) {
+                                                  _updateMemberStatus(
+                                                      ref,
+                                                      userId,
+                                                      eventId,
+                                                      memberId,
+                                                      status);
+                                                },
+                                              ),
+                                            );
+                                          },
+                                        ),
                                       ),
-                                    ),
-                                    const Divider(
-                                      thickness: 1,
-                                      height: 1,
-                                      color: Color(0xFFE8E8E8),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
+                                      const Divider(
+                                        thickness: 1,
+                                        height: 1,
+                                        color: Color(0xFFE8E8E8),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const Divider(
-                      color: Colors.black,
-                      thickness: 1,
-                      height: 1,
-                    ),
-                    SizedBox(
-                      height: 44,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment
-                            .center, //TODO リリース初期段階では中央に一つのボタンを配置
-                        children: [
-                          // const SizedBox(width: 53),
-                          // ElevatedButton(
-                          //   onPressed: () {},
-                          //   style: ElevatedButton.styleFrom(
-                          //     elevation: 0,
-                          //     side: const BorderSide(
-                          //       color: Colors.black,
-                          //       width: 1.0,
-                          //     ),
-                          //     shape: RoundedRectangleBorder(
-                          //       borderRadius: BorderRadius.circular(20),
-                          //     ),
-                          //     minimumSize: const Size(12, 24),
-                          //     backgroundColor: Colors.white,
-                          //   ),
-                          //   child: Text(
-                          //     '一括編集',
-                          //     style: Theme.of(context).textTheme.labelSmall,
-                          //   ),
-                          // ),
-                          // const SizedBox(width: 100),
-                          TextButton(
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => AddMemberDialog(
-                                  userId: ref.read(userProvider)!.userId,
-                                  eventId: eventId,
+                      const Divider(
+                        color: Colors.black,
+                        thickness: 1,
+                        height: 1,
+                      ),
+                      SizedBox(
+                        height: 44,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment
+                              .center, //TODO リリース初期段階では中央に一つのボタンを配置
+                          children: [
+                            // const SizedBox(width: 53),
+                            // ElevatedButton(
+                            //   onPressed: () {},
+                            //   style: ElevatedButton.styleFrom(
+                            //     elevation: 0,
+                            //     side: const BorderSide(
+                            //       color: Colors.black,
+                            //       width: 1.0,
+                            //     ),
+                            //     shape: RoundedRectangleBorder(
+                            //       borderRadius: BorderRadius.circular(20),
+                            //     ),
+                            //     minimumSize: const Size(12, 24),
+                            //     backgroundColor: Colors.white,
+                            //   ),
+                            //   child: Text(
+                            //     '一括編集',
+                            //     style: Theme.of(context).textTheme.labelSmall,
+                            //   ),
+                            // ),
+                            // const SizedBox(width: 100),
+                            TextButton(
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AddMemberDialog(
+                                    userId: ref.read(userProvider)!.userId,
+                                    eventId: eventId,
+                                  ),
+                                );
+                              },
+                              style: TextButton.styleFrom(
+                                elevation: 0,
+                                backgroundColor: Colors.transparent,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.zero,
                                 ),
-                              );
-                            },
-                            style: TextButton.styleFrom(
-                              elevation: 0,
-                              backgroundColor: Colors.transparent,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.zero,
+                              ),
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                      height: 24,
+                                      width: 24,
+                                      child: SvgPicture.asset(
+                                          'assets/icons/user-add.svg')),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    'メンバー追加',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall
+                                        ?.copyWith(
+                                          color: Colors.black,
+                                        ),
+                                  ),
+                                ],
                               ),
                             ),
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                    height: 24,
-                                    width: 24,
-                                    child: SvgPicture.asset(
-                                        'assets/icons/user-add.svg')),
-                                const SizedBox(width: 4),
-                                Text(
-                                  'メンバー追加',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
-                                      ?.copyWith(
-                                        color: Colors.black,
-                                      ),
-                                ),
-                              ],
-                            ),
-                          ),
 
-                          // const SizedBox(width: 30),
-                        ],
-                      ),
-                    )
-                  ],
+                            // const SizedBox(width: 30),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 24),
-              //TODO メンバーのステータスによって表示を変える
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child:
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  SizedBox(
-                    width: 60,
-                    child: Text(
-                      "未払い",
-                      style: Theme.of(context).textTheme.bodyLarge,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.25,
-                    height: iconSize,
-                    child: Stack(
-                      children: unpaidCount != null
-                          ? List.generate(
-                              unpaidCount,
-                              (index) {
-                                double containerWidth =
-                                    MediaQuery.of(context).size.width * 0.25;
-                                double spacing = (unpaidCount > 1)
-                                    ? (containerWidth - iconSize) /
-                                        (unpaidCount - 1)
-                                    : 0;
-                                double left = (unpaidCount > 1)
-                                    ? index * spacing
-                                    : (containerWidth - iconSize) / 2;
-                                return Positioned(
-                                  left: left,
-                                  child: SvgPicture.asset(
-                                    'assets/icons/sad_face.svg',
-                                    width: iconSize,
-                                    height: iconSize,
-                                  ),
-                                );
-                              },
-                            )
-                          : const <Widget>[],
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  const Text("・・・・・・"),
-                  const SizedBox(width: 26),
-                  Text("$unpaidCount人"),
-                ]),
-              ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child:
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  SizedBox(
-                    width: 60,
-                    child: Text(
-                      "支払済",
-                      style: Theme.of(context).textTheme.bodyLarge,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.25,
-                    height: iconSize,
-                    child: Stack(
-                      children: attendanceCount != null
-                          ? List.generate(
-                              attendanceCount,
-                              (index) {
-                                double containerWidth =
-                                    MediaQuery.of(context).size.width * 0.25;
-                                double spacing = (attendanceCount > 1)
-                                    ? (containerWidth - iconSize) /
-                                        (attendanceCount - 1)
-                                    : 0;
-                                double left = (attendanceCount > 1)
-                                    ? index * spacing
-                                    : (containerWidth - iconSize) / 2;
-                                return Positioned(
-                                  left: left,
-                                  child: SvgPicture.asset(
-                                    'assets/icons/flag.svg',
-                                    width: iconSize,
-                                    height: iconSize,
-                                  ),
-                                );
-                              },
-                            )
-                          : const <Widget>[],
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  const Text("・・・・・・"),
-                  const SizedBox(width: 26),
-                  Text("$attendanceCount人"),
-                ]),
-              ),
-            ],
-          ),
-          Positioned(
-            right: 4,
-            bottom: 100,
-            child: SizedBox(
+                const SizedBox(height: 24),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 60,
+                          child: Text(
+                            "未払い",
+                            style: Theme.of(context).textTheme.bodyLarge,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.25,
+                          height: iconSize,
+                          child: Stack(
+                            children: unpaidCount != null
+                                ? List.generate(
+                                    unpaidCount,
+                                    (index) {
+                                      double containerWidth =
+                                          MediaQuery.of(context).size.width *
+                                              0.25;
+                                      double spacing = (unpaidCount > 1)
+                                          ? (containerWidth - iconSize) /
+                                              (unpaidCount - 1)
+                                          : 0;
+                                      double left = (unpaidCount > 1)
+                                          ? index * spacing
+                                          : (containerWidth - iconSize) / 2;
+                                      return Positioned(
+                                        left: left,
+                                        child: SvgPicture.asset(
+                                          'assets/icons/sad_face.svg',
+                                          width: iconSize,
+                                          height: iconSize,
+                                        ),
+                                      );
+                                    },
+                                  )
+                                : const <Widget>[],
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        const Text("・・・・・"),
+                        const SizedBox(width: 20),
+                        Text("$unpaidCount人"),
+                      ]),
+                ),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "支払済",
+                          style: Theme.of(context).textTheme.bodyLarge,
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.25,
+                          height: iconSize,
+                          child: Stack(
+                            children: attendanceCount != null
+                                ? List.generate(
+                                    attendanceCount,
+                                    (index) {
+                                      double containerWidth =
+                                          MediaQuery.of(context).size.width *
+                                              0.25;
+                                      double spacing = (attendanceCount > 1)
+                                          ? (containerWidth - iconSize) /
+                                              (attendanceCount - 1)
+                                          : 0;
+                                      double left = (attendanceCount > 1)
+                                          ? index * spacing
+                                          : (containerWidth - iconSize) / 2;
+                                      return Positioned(
+                                        left: left,
+                                        child: SvgPicture.asset(
+                                          'assets/icons/flag.svg',
+                                          width: iconSize,
+                                          height: iconSize,
+                                        ),
+                                      );
+                                    },
+                                  )
+                                : const <Widget>[],
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        const Text("・・・・・"),
+                        const SizedBox(width: 20),
+                        Text("$attendanceCount人"),
+                      ]),
+                ),
+              ],
+            ),
+          ],
+        ),
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.02,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            SizedBox(
               height: 60,
               width: 60,
               child: FloatingActionButton(
@@ -409,9 +424,9 @@ class MemberList extends ConsumerWidget {
                   );
                   //TODO LINE認証申請が通ったらこちらに戻す
                   /*showDialog(
-                    context: context,
-                    builder: (context) => const ConfirmationDialog(),
-                  );*/
+                      context: context,
+                      builder: (context) => const ConfirmationDialog(),
+                    );*/
                 },
                 child: Center(
                   child: Stack(
@@ -436,9 +451,9 @@ class MemberList extends ConsumerWidget {
                 ),
               ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
+      ]),
     );
   }
 
