@@ -102,7 +102,7 @@ class EditMemberNameDialogState extends ConsumerState<EditMemberNameDialog> {
         padding: const EdgeInsets.all(20),
         child: Container(
           color: const Color(0xFFFFFFFF),
-          height: 200,
+          height: 220,
           width: 320,
           child: Column(
             children: [
@@ -120,8 +120,8 @@ class EditMemberNameDialogState extends ConsumerState<EditMemberNameDialog> {
                 children: [
                   Text(
                     "Name",
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      fontSize: 16,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      fontSize: 10,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -167,11 +167,12 @@ class EditMemberNameDialogState extends ConsumerState<EditMemberNameDialog> {
                     elevation: 2,
                     shape: const StadiumBorder(),
                   ),
-                  child: const Text(
+                  child: Text(
                     '決定',
-                    style: TextStyle(
+                    style: GoogleFonts.notoSansJp(
                       color: Colors.black,
                       fontSize: 14.0,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 ),
