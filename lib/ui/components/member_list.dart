@@ -10,6 +10,8 @@ import 'package:mr_collection/ui/components/dialog/delete_member_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/status_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'dialog/edit_member_name_dialog.dart';
+
 class MemberList extends ConsumerWidget {
   final List<Member>? members;
   final String eventId;
@@ -115,17 +117,26 @@ class MemberList extends ConsumerWidget {
                                         motion: const ScrollMotion(),
                                         extentRatio: 0.26,
                                         children: [
-                                          /*
                                       CustomSlidableAction(
                                         onPressed: (context) {
-                                          // TODO: メンバー名編集機能の実装
-                                          debugPrint('編集ボタンが押されました: ${member.memberId}');
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) =>
+                                                EditMemberNameDialog(
+                                                  userId: ref
+                                                      .read(userProvider)!
+                                                      .userId,
+                                                  eventId: eventId,
+                                                  memberId: member!.memberId,
+                                                  currentName: member.memberName,
+                                                ),
+                                          );
                                         },
                                         backgroundColor: Colors.grey,
-                                        child: const Column(
+                                        child: Column(
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
-                                            SizedBox(height: 4),
+                                            const SizedBox(height: 4),
                                             Text(
                                               '編集',
                                               style: GoogleFonts.inter(
@@ -137,7 +148,7 @@ class MemberList extends ConsumerWidget {
                                           ],
                                         ),
                                       ),
-                                       */
+
                                           CustomSlidableAction(
                                             onPressed: (context) {
                                               showDialog(
