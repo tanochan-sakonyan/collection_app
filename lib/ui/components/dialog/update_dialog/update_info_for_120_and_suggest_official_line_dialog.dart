@@ -27,6 +27,7 @@ class _UpdateInfoFor120AndSuggestOfficialLineDialogState
   @override
   Widget build(BuildContext context) {
     return Dialog(
+      backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.85,
@@ -45,10 +46,24 @@ class _UpdateInfoFor120AndSuggestOfficialLineDialogState
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12),
-              child: SmoothPageIndicator(
-                controller: _pageController,
-                count: 2,
-                effect: const WormEffect(dotHeight: 8, dotWidth: 8, spacing: 8),
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFEFEFEF),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: SmoothPageIndicator(
+                  controller: _pageController,
+                  count: 2,
+                  effect: const WormEffect(
+                    dotHeight: 8,
+                    dotWidth: 8,
+                    spacing: 8,
+                    activeDotColor: Colors.black,
+                    dotColor: Color(0xFFA7A7A7),
+                  ),
+                ),
               ),
             ),
           ],
