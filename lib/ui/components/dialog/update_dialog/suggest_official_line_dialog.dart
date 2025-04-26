@@ -1,8 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SuggestOfficialLineDialog extends StatelessWidget {
   const SuggestOfficialLineDialog({super.key});
+
+  Future<void> _launchLine() async {
+    final uri = Uri.parse('https://lin.ee/cLwUgQtP');
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(
+        uri,
+        mode: LaunchMode.externalApplication,
+      );
+    } else {
+      debugPrint('LINE を起動できませんでした');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +43,9 @@ class SuggestOfficialLineDialog extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                _launchLine();
+              },
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
               icon: SvgPicture.asset(
