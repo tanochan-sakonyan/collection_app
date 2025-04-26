@@ -44,7 +44,7 @@ flutter_launcher_icons:
 
 flutter:
   assets: 
-    - assets/images/loading_image.svg
+    - assets/icons/reverse_icon.svg
     - assets/icons/filter.svg
     - assets/icons/circle_plus.svg
     - assets/icons/settings.svg

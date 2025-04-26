@@ -72,7 +72,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
             return Container(
               color: const Color(0xFF75DCC6),
               child: Center(
-                  child: SvgPicture.asset('assets/images/loading_image.svg')),
+                  child: SvgPicture.asset('assets/icons/reverse_icon.svg')),
             );
           } else if (snapshot.hasError) {
             return Center(child: Text('エラーが発生しました: ${snapshot.error}'));
@@ -92,7 +92,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                       color: const Color(0xFF75DCC6),
                       child: Center(
                           child: SvgPicture.asset(
-                              'assets/images/loading_image.svg')),
+                              'assets/icons/reverse_icon.svg')),
                     );
                   } else if (userIdSnapshot.hasError) {
                     return Center(
@@ -112,7 +112,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                               color: const Color(0xFF75DCC6),
                               child: Center(
                                   child: SvgPicture.asset(
-                                      'assets/images/loading_image.svg')),
+                                      'assets/icons/reverse_icon.svg')),
                             );
                           } else if (userSnapshot.hasError) {
                             return Center(
@@ -147,7 +147,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                       color: const Color(0xFF75DCC6),
                       child: Center(
                           child: SvgPicture.asset(
-                              'assets/images/loading_image.svg')),
+                              'assets/icons/reverse_icon.svg')),
                     );
                   } else if (userIdSnapshot.hasError) {
                     return Center(
@@ -167,7 +167,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                               color: const Color(0xFF75DCC6),
                               child: Center(
                                   child: SvgPicture.asset(
-                                      'assets/images/loading_image.svg')),
+                                      'assets/icons/reverse_icon.svg')),
                             );
                           } else if (userSnapshot.hasError) {
                             return Center(
