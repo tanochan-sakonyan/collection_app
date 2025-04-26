@@ -30,8 +30,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<String> _tabTitles = [];
   int _currentTabIndex = 0;
-  static const String _versionForUpdateDialog =
-      "1.2.0"; // アップデートポップアップを出すときに使用。今後も手動で変更
 
   @override
   void initState() {
@@ -100,12 +98,14 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     }
   }
 
+  // versionForUpdateDialogを、2025/04現在は1.2.0で定義
+  // これがshownVersionFor120と異なる時、ポップアップを出す。
+  // 今後のアップデートの際は、shownVersionFor〇〇〇のpreferenceを更新する。
   Future<void> _checkAndShowUpdateDialog() async {
     final prefs = await SharedPreferences.getInstance();
-    final shownVersion = prefs.getString('shownUpdateDialogVersion') ?? "";
-    debugPrint(
-        'shownVersion: $shownVersion, _versionForUpdateDialog: $_versionForUpdateDialog');
-    if (shownVersion != _versionForUpdateDialog) {
+    final shown = prefs.getBool('shownVersionFor120') ?? false;
+    debugPrint('shownVersion: $shown');
+    if (!shown) {
       showDialog(
         context: context,
         builder: (_) => UpdateInfoFor120AndSuggestOfficialLineDialog(
@@ -113,14 +113,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           onPageChanged: (i) {},
         ),
       );
-      await prefs.setString(
-          'shownUpdateDialogVersion', _versionForUpdateDialog);
-      debugPrint('Update dialog shown for version $_versionForUpdateDialog');
+      await prefs.setBool('shownVersionFor120', true);
+      debugPrint('Update dialog shown for version "true"');
     } else {
-      debugPrint(
-          'Update dialog already shown for version $_versionForUpdateDialog');
-      await prefs.remove(
-          'shownUpdateDialogVersion'); //TODO あとで絶対直す。デバッグ用に、2回に一回表示されるように変更
+      debugPrint('すでに表示されています。');
     }
   }
 
