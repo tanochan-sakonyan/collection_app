@@ -115,7 +115,7 @@ class MemberList extends ConsumerWidget {
                                       key: ValueKey(member!.memberId),
                                       endActionPane: ActionPane(
                                         motion: const ScrollMotion(),
-                                        extentRatio: 0.26,
+                                        extentRatio: 0.52,
                                         children: [
                                       CustomSlidableAction(
                                         onPressed: (context) {
@@ -183,7 +183,7 @@ class MemberList extends ConsumerWidget {
                                         ],
                                       ),
                                       child: ListTile(
-                                        minTileHeight: 32,
+                                        minTileHeight: 44,
                                         title: (member?.memberName != null)
                                             ? Text(
                                                 member!.memberName,

@@ -70,7 +70,7 @@ flutter:
     - family: Montserrat
       fonts:
         - asset: assets/fonts/Montserrat/static/Montserrat-Thin.ttf
-        - weight: 100
+           weight: 100
         - asset: assets/fonts/Montserrat/static/Montserrat-ExtraLight.ttf
           weight: 200
         - asset: assets/fonts/Montserrat/static/Montserrat-Light.ttf

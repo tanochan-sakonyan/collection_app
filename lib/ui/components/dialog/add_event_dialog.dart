@@ -84,7 +84,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: const Color(0xFFF2F2F2),
+      backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
@@ -93,7 +93,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
         child: Container(
           width: 320,
           height: 330,
-          color: const Color(0xFFF2F2F2),
+          color: Colors.white,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -107,7 +107,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                       ),
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 20),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -135,25 +135,24 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                   ),
                 ),
               ),
-              if (_errorMessage != null)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(4.0),
-                      child: Text(
-                        _errorMessage!,
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: Colors.red,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w300,
-                            ),
-                      ),
-                    ),
-                  ],
+              const SizedBox(height: 4),
+              Container(
+                height: 20,
+                width: double.infinity,
+                color: Colors.white,
+                alignment: Alignment.centerRight,
+                child: _errorMessage != null
+                    ? Text(
+                  _errorMessage!,
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w300,
+                    color: Colors.red,
+                  ),
                 )
-              else
-                const SizedBox(height: 24),
+                    : null,
+              ),
+              const SizedBox(height: 4),
               // Options Section
               Container(
                 decoration: BoxDecoration(
