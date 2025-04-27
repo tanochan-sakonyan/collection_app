@@ -6,7 +6,6 @@ import 'package:mr_collection/provider/tab_titles_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/add_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/delete_event_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_dialog_for_120.dart.dart';
 import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_for_120_and_suggest_official_line_dialog.dart';
 import 'package:mr_collection/ui/components/member_list.dart';
 import 'package:mr_collection/ui/components/tanochan_drawer.dart';
@@ -15,7 +14,6 @@ import 'package:mr_collection/data/model/freezed/user.dart';
 import 'package:mr_collection/ui/tutorial/tutorial_targets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/ui/components/event_zero_components.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -309,7 +307,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                     const EdgeInsets.symmetric(horizontal: 8.0),
                                 child: Tab(
                                   child: Text(event.eventName,
-                                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.copyWith(
                                               fontSize: 14,
                                               color: tabTextColor)),
                                 ),
@@ -366,44 +367,29 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         children: [
           Expanded(
             child: tabTitles.isEmpty
-                ? EventZeroComponents()
-                : TabBarView(
-              controller: _tabController,
-              children: _tabTitles.asMap().entries.map((entry) {
-                final index = entry.key;
-                final eventId = entry.value;
-                final event = user!.events.firstWhere(
-                  (e) => e.eventId == eventId,
-                  orElse: () =>
-                      const Event(eventId: "", eventName: '', members: []),
-                );
-                return MemberList(
-                  memberAddKey:
-                      (_currentTabIndex == index) ? memberAddKey : null,
-                  slidableKey: (_currentTabIndex == index) ? slidableKey : null,
-                  sortKey: (_currentTabIndex == index) ? sortKey : null,
-                  fabKey: (_currentTabIndex == index) ? fabKey : null,
-                  members: event.eventId != "" ? event.members : [],
-                  eventId: event.eventId != "" ? event.eventId : "",
-                );
-              }).toList(),
-            ),
-            child: tabTitles.isEmpty
-                ? EventZeroComponents()
+                ? const EventZeroComponents()
                 : TabBarView(
                     controller: _tabController,
-                    children: _tabTitles.map((eventId) {
+                    children: _tabTitles.asMap().entries.map((entry) {
+                      final index = entry.key;
+                      final eventId = entry.value;
                       final event = user!.events.firstWhere(
                         (e) => e.eventId == eventId,
-                        orElse: () =>
-                          const Event(eventId: "", eventName: '', members: []),
+                        orElse: () => const Event(
+                            eventId: "", eventName: '', members: []),
                       );
-                    return MemberList(
-                      members: event.eventId != "" ? event.members : [],
-                      eventId: event.eventId != "" ? event.eventId : "",
-                    );
+                      return MemberList(
+                        memberAddKey:
+                            (_currentTabIndex == index) ? memberAddKey : null,
+                        slidableKey:
+                            (_currentTabIndex == index) ? slidableKey : null,
+                        sortKey: (_currentTabIndex == index) ? sortKey : null,
+                        fabKey: (_currentTabIndex == index) ? fabKey : null,
+                        members: event.eventId != "" ? event.members : [],
+                        eventId: event.eventId != "" ? event.eventId : "",
+                      );
                     }).toList(),
-                ),
+                  ),
           ),
         ],
       ),

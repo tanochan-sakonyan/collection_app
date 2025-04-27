@@ -49,16 +49,16 @@ class TanochanDrawer extends StatelessWidget {
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
-                    contentPadding:
-                        const EdgeInsets.symmetric(vertical: 56.0, horizontal: 24.0),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 56.0, horizontal: 24.0),
                     content: Text(
-                      'LINEへの認証申請中のため、\n機能解禁までしばらくお待ちください',
+                      'LINEへの認証申請中のため、\nアップデートをお待ちください。',
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                      ),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black,
+                          ),
                     ),
                   ),
                 );
@@ -166,10 +166,10 @@ class TanochanDrawer extends StatelessWidget {
             Text(
               text,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: Colors.black,
-              ),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
             ),
           ],
         ),

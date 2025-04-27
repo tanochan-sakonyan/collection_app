@@ -143,13 +143,13 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                 alignment: Alignment.centerRight,
                 child: _errorMessage != null
                     ? Text(
-                  _errorMessage!,
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w300,
-                    color: Colors.red,
-                  ),
-                )
+                        _errorMessage!,
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.red,
+                            ),
+                      )
                     : null,
               ),
               const SizedBox(height: 4),
@@ -192,11 +192,13 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                         dense: true,
                         title: Text(
                           'LINEから参加者取得',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black
-                          ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black),
                         ),
                         trailing: IconButton(
                           icon: SvgPicture.asset(
@@ -212,13 +214,16 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                                 contentPadding: const EdgeInsets.symmetric(
                                     vertical: 56.0, horizontal: 24.0),
                                 content: Text(
-                                  'LINEへの認証申請中のため、\n機能解禁までしばらくお待ちください',
+                                  'LINEへの認証申請中のため、\nアップデートをお待ちください。',
                                   textAlign: TextAlign.center,
-                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black,
-                                  ),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.copyWith(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black,
+                                      ),
                                 ),
                               ),
                             );
@@ -248,10 +253,9 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                   child: Text(
                     '決定',
                     style: GoogleFonts.notoSansJp(
-                      color: Colors.black,
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.w400
-                    ),
+                        color: Colors.black,
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w400),
                   ),
                 ),
               ),

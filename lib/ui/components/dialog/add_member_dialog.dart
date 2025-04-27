@@ -110,11 +110,11 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                      "Name",
+                    "Name",
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w700,
-                    ),
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                        ),
                   ),
                 ],
               ),
@@ -140,22 +140,23 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
                 alignment: Alignment.centerRight,
                 child: _errorMessage != null
                     ? Text(
-                  _errorMessage!,
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w300,
-                    color: Colors.red,
-                  ),
-                )
+                        _errorMessage!,
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.red,
+                            ),
+                      )
                     : null,
               ),
               const SizedBox(height: 4),
               Row(children: [
-                Text("LINEグループから自動追加",
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                  ),
+                Text(
+                  "LINEグループから自動追加",
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
                 ),
                 const Spacer(),
                 IconButton(
@@ -169,13 +170,14 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
                         contentPadding: const EdgeInsets.symmetric(
                             vertical: 56.0, horizontal: 24.0),
                         content: Text(
-                          'LINEへの認証申請中のため、\n機能解禁までしばらくお待ちください',
+                          'LINEへの認証申請中のため、\nアップデートをお待ちください。',
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black,
+                                  ),
                         ),
                       ),
                     );
