@@ -8,8 +8,8 @@ import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/add_member_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/delete_member_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/status_dialog.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'dialog/edit_member_name_dialog.dart';
 
 class MemberList extends ConsumerWidget {
@@ -54,64 +54,50 @@ class MemberList extends ConsumerWidget {
 
     return Padding(
       padding: const EdgeInsets.only(top: 16, left: 29, right: 29),
-      child: Stack(
-        children: [
-          Column(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.black),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  children: [
-                    Container(
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFE8E8E8),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(12),
-                          topRight: Radius.circular(12),
+      child: Column(children: [
+        Stack(
+          children: [
+            Column(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: Colors.black),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFE8E8E8),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(12),
+                            topRight: Radius.circular(12),
+                          ),
+                          border: Border(
+                            bottom: BorderSide(color: Colors.black),
+                          ),
                         ),
-                        border: Border(
-                          bottom: BorderSide(color: Colors.black),
+                        height: 32,
+                        child: Row(
+                          children: [
+                            const SizedBox(width: 24),
+                            const Text('メンバー'),
+                            const Spacer(),
+                            const Text('支払い状況'),
+                            const SizedBox(width: 3),
+                            GestureDetector(
+                              onTap: () {
+                                ref
+                                    .read(userProvider.notifier)
+                                    .sortingMembers(eventId);
+                              },
+                              child: SvgPicture.asset('assets/icons/sort.svg'),
+                            ),
+                            const SizedBox(width: 28),
+                          ],
                         ),
                       ),
-                      height: 32,
-                      child: Row(
-                        children: [
-                          const SizedBox(width: 24),
-                          Text(
-                              'メンバー',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black
-                            ),
-                          ),
-                          const Spacer(),
-                          Text(
-                              '支払い状況',
-                            style: GoogleFonts.notoSansJp(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.black
-                            ),
-                          ),
-                          const SizedBox(width: 3),
-                          GestureDetector(
-                            key: sortKey,
-                            onTap: () {
-                              ref
-                                  .read(userProvider.notifier)
-                                  .sortingMembers(eventId);
-                            },
-                            child: SvgPicture.asset('assets/icons/sort.svg'),
-                          ),
-                          const SizedBox(width: 28),
-                        ],
-                      ),
-                    ),
                     ClipRect(
                       child: SizedBox(
                         height: MediaQuery.of(context).size.height * 0.4,
@@ -162,7 +148,6 @@ class MemberList extends ConsumerWidget {
                                           ],
                                         ),
                                       ),
-
                                           CustomSlidableAction(
                                             onPressed: (context) {
                                               showDialog(
@@ -183,8 +168,9 @@ class MemberList extends ConsumerWidget {
                                                   MainAxisAlignment.center,
                                               children: [
                                                 const SizedBox(height: 4),
-                                                Text(
+                                                AutoSizeText(
                                                   '削除',
+                                                  maxLines: 1,
                                                   style: GoogleFonts.inter(
                                                     fontSize: 14,
                                                     fontWeight: FontWeight.w400,
@@ -323,13 +309,13 @@ class MemberList extends ConsumerWidget {
                                     fontWeight: FontWeight.w500,
                                     color: Colors.black,
                                       ),
-                                ),
-                              ],
+                                    ],
+                                  ),
+                                );
+                              },
                             ),
                           ),
-
-                          // const SizedBox(width: 30),
-                        ],
+                        ),
                       ),
                     )
                   ],
@@ -437,11 +423,14 @@ class MemberList extends ConsumerWidget {
                                     width: iconSize,
                                     height: iconSize,
                                   ),
-                                );
-                              },
-                            )
-                          : const <Widget>[],
-                    ),
+                                ],
+                              ),
+                            ),
+                            // const SizedBox(width: 30),
+                          ],
+                        ),
+                      )
+                    ],
                   ),
                   const SizedBox(width: 4),
                   const Text("・・・・・・"),
@@ -489,9 +478,9 @@ class MemberList extends ConsumerWidget {
                   );
                   //TODO LINE認証申請が通ったらこちらに戻す
                   /*showDialog(
-                    context: context,
-                    builder: (context) => const ConfirmationDialog(),
-                  );*/
+                      context: context,
+                      builder: (context) => const ConfirmationDialog(),
+                    );*/
                 },
                 child: Center(
                   child: Stack(
@@ -516,9 +505,9 @@ class MemberList extends ConsumerWidget {
                 ),
               ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
+      ]),
     );
   }
 

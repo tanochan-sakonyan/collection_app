@@ -24,8 +24,9 @@ dependencies:
   sign_in_with_apple: ^6.1.3
   url_launcher: ^6.1.10
   flutter_line_sdk: ^2.3.8
-  tutorial_coach_mark: ^1.2.13
   webview_flutter: ^4.11.0
+  auto_size_text: ^3.0.0
+  tutorial_coach_mark: ^1.2.13
   smooth_page_indicator: ^1.2.1
 
 dev_dependencies:
@@ -70,6 +71,7 @@ flutter:
     - assets/icons/drawer_star.svg
     - assets/icons/drawer_key.svg
     - assets/icons/drawer_file.svg
+    - assets/icons/drawer_envelope.svg
     - assets/icons/drawer_delete_account.svg
 
   fonts:
