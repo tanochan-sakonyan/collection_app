@@ -116,7 +116,7 @@ class TutorialTargets {
                   horizontal: 8,
                 ),
                 child: Text(
-                  "スワイプでメンバーを削除\nできます",
+                  "スワイプでメンバーの削除及び\nメンバー名の変更ができます",
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ),
