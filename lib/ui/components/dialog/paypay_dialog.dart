@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/provider/user_provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class PayPayDialog extends ConsumerStatefulWidget {
   PayPayDialog({super.key});
@@ -58,8 +59,10 @@ class _PayPayDialogState extends ConsumerState<PayPayDialog> {
                 'PayPayリンクを入力してください',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black,
+                ),
               ),
               const SizedBox(height: 14),
               SizedBox(
@@ -69,7 +72,11 @@ class _PayPayDialogState extends ConsumerState<PayPayDialog> {
                   cursorColor: Color(0xFFA3A3A3),
                   decoration: InputDecoration(
                     hintText: '受け取りリンクを入力',
-                    hintStyle: const TextStyle(color: Color(0xFFA3A3A3)),
+                    hintStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey,
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: const BorderSide(color: Color(0xFFE8E8E8)),
@@ -83,6 +90,11 @@ class _PayPayDialogState extends ConsumerState<PayPayDialog> {
                       borderSide: const BorderSide(color: Color(0xFFE8E8E8)),
                     ),
                     errorText: _errorMessage,
+                    errorStyle:Theme.of(context).textTheme.labelSmall?.copyWith(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w300,
+                      color: Colors.red,
+                    ),
                   ),
                 ),
               ),
@@ -103,7 +115,11 @@ class _PayPayDialogState extends ConsumerState<PayPayDialog> {
                   ),
                   child: Text(
                     'OK',
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: GoogleFonts.notoSansJp(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ),

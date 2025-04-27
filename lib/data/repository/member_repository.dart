@@ -74,4 +74,21 @@ class MemberRepository {
       );
     }
   }
+
+  Future<Member> editMemberName(
+      String userId, String eventId, String memberId, String newMemberName) async {
+    final url = Uri.parse('$baseUrl/users/$userId/events/$eventId/members/$memberId');
+    final response = await http.put(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'newMemberName': newMemberName}),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final data = jsonDecode(response.body);
+      return Member.fromJson(data);
+    } else {
+      throw Exception('メンバーの追加に失敗しました');
+    }
+  }
 }

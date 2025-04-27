@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/data/model/freezed/user.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -44,14 +43,9 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
 
   @override
   Widget build(BuildContext context) {
-    final baseTextTheme = GoogleFonts.montserratTextTheme();
-
-    final collectionAppTextTheme = baseTextTheme.copyWith(
-      bodyLarge: baseTextTheme.bodyLarge?.copyWith(fontSize: 16.0),
-      bodyMedium: baseTextTheme.bodyMedium?.copyWith(fontSize: 14.0),
-      bodySmall: baseTextTheme.bodySmall?.copyWith(fontSize: 12.0),
-      labelLarge: baseTextTheme.labelLarge?.copyWith(fontSize: 11.0),
-      labelSmall: baseTextTheme.labelSmall?.copyWith(fontSize: 10.0),
+    final textTheme = Theme.of(context).textTheme.apply(
+      fontFamily: 'Montserrat',
+      fontFamilyFallback: ['Noto Sans JP'],
     );
 
     return MaterialApp(
@@ -62,7 +56,13 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
           seedColor: Colors.white,
         ),
         brightness: Brightness.light,
-        textTheme: collectionAppTextTheme,
+        fontFamily: 'Montserrat',
+        fontFamilyFallback: const ['Noto Sans JP'],
+        textTheme: textTheme,
+        primaryTextTheme: textTheme,
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(textStyle: textTheme.labelLarge),
+        ),
       ),
       debugShowCheckedModeBanner: false,
       home: FutureBuilder<Map<String, bool>>(
@@ -72,7 +72,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
             return Container(
               color: const Color(0xFF75DCC6),
               child: Center(
-                  child: SvgPicture.asset('assets/images/loading_image.svg')),
+                  child: SvgPicture.asset('assets/icons/reverse_icon.svg')),
             );
           } else if (snapshot.hasError) {
             return Center(child: Text('エラーが発生しました: ${snapshot.error}'));
@@ -92,7 +92,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                       color: const Color(0xFF75DCC6),
                       child: Center(
                           child: SvgPicture.asset(
-                              'assets/images/loading_image.svg')),
+                              'assets/icons/reverse_icon.svg')),
                     );
                   } else if (userIdSnapshot.hasError) {
                     return Center(
@@ -112,7 +112,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                               color: const Color(0xFF75DCC6),
                               child: Center(
                                   child: SvgPicture.asset(
-                                      'assets/images/loading_image.svg')),
+                                      'assets/icons/reverse_icon.svg')),
                             );
                           } else if (userSnapshot.hasError) {
                             return Center(
@@ -147,7 +147,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                       color: const Color(0xFF75DCC6),
                       child: Center(
                           child: SvgPicture.asset(
-                              'assets/images/loading_image.svg')),
+                              'assets/icons/reverse_icon.svg')),
                     );
                   } else if (userIdSnapshot.hasError) {
                     return Center(
@@ -167,7 +167,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                               color: const Color(0xFF75DCC6),
                               child: Center(
                                   child: SvgPicture.asset(
-                                      'assets/images/loading_image.svg')),
+                                      'assets/icons/reverse_icon.svg')),
                             );
                           } else if (userSnapshot.hasError) {
                             return Center(

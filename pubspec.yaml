@@ -25,6 +25,8 @@ dependencies:
   url_launcher: ^6.1.10
   flutter_line_sdk: ^2.3.8
   tutorial_coach_mark: ^1.2.13
+  webview_flutter: ^4.11.0
+  smooth_page_indicator: ^1.2.1
 
 dev_dependencies:
   flutter_test:
@@ -43,7 +45,7 @@ flutter_launcher_icons:
 
 flutter:
   assets: 
-    - assets/images/loading_image.svg
+    - assets/icons/reverse_icon.svg
     - assets/icons/filter.svg
     - assets/icons/circle_plus.svg
     - assets/icons/settings.svg
@@ -61,10 +63,55 @@ flutter:
     - assets/icons/chat_bubble.svg
     - assets/icons/yen.svg
     - assets/icons/question_circle.svg
+    - assets/icons/suggest_official_line.svg
+    - assets/icons/ic_check_badge_green.svg
+    - assets/icons/ic_check_circle_teal.svg
     - assets/icons/drawer_yen.svg
     - assets/icons/drawer_star.svg
     - assets/icons/drawer_key.svg
     - assets/icons/drawer_file.svg
     - assets/icons/drawer_delete_account.svg
+
+  fonts:
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat/static/Montserrat-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/Montserrat/static/Montserrat-ExtraLight.ttf
+          weight: 200
+        - asset: assets/fonts/Montserrat/static/Montserrat-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Montserrat/static/Montserrat-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Montserrat/static/Montserrat-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Montserrat/static/Montserrat-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Montserrat/static/Montserrat-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Montserrat/static/Montserrat-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/Montserrat/static/Montserrat-Black.ttf
+          weight: 900
+    - family: Noto Sans JP
+      fonts:
+        - asset: assets/fonts/Noto_Sans_JP/static/NotoSansJP-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/Noto_Sans_JP/static/NotoSansJP-ExtraLight.ttf
+          weight: 200
+        - asset: assets/fonts/Noto_Sans_JP/static/NotoSansJP-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Noto_Sans_JP/static/NotoSansJP-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Noto_Sans_JP/static/NotoSansJP-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Noto_Sans_JP/static/NotoSansJP-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Noto_Sans_JP/static/NotoSansJP-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Noto_Sans_JP/static/NotoSansJP-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/Noto_Sans_JP/static/NotoSansJP-Black.ttf
+          weight: 900
 
   uses-material-design: true

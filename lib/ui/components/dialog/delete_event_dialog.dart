@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/provider/user_provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class DeleteEventDialog extends ConsumerStatefulWidget {
   final String userId;
@@ -45,10 +46,10 @@ class _DeleteEventDialogState extends ConsumerState<DeleteEventDialog> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
+            Text(
               'このイベントを削除しますか？', //TODO 実際にイベント名を取得
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.w500,
                 fontSize: 16,
                 color: Colors.black,
               ),
@@ -74,7 +75,11 @@ class _DeleteEventDialogState extends ConsumerState<DeleteEventDialog> {
                     ),
                     child: Text(
                       'いいえ',
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style: GoogleFonts.notoSansJp(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black
+                      ),
                     ),
                   ),
                 ),
@@ -95,7 +100,11 @@ class _DeleteEventDialogState extends ConsumerState<DeleteEventDialog> {
                     ),
                     child: Text(
                       'はい',
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style: GoogleFonts.notoSansJp(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black
+                      ),
                     ),
                   ),
                 ),
