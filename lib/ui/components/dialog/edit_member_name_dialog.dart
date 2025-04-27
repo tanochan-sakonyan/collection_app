@@ -59,7 +59,7 @@ class EditMemberNameDialogState extends ConsumerState<EditMemberNameDialog> {
     setState(() {
       _isButtonEnabled = false;
       if (memberName.isEmpty) {
-        _errorMessage = '新しいメンバー名を入力してください';
+        _errorMessage = 'メンバーを入力してください';
       } else if (memberName.length > 9) {
         _errorMessage = '最大9文字まで入力可能です';
       } else {
@@ -106,7 +106,7 @@ class EditMemberNameDialogState extends ConsumerState<EditMemberNameDialog> {
           width: 320,
           child: Column(
             children: [
-              const SizedBox(height: 8),
+              const SizedBox(height: 12),
               Text(
                 'メンバー名編集',
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -114,7 +114,7 @@ class EditMemberNameDialogState extends ConsumerState<EditMemberNameDialog> {
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -127,6 +127,7 @@ class EditMemberNameDialogState extends ConsumerState<EditMemberNameDialog> {
                   ),
                 ],
               ),
+              const SizedBox(height: 8),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 decoration: BoxDecoration(
@@ -141,22 +142,24 @@ class EditMemberNameDialogState extends ConsumerState<EditMemberNameDialog> {
                   ),
                 ),
               ),
-              const SizedBox(height: 4),
-              if (_errorMessage != null)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                        _errorMessage!,
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w300,
-                          color: Colors.red,
-                        )
-                    ),
-                  ],
-                ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 8),
+              Container(
+                height: 16,
+                width: double.infinity,
+                color: Colors.white,
+                alignment: Alignment.centerRight,
+                child: _errorMessage != null
+                    ? Text(
+                  _errorMessage!,
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w300,
+                    color: Colors.red,
+                  ),
+                )
+                    : null,
+              ),
+              const SizedBox(height: 24),
               SizedBox(
                 width: 272,
                 height: 40,

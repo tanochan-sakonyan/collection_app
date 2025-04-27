@@ -111,8 +111,8 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
                 children: [
                   Text(
                       "Name",
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      fontSize: 16,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      fontSize: 10,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -133,20 +133,22 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
                 ),
               ),
               const SizedBox(height: 4),
-              if (_errorMessage != null)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      _errorMessage!,
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w300,
-                        color: Colors.red,
-                      )
-                    ),
-                  ],
-                ),
+              Container(
+                height: 20,
+                width: double.infinity,
+                color: Colors.white,
+                alignment: Alignment.centerRight,
+                child: _errorMessage != null
+                    ? Text(
+                  _errorMessage!,
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w300,
+                    color: Colors.red,
+                  ),
+                )
+                    : null,
+              ),
               const SizedBox(height: 4),
               Row(children: [
                 Text("LINEグループから自動追加",
