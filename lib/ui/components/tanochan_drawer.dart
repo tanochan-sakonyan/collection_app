@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/delete_account_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/logout_dialog.dart';
@@ -26,7 +27,8 @@ class TanochanDrawer extends StatelessWidget {
             Text(
               "設定",
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
                   ),
             ),
             const SizedBox(height: 8),
@@ -46,12 +48,17 @@ class TanochanDrawer extends StatelessWidget {
                 // );
                 showDialog(
                   context: context,
-                  builder: (context) => const AlertDialog(
+                  builder: (context) => AlertDialog(
                     contentPadding:
-                        EdgeInsets.symmetric(vertical: 56.0, horizontal: 24.0),
+                        const EdgeInsets.symmetric(vertical: 56.0, horizontal: 24.0),
                     content: Text(
                       'LINEへの認証申請中のため、\n機能解禁までしばらくお待ちください',
                       textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                 );
@@ -158,7 +165,11 @@ class TanochanDrawer extends StatelessWidget {
             const SizedBox(width: 8),
             Text(
               text,
-              style: Theme.of(context).textTheme.bodyLarge,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+              ),
             ),
           ],
         ),

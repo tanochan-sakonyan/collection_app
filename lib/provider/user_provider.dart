@@ -226,4 +226,24 @@ class UserNotifier extends StateNotifier<User?> {
 
     state = state!.copyWith(events: updatedEvents);
   }
+
+  Future<void> editMemberName(
+      String userId, String eventId, String memberId, String newMemberName ) async {
+    try {
+      final updatedMember =
+      await memberRepository.editMemberName(userId, eventId, memberId, newMemberName);
+      final updatedEvents = state?.events.map((event) {
+        if (event.eventId != eventId) return event;
+        return event.copyWith(
+          members: event.members.map((m) {
+            if (m.memberId == memberId) return updatedMember;
+            return m;
+          }).toList(),
+        );
+      }).toList();
+      state = state?.copyWith(events: updatedEvents ?? []);
+    } catch (e) {
+      debugPrint('メンバーの作成中にエラーが発生しました: $e : user_provider.dart');
+    }
+  }
 }
