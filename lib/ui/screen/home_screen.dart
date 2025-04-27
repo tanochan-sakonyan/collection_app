@@ -12,16 +12,15 @@ import 'package:mr_collection/ui/components/member_list.dart';
 import 'package:mr_collection/ui/components/tanochan_drawer.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/user.dart';
+import 'package:mr_collection/ui/tutorial/tutorial_targets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/ui/components/event_zero_components.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
-  const HomeScreen({super.key, required this.title, this.user});
-
-  final String title;
+  const HomeScreen({super.key, this.user});
   final User? user;
-
   @override
   ConsumerState<HomeScreen> createState() => HomeScreenState();
 }
@@ -32,6 +31,16 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<String> _tabTitles = [];
   int _currentTabIndex = 0;
+
+  final GlobalKey plusKey = GlobalKey();
+  final GlobalKey leftTabKey = GlobalKey();
+  final GlobalKey memberAddKey = GlobalKey();
+  final GlobalKey slidableKey = GlobalKey();
+  final GlobalKey sortKey = GlobalKey();
+  final GlobalKey fabKey = GlobalKey();
+
+  late TutorialCoachMark tutorialCoachMark;
+  List<TargetFocus> targets = [];
 
   @override
   void initState() {
@@ -55,8 +64,59 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         }
       }
     });
-
     _loadSavedTabIndex();
+    _checkTutorialStatus();
+  }
+
+  Future<void> _checkTutorialStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isTutorialShown120 = prefs.getBool('isTutorialShown120') ?? false;
+    if (!isTutorialShown120) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _showTutorial();
+      });
+      debugPrint('Tutorial shown');
+    } else {
+      debugPrint('Tutorial already shown');
+    }
+  }
+
+  void _showTutorial() {
+    targets = TutorialTargets.createTargets(
+      context: context,
+      plusKey: plusKey,
+      leftTabKey: leftTabKey,
+      memberAddKey: memberAddKey,
+      slidableKey: slidableKey,
+      sortKey: sortKey,
+      fabKey: fabKey,
+    );
+    tutorialCoachMark = TutorialCoachMark(
+      targets: targets,
+      colorShadow: const Color(0xFFE0E0E0),
+      textSkip: "スキップ",
+      textStyleSkip: const TextStyle(
+        color: Colors.black,
+        fontSize: 16,
+      ),
+      paddingFocus: 6,
+      onFinish: () => _setTutorialShown(),
+      onSkip: () {
+        _setTutorialShown();
+        return true;
+      },
+    );
+    tutorialCoachMark.show(context: context);
+  }
+
+  void _setTutorialShown() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isTutorialShown120', true);
+  }
+
+  void _resetTutorial() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isTutorialShown120', false);
     _checkAndShowUpdateDialog();
   }
 
@@ -151,15 +211,18 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            SizedBox(
-              width: screenWidth * 0.05,
-            ),
-            Text(
-              widget.title,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    fontSize: screenWidth * 0.05,
-                  ),
+            IconButton(
+              onPressed: () {
+                _resetTutorial();
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  _showTutorial();
+                });
+              },
+              icon: SvgPicture.asset(
+                'assets/icons/question_circle.svg',
+                width: 24,
+                height: 24,
+              ),
             ),
           ],
         ),
@@ -208,7 +271,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                         child: TabBar(
                           isScrollable: true,
                           controller: _tabController,
-                          tabs: _tabTitles.map((eventId) {
+                          tabs: _tabTitles.asMap().entries.map((entry) {
+                            final index = entry.key;
+                            final eventId = entry.value;
                             final event = user!.events.firstWhere(
                               (e) => e.eventId == eventId,
                               orElse: () => const Event(
@@ -217,6 +282,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                             final bool isFullyPaid = event.members.isNotEmpty &&
                                 event.members.every((member) =>
                                     member.status != PaymentStatus.unpaid);
+
                             final Color tabTextColor = isFullyPaid
                                 ? const Color(0xFF35C759)
                                 : Theme.of(context)
@@ -225,7 +291,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                         ?.color ??
                                     Colors.black;
 
+                            final bool isFirstTab = (index == 0);
+
                             return GestureDetector(
+                              key: isFirstTab ? leftTabKey : null,
                               onLongPress: () => showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
@@ -255,6 +324,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                     Row(
                       children: [
                         IconButton(
+                          key: plusKey,
                           icon: SvgPicture.asset(
                             'assets/icons/plus.svg',
                             width: screenWidth * 0.07,
@@ -295,6 +365,29 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       body: Column(
         children: [
           Expanded(
+            child: tabTitles.isEmpty
+                ? EventZeroComponents()
+                : TabBarView(
+              controller: _tabController,
+              children: _tabTitles.asMap().entries.map((entry) {
+                final index = entry.key;
+                final eventId = entry.value;
+                final event = user!.events.firstWhere(
+                  (e) => e.eventId == eventId,
+                  orElse: () =>
+                      const Event(eventId: "", eventName: '', members: []),
+                );
+                return MemberList(
+                  memberAddKey:
+                      (_currentTabIndex == index) ? memberAddKey : null,
+                  slidableKey: (_currentTabIndex == index) ? slidableKey : null,
+                  sortKey: (_currentTabIndex == index) ? sortKey : null,
+                  fabKey: (_currentTabIndex == index) ? fabKey : null,
+                  members: event.eventId != "" ? event.members : [],
+                  eventId: event.eventId != "" ? event.eventId : "",
+                );
+              }).toList(),
+            ),
             child: tabTitles.isEmpty
                 ? EventZeroComponents()
                 : TabBarView(

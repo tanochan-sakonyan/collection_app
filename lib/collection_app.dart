@@ -122,7 +122,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                             final user = userSnapshot.data;
                             if (user != null) {
                               _updateCurrentLoginMedia('line');
-                              return HomeScreen(title: '集金くん', user: user);
+                              return HomeScreen(user: user);
                             } else {
                               return const LoginScreen();
                             }
@@ -177,7 +177,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                             final user = userSnapshot.data;
                             if (user != null) {
                               _updateCurrentLoginMedia('apple');
-                              return HomeScreen(title: '集金くん', user: user);
+                              return HomeScreen(user: user);
                             } else {
                               return const LoginScreen();
                             }
