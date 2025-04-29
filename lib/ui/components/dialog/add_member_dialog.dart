@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/provider/user_provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AddMemberDialog extends ConsumerStatefulWidget {
   final String userId;
@@ -100,14 +101,21 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
               Text(
                 'メンバー追加',
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
                     ),
               ),
               const SizedBox(height: 12),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text("Name"),
+                  Text(
+                    "Name",
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                        ),
+                  ),
                 ],
               ),
               Container(
@@ -125,22 +133,31 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
                 ),
               ),
               const SizedBox(height: 4),
-              if (_errorMessage != null)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      _errorMessage!,
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color: Colors.red,
-                          ),
-                    ),
-                  ],
-                ),
+              Container(
+                height: 20,
+                width: double.infinity,
+                color: Colors.white,
+                alignment: Alignment.centerRight,
+                child: _errorMessage != null
+                    ? Text(
+                        _errorMessage!,
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.red,
+                            ),
+                      )
+                    : null,
+              ),
               const SizedBox(height: 4),
               Row(children: [
-                Text("LINEグループから自動追加",
-                    style: Theme.of(context).textTheme.bodyMedium),
+                Text(
+                  "LINEグループから自動追加",
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                ),
                 const Spacer(),
                 IconButton(
                   icon: SvgPicture.asset("assets/icons/line.svg"),
@@ -149,12 +166,18 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
                     //LINE認証申請前の臨時ダイアログ
                     showDialog(
                       context: context,
-                      builder: (context) => const AlertDialog(
-                        contentPadding: EdgeInsets.symmetric(
+                      builder: (context) => AlertDialog(
+                        contentPadding: const EdgeInsets.symmetric(
                             vertical: 56.0, horizontal: 24.0),
                         content: Text(
-                          'LINEへの認証申請中のため、\n機能解禁までしばらくお待ちください',
+                          'LINEへの認証申請中のため、\nアップデートをお待ちください。',
                           textAlign: TextAlign.center,
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black,
+                                  ),
                         ),
                       ),
                     );

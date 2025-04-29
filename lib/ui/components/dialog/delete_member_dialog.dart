@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 
 class DeleteMemberDialog extends ConsumerStatefulWidget {
@@ -58,11 +59,11 @@ class _DeleteMemberDialogState extends ConsumerState<DeleteMemberDialog> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
+            Text(
               'このメンバーを削除しますか？',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
+              style: GoogleFonts.notoSansJp(
+                fontWeight: FontWeight.w400,
+                fontSize: 13,
                 color: Colors.black,
               ),
             ),

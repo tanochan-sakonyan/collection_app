@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/constants/base_url.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/data/repository/event_repository.dart';
@@ -83,7 +84,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: const Color(0xFFF2F2F2),
+      backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
@@ -92,7 +93,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
         child: Container(
           width: 320,
           height: 330,
-          color: const Color(0xFFF2F2F2),
+          color: Colors.white,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -102,18 +103,18 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                   'イベント追加',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w700,
                       ),
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 20),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
                   "Event",
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontSize: 10.0,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w700,
                       ),
                 ),
               ),
@@ -134,24 +135,24 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                   ),
                 ),
               ),
-              if (_errorMessage != null)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(4.0),
-                      child: Text(
+              const SizedBox(height: 4),
+              Container(
+                height: 20,
+                width: double.infinity,
+                color: Colors.white,
+                alignment: Alignment.centerRight,
+                child: _errorMessage != null
+                    ? Text(
                         _errorMessage!,
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: Colors.red,
                               fontSize: 10,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.red,
                             ),
-                      ),
-                    ),
-                  ],
-                )
-              else
-                const SizedBox(height: 24),
+                      )
+                    : null,
+              ),
+              const SizedBox(height: 4),
               // Options Section
               Container(
                 decoration: BoxDecoration(
@@ -165,12 +166,13 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                     //   width: 272,
                     //   height: 48,
                     //   child: ListTile(
-                    //     title: const Text(
+                    //     title: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     //       '参加者引継ぎ',
                     //       style: TextStyle(
-                    //         color: Colors.black,
-                    //         fontSize: 14.0,
-                    //       ),
+                    //                               fontSize: 14,
+                    //                               fontWeight: FontWeight.w500,
+                    //                               color: Colors.black
+                    //                             ),
                     //     ),
                     //     trailing: ToggleButton(
                     //       initialValue: isToggleOn,
@@ -188,12 +190,15 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                       height: 48,
                       child: ListTile(
                         dense: true,
-                        title: const Text(
+                        title: Text(
                           'LINEから参加者取得',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 14.0,
-                          ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black),
                         ),
                         trailing: IconButton(
                           icon: SvgPicture.asset(
@@ -205,12 +210,20 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                             //LINE認証申請前の臨時ダイアログ
                             showDialog(
                               context: context,
-                              builder: (context) => const AlertDialog(
-                                contentPadding: EdgeInsets.symmetric(
+                              builder: (context) => AlertDialog(
+                                contentPadding: const EdgeInsets.symmetric(
                                     vertical: 56.0, horizontal: 24.0),
                                 content: Text(
-                                  'LINEへの認証申請中のため、\n機能解禁までしばらくお待ちください',
+                                  'LINEへの認証申請中のため、\nアップデートをお待ちください。',
                                   textAlign: TextAlign.center,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.copyWith(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black,
+                                      ),
                                 ),
                               ),
                             );
@@ -237,12 +250,12 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                     elevation: 2,
                     shape: const StadiumBorder(),
                   ),
-                  child: const Text(
+                  child: Text(
                     '決定',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 14.0,
-                    ),
+                    style: GoogleFonts.notoSansJp(
+                        color: Colors.black,
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w400),
                   ),
                 ),
               ),
