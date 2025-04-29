@@ -4,7 +4,7 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 class TutorialTargets {
   static List<TargetFocus> createTargets({
     required BuildContext context,
-    required GlobalKey plusKey,
+    required GlobalKey eventAddKey,
     required GlobalKey leftTabKey,
     required GlobalKey memberAddKey,
     required GlobalKey slidableKey,
@@ -14,7 +14,7 @@ class TutorialTargets {
     return [
       TargetFocus(
         identify: "plus_button",
-        keyTarget: plusKey,
+        keyTarget: eventAddKey,
         shape: ShapeLightFocus.RRect,
         radius: 12,
         contents: [

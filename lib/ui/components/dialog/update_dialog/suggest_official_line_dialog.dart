@@ -37,7 +37,7 @@ class SuggestOfficialLineDialog extends StatelessWidget {
           Text(
             '現在、LINE公式アカウントの認証通過を目指して\n取り組んでいます！認証通過には友だち数も重要です。',
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   color: const Color(0xFF6A6A6A),
                 ),
           ),

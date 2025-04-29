@@ -30,7 +30,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   List<String> _tabTitles = [];
   int _currentTabIndex = 0;
 
-  final GlobalKey plusKey = GlobalKey();
+  final GlobalKey eventAddKey = GlobalKey();
   final GlobalKey leftTabKey = GlobalKey();
   final GlobalKey memberAddKey = GlobalKey();
   final GlobalKey slidableKey = GlobalKey();
@@ -63,15 +63,33 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       }
     });
     _loadSavedTabIndex();
-    _checkTutorialStatus();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final route = ModalRoute.of(context);
+    if (route?.animation != null) {
+      route!.animation!.addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          _checkTutorialStatus();
+        }
+      });
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _checkTutorialStatus();
+      });
+    }
   }
 
   Future<void> _checkTutorialStatus() async {
     final prefs = await SharedPreferences.getInstance();
     final isTutorialShown120 = prefs.getBool('isTutorialShown120') ?? false;
     if (!isTutorialShown120) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _showTutorial();
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        await Future.delayed(const Duration(milliseconds: 120));
+        if (mounted) _showTutorial();
       });
       debugPrint('Tutorial shown');
     } else {
@@ -82,7 +100,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   void _showTutorial() {
     targets = TutorialTargets.createTargets(
       context: context,
-      plusKey: plusKey,
+      eventAddKey: eventAddKey,
       leftTabKey: leftTabKey,
       memberAddKey: memberAddKey,
       slidableKey: slidableKey,
@@ -91,6 +109,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     );
     tutorialCoachMark = TutorialCoachMark(
       targets: targets,
+      useSafeArea: true,
       colorShadow: const Color(0xFFE0E0E0),
       textSkip: "スキップ",
       textStyleSkip: const TextStyle(
@@ -98,9 +117,13 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         fontSize: 16,
       ),
       paddingFocus: 6,
-      onFinish: () => _setTutorialShown(),
+      onFinish: () {
+        _setTutorialShown();
+        _checkAndShowUpdateDialog();
+      },
       onSkip: () {
         _setTutorialShown();
+        _checkAndShowUpdateDialog();
         return true;
       },
     );
@@ -115,7 +138,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   void _resetTutorial() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isTutorialShown120', false);
-    _checkAndShowUpdateDialog();
   }
 
   @override
@@ -325,7 +347,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                     Row(
                       children: [
                         IconButton(
-                          key: plusKey,
+                          key: eventAddKey,
                           icon: SvgPicture.asset(
                             'assets/icons/plus.svg',
                             width: screenWidth * 0.07,
