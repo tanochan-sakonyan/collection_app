@@ -10,11 +10,13 @@ import 'package:mr_collection/ui/components/dialog/delete_member_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/status_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:mr_collection/ui/screen/amount_screen/amount_input_screen.dart';
 import 'dialog/edit_member_name_dialog.dart';
 
 class MemberList extends ConsumerWidget {
   final List<Member>? members;
   final String eventId;
+  final String eventName;
 
   final GlobalKey? memberAddKey;
   final GlobalKey? slidableKey;
@@ -25,6 +27,7 @@ class MemberList extends ConsumerWidget {
     super.key,
     required this.members,
     required this.eventId,
+    required this.eventName,
     this.memberAddKey,
     this.slidableKey,
     this.sortKey,
@@ -358,7 +361,16 @@ class MemberList extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => AmountInputScreen(
+                          eventId: eventId,
+                          eventName: eventName,
+                        ),
+                      ),
+                    );
+                  },
                   child: Text(
                     "金額を計算する",
                     style: GoogleFonts.inter(
