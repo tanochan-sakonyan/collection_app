@@ -114,7 +114,7 @@ class MemberList extends ConsumerWidget {
                     ),
                     ClipRect(
                       child: SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.4,
+                        height: MediaQuery.of(context).size.height * 0.35,
                         child: SlidableAutoCloseBehavior(
                           child: ListView.builder(
                             itemCount: members?.length,
@@ -347,8 +347,28 @@ class MemberList extends ConsumerWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 24),
-              //TODO メンバーのステータスによって表示を変える
+              const SizedBox(height: 12),
+              SizedBox(
+                height: 40,
+                width: 324,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFAEAEB2),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  onPressed: () {},
+                  child: Text(
+                    "金額を計算する",
+                    style: GoogleFonts.inter(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child:
