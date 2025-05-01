@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'dart:ui' show FontFeature;
@@ -28,9 +29,9 @@ class _SplitAmountScreenState extends State<SplitAmountScreen> {
   @override
   void initState() {
     super.initState();
-    final evenShare = widget.amount ~/ widget.members.length;
+    final evenShare = (widget.amount / widget.members.length).ceil();
     _controllers = widget.members
-        .map((_) => TextEditingController(text: evenShare.toString()))
+        .map((_) => TextEditingController(text: _numFmt.format(evenShare)))
         .toList();
   }
 
@@ -59,6 +60,39 @@ class _SplitAmountScreenState extends State<SplitAmountScreen> {
     debugPrint('金額マップ: $amountMap');
   }
 
+  TextInputFormatter _buildAmountFormatter() {
+    return TextInputFormatter.withFunction((oldValue, newValue) {
+      String text = newValue.text;
+      if (text.isEmpty) return newValue;
+
+      // 既存カンマを除去して数値だけ取り出し
+      String digitsOnly = text.replaceAll(',', '');
+      final int? value = int.tryParse(digitsOnly);
+      if (value == null) return oldValue;
+
+      // 上限チェック（必要なら）
+      if (value > 9990000) return oldValue;
+
+      // カンマ付き文字列を作る
+      String newText = _numFmt.format(value);
+
+      // カーソル位置を維持するロジック
+      int oldCursor = newValue.selection.end;
+      int nonCommaBefore =
+          text.substring(0, oldCursor).replaceAll(',', '').length;
+      int cursor = 0, count = 0;
+      for (int i = 0; i < newText.length && count < nonCommaBefore; i++) {
+        if (newText[i] != ',') count++;
+        cursor++;
+      }
+
+      return TextEditingValue(
+        text: newText,
+        selection: TextSelection.collapsed(offset: cursor),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final evenShare = (widget.amount / widget.members.length).ceil();
@@ -66,6 +100,7 @@ class _SplitAmountScreenState extends State<SplitAmountScreen> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: SafeArea(
           child: Column(
             children: [
@@ -221,6 +256,9 @@ class _SplitAmountScreenState extends State<SplitAmountScreen> {
                                             controller: _controllers[i],
                                             keyboardType: TextInputType.number,
                                             textAlign: TextAlign.right,
+                                            inputFormatters: [
+                                              _buildAmountFormatter()
+                                            ],
                                             decoration: InputDecoration(
                                               isCollapsed: true,
                                               contentPadding:
