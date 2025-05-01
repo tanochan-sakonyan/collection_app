@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:ui' show FontFeature;
 
 class AmountInputScreen extends StatefulWidget {
   final String eventId;
@@ -19,6 +20,13 @@ class AmountInputScreenState extends State<AmountInputScreen> {
   late FocusNode _focusNode;
 
   int _amount = 10000;
+
+  final _numberStyle = GoogleFonts.inter(
+    fontSize: 48,
+    fontWeight: FontWeight.bold,
+    color: Colors.black,
+    fontFeatures: const [FontFeature.tabularFigures()],
+  );
 
   @override
   void initState() {
@@ -106,6 +114,7 @@ class AmountInputScreenState extends State<AmountInputScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final yenStyle = _numberStyle.copyWith(fontSize: 36);
     Widget amountDisplay;
     if (_isEditing) {
       amountDisplay = IntrinsicWidth(
@@ -122,22 +131,12 @@ class AmountInputScreenState extends State<AmountInputScreen> {
             controller: _controller,
             keyboardType: TextInputType.number,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 48,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-            decoration: const InputDecoration(
+            style: _numberStyle,
+            decoration: InputDecoration(
               border: InputBorder.none,
               isCollapsed: true,
               suffixText: '円',
-              suffixStyle: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 36,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
+              suffixStyle: yenStyle,
               contentPadding: EdgeInsets.zero,
             ),
             inputFormatters: [_buildAmountFormatter()],
@@ -206,26 +205,45 @@ class AmountInputScreenState extends State<AmountInputScreen> {
               child: amountDisplay,
             ),
             const SizedBox(height: 150),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.grey,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              ),
-              onPressed: () {
-                if (_isEditing) {
-                  _finishEditing();
-                }
-              },
-              child: const Text(
-                '次へ',
-                style: TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black),
+            SizedBox(
+              width: 108,
+              height: 44,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFAEAEB2),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                ),
+                onPressed: () {
+                  if (_isEditing) {
+                    _finishEditing();
+                    // TODO 画面遷移
+                  } else {
+                    // TODO 画面遷移
+                  }
+                },
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '次',
+                      style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white),
+                    ),
+                    SizedBox(width: 4),
+                    Text(
+                      'へ',
+                      style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
