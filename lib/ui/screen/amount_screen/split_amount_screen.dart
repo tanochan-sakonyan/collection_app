@@ -69,22 +69,22 @@ class _SplitAmountScreenState extends State<SplitAmountScreen> {
         body: SafeArea(
           child: Column(
             children: [
-              const SizedBox(height: 24),
+              const SizedBox(height: 44),
               Text(
                 widget.eventName,
                 style: GoogleFonts.notoSansJp(
                   fontSize: 24,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.bold,
                   color: Colors.grey,
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 28),
               Text(
                 '合計金額の入力',
                 style: GoogleFonts.notoSansJp(
-                    fontSize: 24, fontWeight: FontWeight.w500),
+                    fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
               Text.rich(
                 TextSpan(
                   text: _numFmt.format(widget.amount),
@@ -95,7 +95,7 @@ class _SplitAmountScreenState extends State<SplitAmountScreen> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 28),
               Container(
                 decoration: BoxDecoration(
                   color: const Color(0xFFE5E5EA),
@@ -104,10 +104,20 @@ class _SplitAmountScreenState extends State<SplitAmountScreen> {
                 margin: const EdgeInsets.symmetric(horizontal: 16),
                 child: TabBar(
                   labelColor: Colors.black,
-                  unselectedLabelColor: Colors.black45,
+                  unselectedLabelColor: Colors.black,
+                  labelStyle: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Inter',
+                    fontSize: 16,
+                  ),
+                  unselectedLabelStyle: const TextStyle(
+                    fontWeight: FontWeight.normal,
+                    fontFamily: 'Inter',
+                    fontSize: 16,
+                  ),
                   indicator: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   tabs: const [
                     Tab(text: '割り勘'),
@@ -124,43 +134,99 @@ class _SplitAmountScreenState extends State<SplitAmountScreen> {
                   },
                   child: TabBarView(
                     children: [
+                      // 割り勘タブ
                       ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        padding: const EdgeInsets.symmetric(horizontal: 44),
                         itemCount: widget.members.length,
                         itemBuilder: (context, i) {
                           final m = widget.members[i];
-                          return ListTile(
-                            title: Text(m.memberName,
-                                style: GoogleFonts.inter(fontSize: 16)),
-                            trailing: Text(
-                              '${_numFmt.format(evenShare)} 円',
-                              style: GoogleFonts.notoSansJp(fontSize: 16),
-                            ),
+                          return Column(
+                            children: [
+                              ListTile(
+                                minTileHeight: 44,
+                                title: Text(m.memberName,
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium),
+                                trailing: IntrinsicWidth(
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        _numFmt.format(evenShare),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge
+                                            ?.copyWith(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w500),
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        '円',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge
+                                            ?.copyWith(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const Divider(
+                                height: 1,
+                                color: Color(0xFFE8E8E8),
+                              ),
+                            ],
                           );
                         },
                       ),
+                      // 金額の調整タブ
                       ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        padding: const EdgeInsets.symmetric(horizontal: 44),
                         itemCount: widget.members.length,
                         itemBuilder: (context, i) {
                           final m = widget.members[i];
                           return ListTile(
+                            minTileHeight: 44,
                             title: Text(m.memberName,
                                 style: GoogleFonts.inter(fontSize: 16)),
                             trailing: SizedBox(
                               width: 110,
-                              child: TextField(
-                                controller: _controllers[i],
-                                keyboardType: TextInputType.number,
-                                textAlign: TextAlign.right,
-                                decoration: const InputDecoration(
-                                  isCollapsed: true,
-                                  contentPadding:
-                                      EdgeInsets.symmetric(vertical: 8),
-                                  border: OutlineInputBorder(),
-                                  suffixText: '円',
-                                ),
-                                style: GoogleFonts.inter(fontSize: 16),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      controller: _controllers[i],
+                                      keyboardType: TextInputType.number,
+                                      textAlign: TextAlign.right,
+                                      decoration: const InputDecoration(
+                                        isCollapsed: true,
+                                        contentPadding:
+                                            EdgeInsets.symmetric(vertical: 8),
+                                        border: OutlineInputBorder(),
+                                      ),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge
+                                          ?.copyWith(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    '円',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge
+                                        ?.copyWith(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                  ),
+                                ],
                               ),
                             ),
                           );
@@ -170,24 +236,36 @@ class _SplitAmountScreenState extends State<SplitAmountScreen> {
                   ),
                 ),
               ),
-            ],
-          ),
-        ),
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 12),
-          child: SizedBox(
-            height: 48,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFAEAEB2),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
+              SizedBox(
+                height: 40,
+                width: 108,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFAEAEB2),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                  ),
+                  onPressed: _onConfirm,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('確',
+                          style: GoogleFonts.inter(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white)),
+                      const SizedBox(width: 8),
+                      Text('定',
+                          style: GoogleFonts.inter(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white)),
+                    ],
+                  ),
+                ),
               ),
-              onPressed: _onConfirm,
-              child: Text('確定',
-                  style: GoogleFonts.notoSansJp(
-                      fontSize: 18, fontWeight: FontWeight.bold)),
-            ),
+              const SizedBox(height: 30),
+            ],
           ),
         ),
       ),
