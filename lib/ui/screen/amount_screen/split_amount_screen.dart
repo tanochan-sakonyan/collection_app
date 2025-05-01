@@ -100,7 +100,6 @@ class _SplitAmountScreenState extends State<SplitAmountScreen> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
         body: SafeArea(
           child: Column(
             children: [
@@ -308,36 +307,42 @@ class _SplitAmountScreenState extends State<SplitAmountScreen> {
                   ),
                 ),
               ),
-              SizedBox(
-                height: 40,
-                width: 108,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFAEAEB2),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
-                  ),
-                  onPressed: _onConfirm,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('確',
-                          style: GoogleFonts.inter(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white)),
-                      const SizedBox(width: 8),
-                      Text('定',
-                          style: GoogleFonts.inter(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white)),
-                    ],
-                  ),
+            ],
+          ),
+        ),
+        bottomNavigationBar: MediaQuery(
+          data: MediaQuery.of(context).copyWith(viewInsets: EdgeInsets.zero),
+          child: Padding(
+            padding: const EdgeInsets.only(
+                top: 60, bottom: 30, right: 141, left: 141),
+            child: SizedBox(
+              width: 108,
+              height: 40,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFAEAEB2),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                ),
+                onPressed: _onConfirm,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('確',
+                        style: GoogleFonts.inter(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white)),
+                    const SizedBox(width: 8),
+                    Text('定',
+                        style: GoogleFonts.inter(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white)),
+                  ],
                 ),
               ),
-              const SizedBox(height: 30),
-            ],
+            ),
           ),
         ),
       ),
