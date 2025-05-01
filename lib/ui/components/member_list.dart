@@ -367,6 +367,7 @@ class MemberList extends ConsumerWidget {
                         builder: (context) => AmountInputScreen(
                           eventId: eventId,
                           eventName: eventName,
+                          members: members!,
                         ),
                       ),
                     );

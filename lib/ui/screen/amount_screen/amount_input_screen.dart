@@ -3,11 +3,19 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:ui' show FontFeature;
 
+import 'package:mr_collection/data/model/freezed/member.dart';
+import 'package:mr_collection/ui/screen/amount_screen/split_amount_screen.dart';
+
 class AmountInputScreen extends StatefulWidget {
   final String eventId;
   final String eventName;
+  final List<Member> members;
+
   const AmountInputScreen(
-      {super.key, required this.eventId, required this.eventName});
+      {super.key,
+      required this.eventId,
+      required this.eventName,
+      required this.members});
 
   @override
   AmountInputScreenState createState() => AmountInputScreenState();
@@ -71,7 +79,7 @@ class AmountInputScreenState extends State<AmountInputScreen> {
         return oldValue;
       }
 
-      if (value > 9990000) {
+      if (value > 9999999) {
         return oldValue;
       }
 
@@ -215,12 +223,17 @@ class AmountInputScreenState extends State<AmountInputScreen> {
                       borderRadius: BorderRadius.circular(12)),
                 ),
                 onPressed: () {
-                  if (_isEditing) {
-                    _finishEditing();
-                    // TODO 画面遷移
-                  } else {
-                    // TODO 画面遷移
-                  }
+                  if (_isEditing) _finishEditing();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => SplitAmountScreen(
+                        eventName: widget.eventName,
+                        amount: _amount,
+                        members: widget.members,
+                      ),
+                    ),
+                  );
                 },
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
