@@ -95,37 +95,51 @@ class _SplitAmountScreenState extends State<SplitAmountScreen> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 28),
+              const SizedBox(height: 20),
               Container(
                 decoration: BoxDecoration(
                   color: const Color(0xFFE5E5EA),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 margin: const EdgeInsets.symmetric(horizontal: 16),
-                child: TabBar(
-                  labelColor: Colors.black,
-                  unselectedLabelColor: Colors.black,
-                  labelStyle: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'Inter',
-                    fontSize: 16,
+                child: SizedBox(
+                  width: 370,
+                  height: 32,
+                  child: TabBar(
+                    indicatorPadding: const EdgeInsets.symmetric(
+                        horizontal: -48, vertical: 2),
+                    dividerColor: Colors.transparent,
+                    labelColor: Colors.black,
+                    unselectedLabelColor: Colors.black,
+                    labelStyle: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Inter',
+                      fontSize: 16,
+                    ),
+                    unselectedLabelStyle: const TextStyle(
+                      fontWeight: FontWeight.normal,
+                      fontFamily: 'Inter',
+                      fontSize: 16,
+                    ),
+                    indicator: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: const [
+                        BoxShadow(
+                          blurRadius: 2,
+                          offset: Offset(0, 2),
+                          color: Colors.black12,
+                        ),
+                      ],
+                    ),
+                    tabs: const [
+                      Tab(text: '割り勘'),
+                      Tab(text: '金額の調整'),
+                    ],
                   ),
-                  unselectedLabelStyle: const TextStyle(
-                    fontWeight: FontWeight.normal,
-                    fontFamily: 'Inter',
-                    fontSize: 16,
-                  ),
-                  indicator: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  tabs: const [
-                    Tab(text: '割り勘'),
-                    Tab(text: '金額の調整'),
-                  ],
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 16),
               Expanded(
                 child: GestureDetector(
                   behavior: HitTestBehavior.opaque,
@@ -187,48 +201,68 @@ class _SplitAmountScreenState extends State<SplitAmountScreen> {
                         itemCount: widget.members.length,
                         itemBuilder: (context, i) {
                           final m = widget.members[i];
-                          return ListTile(
-                            minTileHeight: 44,
-                            title: Text(m.memberName,
-                                style: GoogleFonts.inter(fontSize: 16)),
-                            trailing: SizedBox(
-                              width: 110,
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: TextField(
-                                      controller: _controllers[i],
-                                      keyboardType: TextInputType.number,
-                                      textAlign: TextAlign.right,
-                                      decoration: const InputDecoration(
-                                        isCollapsed: true,
-                                        contentPadding:
-                                            EdgeInsets.symmetric(vertical: 8),
-                                        border: OutlineInputBorder(),
-                                      ),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge
-                                          ?.copyWith(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w400,
+                          return Column(
+                            children: [
+                              ListTile(
+                                minTileHeight: 44,
+                                title: Text(m.memberName,
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium),
+                                trailing: SizedBox(
+                                  width: 110,
+                                  child: Row(
+                                    children: [
+                                      const Spacer(),
+                                      SizedBox(
+                                        height: 28,
+                                        width: 68,
+                                        child: Expanded(
+                                          child: TextField(
+                                            controller: _controllers[i],
+                                            keyboardType: TextInputType.number,
+                                            textAlign: TextAlign.right,
+                                            decoration: InputDecoration(
+                                              isCollapsed: true,
+                                              contentPadding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 8),
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(6),
+                                                borderSide: const BorderSide(
+                                                    color: Color(0xFFC6C6C8)),
+                                              ),
+                                            ),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge
+                                                ?.copyWith(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
                                           ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 6),
-                                  Text(
-                                    '円',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyLarge
-                                        ?.copyWith(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
                                         ),
+                                      ),
+                                      const SizedBox(width: 6),
+                                      Text(
+                                        '円',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge
+                                            ?.copyWith(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                      ),
+                                    ],
                                   ),
-                                ],
+                                ),
                               ),
-                            ),
+                              const Divider(
+                                height: 1,
+                                color: Color(0xFFE8E8E8),
+                              ),
+                            ],
                           );
                         },
                       ),
