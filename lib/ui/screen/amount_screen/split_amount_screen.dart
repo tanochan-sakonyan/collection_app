@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart'; // -------- 変更点 --------
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'dart:ui' show FontFeature;
@@ -21,8 +22,12 @@ class SplitAmountScreen extends StatefulWidget {
   State<SplitAmountScreen> createState() => _SplitAmountScreenState();
 }
 
-class _SplitAmountScreenState extends State<SplitAmountScreen> {
+class _SplitAmountScreenState extends State<SplitAmountScreen>
+    with SingleTickerProviderStateMixin {
+  // -------- 変更点 --------
   late List<TextEditingController> _controllers;
+  late List<bool> _locked; // -------- 変更点 --------
+  late TabController _tabController; // -------- 変更点 --------
   final _numFmt = NumberFormat.decimalPattern();
 
   @override
@@ -32,6 +37,10 @@ class _SplitAmountScreenState extends State<SplitAmountScreen> {
     _controllers = widget.members
         .map((_) => TextEditingController(text: _numFmt.format(evenShare)))
         .toList();
+    _locked = List<bool>.filled(
+        widget.members.length, false); // -------- 変更点 --------
+    _tabController =
+        TabController(length: 2, vsync: this); // -------- 変更点 --------
   }
 
   @override
@@ -39,6 +48,7 @@ class _SplitAmountScreenState extends State<SplitAmountScreen> {
     for (final c in _controllers) {
       c.dispose();
     }
+    _tabController.dispose(); // -------- 変更点 --------
     super.dispose();
   }
 
@@ -57,6 +67,97 @@ class _SplitAmountScreenState extends State<SplitAmountScreen> {
           int.tryParse(_controllers[i].text.replaceAll(',', '')) ?? 0;
     }
     debugPrint('金額マップ: $amountMap');
+  }
+
+  // -------- 変更点 --------
+  /// 入力確定(onSubmitted)時に呼び出される。
+  void _handleSubmitted(int index, String rawText) {
+    // 必ず「金額の調整」タブを開いておく
+    if (_tabController.index != 1) _tabController.animateTo(1);
+
+    int input = int.tryParse(rawText.replaceAll(',', '')) ?? 0;
+
+    // 現在ロック済みの合計(自分は除外)
+    int lockedSum = 0;
+    for (int i = 0; i < widget.members.length; i++) {
+      if (_locked[i] && i != index) {
+        lockedSum +=
+            int.tryParse(_controllers[i].text.replaceAll(',', '')) ?? 0;
+      }
+    }
+
+    // 残り徴収すべき金額
+    int remaining = widget.amount - lockedSum;
+
+    // 入力が残りより大きい場合は残りに揃える
+    if (input > remaining) {
+      input = remaining;
+    }
+
+    _controllers[index].text = _numFmt.format(input);
+    _locked[index] = true; // 入力者をロック
+
+    // 再計算
+    _recalculateAmounts();
+  }
+
+  // -------- 変更点 --------
+  /// 鍵アイコンのタップ時に呼び出される。
+  void _toggleLock(int index) {
+    setState(() {
+      _locked[index] = !_locked[index];
+      _recalculateAmounts();
+    });
+  }
+
+  // -------- 変更点 --------
+  /// 現在のロック状態と各 TextField の値を基に、自動で金額を割り振る。
+  void _recalculateAmounts() {
+    // ロックされているメンバーの合計を算出
+    int lockedSum = 0;
+    for (int i = 0; i < widget.members.length; i++) {
+      if (_locked[i]) {
+        lockedSum +=
+            int.tryParse(_controllers[i].text.replaceAll(',', '')) ?? 0;
+      }
+    }
+
+    // すべてロックされていれば終了
+    if (lockedSum >= widget.amount) {
+      setState(() {});
+      return;
+    }
+
+    // ロックされていないメンバーリスト
+    final adjustables = <int>[];
+    for (int i = 0; i < widget.members.length; i++) {
+      if (!_locked[i]) adjustables.add(i);
+    }
+
+    int remaining = widget.amount - lockedSum;
+
+    if (adjustables.isEmpty) {
+      // ロックされていない人がいない場合は残りを最後のロックメンバーに足す
+      // （仕様には出てこないが保険として実装）
+      for (int i = widget.members.length - 1; i >= 0; i--) {
+        if (_locked[i]) {
+          int val = int.tryParse(_controllers[i].text.replaceAll(',', '')) ?? 0;
+          _controllers[i].text = _numFmt.format(val + remaining);
+          break;
+        }
+      }
+      setState(() {});
+      return;
+    }
+
+    // 繰り上げで均等割
+    int share = (remaining / adjustables.length).ceil();
+
+    for (int idx in adjustables) {
+      _controllers[idx].text = _numFmt.format(share);
+    }
+
+    setState(() {});
   }
 
   TextInputFormatter _buildAmountFormatter() {
@@ -89,250 +190,263 @@ class _SplitAmountScreenState extends State<SplitAmountScreen> {
   Widget build(BuildContext context) {
     final evenShare = (widget.amount / widget.members.length).ceil();
 
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        body: SafeArea(
-          child: Column(
-            children: [
-              const SizedBox(height: 44),
-              Text(
-                widget.eventName,
-                style: GoogleFonts.notoSansJp(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey,
-                ),
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            const SizedBox(height: 44),
+            Text(
+              widget.eventName,
+              style: GoogleFonts.notoSansJp(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey,
               ),
-              const SizedBox(height: 28),
-              Text(
-                '合計金額の入力',
-                style: GoogleFonts.notoSansJp(
-                    fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 28),
+            Text(
+              '合計金額の入力',
+              style: GoogleFonts.notoSansJp(
+                  fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
+            Text.rich(
+              TextSpan(
+                text: _numFmt.format(widget.amount),
+                style: _numberStyle,
+                children: [
+                  TextSpan(text: ' 円', style: _yenStyle),
+                ],
               ),
-              const SizedBox(height: 20),
-              Text.rich(
-                TextSpan(
-                  text: _numFmt.format(widget.amount),
-                  style: _numberStyle,
-                  children: [
-                    TextSpan(text: ' 円', style: _yenStyle),
-                  ],
-                ),
-                textAlign: TextAlign.center,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 20),
+            Container(
+              decoration: BoxDecoration(
+                color: const Color(0xFFE5E5EA),
+                borderRadius: BorderRadius.circular(8),
               ),
-              const SizedBox(height: 20),
-              Container(
-                decoration: BoxDecoration(
-                  color: const Color(0xFFE5E5EA),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                margin: const EdgeInsets.symmetric(horizontal: 16),
-                child: SizedBox(
-                  width: 370,
-                  height: 32,
-                  child: TabBar(
-                    indicatorPadding: const EdgeInsets.symmetric(
-                        horizontal: -48, vertical: 2),
-                    dividerColor: Colors.transparent,
-                    labelColor: Colors.black,
-                    unselectedLabelColor: Colors.black,
-                    labelStyle: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontFamily: 'Inter',
-                      fontSize: 16,
-                    ),
-                    unselectedLabelStyle: const TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontFamily: 'Inter',
-                      fontSize: 16,
-                    ),
-                    indicator: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: const [
-                        BoxShadow(
-                          blurRadius: 2,
-                          offset: Offset(0, 2),
-                          color: Colors.black12,
-                        ),
-                      ],
-                    ),
-                    tabs: const [
-                      Tab(text: '割り勘'),
-                      Tab(text: '金額の調整'),
+              margin: const EdgeInsets.symmetric(horizontal: 16),
+              child: SizedBox(
+                width: 370,
+                height: 32,
+                child: TabBar(
+                  controller: _tabController, // -------- 変更点 --------
+                  indicatorPadding:
+                      const EdgeInsets.symmetric(horizontal: -48, vertical: 2),
+                  dividerColor: Colors.transparent,
+                  labelColor: Colors.black,
+                  unselectedLabelColor: Colors.black,
+                  labelStyle: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Inter',
+                    fontSize: 16,
+                  ),
+                  unselectedLabelStyle: const TextStyle(
+                    fontWeight: FontWeight.normal,
+                    fontFamily: 'Inter',
+                    fontSize: 16,
+                  ),
+                  indicator: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: const [
+                      BoxShadow(
+                        blurRadius: 2,
+                        offset: Offset(0, 2),
+                        color: Colors.black12,
+                      ),
                     ],
                   ),
+                  tabs: const [
+                    Tab(text: '割り勘'),
+                    Tab(text: '金額の調整'),
+                  ],
                 ),
               ),
-              const SizedBox(height: 16),
-              Expanded(
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () {
-                    FocusScope.of(context).unfocus();
-                  },
-                  child: TabBarView(
-                    children: [
-                      // 割り勘タブ
-                      ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 44),
-                        itemCount: widget.members.length,
-                        itemBuilder: (context, i) {
-                          final m = widget.members[i];
-                          return Column(
-                            children: [
-                              ListTile(
-                                minTileHeight: 44,
-                                title: Text(m.memberName,
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium),
-                                trailing: IntrinsicWidth(
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        _numFmt.format(evenShare),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge
-                                            ?.copyWith(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w500),
-                                      ),
-                                      const SizedBox(width: 4),
-                                      Text(
-                                        '円',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge
-                                            ?.copyWith(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w500),
-                                      ),
-                                    ],
-                                  ),
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  FocusScope.of(context).unfocus();
+                },
+                child: TabBarView(
+                  controller: _tabController, // -------- 変更点 --------
+                  children: [
+                    // ------------- 割り勘タブ -------------
+                    ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 44),
+                      itemCount: widget.members.length,
+                      itemBuilder: (context, i) {
+                        final m = widget.members[i];
+                        return Column(
+                          children: [
+                            ListTile(
+                              minTileHeight: 44,
+                              title: Text(m.memberName,
+                                  style:
+                                      Theme.of(context).textTheme.bodyMedium),
+                              trailing: IntrinsicWidth(
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      _numFmt.format(evenShare),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge
+                                          ?.copyWith(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w500),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      '円',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge
+                                          ?.copyWith(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              const Divider(
-                                height: 1,
-                                color: Color(0xFFE8E8E8),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                      // 金額の調整タブ
-                      ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 44),
-                        itemCount: widget.members.length,
-                        itemBuilder: (context, i) {
-                          final m = widget.members[i];
-                          return Column(
-                            children: [
-                              ListTile(
-                                minTileHeight: 44,
-                                title: Text(m.memberName,
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium),
-                                trailing: SizedBox(
-                                  width: 110,
-                                  child: Row(
-                                    children: [
-                                      const Spacer(),
-                                      SizedBox(
+                            ),
+                            const Divider(
+                              height: 1,
+                              color: Color(0xFFE8E8E8),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                    // ------------- 金額の調整タブ -------------
+                    ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 44),
+                      itemCount: widget.members.length,
+                      itemBuilder: (context, i) {
+                        final m = widget.members[i];
+                        return Column(
+                          children: [
+                            ListTile(
+                              minTileHeight: 44,
+                              title: Text(m.memberName,
+                                  style:
+                                      Theme.of(context).textTheme.bodyMedium),
+                              trailing: SizedBox(
+                                width: 150, // サイズを拡張
+                                child: Row(
+                                  children: [
+                                    // ------- 金額入力欄 -------
+                                    Expanded(
+                                      child: SizedBox(
                                         height: 28,
-                                        width: 68,
-                                        child: Expanded(
-                                          child: TextField(
-                                            controller: _controllers[i],
-                                            keyboardType: TextInputType.number,
-                                            textAlign: TextAlign.right,
-                                            inputFormatters: [
-                                              _buildAmountFormatter()
-                                            ],
-                                            decoration: InputDecoration(
-                                              isCollapsed: true,
-                                              contentPadding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 8),
-                                              border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(6),
-                                                borderSide: const BorderSide(
-                                                    color: Color(0xFFC6C6C8)),
-                                              ),
+                                        child: TextField(
+                                          controller: _controllers[i],
+                                          keyboardType: TextInputType.number,
+                                          textAlign: TextAlign.right,
+                                          inputFormatters: [
+                                            _buildAmountFormatter()
+                                          ],
+                                          decoration: InputDecoration(
+                                            isCollapsed: true,
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                                    vertical: 8),
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
+                                              borderSide: const BorderSide(
+                                                  color: Color(0xFFC6C6C8)),
                                             ),
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyLarge
-                                                ?.copyWith(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
                                           ),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge
+                                              ?.copyWith(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                          onSubmitted: (v) => _handleSubmitted(
+                                              i, v), // -------- 変更点 --------
                                         ),
                                       ),
-                                      const SizedBox(width: 6),
-                                      Text(
-                                        '円',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge
-                                            ?.copyWith(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500,
-                                            ),
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      '円',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge
+                                          ?.copyWith(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                    ),
+                                    const SizedBox(width: 6),
+                                    // ------- 鍵アイコン -------
+                                    GestureDetector(
+                                      onTap: () => _toggleLock(
+                                          i), // -------- 変更点 --------
+                                      child: SvgPicture.asset(
+                                        _locked[i]
+                                            ? 'assets/icons/ic_rock_close.svg'
+                                            : 'assets/icons/ic_rock_open.svg',
+                                        width: 20,
+                                        height: 20,
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              const Divider(
-                                height: 1,
-                                color: Color(0xFFE8E8E8),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        bottomNavigationBar: MediaQuery(
-          data: MediaQuery.of(context).copyWith(viewInsets: EdgeInsets.zero),
-          child: Padding(
-            padding: const EdgeInsets.only(
-                top: 60, bottom: 30, right: 141, left: 141),
-            child: SizedBox(
-              width: 108,
-              height: 40,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF75DCC6),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                ),
-                onPressed: _onConfirm,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('確',
-                        style: GoogleFonts.inter(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white)),
-                    const SizedBox(width: 8),
-                    Text('定',
-                        style: GoogleFonts.inter(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white)),
+                            ),
+                            const Divider(
+                              height: 1,
+                              color: Color(0xFFE8E8E8),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                   ],
                 ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: MediaQuery(
+        data: MediaQuery.of(context).copyWith(viewInsets: EdgeInsets.zero),
+        child: Padding(
+          padding:
+              const EdgeInsets.only(top: 60, bottom: 30, right: 141, left: 141),
+          child: SizedBox(
+            width: 108,
+            height: 40,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF75DCC6),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+              ),
+              onPressed: _onConfirm,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('確',
+                      style: GoogleFonts.inter(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white)),
+                  const SizedBox(width: 8),
+                  Text('定',
+                      style: GoogleFonts.inter(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white)),
+                ],
               ),
             ),
           ),
