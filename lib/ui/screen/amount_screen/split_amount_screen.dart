@@ -394,8 +394,8 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
                                         _locked[i]
                                             ? 'assets/icons/ic_rock_close.svg'
                                             : 'assets/icons/ic_rock_open.svg',
-                                        width: 20,
-                                        height: 20,
+                                        width: 24,
+                                        height: 24,
                                       ),
                                     ),
                                   ],
