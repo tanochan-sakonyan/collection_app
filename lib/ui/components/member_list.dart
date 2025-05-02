@@ -356,9 +356,9 @@ class MemberList extends ConsumerWidget {
                 width: 324,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFAEAEB2),
+                    backgroundColor: const Color(0xFF75DCC6),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(8),
                     ),
                   ),
                   onPressed: () {
@@ -372,12 +372,34 @@ class MemberList extends ConsumerWidget {
                       ),
                     );
                   },
-                  child: Text(
-                    "金額を計算する",
-                    style: GoogleFonts.inter(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/icons/ic_amount.svg',
+                        width: 35,
+                        height: 35,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        "清",
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                            ),
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        "算",
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                            ),
+                      ),
+                      const SizedBox(width: 12),
+                    ],
                   ),
                 ),
               ),

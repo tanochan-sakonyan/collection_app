@@ -10,7 +10,6 @@ class SplitAmountScreen extends StatefulWidget {
   final String eventName;
   final int amount;
   final List<Member> members;
-
   const SplitAmountScreen({
     super.key,
     required this.eventName,
@@ -65,18 +64,11 @@ class _SplitAmountScreenState extends State<SplitAmountScreen> {
       String text = newValue.text;
       if (text.isEmpty) return newValue;
 
-      // 既存カンマを除去して数値だけ取り出し
       String digitsOnly = text.replaceAll(',', '');
       final int? value = int.tryParse(digitsOnly);
       if (value == null) return oldValue;
-
-      // 上限チェック（必要なら）
       if (value > 9990000) return oldValue;
-
-      // カンマ付き文字列を作る
       String newText = _numFmt.format(value);
-
-      // カーソル位置を維持するロジック
       int oldCursor = newValue.selection.end;
       int nonCommaBefore =
           text.substring(0, oldCursor).replaceAll(',', '').length;
@@ -320,7 +312,7 @@ class _SplitAmountScreenState extends State<SplitAmountScreen> {
               height: 40,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFAEAEB2),
+                  backgroundColor: const Color(0xFF75DCC6),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12)),
                 ),

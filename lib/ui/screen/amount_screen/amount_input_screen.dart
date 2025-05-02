@@ -218,7 +218,7 @@ class AmountInputScreenState extends State<AmountInputScreen> {
               height: 44,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFAEAEB2),
+                  backgroundColor: const Color(0xFF75DCC6),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12)),
                 ),

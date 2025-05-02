@@ -68,6 +68,9 @@ flutter:
     - assets/icons/suggest_official_line.svg
     - assets/icons/ic_check_badge_green.svg
     - assets/icons/ic_check_circle_teal.svg
+    - assets/icons/ic_amount.svg
+    - assets/icons/ic_rock_open.svg
+    - assets/icons/ic_rock_close.svg
     - assets/icons/drawer_yen.svg
     - assets/icons/drawer_star.svg
     - assets/icons/drawer_key.svg
