@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart'; // -------- 変更点 --------
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'dart:ui' show FontFeature;
@@ -24,10 +24,10 @@ class SplitAmountScreen extends StatefulWidget {
 
 class _SplitAmountScreenState extends State<SplitAmountScreen>
     with SingleTickerProviderStateMixin {
-  // -------- 変更点 --------
   late List<TextEditingController> _controllers;
-  late List<bool> _locked; // -------- 変更点 --------
-  late TabController _tabController; // -------- 変更点 --------
+  late List<FocusNode> _focusNodes;
+  late List<bool> _locked;
+  late TabController _tabController;
   final _numFmt = NumberFormat.decimalPattern();
 
   @override
@@ -37,10 +37,20 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
     _controllers = widget.members
         .map((_) => TextEditingController(text: _numFmt.format(evenShare)))
         .toList();
-    _locked = List<bool>.filled(
-        widget.members.length, false); // -------- 変更点 --------
-    _tabController =
-        TabController(length: 2, vsync: this); // -------- 変更点 --------
+    _focusNodes = List.generate(
+      widget.members.length,
+      (i) {
+        final node = FocusNode();
+        node.addListener(() {
+          if (!node.hasFocus) {
+            _handleSubmitted(i, _controllers[i].text);
+          }
+        });
+        return node;
+      },
+    );
+    _locked = List<bool>.filled(widget.members.length, false);
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -48,7 +58,10 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
     for (final c in _controllers) {
       c.dispose();
     }
-    _tabController.dispose(); // -------- 変更点 --------
+    for (final n in _focusNodes) {
+      n.dispose();
+    }
+    _tabController.dispose();
     super.dispose();
   }
 
@@ -62,22 +75,27 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
 
   Future<void> _onConfirm() async {
     final Map<String, int> amountMap = {};
-    for (var i = 0; i < widget.members.length; i++) {
-      amountMap[widget.members[i].memberId] =
-          int.tryParse(_controllers[i].text.replaceAll(',', '')) ?? 0;
+
+    if (_tabController.index == 0) {
+      final evenShare = (widget.amount / widget.members.length).ceil();
+      for (final m in widget.members) {
+        amountMap[m.memberId] = evenShare;
+      }
+    } else if (_tabController.index == 1) {
+      for (var i = 0; i < widget.members.length; i++) {
+        amountMap[widget.members[i].memberId] =
+            int.tryParse(_controllers[i].text.replaceAll(',', '')) ?? 0;
+      }
     }
-    debugPrint('金額マップ: $amountMap');
+
+    debugPrint('送信する金額マップ: $amountMap');
   }
 
-  // -------- 変更点 --------
-  /// 入力確定(onSubmitted)時に呼び出される。
   void _handleSubmitted(int index, String rawText) {
-    // 必ず「金額の調整」タブを開いておく
     if (_tabController.index != 1) _tabController.animateTo(1);
 
     int input = int.tryParse(rawText.replaceAll(',', '')) ?? 0;
 
-    // 現在ロック済みの合計(自分は除外)
     int lockedSum = 0;
     for (int i = 0; i < widget.members.length; i++) {
       if (_locked[i] && i != index) {
@@ -86,23 +104,29 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
       }
     }
 
-    // 残り徴収すべき金額
     int remaining = widget.amount - lockedSum;
 
-    // 入力が残りより大きい場合は残りに揃える
-    if (input > remaining) {
+    final bool wasTrimmed = input > remaining;
+    if (wasTrimmed) {
       input = remaining;
     }
 
-    _controllers[index].text = _numFmt.format(input);
-    _locked[index] = true; // 入力者をロック
+    setState(() {
+      _controllers[index].text = _numFmt.format(input);
+      _locked[index] = true;
 
-    // 再計算
-    _recalculateAmounts();
+      if (wasTrimmed) {
+        for (int j = 0; j < widget.members.length; j++) {
+          if (j != index && !_locked[j]) {
+            _controllers[j].text = _numFmt.format(0);
+          }
+        }
+      }
+
+      _recalculateAmounts();
+    });
   }
 
-  // -------- 変更点 --------
-  /// 鍵アイコンのタップ時に呼び出される。
   void _toggleLock(int index) {
     setState(() {
       _locked[index] = !_locked[index];
@@ -110,10 +134,7 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
     });
   }
 
-  // -------- 変更点 --------
-  /// 現在のロック状態と各 TextField の値を基に、自動で金額を割り振る。
   void _recalculateAmounts() {
-    // ロックされているメンバーの合計を算出
     int lockedSum = 0;
     for (int i = 0; i < widget.members.length; i++) {
       if (_locked[i]) {
@@ -122,13 +143,11 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
       }
     }
 
-    // すべてロックされていれば終了
     if (lockedSum >= widget.amount) {
       setState(() {});
       return;
     }
 
-    // ロックされていないメンバーリスト
     final adjustables = <int>[];
     for (int i = 0; i < widget.members.length; i++) {
       if (!_locked[i]) adjustables.add(i);
@@ -137,8 +156,6 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
     int remaining = widget.amount - lockedSum;
 
     if (adjustables.isEmpty) {
-      // ロックされていない人がいない場合は残りを最後のロックメンバーに足す
-      // （仕様には出てこないが保険として実装）
       for (int i = widget.members.length - 1; i >= 0; i--) {
         if (_locked[i]) {
           int val = int.tryParse(_controllers[i].text.replaceAll(',', '')) ?? 0;
@@ -150,7 +167,6 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
       return;
     }
 
-    // 繰り上げで均等割
     int share = (remaining / adjustables.length).ceil();
 
     for (int idx in adjustables) {
@@ -231,7 +247,7 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
                 width: 370,
                 height: 32,
                 child: TabBar(
-                  controller: _tabController, // -------- 変更点 --------
+                  controller: _tabController,
                   indicatorPadding:
                       const EdgeInsets.symmetric(horizontal: -48, vertical: 2),
                   dividerColor: Colors.transparent,
@@ -273,9 +289,8 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
                   FocusScope.of(context).unfocus();
                 },
                 child: TabBarView(
-                  controller: _tabController, // -------- 変更点 --------
+                  controller: _tabController,
                   children: [
-                    // ------------- 割り勘タブ -------------
                     ListView.builder(
                       padding: const EdgeInsets.symmetric(horizontal: 44),
                       itemCount: widget.members.length,
@@ -322,9 +337,8 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
                         );
                       },
                     ),
-                    // ------------- 金額の調整タブ -------------
                     ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 44),
+                      padding: const EdgeInsets.only(left: 34, right: 20),
                       itemCount: widget.members.length,
                       itemBuilder: (context, i) {
                         final m = widget.members[i];
@@ -336,15 +350,15 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
                                   style:
                                       Theme.of(context).textTheme.bodyMedium),
                               trailing: SizedBox(
-                                width: 150, // サイズを拡張
+                                width: 140,
                                 child: Row(
                                   children: [
-                                    // ------- 金額入力欄 -------
                                     Expanded(
                                       child: SizedBox(
                                         height: 28,
                                         child: TextField(
                                           controller: _controllers[i],
+                                          focusNode: _focusNodes[i],
                                           keyboardType: TextInputType.number,
                                           textAlign: TextAlign.right,
                                           inputFormatters: [
@@ -369,8 +383,8 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w400,
                                               ),
-                                          onSubmitted: (v) => _handleSubmitted(
-                                              i, v), // -------- 変更点 --------
+                                          onSubmitted: (v) =>
+                                              _handleSubmitted(i, v),
                                         ),
                                       ),
                                     ),
@@ -385,11 +399,9 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
                                             fontWeight: FontWeight.w500,
                                           ),
                                     ),
-                                    const SizedBox(width: 6),
-                                    // ------- 鍵アイコン -------
+                                    const SizedBox(width: 24),
                                     GestureDetector(
-                                      onTap: () => _toggleLock(
-                                          i), // -------- 変更点 --------
+                                      onTap: () => _toggleLock(i),
                                       child: SvgPicture.asset(
                                         _locked[i]
                                             ? 'assets/icons/ic_rock_close.svg'
