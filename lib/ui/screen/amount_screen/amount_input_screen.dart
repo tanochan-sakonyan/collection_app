@@ -177,6 +177,7 @@ class AmountInputScreenState extends State<AmountInputScreen> {
     }
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Center(
         child: Column(
           children: [

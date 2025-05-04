@@ -207,6 +207,7 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
     final evenShare = (widget.amount / widget.members.length).ceil();
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
