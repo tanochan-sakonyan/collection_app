@@ -162,29 +162,29 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                 ),
                 child: Column(
                   children: [
-                    // SizedBox(
-                    //   width: 272,
-                    //   height: 48,
-                    //   child: ListTile(
-                    //     title: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    //       '参加者引継ぎ',
-                    //       style: TextStyle(
-                    //                               fontSize: 14,
-                    //                               fontWeight: FontWeight.w500,
-                    //                               color: Colors.black
-                    //                             ),
-                    //     ),
-                    //     trailing: ToggleButton(
-                    //       initialValue: isToggleOn,
-                    //       onChanged: (bool isOn) {
-                    //         setState(() {
-                    //           isToggleOn = isOn;
-                    //         });
-                    //       },
-                    //     ),
-                    //   ),
-                    // ),
-                    // const Divider(height: 1, color: Color(0xFFE8E8E8)),
+                    SizedBox(
+                      width: 272,
+                      height: 48,
+                      child: ListTile(
+                        title: Text(
+                            '参加者引継ぎ',
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black
+                          ),
+                        ),
+                        trailing: ToggleButton(
+                          initialValue: isToggleOn,
+                          onChanged: (bool isOn) {
+                            setState(() {
+                              isToggleOn = isOn;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    const Divider(height: 1, color: Color(0xFFE8E8E8)),
                     SizedBox(
                       width: 272,
                       height: 48,
