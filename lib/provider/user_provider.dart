@@ -128,6 +128,18 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
+  Future<void> createEventAndTransferMembers(String eventId, String eventName, String userId) async {
+    try {
+      final newEvent = await eventRepository.createEventAndTransferMembers(eventId, eventName, userId);
+      final updatedUser = state?.copyWith(
+        events: [...state!.events, newEvent],
+      );
+      state = updatedUser;
+    } catch (e) {
+      debugPrint('イベントの作成中にエラーが発生しました: $e');
+    }
+  }
+
   Future<void> deleteEvent(String userId, String eventId) async {
     try {
       final deleteResult = await eventRepository.deleteEvent(userId, eventId);
