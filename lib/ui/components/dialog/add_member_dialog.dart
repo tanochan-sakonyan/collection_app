@@ -99,7 +99,7 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
         padding: const EdgeInsets.all(20),
         child: Container(
           color: const Color(0xFFFFFFFF),
-          height: 420,
+          height: 355,
           width: 320,
           child: Column(
             children: [
@@ -115,15 +115,19 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Text(
                     "Name",
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           fontSize: 10,
                           fontWeight: FontWeight.w700,
                         ),
                   ),
+              ),
                 ],
               ),
+              const SizedBox(height: 4),
           SizedBox(
             width: 272,
             height: 220,
@@ -167,47 +171,7 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
                       )
                     : null,
               ),
-              const SizedBox(height: 4),
-              Row(children: [
-                Text(
-                  "LINEグループから自動追加",
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                ),
-                const Spacer(),
-                IconButton(
-                  icon: SvgPicture.asset("assets/icons/line.svg"),
-                  color: const Color(0xFF06C755),
-                  onPressed: () {
-                    //LINE認証申請前の臨時ダイアログ
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 56.0, horizontal: 24.0),
-                        content: Text(
-                          'LINEへの認証申請中のため、\nアップデートをお待ちください。',
-                          textAlign: TextAlign.center,
-                          style:
-                              Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black,
-                                  ),
-                        ),
-                      ),
-                    );
-                    //TODO LINE認証申請が通ったらこちらに戻す
-                    /*showDialog(
-                        context: context,
-                        builder: (context) => const ConfirmationDialog(),
-                      );*/
-                  },
-                ),
-              ]),
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
               SizedBox(
                 width: 272,
                 height: 40,
