@@ -72,7 +72,7 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
     try {
       await ref
           .read(userProvider.notifier)
-          .addMembersFromInput(widget.userId, widget.eventId, rawText);
+          .createMembers(widget.userId, widget.eventId, rawText);
       if (mounted) Navigator.of(context).pop();
     } catch (e) {
       setState(() {

@@ -8,23 +8,6 @@ class MemberRepository {
 
   MemberRepository({required this.baseUrl});
 
-  Future<Member> createMember(
-      String userId, String eventId, String newMemberName) async {
-    final url = Uri.parse('$baseUrl/users/$userId/events/$eventId/members');
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'newMemberName': newMemberName}),
-    );
-
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      final data = jsonDecode(response.body);
-      return Member.fromJson(data);
-    } else {
-      throw Exception('メンバーの追加に失敗しました');
-    }
-  }
-
   Future<List<Member>> createMembers(
       String userId, String eventId, List<String> newMemberNames) async {
     final url = Uri.parse('$baseUrl/users/$userId/events/$eventId/members/bulk');

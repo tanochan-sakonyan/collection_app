@@ -149,7 +149,7 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
-  Future<void> addMembersFromInput(
+  Future<void> createMembers(
       String userId, String eventId, String rawInput) async {
     try {
       final names = rawInput
