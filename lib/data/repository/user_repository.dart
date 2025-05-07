@@ -56,18 +56,18 @@ class UserRepository {
       ],
       webAuthenticationOptions: WebAuthenticationOptions(
         clientId: 'com.tanotyan.syukinkun.service',
-        redirectUri: kIsWeb
-            ? Uri.parse('https://${Uri.base.host}/')
-            : Uri.parse(
-                '$baseUrl/auth/apple/callback',
-              ),
+        redirectUri: Uri.parse('$baseUrl/auth/apple/callback'),
       ),
     );
+    final code = credential.authorizationCode;
     final url = Uri.parse('$baseUrl/auth/apple/callback');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'identityToken': credential.userIdentifier}),
+      body: jsonEncode({
+        'code': code,
+        'redirect_uri': '$baseUrl/auth/apple/callback',
+      }),
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
