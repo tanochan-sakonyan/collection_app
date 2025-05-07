@@ -35,9 +35,11 @@ dev_dependencies:
   json_serializable: ^6.8.0
   flutter_launcher_icons: ^0.14.1
 
-flutter_launcher_icons:
+flutter_icons:
   ios: true
   android: true
+  adaptive_icon_foreground: "assets/icons/icon.png"
+  adaptive_icon_background: "#ffffff"
   image_path: "assets/icons/icon.png"
 
 
