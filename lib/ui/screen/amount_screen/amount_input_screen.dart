@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:ui' show FontFeature;
 
@@ -178,15 +179,40 @@ class AmountInputScreenState extends State<AmountInputScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SvgPicture.asset(
+                'assets/icons/ic_back.svg',
+                width: 44,
+                height: 44,
+              ),
+              Text(
+                '戻る',
+                style: GoogleFonts.notoSansJp(
+                    color: const Color(0xFF76DCC6),
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500),
+              ),
+            ],
+          ),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+      ),
       body: Center(
         child: Column(
           children: [
-            const SizedBox(height: 92),
+            const SizedBox(height: 60),
             Text(
               widget.eventName,
               style: GoogleFonts.inter(
                 fontSize: 24,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w700,
                 color: Colors.grey,
               ),
             ),
@@ -194,7 +220,7 @@ class AmountInputScreenState extends State<AmountInputScreen> {
             Text(
               '合計金額の入力',
               style: GoogleFonts.notoSansJp(
-                  fontSize: 24, fontWeight: FontWeight.w500),
+                  fontSize: 24, fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 32),
             GestureDetector(
@@ -213,7 +239,7 @@ class AmountInputScreenState extends State<AmountInputScreen> {
               },
               child: amountDisplay,
             ),
-            const SizedBox(height: 150),
+            const SizedBox(height: 100),
             SizedBox(
               width: 108,
               height: 44,
