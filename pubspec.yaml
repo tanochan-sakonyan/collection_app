@@ -29,7 +29,6 @@ dependencies:
   tutorial_coach_mark: ^1.2.13
   smooth_page_indicator: ^1.2.1
 
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
