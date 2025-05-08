@@ -333,6 +333,7 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
                 child: TabBarView(
                   controller: _tabController,
                   children: [
+                    // 割り勘
                     ListView.builder(
                       padding: const EdgeInsets.symmetric(horizontal: 44),
                       itemCount: widget.members.length,
@@ -379,6 +380,7 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
                         );
                       },
                     ),
+                    // 金額の調整
                     ListView.builder(
                       padding: const EdgeInsets.only(left: 34, right: 20),
                       itemCount: widget.members.length,
@@ -423,7 +425,9 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
                                               .bodyLarge
                                               ?.copyWith(
                                                 fontSize: 16,
-                                                fontWeight: FontWeight.w400,
+                                                fontWeight: _locked[i]
+                                                    ? FontWeight.w700
+                                                    : FontWeight.w400, // ★変更
                                               ),
                                           onSubmitted: (v) =>
                                               _handleSubmitted(i, v),
