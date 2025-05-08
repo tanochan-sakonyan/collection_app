@@ -1,20 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mr_collection/data/model/payment_status.dart';
-import 'package:mr_collection/provider/tab_titles_provider.dart';
-import 'package:mr_collection/provider/user_provider.dart';
-import 'package:mr_collection/ui/components/dialog/add_event_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/delete_event_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_for_120_and_suggest_official_line_dialog.dart';
-import 'package:mr_collection/ui/components/member_list.dart';
-import 'package:mr_collection/ui/components/tanochan_drawer.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
-import 'package:mr_collection/data/model/freezed/user.dart';
-import 'package:mr_collection/ui/tutorial/tutorial_targets.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
-import 'package:mr_collection/ui/components/event_zero_components.dart';
+
 
 class CheckSelectedEventScreen extends ConsumerStatefulWidget {
   final Event selectedEvent;
@@ -23,20 +11,7 @@ class CheckSelectedEventScreen extends ConsumerStatefulWidget {
   ConsumerState<CheckSelectedEventScreen> createState() => CheckSelectedEventScreenState();
 }
 
-class CheckSelectedEventScreenState extends ConsumerState<CheckSelectedEventScreen>
-    with TickerProviderStateMixin {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  void _addSelectedEvent (Event event) {
-    Navigator.of(context).pop();
-    // Navigator.of(context).push(
-    //   MaterialPageRoute(
-    //     builder: (context) => AddEventDialog(
-    //       user: ref.read(userProvider),
-    //     ),
-    //   ),
-    // );
-  }
+class CheckSelectedEventScreenState extends ConsumerState<CheckSelectedEventScreen> {
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +19,6 @@ class CheckSelectedEventScreenState extends ConsumerState<CheckSelectedEventScre
     final eventName = event.eventName;
 
     return Scaffold(
-      key: _scaffoldKey,
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,

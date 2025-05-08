@@ -5,10 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/constants/base_url.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/data/repository/event_repository.dart';
-import 'package:mr_collection/ui/components/button/toggle_button.dart';
 import 'package:mr_collection/ui/screen/choice_event_screen.dart';
-
-import '../../../data/model/freezed/event.dart';
+import 'package:mr_collection/data/model/freezed/event.dart';
 
 class AddEventDialog extends ConsumerStatefulWidget {
   final String userId;
