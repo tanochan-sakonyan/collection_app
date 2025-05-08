@@ -24,8 +24,11 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
   void initState() {
     super.initState();
     _controller.addListener(() {
-      final text = _controller.text.trim();
-      if (text.length > 9) {
+      final lines = _controller.text
+        .split('\n')
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty);
+      if (lines.any((n) => n.length > 9)) {
         setState(() {
           _errorMessage = '最大9文字まで入力可能です';
         });
@@ -44,41 +47,44 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
   }
 
   Future<void> _createMember() async {
-    final memberName = _controller.text.trim();
-    if (!_isButtonEnabled) return;
+    final rawText = _controller.text;
+    final memberNames = rawText
+        .split('\n')
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .toList();
+
+    if(memberNames.isEmpty){
+      setState(() => _errorMessage = 'メンバーを入力してください');
+      return;
+    }else if(memberNames.any((n) => n.length > 9)){
+      setState(() => _errorMessage = '最大9文字まで入力可能です');
+      return;
+    }else{
+      _errorMessage = null;
+    }
 
     setState(() {
       _isButtonEnabled = false;
-      if (memberName.isEmpty) {
-        _errorMessage = 'メンバーを入力してください';
-      } else if (memberName.length > 9) {
-        _errorMessage = '最大9文字まで入力可能です';
-      } else {
-        _errorMessage = null;
-      }
+      _errorMessage = null;
     });
-
-    if (memberName.isEmpty || memberName.length > 9) {
-      setState(() {
-        _isButtonEnabled = true;
-      });
-      return;
-    }
 
     try {
       await ref
           .read(userProvider.notifier)
-          .createMember(widget.userId, widget.eventId, _controller.text.trim());
-      Future.delayed(const Duration(seconds: 2), () {
-        setState(() {
-          _isButtonEnabled = true;
-        });
-      });
-      Navigator.of(context).pop();
+          .createMembers(widget.userId, widget.eventId, rawText);
+      if (mounted) Navigator.of(context).pop();
     } catch (e) {
       setState(() {
         _errorMessage = 'メンバーの追加に失敗しました';
       });
+    }
+    finally {
+      if (mounted) {
+        setState(() {
+          _isButtonEnabled = true;
+        });
+      }
     }
   }
 
@@ -93,7 +99,7 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
         padding: const EdgeInsets.all(20),
         child: Container(
           color: const Color(0xFFFFFFFF),
-          height: 260,
+          height: 355,
           width: 320,
           child: Column(
             children: [
@@ -109,16 +115,23 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Text(
                     "Name",
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           fontSize: 10,
                           fontWeight: FontWeight.w700,
                         ),
                   ),
+              ),
                 ],
               ),
-              Container(
+              const SizedBox(height: 4),
+          SizedBox(
+            width: 272,
+            height: 220,
+              child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -127,11 +140,20 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
                 ),
                 child: TextField(
                   controller: _controller,
-                  decoration: const InputDecoration(
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 10,
+                  decoration: InputDecoration(
                     border: InputBorder.none,
+                    hintText: "メンバーを改行区切りでまとめて登録できます",
+                    hintStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w300,
+                      color: const Color(0xFF999999)
+                    ),
                   ),
                 ),
               ),
+            ),
               const SizedBox(height: 4),
               Container(
                 height: 20,
@@ -149,47 +171,7 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
                       )
                     : null,
               ),
-              const SizedBox(height: 4),
-              Row(children: [
-                Text(
-                  "LINEグループから自動追加",
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                ),
-                const Spacer(),
-                IconButton(
-                  icon: SvgPicture.asset("assets/icons/line.svg"),
-                  color: const Color(0xFF06C755),
-                  onPressed: () {
-                    //LINE認証申請前の臨時ダイアログ
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 56.0, horizontal: 24.0),
-                        content: Text(
-                          'LINEへの認証申請中のため、\nアップデートをお待ちください。',
-                          textAlign: TextAlign.center,
-                          style:
-                              Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black,
-                                  ),
-                        ),
-                      ),
-                    );
-                    //TODO LINE認証申請が通ったらこちらに戻す
-                    /*showDialog(
-                        context: context,
-                        builder: (context) => const ConfirmationDialog(),
-                      );*/
-                  },
-                ),
-              ]),
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
               SizedBox(
                 width: 272,
                 height: 40,
