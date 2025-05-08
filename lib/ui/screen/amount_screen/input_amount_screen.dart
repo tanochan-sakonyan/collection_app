@@ -7,22 +7,22 @@ import 'dart:ui' show FontFeature;
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/ui/screen/amount_screen/split_amount_screen.dart';
 
-class AmountInputScreen extends StatefulWidget {
+class InputAmountScreen extends StatefulWidget {
   final String eventId;
   final String eventName;
   final List<Member> members;
 
-  const AmountInputScreen(
+  const InputAmountScreen(
       {super.key,
       required this.eventId,
       required this.eventName,
       required this.members});
 
   @override
-  AmountInputScreenState createState() => AmountInputScreenState();
+  InputAmountScreenState createState() => InputAmountScreenState();
 }
 
-class AmountInputScreenState extends State<AmountInputScreen> {
+class InputAmountScreenState extends State<InputAmountScreen> {
   bool _isEditing = false;
 
   late TextEditingController _controller;

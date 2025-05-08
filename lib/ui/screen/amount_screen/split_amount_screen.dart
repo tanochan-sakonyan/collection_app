@@ -208,10 +208,34 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
 
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SvgPicture.asset(
+                'assets/icons/ic_back.svg',
+                width: 44,
+                height: 44,
+              ),
+              Text(
+                '戻る',
+                style: GoogleFonts.notoSansJp(
+                    color: const Color(0xFF76DCC6),
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500),
+              ),
+            ],
+          ),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+      ),
       body: SafeArea(
         child: Column(
           children: [
-            const SizedBox(height: 44),
             Text(
               widget.eventName,
               style: GoogleFonts.notoSansJp(
@@ -221,10 +245,27 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
               ),
             ),
             const SizedBox(height: 28),
-            Text(
-              '合計金額の入力',
-              style: GoogleFonts.notoSansJp(
-                  fontSize: 24, fontWeight: FontWeight.bold),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Spacer(flex: 10),
+                Text(
+                  '個別金額の設定',
+                  style: GoogleFonts.notoSansJp(
+                      fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(width: 4),
+                IconButton(
+                    onPressed: () => {
+                          // TODO: 傾斜ナビを追加
+                        },
+                    icon: SvgPicture.asset(
+                      'assets/icons/question_circle.svg',
+                      width: 24,
+                      height: 24,
+                    )),
+                const Spacer(flex: 8),
+              ],
             ),
             const SizedBox(height: 20),
             Text.rich(
@@ -434,7 +475,7 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
         data: MediaQuery.of(context).copyWith(viewInsets: EdgeInsets.zero),
         child: Padding(
           padding:
-              const EdgeInsets.only(top: 60, bottom: 30, right: 141, left: 141),
+              const EdgeInsets.only(top: 30, bottom: 60, right: 141, left: 141),
           child: SizedBox(
             width: 108,
             height: 40,

@@ -10,7 +10,7 @@ import 'package:mr_collection/ui/components/dialog/delete_member_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/status_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:mr_collection/ui/screen/amount_screen/amount_input_screen.dart';
+import 'package:mr_collection/ui/screen/amount_screen/input_amount_screen.dart';
 import 'dialog/edit_member_name_dialog.dart';
 
 class MemberList extends ConsumerWidget {
@@ -364,7 +364,7 @@ class MemberList extends ConsumerWidget {
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => AmountInputScreen(
+                        builder: (context) => InputAmountScreen(
                           eventId: eventId,
                           eventName: eventName,
                           members: members!,
