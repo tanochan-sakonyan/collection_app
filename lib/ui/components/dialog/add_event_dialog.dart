@@ -6,6 +6,7 @@ import 'package:mr_collection/constants/base_url.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/data/repository/event_repository.dart';
 import 'package:mr_collection/ui/components/button/toggle_button.dart';
+import 'package:mr_collection/ui/screen/choice_event_screen.dart';
 
 class AddEventDialog extends ConsumerStatefulWidget {
   final String userId;
@@ -80,6 +81,17 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
       debugPrint('イベントの追加に失敗しました: $error');
     }
   }
+
+  void _choiceEvent() {
+  Navigator.of(context).pop();
+  Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ChoiceEventScreen(
+          user: ref.read(userProvider),
+          ),
+      ),
+  );
+}
 
   @override
   Widget build(BuildContext context) {
@@ -158,7 +170,6 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: const Color(0xFFE8E8E8)),
                 ),
                 child: Column(
                   children: [
@@ -166,32 +177,47 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                       width: 272,
                       height: 48,
                       child: ListTile(
+                        contentPadding: EdgeInsets.zero,
                         title: Text(
-                            '参加者引継ぎ',
+                            'メンバー引継ぎ',
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                               color: Colors.black
                           ),
                         ),
-                        trailing: ToggleButton(
-                          initialValue: isToggleOn,
-                          onChanged: (bool isOn) {
-                            setState(() {
-                              isToggleOn = isOn;
-                            });
-                          },
+                        trailing: SizedBox(
+                          width: 112,
+                          height: 28,
+                          child: ElevatedButton(
+                          onPressed: _isButtonEnabled ? _choiceEvent : null,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFECECEC),
+                            elevation: 2,
+                            shape: const StadiumBorder(),
+                            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
+                          ),
+                          child: Text(
+                            'イベントを選択',
+                            maxLines: 1,
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black
+                            ),
+                          ),
                         ),
                       ),
+                      ),
                     ),
-                    const Divider(height: 1, color: Color(0xFFE8E8E8)),
                     SizedBox(
                       width: 272,
                       height: 48,
                       child: ListTile(
+                        contentPadding: EdgeInsets.zero,
                         dense: true,
                         title: Text(
-                          'LINEから参加者取得',
+                          'LINEグループから追加',
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium
