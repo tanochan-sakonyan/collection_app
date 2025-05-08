@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'dart:ui' show FontFeature;
 
 import 'package:mr_collection/data/model/freezed/member.dart';
+import 'package:mr_collection/data/model/payment_status.dart';
 
 class SplitAmountScreen extends StatefulWidget {
   final String eventName;
@@ -33,9 +34,16 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
   @override
   void initState() {
     super.initState();
-    final evenShare = (widget.amount / widget.members.length).ceil();
+    final activeMembers =
+        widget.members.where((m) => m.status != PaymentStatus.absence).toList();
+    final evenShare = (widget.amount / activeMembers.length).ceil();
     _controllers = widget.members
-        .map((_) => TextEditingController(text: _numFmt.format(evenShare)))
+        .map(
+          (m) => TextEditingController(
+            text: _numFmt.format(
+                m.status == PaymentStatus.absence ? 0 : evenShare), // ★修正
+          ),
+        )
         .toList();
     _focusNodes = List.generate(
       widget.members.length,
@@ -49,7 +57,8 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
         return node;
       },
     );
-    _locked = List<bool>.filled(widget.members.length, false);
+    _locked =
+        widget.members.map((m) => m.status == PaymentStatus.absence).toList();
     _tabController = TabController(length: 2, vsync: this);
   }
 
@@ -77,14 +86,20 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
     final Map<String, int> amountMap = {};
 
     if (_tabController.index == 0) {
-      final evenShare = (widget.amount / widget.members.length).ceil();
+      final activeMembers = widget.members
+          .where((m) => m.status != PaymentStatus.absence)
+          .toList();
+      final evenShare = (widget.amount / activeMembers.length).ceil();
       for (final m in widget.members) {
-        amountMap[m.memberId] = evenShare;
+        amountMap[m.memberId] =
+            m.status == PaymentStatus.absence ? 0 : evenShare;
       }
     } else if (_tabController.index == 1) {
       for (var i = 0; i < widget.members.length; i++) {
         amountMap[widget.members[i].memberId] =
-            int.tryParse(_controllers[i].text.replaceAll(',', '')) ?? 0;
+            widget.members[i].status == PaymentStatus.absence // ★修正
+                ? 0
+                : int.tryParse(_controllers[i].text.replaceAll(',', '')) ?? 0;
       }
     }
 
@@ -92,12 +107,10 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
   }
 
   void _handleSubmitted(int index, String rawText) {
-    if (_tabController.index != 1) _tabController.animateTo(1);
-
     int input = int.tryParse(rawText.replaceAll(',', '')) ?? 0;
-
     int lockedSum = 0;
     for (int i = 0; i < widget.members.length; i++) {
+      if (widget.members[i].status == PaymentStatus.absence) continue;
       if (_locked[i] && i != index) {
         lockedSum +=
             int.tryParse(_controllers[i].text.replaceAll(',', '')) ?? 0;
@@ -137,6 +150,7 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
   void _recalculateAmounts() {
     int lockedSum = 0;
     for (int i = 0; i < widget.members.length; i++) {
+      if (widget.members[i].status == PaymentStatus.absence) continue;
       if (_locked[i]) {
         lockedSum +=
             int.tryParse(_controllers[i].text.replaceAll(',', '')) ?? 0;
@@ -150,6 +164,7 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
 
     final adjustables = <int>[];
     for (int i = 0; i < widget.members.length; i++) {
+      if (widget.members[i].status == PaymentStatus.absence) continue;
       if (!_locked[i]) adjustables.add(i);
     }
 
@@ -157,6 +172,7 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
 
     if (adjustables.isEmpty) {
       for (int i = widget.members.length - 1; i >= 0; i--) {
+        if (widget.members[i].status == PaymentStatus.absence) continue;
         if (_locked[i]) {
           int val = int.tryParse(_controllers[i].text.replaceAll(',', '')) ?? 0;
           _controllers[i].text = _numFmt.format(val + remaining);
@@ -204,7 +220,10 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
 
   @override
   Widget build(BuildContext context) {
-    final evenShare = (widget.amount / widget.members.length).ceil();
+    final activeCount =
+        widget.members.where((m) => m.status != PaymentStatus.absence).length;
+    final evenShare =
+        activeCount == 0 ? 0 : (widget.amount / activeCount).ceil();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -344,32 +363,61 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
                             ListTile(
                               minTileHeight: 44,
                               title: Text(m.memberName,
-                                  style:
-                                      Theme.of(context).textTheme.bodyMedium),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                        color: m.status == PaymentStatus.absence
+                                            ? const Color(0xFFC0C0C0)
+                                            : Colors.black,
+                                      )),
                               trailing: IntrinsicWidth(
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      _numFmt.format(evenShare),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge
-                                          ?.copyWith(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.w500),
-                                    ),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      '円',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge
-                                          ?.copyWith(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500),
-                                    ),
-                                  ],
-                                ),
+                                child: m.status == PaymentStatus.absence
+                                    ? Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "欠席",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium
+                                                ?.copyWith(
+                                                  fontWeight: FontWeight.w500,
+                                                  color:
+                                                      const Color(0xFFC0C0C0),
+                                                ),
+                                          ),
+                                          const SizedBox(
+                                            width: 24,
+                                          ),
+                                        ],
+                                      )
+                                    : Row(
+                                        children: [
+                                          Text(
+                                            _numFmt.format(evenShare),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge
+                                                ?.copyWith(
+                                                    fontSize: 20,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            '円',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge
+                                                ?.copyWith(
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                          ),
+                                        ],
+                                      ),
                               ),
                             ),
                             const Divider(
@@ -391,73 +439,103 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
                             ListTile(
                               minTileHeight: 44,
                               title: Text(m.memberName,
-                                  style:
-                                      Theme.of(context).textTheme.bodyMedium),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                        color: m.status == PaymentStatus.absence
+                                            ? const Color(0xFFC0C0C0)
+                                            : Colors.black,
+                                      )),
                               trailing: SizedBox(
                                 width: 140,
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: SizedBox(
-                                        height: 28,
-                                        child: TextField(
-                                          controller: _controllers[i],
-                                          focusNode: _focusNodes[i],
-                                          keyboardType: TextInputType.number,
-                                          textAlign: TextAlign.right,
-                                          inputFormatters: [
-                                            _buildAmountFormatter()
-                                          ],
-                                          decoration: InputDecoration(
-                                            isCollapsed: true,
-                                            contentPadding:
-                                                const EdgeInsets.symmetric(
-                                                    vertical: 8),
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(6),
-                                              borderSide: const BorderSide(
-                                                  color: Color(0xFFC6C6C8)),
+                                child: m.status == PaymentStatus.absence
+                                    ? Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "欠席",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium
+                                                ?.copyWith(
+                                                  fontWeight: FontWeight.w500,
+                                                  color:
+                                                      const Color(0xFFC0C0C0),
+                                                ),
+                                          ),
+                                        ],
+                                      )
+                                    : Row(
+                                        children: [
+                                          Expanded(
+                                            child: SizedBox(
+                                              height: 28,
+                                              child: TextField(
+                                                controller: _controllers[i],
+                                                focusNode: _focusNodes[i],
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                textAlign: TextAlign.right,
+                                                inputFormatters: [
+                                                  _buildAmountFormatter()
+                                                ],
+                                                decoration: InputDecoration(
+                                                  isCollapsed: true,
+                                                  contentPadding:
+                                                      const EdgeInsets
+                                                          .symmetric(
+                                                          vertical: 8),
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            6),
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            color: Color(
+                                                                0xFFC6C6C8)),
+                                                  ),
+                                                ),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyLarge
+                                                    ?.copyWith(
+                                                      fontSize: 16,
+                                                      fontWeight: _locked[i]
+                                                          ? FontWeight.w700
+                                                          : FontWeight
+                                                              .w400, // ★変更
+                                                    ),
+                                                onSubmitted: (v) =>
+                                                    _handleSubmitted(i, v),
+                                              ),
                                             ),
                                           ),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge
-                                              ?.copyWith(
-                                                fontSize: 16,
-                                                fontWeight: _locked[i]
-                                                    ? FontWeight.w700
-                                                    : FontWeight.w400, // ★変更
-                                              ),
-                                          onSubmitted: (v) =>
-                                              _handleSubmitted(i, v),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 6),
-                                    Text(
-                                      '円',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge
-                                          ?.copyWith(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
+                                          const SizedBox(width: 6),
+                                          Text(
+                                            '円',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge
+                                                ?.copyWith(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
                                           ),
-                                    ),
-                                    const SizedBox(width: 24),
-                                    GestureDetector(
-                                      onTap: () => _toggleLock(i),
-                                      child: SvgPicture.asset(
-                                        _locked[i]
-                                            ? 'assets/icons/ic_rock_close.svg'
-                                            : 'assets/icons/ic_rock_open.svg',
-                                        width: 24,
-                                        height: 24,
+                                          const SizedBox(width: 24),
+                                          GestureDetector(
+                                            onTap: () => _toggleLock(i),
+                                            child: SvgPicture.asset(
+                                              _locked[i]
+                                                  ? 'assets/icons/ic_rock_close.svg'
+                                                  : 'assets/icons/ic_rock_open.svg',
+                                              width: 24,
+                                              height: 24,
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                  ],
-                                ),
                               ),
                             ),
                             const Divider(
