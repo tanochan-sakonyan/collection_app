@@ -8,6 +8,8 @@ import 'package:mr_collection/data/repository/event_repository.dart';
 import 'package:mr_collection/ui/components/button/toggle_button.dart';
 import 'package:mr_collection/ui/screen/choice_event_screen.dart';
 
+import '../../../data/model/freezed/event.dart';
+
 class AddEventDialog extends ConsumerStatefulWidget {
   final String userId;
 
@@ -22,6 +24,8 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
   String? _errorMessage;
   bool _isButtonEnabled = true;
   bool isToggleOn = false;
+  Event? _selectedEvent;
+  bool get _isTransferMode => _selectedEvent != null;
 
   final EventRepository eventRepository = EventRepository(baseUrl: baseUrl);
 
@@ -50,7 +54,6 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
 
   Future<void> _createEvent() async {
     final eventName = _controller.text.trim();
-    // final isCopy = isToggleOn;
     final userId = ref.read(userProvider)!.userId;
 
     if (!_isButtonEnabled) return;
@@ -74,23 +77,31 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
     }
 
     try {
+      if(_isTransferMode){
+        await ref.read(userProvider.notifier).createEventAndTransferMembers(_selectedEvent!.eventId, eventName, userId);
+      }else{
+        await ref.read(userProvider.notifier).createEvent(eventName, userId);
+      }
       debugPrint('イベント名: $eventName, ユーザーID: $userId');
-      await ref.read(userProvider.notifier).createEvent(eventName, userId);
       Navigator.of(context).pop();
     } catch (error) {
       debugPrint('イベントの追加に失敗しました: $error');
     }
   }
 
-  void _choiceEvent() {
-  Navigator.of(context).pop();
-  Navigator.of(context).push(
+  Future<void> _choiceEvent() async {
+  final picked = await Navigator.of(context).push<Event>(
       MaterialPageRoute(
-        builder: (context) => ChoiceEventScreen(
+        builder: (_) => ChoiceEventScreen(
           user: ref.read(userProvider),
           ),
       ),
   );
+  if(picked != null){
+    setState(() {
+      _selectedEvent = picked;
+      });
+  }
 }
 
   @override
@@ -192,18 +203,22 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                           child: ElevatedButton(
                           onPressed: _isButtonEnabled ? _choiceEvent : null,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFECECEC),
+                            backgroundColor: _isTransferMode
+                                ? const Color(0xFF76DCC6)
+                                : const Color(0xFFECECEC),
                             elevation: 2,
                             shape: const StadiumBorder(),
                             padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
                           ),
                           child: Text(
-                            'イベントを選択',
+                            _selectedEvent?.eventName ?? 'イベントを選択',
                             maxLines: 1,
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w500,
-                                color: Colors.black
+                                color: _isTransferMode
+                                ? Colors.white
+                                : Colors.black,
                             ),
                           ),
                         ),

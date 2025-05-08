@@ -29,13 +29,15 @@ class ChoiceEventScreen extends ConsumerStatefulWidget {
 class ChoiceEventScreenState extends ConsumerState<ChoiceEventScreen>
     with TickerProviderStateMixin {
 
-  void _checkSelectedEvent (Event event) {
-    Navigator.of(context).pop();
-    Navigator.of(context).push(
+  Future<void> _checkSelectedEvent (Event event) async {
+    final picked = await Navigator.of(context).push<Event>(
       MaterialPageRoute(
           builder: (_) => CheckSelectedEventScreen(selectedEvent: event)
       ),
     );
+    if(picked != null){
+      Navigator.of(context).pop(picked);
+    }
 }
 
   @override
@@ -97,43 +99,41 @@ class ChoiceEventScreenState extends ConsumerState<ChoiceEventScreen>
               ),
               const SizedBox(height: 32),
               Expanded(
-                child: ListView.separated(
+                child: ListView.builder(
                   itemCount: events.length,
-                  separatorBuilder: (context, index) => const Divider(
-                    color: Color(0xFFE8E8E8),
-                    thickness: 1,
-                    height: 1,
-                  ),
                   itemBuilder: (context, index) {
                     final event = events[index];
-                    return Container(
-                      height: 44,                           // ★ 各タイルを44pxの高さに固定
-                      alignment: Alignment.centerLeft,
-                      child: ListTile(
-                        title: Text(
-                          event.eventName,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.copyWith(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
+                    return Column(
+                      children: [
+                      SizedBox(
+                        height: 44,
+                        child: ListTile(
+                          title: Text(
+                            event.eventName,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
+                          trailing: SizedBox(
+                            width: 16, height: 16,
+                            child: SvgPicture.asset('assets/icons/disclosure_indicator.svg'),
+                          ),
+                          onTap: () => _checkSelectedEvent(event)
                         ),
-                        trailing: SizedBox(
-                          width: 16, height: 16,
-                          child: SvgPicture.asset('assets/icons/disclosure_indicator.svg'),
-                        ),
-                        onTap: () => _checkSelectedEvent(event)
                       ),
+                      const Divider(
+                        color: Color(0xFFE8E8E8),
+                        thickness: 1,
+                        height: 1,
+                      ),
+                      ],
                     );
                   },
                 )
-              ),
-              const Divider(
-                color: Color(0xFFE8E8E8),
-                thickness: 1,
-                height: 1,
               ),
             ]
         ),

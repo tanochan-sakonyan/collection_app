@@ -141,33 +141,37 @@ class CheckSelectedEventScreenState extends ConsumerState<CheckSelectedEventScre
               bottomLeft: Radius.circular(12),
               bottomRight: Radius.circular(12),
             ),
-            child: ListView.separated(
+            child: ListView.builder(
               shrinkWrap: true,
               itemCount: event.members.length,
-              separatorBuilder: (context, index) => const Divider(
-                color: Color(0xFFE8E8E8),
-                thickness: 1,
-                height: 1,
-              ),
               itemBuilder: (context, index) {
                 final member = event.members[index];
-                return Padding(
-                  padding:
-                  const EdgeInsets.only(left: 16, right: 16),
-                  child: SizedBox(
-                    height: 44,
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        member.memberName,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black,
+                return Column(
+                  children: [
+                    Padding(
+                      padding:
+                      const EdgeInsets.only(left: 16, right: 16),
+                      child: SizedBox(
+                        height: 44,
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            member.memberName,
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                    const Divider(
+                      color: Color(0xFFE8E8E8),
+                      thickness: 1,
+                      height: 1,
+                    ),
+                  ],
                 );
               },
             ),
@@ -182,12 +186,15 @@ class CheckSelectedEventScreenState extends ConsumerState<CheckSelectedEventScre
           width: 240,
           height: 40,
           child: ElevatedButton(
-            //TODO 選択したイベントをchoiceEventScreenに返す ,
-            onPressed: () => _addSelectedEvent(event),
+            onPressed: (){
+              Navigator.of(context).pop(event);
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF76DCC6),
               elevation: 2,
-              shape: const StadiumBorder(),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
             child: Text(
               'このメンバーを引継ぐ',
