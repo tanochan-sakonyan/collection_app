@@ -29,7 +29,7 @@ class CheckSelectedEventScreenState extends ConsumerState<CheckSelectedEventScre
           padding: EdgeInsets.zero,
           icon: SizedBox(
             width: 21, height: 21,
-            child: SvgPicture.asset('assets/icons/back.svg'),
+            child: SvgPicture.asset('assets/icons/ic_back.svg'),
           ),),
         titleSpacing: 0,
         title: GestureDetector(

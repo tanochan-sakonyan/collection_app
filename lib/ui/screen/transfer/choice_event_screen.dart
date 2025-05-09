@@ -3,12 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
-import 'package:mr_collection/data/model/freezed/user.dart';
-import 'package:mr_collection/ui/screen/check_selected_event_screen.dart';
+import 'package:mr_collection/ui/screen/transfer/check_selected_event_screen.dart';
 
 class ChoiceEventScreen extends ConsumerStatefulWidget {
-  const ChoiceEventScreen({super.key, this.user});
-  final User? user;
+  const ChoiceEventScreen({super.key});
   @override
   ConsumerState<ChoiceEventScreen> createState() => ChoiceEventScreenState();
 }
@@ -42,7 +40,7 @@ class ChoiceEventScreenState extends ConsumerState<ChoiceEventScreen> {
             padding: EdgeInsets.zero,
             icon: SizedBox(
               width: 21, height: 21,
-              child: SvgPicture.asset('assets/icons/back.svg'),
+              child: SvgPicture.asset('assets/icons/ic_back.svg'),
             ),),
           titleSpacing: 0,
           title: GestureDetector(
@@ -106,7 +104,7 @@ class ChoiceEventScreenState extends ConsumerState<ChoiceEventScreen> {
                           ),
                           trailing: SizedBox(
                             width: 16, height: 16,
-                            child: SvgPicture.asset('assets/icons/disclosure_indicator.svg'),
+                            child: SvgPicture.asset('assets/icons/ic_next.svg'),
                           ),
                           onTap: () => _checkSelectedEvent(event)
                         ),

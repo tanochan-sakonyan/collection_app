@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/constants/base_url.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/data/repository/event_repository.dart';
-import 'package:mr_collection/ui/screen/choice_event_screen.dart';
+import 'package:mr_collection/ui/screen/transfer/choice_event_screen.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 
 class AddEventDialog extends ConsumerStatefulWidget {
@@ -21,7 +21,6 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
   final TextEditingController _controller = TextEditingController();
   String? _errorMessage;
   bool _isButtonEnabled = true;
-  bool isToggleOn = false;
   Event? _selectedEvent;
   bool get _isTransferMode => _selectedEvent != null;
 
@@ -90,9 +89,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
   Future<void> _choiceEvent() async {
   final picked = await Navigator.of(context).push<Event>(
       MaterialPageRoute(
-        builder: (_) => ChoiceEventScreen(
-          user: ref.read(userProvider),
-          ),
+        builder: (_) => const ChoiceEventScreen(),
       ),
   );
   if(picked != null){
