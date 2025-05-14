@@ -13,6 +13,7 @@ import 'package:mr_collection/ui/screen/terms_of_service_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:http/http.dart' as http;
+import 'package:google_fonts/google_fonts.dart';
 
 final checkboxProvider = StateProvider<bool>((ref) => false);
 
@@ -44,8 +45,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(height: 100),
-            const Text("集金くん",
-                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+            Text("集金くん",
+                style: GoogleFonts.roboto(fontSize: 32, fontWeight: FontWeight.bold),),
             const SizedBox(height: 100),
             SizedBox(
               width: 300,
@@ -80,8 +81,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           _updateCurrentLoginMedia('line');
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  HomeScreen(title: '集金くん', user: user),
+                              builder: (context) => HomeScreen(user: user),
                             ),
                           );
                         }
@@ -90,7 +90,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       }
                     } else {
                       try {
-                        final result = await LineSDK.instance.login();
+                        final result = await LineSDK.instance
+                            .login(option: LoginOption(false, 'aggressive'));
                         final accessToken = result.accessToken.value;
                         ref.read(accessTokenProvider.notifier).state =
                             accessToken;
@@ -112,8 +113,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           _updateCurrentLoginMedia('line');
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  HomeScreen(title: '集金くん', user: user),
+                              builder: (context) => HomeScreen(user: user),
                             ),
                           );
                         }
@@ -136,9 +136,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       'assets/icons/line-login.svg',
                     ),
                     const SizedBox(width: 40),
-                    const Text(
+                    Text(
                       'LINEでログイン',
-                      style: TextStyle(
+                      style: GoogleFonts.notoSansJp(
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.bold),
@@ -185,8 +185,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             _updateCurrentLoginMedia('apple');
                             Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    HomeScreen(title: '集金くん', user: user),
+                                builder: (context) => HomeScreen(user: user),
                               ),
                             );
                           }
@@ -241,7 +240,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        HomeScreen(title: '集金くん', user: user),
+                                        HomeScreen(user: user),
                                   ),
                                 );
                               }
@@ -290,9 +289,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       height: 24,
                     ),
                     const SizedBox(width: 40),
-                    const Text(
+                    Text(
                       'Appleでサインイン',
-                      style: TextStyle(
+                      style: GoogleFonts.notoSansJp(
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.bold),
@@ -320,12 +319,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           builder: (context) => const TermsOfServiceScreen()),
                     );
                   },
-                  child: const Text(
+                  child: Text(
                     '利用規約',
-                    style: TextStyle(color: Colors.blue, fontSize: 14),
+                    style: GoogleFonts.notoSansJp(color: Colors.blue, fontSize: 14),
                   ),
                 ),
-                const Text(' と '),
+                Text(' と ', style: GoogleFonts.notoSansJp(color: Colors.black, fontSize: 14)),
                 GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -334,12 +333,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           builder: (context) => const PrivacyPolicyScreen()),
                     );
                   },
-                  child: const Text(
+                  child: Text(
                     'プライバシーポリシー',
-                    style: TextStyle(color: Colors.blue, fontSize: 14),
+                    style: GoogleFonts.notoSansJp(color: Colors.blue, fontSize: 14),
                   ),
                 ),
-                const Text(' に同意します。'),
+                Text(' に同意します。', style: GoogleFonts.notoSansJp(color: Colors.black, fontSize: 14)),
               ],
             ),
           ],

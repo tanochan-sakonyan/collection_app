@@ -8,5 +8,5 @@ final tabTitlesProvider = Provider<List<String>>((ref) {
     return [];
   }
 
-  return user.events.map((event) => event.eventName).toList();
+  return user.events.map((event) => event.eventId).toList();
 });

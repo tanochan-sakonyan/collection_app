@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_line_sdk/flutter_line_sdk.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/ui/screen/login_screen.dart';
 
 class LogoutDialog extends StatelessWidget {
@@ -25,8 +26,8 @@ class LogoutDialog extends StatelessWidget {
           children: [
             Text(
               'ログアウトしますか？',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.w500,
                 fontSize: 16,
                 color: Colors.black,
               ),
@@ -50,7 +51,11 @@ class LogoutDialog extends StatelessWidget {
                     ),
                     child: Text(
                       'いいえ',
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style: GoogleFonts.notoSansJp(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                 ),
@@ -69,7 +74,11 @@ class LogoutDialog extends StatelessWidget {
                     ),
                     child: Text(
                       'はい',
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style: GoogleFonts.notoSansJp(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                 ),

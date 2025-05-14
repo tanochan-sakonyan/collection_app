@@ -2,7 +2,7 @@ name: mr_collection
 description: "集金くん"
 publish_to: 'none'
 
-version: 1.1.0
+version: 1.2.0
 
 environment:
   sdk: ^3.5.3
@@ -14,6 +14,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   google_fonts: ^6.2.1
   flutter_riverpod: ^2.6.1
+  flutter_slidable: ^3.1.0
   flutter_svg: ^2.0.14
   freezed_annotation: ^2.4.1
   json_annotation: ^4.9.0
@@ -22,6 +23,10 @@ dependencies:
   path_provider: ^2.0.11
   sign_in_with_apple: ^6.1.3
   url_launcher: ^6.1.10
+  webview_flutter: ^4.11.0
+  auto_size_text: ^3.0.0
+  tutorial_coach_mark: ^1.2.13
+  smooth_page_indicator: ^1.2.1
   flutter_line_sdk:
     path: packages/flutter_line_sdk
 
@@ -45,6 +50,7 @@ flutter_icons:
 
 flutter:
   assets: 
+    - assets/icons/reverse_icon.svg
     - assets/icons/filter.svg
     - assets/icons/circle_plus.svg
     - assets/icons/settings.svg
@@ -61,10 +67,57 @@ flutter:
     - assets/icons/user-add.svg
     - assets/icons/chat_bubble.svg
     - assets/icons/yen.svg
+    - assets/icons/question_circle.svg
+    - assets/icons/suggest_official_line.svg
+    - assets/icons/ic_check_badge_green.svg
+    - assets/icons/ic_check_circle_teal.svg
     - assets/icons/drawer_yen.svg
     - assets/icons/drawer_star.svg
     - assets/icons/drawer_key.svg
     - assets/icons/drawer_file.svg
+    - assets/icons/drawer_envelope.svg
     - assets/icons/drawer_delete_account.svg
+
+  fonts:
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat/static/Montserrat-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/Montserrat/static/Montserrat-ExtraLight.ttf
+          weight: 200
+        - asset: assets/fonts/Montserrat/static/Montserrat-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Montserrat/static/Montserrat-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Montserrat/static/Montserrat-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Montserrat/static/Montserrat-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Montserrat/static/Montserrat-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Montserrat/static/Montserrat-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/Montserrat/static/Montserrat-Black.ttf
+          weight: 900
+    - family: Noto Sans JP
+      fonts:
+        - asset: assets/fonts/Noto_Sans_JP/static/NotoSansJP-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/Noto_Sans_JP/static/NotoSansJP-ExtraLight.ttf
+          weight: 200
+        - asset: assets/fonts/Noto_Sans_JP/static/NotoSansJP-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Noto_Sans_JP/static/NotoSansJP-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Noto_Sans_JP/static/NotoSansJP-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Noto_Sans_JP/static/NotoSansJP-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Noto_Sans_JP/static/NotoSansJP-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Noto_Sans_JP/static/NotoSansJP-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/Noto_Sans_JP/static/NotoSansJP-Black.ttf
+          weight: 900
 
   uses-material-design: true

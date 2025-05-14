@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
@@ -7,13 +8,28 @@ import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/add_member_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/delete_member_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/status_dialog.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'dialog/edit_member_name_dialog.dart';
 
 class MemberList extends ConsumerWidget {
   final List<Member>? members;
   final String eventId;
 
-  const MemberList({super.key, required this.members, required this.eventId});
+  final GlobalKey? memberAddKey;
+  final GlobalKey? slidableKey;
+  final GlobalKey? sortKey;
+  final GlobalKey? fabKey;
 
+  const MemberList({
+    super.key,
+    required this.members,
+    required this.eventId,
+    this.memberAddKey,
+    this.slidableKey,
+    this.sortKey,
+    this.fabKey,
+  });
   Future<void> _updateMemberStatus(WidgetRef ref, String userId, String eventId,
       String memberId, int? status) async {
     try {
@@ -64,11 +80,27 @@ class MemberList extends ConsumerWidget {
                       child: Row(
                         children: [
                           const SizedBox(width: 24),
-                          const Text('メンバー'),
+                          Text(
+                            'メンバー',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall
+                                ?.copyWith(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black),
+                          ),
                           const Spacer(),
-                          const Text('支払い状況'),
+                          Text(
+                            '支払い状況',
+                            style: GoogleFonts.notoSansJp(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black),
+                          ),
                           const SizedBox(width: 3),
                           GestureDetector(
+                            key: sortKey,
                             onTap: () {
                               ref
                                   .read(userProvider.notifier)
@@ -80,70 +112,159 @@ class MemberList extends ConsumerWidget {
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.4,
-                      child: ListView.builder(
-                        itemCount: members?.length,
-                        itemBuilder: (context, index) {
-                          final member = members?[index];
-                          return Padding(
-                            padding: const EdgeInsets.only(left: 16, right: 16),
-                            child: Column(
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) => StatusDialog(
-                                        userId: ref.read(userProvider)!.userId,
-                                        eventId: eventId.toString(),
-                                        memberId: member!.memberId,
-                                        member: member.memberName,
-                                        onStatusChange: (String userId,
-                                            String eventId,
-                                            String memberId,
-                                            int status) {
-                                          _updateMemberStatus(ref, userId,
-                                              eventId, memberId, status);
-                                        },
-                                      ),
-                                    );
-                                  },
-                                  onLongPress: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) => DeleteMemberDialog(
-                                        userId: ref.read(userProvider)!.userId,
-                                        eventId: eventId,
-                                        memberId: member!.memberId,
-                                      ),
-                                    );
-                                  },
-                                  child: ListTile(
-                                    minTileHeight: 32,
-                                    title: (member?.memberName != null)
-                                        ? Text(
-                                            member!.memberName,
-                                            style: TextStyle(
-                                              color: member.status ==
-                                                      PaymentStatus.absence
-                                                  ? Colors.grey
-                                                  : Colors.black,
+                    ClipRect(
+                      child: SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.4,
+                        child: SlidableAutoCloseBehavior(
+                          child: ListView.builder(
+                            itemCount: members?.length,
+                            itemBuilder: (context, index) {
+                              final member = members?[index];
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 16, right: 16),
+                                child: Column(
+                                  children: [
+                                    Slidable(
+                                      key: ValueKey(member!.memberId),
+                                      endActionPane: ActionPane(
+                                        motion: const ScrollMotion(),
+                                        extentRatio: 0.52,
+                                        children: [
+                                          CustomSlidableAction(
+                                            onPressed: (context) {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) =>
+                                                    EditMemberNameDialog(
+                                                  userId: ref
+                                                      .read(userProvider)!
+                                                      .userId,
+                                                  eventId: eventId,
+                                                  memberId: member.memberId,
+                                                  currentName:
+                                                      member.memberName,
+                                                ),
+                                              );
+                                            },
+                                            backgroundColor: Colors.grey,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                const SizedBox(height: 4),
+                                                AutoSizeText(
+                                                  '編集',
+                                                  maxLines: 1,
+                                                  style: GoogleFonts.inter(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          )
-                                        : null,
-                                    trailing: _buildStatusIcon(member?.status),
-                                  ),
+                                          ),
+                                          CustomSlidableAction(
+                                            onPressed: (context) {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) =>
+                                                    DeleteMemberDialog(
+                                                  userId: ref
+                                                      .read(userProvider)!
+                                                      .userId,
+                                                  eventId: eventId,
+                                                  memberId: member.memberId,
+                                                ),
+                                              );
+                                            },
+                                            backgroundColor: Colors.red,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                const SizedBox(height: 4),
+                                                AutoSizeText(
+                                                  '削除',
+                                                  maxLines: 1,
+                                                  style: GoogleFonts.inter(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Container(
+                                        key: (index == 0) ? slidableKey : null,
+                                        child: ListTile(
+                                          minTileHeight: 44,
+                                          title: (member.memberName != null)
+                                              ? Text(
+                                                  member.memberName,
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium
+                                                      ?.copyWith(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: member.status ==
+                                                                PaymentStatus
+                                                                    .absence
+                                                            ? Colors.grey
+                                                            : Colors.black,
+                                                      ),
+                                                )
+                                              : null,
+                                          trailing:
+                                              _buildStatusIcon(member.status),
+                                          onTap: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  StatusDialog(
+                                                userId: ref
+                                                    .read(userProvider)!
+                                                    .userId,
+                                                eventId: eventId.toString(),
+                                                memberId: member.memberId,
+                                                member: member.memberName,
+                                                onStatusChange: (String userId,
+                                                    String eventId,
+                                                    String memberId,
+                                                    int status) {
+                                                  _updateMemberStatus(
+                                                      ref,
+                                                      userId,
+                                                      eventId,
+                                                      memberId,
+                                                      status);
+                                                },
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    const Divider(
+                                      thickness: 1,
+                                      height: 1,
+                                      color: Color(0xFFE8E8E8),
+                                    ),
+                                  ],
                                 ),
-                                const Divider(
-                                  thickness: 1,
-                                  height: 1,
-                                  color: Color(0xFFE8E8E8),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
+                              );
+                            },
+                          ),
+                        ),
                       ),
                     ),
                     const Divider(
@@ -196,6 +317,7 @@ class MemberList extends ConsumerWidget {
                               ),
                             ),
                             child: Row(
+                              key: memberAddKey,
                               children: [
                                 SizedBox(
                                     height: 24,
@@ -209,6 +331,8 @@ class MemberList extends ConsumerWidget {
                                       .textTheme
                                       .bodySmall
                                       ?.copyWith(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
                                         color: Colors.black,
                                       ),
                                 ),
@@ -233,7 +357,11 @@ class MemberList extends ConsumerWidget {
                     width: 60,
                     child: Text(
                       "未払い",
-                      style: Theme.of(context).textTheme.bodyLarge,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black,
+                          ),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -268,9 +396,16 @@ class MemberList extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(width: 4),
-                  const Text("・・・・・・"),
-                  const SizedBox(width: 26),
-                  Text("$unpaidCount人"),
+                  const Text("・・・・・"),
+                  const SizedBox(width: 20),
+                  Text(
+                    "$unpaidCount人",
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
+                        ),
+                  ),
                 ]),
               ),
               const SizedBox(height: 20),
@@ -282,7 +417,11 @@ class MemberList extends ConsumerWidget {
                     width: 60,
                     child: Text(
                       "支払済",
-                      style: Theme.of(context).textTheme.bodyLarge,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black,
+                          ),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -317,9 +456,16 @@ class MemberList extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(width: 4),
-                  const Text("・・・・・・"),
-                  const SizedBox(width: 26),
-                  Text("$attendanceCount人"),
+                  const Text("・・・・・"),
+                  const SizedBox(width: 20),
+                  Text(
+                    "$attendanceCount人",
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
+                        ),
+                  ),
                 ]),
               ),
             ],
@@ -331,6 +477,7 @@ class MemberList extends ConsumerWidget {
               height: 60,
               width: 60,
               child: FloatingActionButton(
+                key: fabKey,
                 backgroundColor: const Color(0xFFBABABA),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(48),
@@ -338,20 +485,25 @@ class MemberList extends ConsumerWidget {
                 onPressed: () {
                   showDialog(
                     context: context,
-                    builder: (context) => const AlertDialog(
-                      contentPadding: EdgeInsets.symmetric(
+                    builder: (context) => AlertDialog(
+                      contentPadding: const EdgeInsets.symmetric(
                           vertical: 56.0, horizontal: 24.0),
                       content: Text(
-                        'LINEへの認証申請中のため、\n機能解禁までしばらくお待ちください',
+                        'LINEへの認証申請中のため、\nアップデートをお待ちください。',
                         textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            ),
                       ),
                     ),
                   );
                   //TODO LINE認証申請が通ったらこちらに戻す
                   /*showDialog(
-                    context: context,
-                    builder: (context) => const ConfirmationDialog(),
-                  );*/
+                context: context,
+                builder: (context) => const ConfirmationDialog(),
+              );*/
                 },
                 child: Center(
                   child: Stack(
