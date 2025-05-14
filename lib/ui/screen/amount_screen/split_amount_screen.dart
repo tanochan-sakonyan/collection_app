@@ -8,6 +8,61 @@ import 'dart:ui' show FontFeature;
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 
+class _TabPill extends StatelessWidget {
+  const _TabPill({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: SizedBox(
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          height: 28,
+          decoration: BoxDecoration(
+            color: selected ? const Color(0xFF75DCC6) : Colors.white,
+            borderRadius: BorderRadius.circular(48),
+            boxShadow: selected
+                ? []
+                : [
+                    const BoxShadow(
+                      blurRadius: 4,
+                      offset: Offset(0, 2),
+                      color: Color(0x1A000000),
+                    ),
+                  ],
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(48),
+              onTap: onTap,
+              child: Center(
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    fontFamily: 'NotoSansJP',
+                    fontSize: 13,
+                    fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                    color: selected ? Colors.white : Colors.black,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class SplitAmountScreen extends StatefulWidget {
   final String eventName;
   final int amount;
@@ -30,6 +85,7 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
   late List<bool> _locked;
   late TabController _tabController;
   final _numFmt = NumberFormat.decimalPattern();
+  late int _currentTab;
 
   @override
   void initState() {
@@ -60,6 +116,12 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
     _locked =
         widget.members.map((m) => m.status == PaymentStatus.absence).toList();
     _tabController = TabController(length: 2, vsync: this);
+    _currentTab = 0;
+    _tabController.addListener(() {
+      if (_currentTab != _tabController.index && mounted) {
+        setState(() => _currentTab = _tabController.index);
+      }
+    });
   }
 
   @override
@@ -298,48 +360,30 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
-            Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFFE5E5EA),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              margin: const EdgeInsets.symmetric(horizontal: 16),
-              child: SizedBox(
-                width: 370,
-                height: 32,
-                child: TabBar(
-                  controller: _tabController,
-                  indicatorPadding:
-                      const EdgeInsets.symmetric(horizontal: -48, vertical: 2),
-                  dividerColor: Colors.transparent,
-                  labelColor: Colors.black,
-                  unselectedLabelColor: Colors.black,
-                  labelStyle: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'Inter',
-                    fontSize: 16,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: [
+                  _TabPill(
+                    label: '割り勘',
+                    selected: _currentTab == 0,
+                    onTap: () {
+                      if (_currentTab == 0) return;
+                      setState(() => _currentTab = 0);
+                      _tabController.animateTo(0);
+                    },
                   ),
-                  unselectedLabelStyle: const TextStyle(
-                    fontWeight: FontWeight.normal,
-                    fontFamily: 'Inter',
-                    fontSize: 16,
+                  const SizedBox(width: 12),
+                  _TabPill(
+                    label: '金額の調整',
+                    selected: _currentTab == 1,
+                    onTap: () {
+                      if (_currentTab == 1) return;
+                      setState(() => _currentTab = 1);
+                      _tabController.animateTo(1);
+                    },
                   ),
-                  indicator: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: const [
-                      BoxShadow(
-                        blurRadius: 2,
-                        offset: Offset(0, 2),
-                        color: Colors.black12,
-                      ),
-                    ],
-                  ),
-                  tabs: const [
-                    Tab(text: '割り勘'),
-                    Tab(text: '金額の調整'),
-                  ],
-                ),
+                ],
               ),
             ),
             const SizedBox(height: 16),
