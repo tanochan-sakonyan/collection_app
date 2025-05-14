@@ -7,6 +7,7 @@ import 'dart:ui' show FontFeature;
 
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
+import 'package:mr_collection/ui/components/dialog/amount_guide_dialog.dart';
 
 class _TabPill extends StatelessWidget {
   const _TabPill({
@@ -122,6 +123,20 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
         setState(() => _currentTab = _tabController.index);
       }
     });
+  }
+
+  @override
+  void _showGuideDialog() {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: 'guide',
+      barrierColor: Colors.black38,
+      pageBuilder: (_, __, ___) => const AmountGuideDialog(),
+      transitionDuration: const Duration(milliseconds: 200),
+      transitionBuilder: (_, anim, __, child) =>
+          FadeTransition(opacity: anim, child: child),
+    );
   }
 
   @override
@@ -337,9 +352,7 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
                 ),
                 const SizedBox(width: 4),
                 IconButton(
-                    onPressed: () => {
-                          // TODO: 傾斜ナビを追加
-                        },
+                    onPressed: () => _showGuideDialog(),
                     icon: SvgPicture.asset(
                       'assets/icons/question_circle.svg',
                       width: 24,

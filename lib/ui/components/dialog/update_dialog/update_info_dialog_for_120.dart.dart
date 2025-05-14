@@ -28,7 +28,6 @@ class UpdateInfoDialogFor120 extends StatelessWidget {
             child: Stack(
               alignment: Alignment.center,
               children: [
-                // ① 中心の丸アイコン
                 ClipOval(
                   child: SvgPicture.asset(
                     'assets/icons/reverse_icon.svg',
@@ -37,7 +36,6 @@ class UpdateInfoDialogFor120 extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                 ),
-                // ② 左下のキラキラ
                 const Positioned(
                   left: 0,
                   bottom: 0,
@@ -46,7 +44,6 @@ class UpdateInfoDialogFor120 extends StatelessWidget {
                     style: TextStyle(fontSize: 20),
                   ),
                 ),
-                // ③ 右上のキラキラ
                 const Positioned(
                   right: 0,
                   top: 0,
