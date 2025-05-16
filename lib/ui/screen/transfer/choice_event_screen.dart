@@ -34,6 +34,7 @@ class ChoiceEventScreenState extends ConsumerState<ChoiceEventScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
+        centerTitle: false,
           leadingWidth: 40,
           leading: IconButton(
             onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
