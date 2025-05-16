@@ -23,6 +23,7 @@ class CheckSelectedEventScreenState extends ConsumerState<CheckSelectedEventScre
       appBar: AppBar(
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
+        centerTitle: false,
         leadingWidth: 40,
         leading: IconButton(
           onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
