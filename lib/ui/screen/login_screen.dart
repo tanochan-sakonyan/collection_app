@@ -14,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:io' show Platform;
 
 final checkboxProvider = StateProvider<bool>((ref) => false);
 
@@ -45,8 +46,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(height: 100),
-            Text("集金くん",
-                style: GoogleFonts.roboto(fontSize: 32, fontWeight: FontWeight.bold),),
+            Text(
+              "集金くん",
+              style:
+                  GoogleFonts.roboto(fontSize: 32, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 100),
             SizedBox(
               width: 300,
@@ -131,7 +135,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    // const SizedBox(width: 12),
                     SvgPicture.asset(
                       'assets/icons/line-login.svg',
                     ),
@@ -147,109 +150,128 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 12),
-            SizedBox(
-              width: 300,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: isChecked
-                      ? const Color(0xFF000000)
-                      : const Color(0xFFD7D7D7),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+            if (Platform.isIOS) const SizedBox(height: 20),
+            if (Platform.isIOS)
+              SizedBox(
+                width: 300,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: isChecked
+                        ? const Color(0xFF000000)
+                        : const Color(0xFFD7D7D7),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 16),
                   ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                ),
-                onPressed: () async {
-                  if (!_isAppleButtonEnabled) return;
-                  setState(() {
-                    _isAppleButtonEnabled = false;
-                  });
+                  onPressed: () async {
+                    if (!_isAppleButtonEnabled) return;
+                    setState(() {
+                      _isAppleButtonEnabled = false;
+                    });
 
-                  try {
-                    if (isChecked) {
-                      final prefs = await SharedPreferences.getInstance();
-                      final isAppleLoggedIn =
-                          prefs.getBool('isAppleLoggedIn') ?? false;
-                      debugPrint('isAppleLoggedIn: $isAppleLoggedIn');
-                      final userId = prefs.getString('appleUserId');
+                    try {
+                      if (isChecked) {
+                        final prefs = await SharedPreferences.getInstance();
+                        final isAppleLoggedIn =
+                            prefs.getBool('isAppleLoggedIn') ?? false;
+                        debugPrint('isAppleLoggedIn: $isAppleLoggedIn');
+                        final userId = prefs.getString('appleUserId');
 
-                      if (isAppleLoggedIn && userId != null) {
-                        try {
-                          await ref
-                              .read(userProvider.notifier)
-                              .fetchUserById(userId);
-                          final user = ref.read(userProvider);
-                          if (mounted && user != null) {
-                            _updateCurrentLoginMedia('apple');
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                builder: (context) => HomeScreen(user: user),
+                        if (isAppleLoggedIn && userId != null) {
+                          try {
+                            await ref
+                                .read(userProvider.notifier)
+                                .fetchUserById(userId);
+                            final user = ref.read(userProvider);
+                            if (mounted && user != null) {
+                              _updateCurrentLoginMedia('apple');
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => HomeScreen(user: user),
+                                ),
+                              );
+                            }
+                          } catch (e) {
+                            debugPrint('ユーザー情報の取得に失敗しました。: $e');
+                          }
+                        } else {
+                          try {
+                            final credential =
+                                await SignInWithApple.getAppleIDCredential(
+                              scopes: [
+                                AppleIDAuthorizationScopes.email,
+                                AppleIDAuthorizationScopes.fullName,
+                              ],
+                              webAuthenticationOptions:
+                                  WebAuthenticationOptions(
+                                clientId: 'com.tanotyan.syukinkun.service',
+                                redirectUri: kIsWeb
+                                    ? Uri.parse('https://${Uri.base.host}/')
+                                    : Uri.parse(
+                                        'https://shukinkun-49fb12fd2191.herokuapp.com/auth/apple/callback',
+                                      ),
                               ),
                             );
-                          }
-                        } catch (e) {
-                          debugPrint('ユーザー情報の取得に失敗しました。: $e');
-                        }
-                      } else {
-                        try {
-                          final credential =
-                              await SignInWithApple.getAppleIDCredential(
-                            scopes: [
-                              AppleIDAuthorizationScopes.email,
-                              AppleIDAuthorizationScopes.fullName,
-                            ],
-                            webAuthenticationOptions: WebAuthenticationOptions(
-                              clientId: 'com.tanotyan.syukinkun.service',
-                              redirectUri: kIsWeb
-                                  ? Uri.parse('https://${Uri.base.host}/')
-                                  : Uri.parse(
-                                      'https://shukinkun-49fb12fd2191.herokuapp.com/auth/apple/callback',
+
+                            debugPrint("Appleサインイン認証情報: $credential");
+
+                            final url = Uri.https(
+                                'shukinkun-49fb12fd2191.herokuapp.com',
+                                '/auth/apple');
+
+                            final response = await http.get(
+                              url,
+                              headers: {'Content-Type': 'application/json'},
+                            );
+
+                            if (response.statusCode == 200 ||
+                                response.statusCode == 201) {
+                              final user = await ref
+                                  .read(userProvider.notifier)
+                                  .registerUser(response.body);
+
+                              if (user != null) {
+                                final prefs =
+                                    await SharedPreferences.getInstance();
+                                prefs.setString('appleUserId', user.userId);
+                                prefs.setBool('isAppleLoggedIn', true);
+
+                                if (mounted) {
+                                  debugPrint(
+                                      'Appleサインイン成功。HomeScreenへ遷移します。user: $user');
+                                  _updateCurrentLoginMedia('apple');
+                                  Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          HomeScreen(user: user),
                                     ),
-                            ),
-                          );
-
-                          debugPrint("Appleサインイン認証情報: $credential");
-
-                          final url = Uri.https(
-                              'shukinkun-49fb12fd2191.herokuapp.com',
-                              '/auth/apple');
-
-                          final response = await http.get(
-                            url,
-                            headers: {'Content-Type': 'application/json'},
-                          );
-
-                          if (response.statusCode == 200 ||
-                              response.statusCode == 201) {
-                            final user = await ref
-                                .read(userProvider.notifier)
-                                .registerUser(response.body);
-
-                            if (user != null) {
-                              final prefs =
-                                  await SharedPreferences.getInstance();
-                              prefs.setString('appleUserId', user.userId);
-                              prefs.setBool('isAppleLoggedIn', true);
-
-                              if (mounted) {
-                                debugPrint(
-                                    'Appleサインイン成功。HomeScreenへ遷移します。user: $user');
-                                _updateCurrentLoginMedia('apple');
-                                Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        HomeScreen(user: user),
-                                  ),
-                                );
+                                  );
+                                }
+                              } else {
+                                debugPrint('ユーザー情報がnullです');
                               }
                             } else {
-                              debugPrint('ユーザー情報がnullです');
+                              debugPrint(
+                                  'Appleサインインエンドポイントエラー: ${response.statusCode}');
+                              if (mounted) {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) =>
+                                        const LoginErrorDialog());
+                              }
                             }
-                          } else {
-                            debugPrint(
-                                'Appleサインインエンドポイントエラー: ${response.statusCode}');
+                          } on PlatformException catch (e) {
+                            if (mounted) {
+                              debugPrint("エラーが発生 :$e");
+                              showDialog(
+                                  context: context,
+                                  builder: (context) =>
+                                      const LoginErrorDialog());
+                            }
+                          } catch (e) {
+                            debugPrint('Appleサインイン中にエラーが発生: $e');
                             if (mounted) {
                               showDialog(
                                   context: context,
@@ -257,49 +279,34 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       const LoginErrorDialog());
                             }
                           }
-                        } on PlatformException catch (e) {
-                          if (mounted) {
-                            debugPrint("エラーが発生 :$e");
-                            showDialog(
-                                context: context,
-                                builder: (context) => const LoginErrorDialog());
-                          }
-                        } catch (e) {
-                          debugPrint('Appleサインイン中にエラーが発生: $e');
-                          if (mounted) {
-                            showDialog(
-                                context: context,
-                                builder: (context) => const LoginErrorDialog());
-                          }
                         }
                       }
+                    } finally {
+                      await Future.delayed(const Duration(seconds: 2));
+                      setState(() {
+                        _isAppleButtonEnabled = true;
+                      });
                     }
-                  } finally {
-                    await Future.delayed(const Duration(seconds: 2));
-                    setState(() {
-                      _isAppleButtonEnabled = true;
-                    });
-                  }
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SvgPicture.asset(
-                      'assets/icons/apple_logo.svg',
-                      height: 24,
-                    ),
-                    const SizedBox(width: 40),
-                    Text(
-                      'Appleでサインイン',
-                      style: GoogleFonts.notoSansJp(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/icons/apple_logo.svg',
+                        height: 24,
+                      ),
+                      const SizedBox(width: 40),
+                      Text(
+                        'Appleでサインイン',
+                        style: GoogleFonts.notoSansJp(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -321,10 +328,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   },
                   child: Text(
                     '利用規約',
-                    style: GoogleFonts.notoSansJp(color: Colors.blue, fontSize: 14),
+                    style: GoogleFonts.notoSansJp(
+                        color: Colors.blue, fontSize: 14),
                   ),
                 ),
-                Text(' と ', style: GoogleFonts.notoSansJp(color: Colors.black, fontSize: 14)),
+                Text(' と ',
+                    style: GoogleFonts.notoSansJp(
+                        color: Colors.black, fontSize: 14)),
                 GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -335,10 +345,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   },
                   child: Text(
                     'プライバシーポリシー',
-                    style: GoogleFonts.notoSansJp(color: Colors.blue, fontSize: 14),
+                    style: GoogleFonts.notoSansJp(
+                        color: Colors.blue, fontSize: 14),
                   ),
                 ),
-                Text(' に同意します。', style: GoogleFonts.notoSansJp(color: Colors.black, fontSize: 14)),
+                Text(' に同意します。',
+                    style: GoogleFonts.notoSansJp(
+                        color: Colors.black, fontSize: 14)),
               ],
             ),
           ],
