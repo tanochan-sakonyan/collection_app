@@ -45,7 +45,8 @@ class _AmountGuideDialogState extends State<AmountGuideDialog> {
             Container(
               width: cardW,
               height: cardH,
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+              padding: const EdgeInsets.only(
+                  top: 32, left: 24, right: 24, bottom: 16),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(24),
@@ -61,7 +62,7 @@ class _AmountGuideDialogState extends State<AmountGuideDialog> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   SizedBox(
-                    height: 330,
+                    height: 310,
                     child: PageView(
                       controller: _pageController,
                       onPageChanged: widget.onPageChanged,
