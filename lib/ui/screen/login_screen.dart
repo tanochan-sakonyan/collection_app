@@ -49,7 +49,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             Text(
               "集金くん",
               style:
-                  GoogleFonts.roboto(fontSize: 32, fontWeight: FontWeight.bold),
+                  GoogleFonts.roboto(fontSize: 32, fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 100),
             SizedBox(
