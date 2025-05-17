@@ -132,7 +132,9 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
       barrierDismissible: true,
       barrierLabel: 'guide',
       barrierColor: Colors.black38,
-      pageBuilder: (_, __, ___) => const AmountGuideDialog(),
+      pageBuilder: (_, __, ___) => AmountGuideDialog(
+        onPageChanged: (index) {},
+      ),
       transitionDuration: const Duration(milliseconds: 200),
       transitionBuilder: (_, anim, __, child) =>
           FadeTransition(opacity: anim, child: child),
