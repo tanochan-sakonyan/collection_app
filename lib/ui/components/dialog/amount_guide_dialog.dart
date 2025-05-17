@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -157,7 +158,11 @@ class _AdjustModePage extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         const _MockRow(
-            name: '進藤部長', amount: '5,000', isLockExist: true, isLocked: true),
+            name: '進藤部長',
+            amount: '5,000',
+            isLockExist: true,
+            isLocked: true,
+            isBold: true),
         const _MockRow(
             name: '斎藤ちゃん', amount: '1,000', isLockExist: true, isLocked: false),
         const _MockRow(
@@ -215,12 +220,14 @@ class _MockRow extends StatelessWidget {
       {required this.name,
       required this.amount,
       required this.isLockExist,
-      required this.isLocked});
+      required this.isLocked,
+      this.isBold = false});
 
   final String name;
   final String amount;
   final bool isLockExist;
   final bool isLocked;
+  final bool isBold;
 
   @override
   Widget build(BuildContext context) {
@@ -236,10 +243,37 @@ class _MockRow extends StatelessWidget {
                 const SizedBox(width: 12),
                 Text(name, style: Theme.of(context).textTheme.bodyMedium),
                 const Spacer(),
-                Text(amount, style: Theme.of(context).textTheme.bodyMedium),
+                (isLockExist)
+                    ? Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 4, vertical: 2),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                              color: const Color(0xFFC6C6C8), width: 1),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(amount,
+                            style: (isBold)
+                                ? Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(fontWeight: FontWeight.bold)
+                                : Theme.of(context).textTheme.bodyMedium))
+                    : Text(amount,
+                        style: Theme.of(context).textTheme.bodyMedium),
                 const SizedBox(width: 4),
                 Text('円', style: Theme.of(context).textTheme.bodyMedium),
-                const SizedBox(width: 24),
+                if (isLockExist) ...[
+                  const SizedBox(width: 8),
+                  SvgPicture.asset(
+                    isLocked
+                        ? 'assets/icons/ic_lock_close.svg'
+                        : 'assets/icons/ic_lock_open.svg',
+                    width: 20,
+                    height: 20,
+                  )
+                ] else
+                  const SizedBox(width: 24),
               ],
             ),
           ),

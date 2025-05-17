@@ -587,8 +587,8 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
                                             onTap: () => _toggleLock(i),
                                             child: SvgPicture.asset(
                                               _locked[i]
-                                                  ? 'assets/icons/ic_rock_close.svg'
-                                                  : 'assets/icons/ic_rock_open.svg',
+                                                  ? 'assets/icons/ic_lock_close.svg'
+                                                  : 'assets/icons/ic_lock_open.svg',
                                               width: 24,
                                               height: 24,
                                             ),
