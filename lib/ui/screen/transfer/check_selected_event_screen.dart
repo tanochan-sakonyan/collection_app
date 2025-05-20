@@ -21,32 +21,29 @@ class CheckSelectedEventScreenState extends ConsumerState<CheckSelectedEventScre
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
-        leadingWidth: 40,
-        leading: IconButton(
-          onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
-          padding: EdgeInsets.zero,
-          icon: SizedBox(
-            width: 21, height: 21,
-            child: SvgPicture.asset('assets/icons/ic_back.svg'),
-          ),),
-        titleSpacing: 0,
         title: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () => Navigator.of(context).popUntil((route) => route.isFirst),
-          child: Text(
-            '戻る',
-            style: Theme.of(context)
-                .textTheme
-                .bodySmall
-                ?.copyWith(
-              fontSize: 15,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xFF76DCC6),
-            ),
+          onTap: () => Navigator.pop(context),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SvgPicture.asset(
+                'assets/icons/ic_back.svg',
+                width: 44,
+                height: 44,
+              ),
+              Text(
+                '戻る',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: const Color(0xFF76DCC6),
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500),
+              ),
+            ],
           ),
         ),
+        backgroundColor: Colors.white,
+        elevation: 0,
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
