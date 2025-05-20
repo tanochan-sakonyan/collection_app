@@ -10,11 +10,13 @@ import 'package:mr_collection/ui/components/dialog/delete_member_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/status_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:mr_collection/ui/screen/amount_screen/input_amount_screen.dart';
 import 'dialog/edit_member_name_dialog.dart';
 
 class MemberList extends ConsumerWidget {
   final List<Member>? members;
   final String eventId;
+  final String eventName;
 
   final GlobalKey? memberAddKey;
   final GlobalKey? slidableKey;
@@ -25,6 +27,7 @@ class MemberList extends ConsumerWidget {
     super.key,
     required this.members,
     required this.eventId,
+    required this.eventName,
     this.memberAddKey,
     this.slidableKey,
     this.sortKey,
@@ -114,7 +117,7 @@ class MemberList extends ConsumerWidget {
                     ),
                     ClipRect(
                       child: SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.4,
+                        height: MediaQuery.of(context).size.height * 0.35,
                         child: SlidableAutoCloseBehavior(
                           child: ListView.builder(
                             itemCount: members?.length,
@@ -347,8 +350,60 @@ class MemberList extends ConsumerWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 24),
-              //TODO メンバーのステータスによって表示を変える
+              const SizedBox(height: 12),
+              SizedBox(
+                height: 40,
+                width: 324,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF75DCC6),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => InputAmountScreen(
+                          eventId: eventId,
+                          eventName: eventName,
+                          members: members!,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/icons/ic_amount.svg',
+                        width: 35,
+                        height: 35,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        "清",
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                            ),
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        "算",
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                            ),
+                      ),
+                      const SizedBox(width: 12),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child:

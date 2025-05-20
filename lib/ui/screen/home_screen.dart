@@ -409,6 +409,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                         fabKey: (_currentTabIndex == index) ? fabKey : null,
                         members: event.eventId != "" ? event.members : [],
                         eventId: event.eventId != "" ? event.eventId : "",
+                        eventName: event.eventName,
                       );
                     }).toList(),
                   ),
