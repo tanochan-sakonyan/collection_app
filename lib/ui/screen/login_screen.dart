@@ -50,6 +50,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             const SizedBox(height: 100),
             SizedBox(
               width: 300,
+              height: 60,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: isChecked
@@ -134,6 +135,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     // const SizedBox(width: 12),
                     SvgPicture.asset(
                       'assets/icons/line-login.svg',
+                      width: 44,
+                      height: 44,
                     ),
                     const SizedBox(width: 40),
                     Text(
@@ -284,11 +287,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
+                    const SizedBox(width: 8),
                     SvgPicture.asset(
                       'assets/icons/apple_logo.svg',
-                      height: 24,
+                      width: 28,
+                      height: 28,
                     ),
-                    const SizedBox(width: 40),
+                    const SizedBox(width: 50),
                     Text(
                       'Appleでサインイン',
                       style: GoogleFonts.notoSansJp(
