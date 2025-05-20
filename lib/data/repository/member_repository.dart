@@ -8,18 +8,26 @@ class MemberRepository {
 
   MemberRepository({required this.baseUrl});
 
-  Future<Member> createMember(
-      String userId, String eventId, String newMemberName) async {
-    final url = Uri.parse('$baseUrl/users/$userId/events/$eventId/members');
+  Future<List<Member>> createMembers(
+      String userId, String eventId, List<String> newMemberNames) async {
+    final url = Uri.parse('$baseUrl/users/$userId/events/$eventId/members/bulk');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'newMemberName': newMemberName}),
+      body: jsonEncode({'newMemberNames': newMemberNames}),
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
-      final data = jsonDecode(response.body);
-      return Member.fromJson(data);
+      final data = jsonDecode(response.body) as Map<String, dynamic>;
+
+      if (data['isSuccessful'] != true) {
+        throw Exception('一括メンバー追加に失敗しました');
+      }
+
+      final List<dynamic> membersJson = data['members'] as List<dynamic>;
+      return membersJson
+          .map((e) => Member.fromJson(e as Map<String, dynamic>))
+          .toList();
     } else {
       throw Exception('メンバーの追加に失敗しました');
     }

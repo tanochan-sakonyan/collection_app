@@ -128,6 +128,18 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
+  Future<void> createEventAndTransferMembers(String eventId, String eventName, String userId) async {
+    try {
+      final newEvent = await eventRepository.createEventAndTransferMembers(eventId, eventName, userId);
+      final updatedUser = state?.copyWith(
+        events: [...state!.events, newEvent],
+      );
+      state = updatedUser;
+    } catch (e) {
+      debugPrint('イベントの作成中にエラーが発生しました: $e');
+    }
+  }
+
   Future<void> deleteEvent(String userId, String eventId) async {
     try {
       final deleteResult = await eventRepository.deleteEvent(userId, eventId);
@@ -149,25 +161,29 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
-  Future<void> createMember(
-      String userId, String eventId, String memberName) async {
+  Future<void> createMembers(
+      String userId, String eventId, String rawInput) async {
     try {
-      final newMember =
-          await memberRepository.createMember(userId, eventId, memberName);
-      final updatedUser = state?.copyWith(
-        events: state?.events.map((event) {
-              if (event.eventId == eventId) {
-                return event.copyWith(
-                  members: [...event.members, newMember],
-                );
-              }
-              return event;
-            }).toList() ??
-            [],
-      );
-      state = updatedUser;
+      final names = rawInput
+          .split('\n')
+          .map((e) => e.trim())
+          .where((e) => e.isNotEmpty)
+          .toList();
+
+      if (names.isEmpty) {
+        throw Exception('名前が１つもありません');
+      }
+        final newMembers =
+        await memberRepository.createMembers(userId, eventId, names);
+        state = state?.copyWith(
+          events: state!.events.map((evt) {
+            if (evt.eventId != eventId) return evt;
+            return evt.copyWith(members: [...evt.members, ...newMembers]);
+          }).toList(),
+        );
+      debugPrint('メンバーの一括追加に成功しました: $names : user_provider.dart');
     } catch (e) {
-      debugPrint('メンバーの作成中にエラーが発生しました: $e');
+      debugPrint('メンバーの作成中にエラーが発生しました: $e : user_provider.dart');
     }
   }
 

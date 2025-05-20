@@ -32,6 +32,7 @@ class _DeleteAccountDialogState extends ConsumerState<DeleteAccountDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
+      backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(23.0),
       ),
@@ -46,19 +47,19 @@ class _DeleteAccountDialogState extends ConsumerState<DeleteAccountDialog> {
               Text(
                 'アカウントの削除',
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 16,
-                  color: Colors.black,
-                ),
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
               ),
               const SizedBox(height: 12),
               Text(
                 '※ 注意 ※',
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 16,
-                  color: Colors.red,
-                ),
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                      color: Colors.red,
+                    ),
               ),
               const SizedBox(height: 8),
               Text(
@@ -66,19 +67,19 @@ class _DeleteAccountDialogState extends ConsumerState<DeleteAccountDialog> {
                 'データの復旧を行うことは\nできません。',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 14,
-                  color: Colors.black,
-                ),
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                      color: Colors.black,
+                    ),
               ),
               const SizedBox(height: 8),
               Text(
                 '本当によろしいですか？',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 14,
-                  color: Colors.black,
-                ),
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                      color: Colors.black,
+                    ),
               ),
               const SizedBox(height: 8),
               Row(
@@ -102,10 +103,10 @@ class _DeleteAccountDialogState extends ConsumerState<DeleteAccountDialog> {
                     child: Text(
                       '上記を確認し、削除を希望する',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 12,
-                        color: Colors.black,
-                      ),
+                            fontWeight: FontWeight.w700,
+                            fontSize: 12,
+                            color: Colors.black,
+                          ),
                     ),
                   ),
                 ],
