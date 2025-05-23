@@ -553,7 +553,7 @@ class MemberList extends ConsumerWidget {
                         horizontal: 24.0,
                       ),
                       content: Text(
-                        'LINEへの認証申請中のため、\nアップデートをお待ちください。',
+                        '${S.of(context)?.update_1}\n ${S.of(context)?.update_2}',
                         textAlign: TextAlign.center,
                         style: Theme.of(
                           context,

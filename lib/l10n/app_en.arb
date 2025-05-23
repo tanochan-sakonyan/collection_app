@@ -6,5 +6,7 @@
   "unpaid": "Unpaid",
   "paid": "Paid",
   "person": "",
-  "settlePayment": "Settle Payment"
+  "settlePayment": "Settle Payment",
+  "update_1": "We're currently developing LINE integration.",
+  "update_2": " Please wait for a future update."
 }

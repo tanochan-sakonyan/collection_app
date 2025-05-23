@@ -6,5 +6,7 @@
   "unpaid": "未払い",
   "paid": "支払済",
   "person": "人",
-  "settlePayment": "清算"
+  "settlePayment": "清算",
+  "update_1": "LINEとの連携機能を現在開発中です。",
+  "update_2": "アップデートをお待ちください。"
 }

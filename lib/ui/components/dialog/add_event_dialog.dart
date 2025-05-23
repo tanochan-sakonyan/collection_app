@@ -7,6 +7,7 @@ import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/data/repository/event_repository.dart';
 import 'package:mr_collection/ui/screen/transfer/choice_event_screen.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
+import 'package:flutter_gen/gen_l10n/s.dart';
 
 class AddEventDialog extends ConsumerStatefulWidget {
   final String userId;
@@ -74,9 +75,10 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
     }
 
     try {
-      if(_isTransferMode){
-        await ref.read(userProvider.notifier).createEventAndTransferMembers(_selectedEvent!.eventId, eventName, userId);
-      }else{
+      if (_isTransferMode) {
+        await ref.read(userProvider.notifier).createEventAndTransferMembers(
+            _selectedEvent!.eventId, eventName, userId);
+      } else {
         await ref.read(userProvider.notifier).createEvent(eventName, userId);
       }
       debugPrint('イベント名: $eventName, ユーザーID: $userId');
@@ -87,17 +89,17 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
   }
 
   Future<void> _choiceEvent() async {
-  final picked = await Navigator.of(context).push<Event>(
+    final picked = await Navigator.of(context).push<Event>(
       MaterialPageRoute(
         builder: (_) => const ChoiceEventScreen(),
       ),
-  );
-  if(picked != null){
-    setState(() {
-      _selectedEvent = picked;
+    );
+    if (picked != null) {
+      setState(() {
+        _selectedEvent = picked;
       });
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -185,39 +187,45 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                       child: ListTile(
                         contentPadding: EdgeInsets.zero,
                         title: Text(
-                            'メンバー引継ぎ',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black
-                          ),
+                          'メンバー引継ぎ',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black),
                         ),
                         trailing: SizedBox(
                           width: 112,
                           height: 28,
                           child: ElevatedButton(
-                          onPressed: _isButtonEnabled ? _choiceEvent : null,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: _isTransferMode
-                                ? const Color(0xFF76DCC6)
-                                : const Color(0xFFECECEC),
-                            elevation: 2,
-                            shape: const StadiumBorder(),
-                            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
-                          ),
-                          child: Text(
-                            _selectedEvent?.eventName ?? 'イベントを選択',
-                            maxLines: 1,
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                fontSize: 10,
-                                fontWeight: FontWeight.w500,
-                                color: _isTransferMode
-                                ? Colors.white
-                                : Colors.black,
+                            onPressed: _isButtonEnabled ? _choiceEvent : null,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: _isTransferMode
+                                  ? const Color(0xFF76DCC6)
+                                  : const Color(0xFFECECEC),
+                              elevation: 2,
+                              shape: const StadiumBorder(),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 4, vertical: 0),
+                            ),
+                            child: Text(
+                              _selectedEvent?.eventName ?? 'イベントを選択',
+                              maxLines: 1,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w500,
+                                    color: _isTransferMode
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
                             ),
                           ),
                         ),
-                      ),
                       ),
                     ),
                     SizedBox(
@@ -250,7 +258,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                                 contentPadding: const EdgeInsets.symmetric(
                                     vertical: 56.0, horizontal: 24.0),
                                 content: Text(
-                                  'LINEへの認証申請中のため、\nアップデートをお待ちください。',
+                                  '${S.of(context)?.update_1}\n ${S.of(context)?.update_2}',
                                   textAlign: TextAlign.center,
                                   style: Theme.of(context)
                                       .textTheme
