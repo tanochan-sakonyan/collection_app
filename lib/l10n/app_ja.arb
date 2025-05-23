@@ -18,5 +18,8 @@
   "deleteAccount": "アカウントの削除",
   "questionnaireDescription": "「集金くん」にあったらいいなと思う機能があれば、ご意見いただけると幸いです。",
   "feedbackThanks": "今後のアップデートの参考にさせていただきます。",
-  "suggest": "機能を提案する"
+  "suggest": "機能を提案する",
+  "logout": "ログアウトしますか？",
+  "no": "いいえ",
+  "yes": "はい"
 }

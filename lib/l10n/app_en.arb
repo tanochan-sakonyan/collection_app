@@ -18,5 +18,8 @@
   "deleteAccount": "Delete Account",
   "questionnaireDescription": "If there's a feature you'd like to see in Shukinkun, we'd love to hear your thoughts.",
   "feedbackThanks": "Your input will help us improve future versions.",
-  "suggest": "Suggest"
+  "suggest": "Suggest",
+  "logout": "Do you want to log out?",
+  "no": "No",
+  "yes": "Yes"
 }
