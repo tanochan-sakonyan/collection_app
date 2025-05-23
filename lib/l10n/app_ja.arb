@@ -64,5 +64,8 @@
   "confirmDeleteMember": "このメンバーを削除しますか？",
   "enterTotalAmount": "合計金額の入力",
   "currencyUnit": "円",
-  "next": "次へ"
+  "next": "次へ",
+  "setIndividualAmounts": "個別金額の設定",
+  "splitEqually": "割り勘",
+  "adjustAmounts": "金額の調整"
 }
