@@ -19,7 +19,13 @@
   "questionnaireDescription": "If there's a feature you'd like to see in Shukinkun, we'd love to hear your thoughts.",
   "feedbackThanks": "Your input will help us improve future versions.",
   "suggest": "Suggest",
-  "logout": "Do you want to log out?",
+  "logoutMessage": "Do you want to log out?",
   "no": "No",
-  "yes": "Yes"
+  "yes": "Yes",
+  "caution": "Caution",
+  "deleteAccountMessage": "Deleting your account will erase all data permanently. Recovery will not be possible.",
+  "confirmAction": "Are you sure?",
+  "confirmDeleteAction": "I understand and want to delete my account.",
+  "deletionComplete": "Deletion completed.",
+  "ok": "OK"
 }

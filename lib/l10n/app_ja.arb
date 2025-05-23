@@ -19,7 +19,13 @@
   "questionnaireDescription": "「集金くん」にあったらいいなと思う機能があれば、ご意見いただけると幸いです。",
   "feedbackThanks": "今後のアップデートの参考にさせていただきます。",
   "suggest": "機能を提案する",
-  "logout": "ログアウトしますか？",
+  "logoutMessage": "ログアウトしますか？",
   "no": "いいえ",
-  "yes": "はい"
+  "yes": "はい",
+  "caution": "注意",
+  "deleteAccountMessage": "アカウントを削除した場合、\nすべてのデータが初期化されます。\nデータの復旧を行うことは\nできません。",
+  "confirmAction": "本当によろしいですか？",
+  "confirmDeleteAction": "上記を確認し、削除を希望する",
+  "deletionComplete": "削除が完了しました。",
+  "ok": "OK"
 }

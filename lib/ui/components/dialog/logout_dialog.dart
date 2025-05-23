@@ -26,7 +26,7 @@ class LogoutDialog extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              S.of(context)?.logout ?? "",
+              S.of(context)?.logoutMessage ?? "Do you want to log out?",
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.w500,
                     fontSize: 16,
@@ -51,7 +51,7 @@ class LogoutDialog extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      S.of(context)?.no ?? "",
+                      S.of(context)?.no ?? "No",
                       style: GoogleFonts.notoSansJp(
                         fontWeight: FontWeight.w400,
                         fontSize: 14,
@@ -74,7 +74,7 @@ class LogoutDialog extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      S.of(context)?.yes ?? "",
+                      S.of(context)?.yes ?? "Yes",
                       style: GoogleFonts.notoSansJp(
                         fontWeight: FontWeight.w400,
                         fontSize: 14,
