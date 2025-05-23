@@ -56,5 +56,6 @@
   "tapToSendReminder": "Tap here to send a reminder message.\n(This feature is under development. Please wait for a future update.)",
   "skip": "Skip",
   "edit": "Edit",
-  "delete": "Delete"
+  "delete": "Delete",
+  "editMemberName": "Edit Member Name"
 }

@@ -56,5 +56,6 @@
   "tapToSendReminder": "こちらをタップで催促メッセージを\n送信できます\n(現在機能実装中ですのでアップデートを\nお待ちください)",
   "skip": "スキップ",
   "edit": "編集",
-  "delete": "削除"
+  "delete": "削除",
+  "editMemberName": "メンバー名編集"
 }
