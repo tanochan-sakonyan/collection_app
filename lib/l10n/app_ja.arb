@@ -1,0 +1,7 @@
+{
+  "@@locale": "ja",
+  "hello": "こんにちは！",
+  "welcome": "Flutterへようこそ",
+  "settings": "設定",
+  "logout": "ログアウト"
+}

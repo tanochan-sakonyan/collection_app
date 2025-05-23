@@ -6,6 +6,8 @@ import 'package:mr_collection/provider/user_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mr_collection/ui/screen/home_screen.dart';
 import 'package:mr_collection/ui/screen/login_screen.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/s.dart';
 
 class CollectionApp extends ConsumerStatefulWidget {
   const CollectionApp({super.key});
@@ -65,6 +67,14 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
         ),
       ),
       debugShowCheckedModeBanner: false,
+      localizationsDelegates: const [
+        S.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: S.supportedLocales,
+      locale: const Locale('ja'),
       home: FutureBuilder<Map<String, bool>>(
         future: _checkLoginStatus(),
         builder: (context, snapshot) {
