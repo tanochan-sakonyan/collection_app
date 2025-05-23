@@ -67,5 +67,16 @@
   "next": "Next",
   "setIndividualAmounts": "Set individual amounts",
   "splitEqually": "Split equally",
-  "adjustAmounts": "Adjust amounts"
+  "adjustAmounts": "Adjust amounts",
+  "splitMode": "Split Mode",
+  "adjustMode": "Adjust Mode",
+  "sameAmountForAll": "Everyone pays the same amount.",
+  "lockMemberAmount": "Lock a member’s amount with 🔒 to keep it fixed!",
+  "splitRemaining": "Split the rest among the remaining members!",
+  "example_1": "James",
+  "example_2": "Michael",
+  "example_3": "Emma",
+  "example_4": "Manager Tom",
+  "example_5": "Olivia",
+  "example_6": "Daniel"
 }

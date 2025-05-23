@@ -67,5 +67,16 @@
   "next": "次へ",
   "setIndividualAmounts": "個別金額の設定",
   "splitEqually": "割り勘",
-  "adjustAmounts": "金額の調整"
+  "adjustAmounts": "金額の調整",
+  "splitMode": "割り勘モード",
+  "adjustMode": "金額の調整モード",
+  "sameAmountForAll": "全員が同じ金額でのお支払い",
+  "lockMemberAmount": "ロック🔒で特定のメンバーの金額を固定！",
+  "splitRemaining": "残りのメンバーで割り勘！",
+  "example_1": "田中さん",
+  "example_2": "鈴木さん",
+  "example_3": "進藤さん",
+  "example_4": "進藤部長",
+  "example_5": "斉藤ちゃん",
+  "example_6": "田中くん"
 }
