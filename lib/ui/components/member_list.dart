@@ -139,7 +139,7 @@ class MemberList extends ConsumerWidget {
                                       key: ValueKey(member!.memberId),
                                       endActionPane: ActionPane(
                                         motion: const ScrollMotion(),
-                                        extentRatio: 0.52,
+                                        extentRatio: 0.60,
                                         children: [
                                           CustomSlidableAction(
                                             onPressed: (context) {
@@ -168,7 +168,7 @@ class MemberList extends ConsumerWidget {
                                               children: [
                                                 const SizedBox(height: 4),
                                                 AutoSizeText(
-                                                  '編集',
+                                                  S.of(context)?.edit ?? "Edit",
                                                   maxLines: 1,
                                                   style: GoogleFonts.inter(
                                                     fontSize: 14,
@@ -204,7 +204,8 @@ class MemberList extends ConsumerWidget {
                                               children: [
                                                 const SizedBox(height: 4),
                                                 AutoSizeText(
-                                                  '削除',
+                                                  S.of(context)?.delete ??
+                                                      "Delete",
                                                   maxLines: 1,
                                                   style: GoogleFonts.inter(
                                                     fontSize: 14,

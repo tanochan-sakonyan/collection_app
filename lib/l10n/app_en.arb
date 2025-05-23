@@ -54,5 +54,7 @@
   "swipeToEditOrDeleteMember": "Swipe to delete or edit a member.",
   "tapToSortByPayment": "Tap here to sort by payment status.",
   "tapToSendReminder": "Tap here to send a reminder message.\n(This feature is under development. Please wait for a future update.)",
-  "skip": "Skip"
+  "skip": "Skip",
+  "edit": "Edit",
+  "delete": "Delete"
 }
