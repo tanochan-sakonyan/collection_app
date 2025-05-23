@@ -78,5 +78,6 @@
   "example_3": "進藤さん",
   "example_4": "進藤部長",
   "example_5": "斉藤ちゃん",
-  "example_6": "田中くん"
+  "example_6": "田中くん",
+  "confirmDeleteEvent": "このイベントを削除しますか？"
 }

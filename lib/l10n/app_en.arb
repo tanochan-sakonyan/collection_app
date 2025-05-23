@@ -78,5 +78,6 @@
   "example_3": "Emma",
   "example_4": "Manager Tom",
   "example_5": "Olivia",
-  "example_6": "Daniel"
+  "example_6": "Daniel",
+  "confirmDeleteEvent": "Delete this event?"
 }
