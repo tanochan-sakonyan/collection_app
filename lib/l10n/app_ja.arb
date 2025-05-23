@@ -33,5 +33,9 @@
   "signInWithApple": "Appleでサインイン",
   "termsAndPrivacyIntro": "",
   "and": "と",
-  "termsAndPrivacySuffix": "に同意します。"
+  "termsAndPrivacySuffix": "に同意します。",
+  "maxCharacterMessage_9": "最大9文字まで入力可能です",
+  "enterMemberPrompt": "メンバーを入力してください",
+  "multiMemberHint": "メンバーを改行区切りでまとめて登録できます",
+  "confirm": "決定"
 }

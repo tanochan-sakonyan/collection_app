@@ -33,5 +33,9 @@
   "signInWithApple": "Sign in with Apple",
   "termsAndPrivacyIntro": "I agree to the\n",
   "and": "and",
-  "termsAndPrivacySuffix": "."
+  "termsAndPrivacySuffix": ".",
+  "maxCharacterMessage_9": "You can enter up to 9 characters.",
+  "enterMemberPrompt": "Please enter a member name.",
+  "multiMemberHint": "You can add multiple members by separating them with line breaks.",
+  "confirm": "Confirm"
 }
