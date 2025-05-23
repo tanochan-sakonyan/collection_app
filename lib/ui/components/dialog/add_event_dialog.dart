@@ -34,7 +34,8 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
       final text = _controller.text.trim();
       if (text.length > 8) {
         setState(() {
-          _errorMessage = '最大8文字まで入力可能です';
+          _errorMessage = S.of(context)?.maxCharacterMessage_8 ??
+              "You can enter up to 8 characters.";
         });
       } else {
         setState(() {
@@ -60,9 +61,11 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
     });
 
     if (eventName.isEmpty) {
-      _errorMessage = "イベント名を入力してください";
+      _errorMessage =
+          S.of(context)?.enterEventName ?? "Please enter an event name.";
     } else if (eventName.length > 8) {
-      _errorMessage = "最大8文字まで入力可能です";
+      _errorMessage = S.of(context)?.maxCharacterMessage_8 ??
+          "You can enter up to 8 characters.";
     } else {
       _errorMessage = null;
     }
@@ -120,7 +123,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
             children: [
               Center(
                 child: Text(
-                  'イベント追加',
+                  S.of(context)?.addEvent ?? "Add Event",
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         fontSize: 16.0,
                         fontWeight: FontWeight.w700,
@@ -187,7 +190,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                       child: ListTile(
                         contentPadding: EdgeInsets.zero,
                         title: Text(
-                          'メンバー引継ぎ',
+                          S.of(context)?.transferMembers ?? "Transfer Members",
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium
@@ -211,7 +214,9 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                                   horizontal: 4, vertical: 0),
                             ),
                             child: Text(
-                              _selectedEvent?.eventName ?? 'イベントを選択',
+                              _selectedEvent?.eventName ??
+                                  S.of(context)?.selectEvent ??
+                                  "Select an Event",
                               maxLines: 1,
                               style: Theme.of(context)
                                   .textTheme
@@ -235,7 +240,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                         contentPadding: EdgeInsets.zero,
                         dense: true,
                         title: Text(
-                          'LINEグループから追加',
+                          S.of(context)?.addFromLine ?? "Add From LINE Group",
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium
@@ -295,7 +300,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                     shape: const StadiumBorder(),
                   ),
                   child: Text(
-                    '決定',
+                    S.of(context)?.confirm ?? "Confirm",
                     style: GoogleFonts.notoSansJp(
                         color: Colors.black,
                         fontSize: 14.0,

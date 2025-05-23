@@ -35,7 +35,17 @@
   "and": "and",
   "termsAndPrivacySuffix": ".",
   "maxCharacterMessage_9": "You can enter up to 9 characters.",
+  "maxCharacterMessage_8": "You can enter up to 8 characters.",
   "enterMemberPrompt": "Please enter a member name.",
   "multiMemberHint": "You can add multiple members by separating them with line breaks.",
-  "confirm": "Confirm"
+  "confirm": "Confirm",
+  "addEvent": "Add Event",
+  "transferMembers": "Transfer Members",
+  "selectEvent": "Select an Event",
+  "addFromLine": "Add from LINE Group",
+  "back": "Back",
+  "selectEventToTransfer": "Please select the event from which you want to transfer members.",
+  "confirmTransferFromEvent": "Do you want to transfer members \n from this event?",
+  "transferThisMember": "Transfer this member",
+  "enterEventName": "Please enter an event name."
 }

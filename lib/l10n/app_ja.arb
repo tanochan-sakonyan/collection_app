@@ -35,7 +35,17 @@
   "and": "と",
   "termsAndPrivacySuffix": "に同意します。",
   "maxCharacterMessage_9": "最大9文字まで入力可能です",
+  "maxCharacterMessage_8": "最大8文字まで入力可能です",
   "enterMemberPrompt": "メンバーを入力してください",
   "multiMemberHint": "メンバーを改行区切りでまとめて登録できます",
-  "confirm": "決定"
+  "confirm": "決定",
+  "addEvent": "イベント追加",
+  "transferMembers": "メンバー引継ぎ",
+  "selectEvent": "イベントを選択",
+  "addFromLine": "LINEグループから追加",
+  "back": "戻る",
+  "selectEventToTransfer": "メンバーを引継ぎたい\nイベントを選択してください",
+  "confirmTransferFromEvent": "このメンバーを引継ぎますか？",
+  "transferThisMember": "このメンバーを引継ぐ",
+  "enterEventName": "イベント名を入力してください"
 }
