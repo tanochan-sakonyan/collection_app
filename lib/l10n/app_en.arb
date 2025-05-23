@@ -1,3 +1,10 @@
 {
-  "@@locale": "en"
+  "@@locale": "en",
+  "member": "Member",
+  "paymentStatus": "Payment Status",
+  "addMembers": "Add Members",
+  "unpaid": "Unpaid",
+  "paid": "Paid",
+  "person": "",
+  "settlePayment": "Settle Payment"
 }

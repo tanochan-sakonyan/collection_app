@@ -1,7 +1,10 @@
 {
   "@@locale": "ja",
-  "hello": "こんにちは！",
-  "welcome": "Flutterへようこそ",
-  "settings": "設定",
-  "logout": "ログアウト"
+  "member": "メンバー",
+  "paymentStatus": "支払い状況",
+  "addMembers": "メンバー追加",
+  "unpaid": "未払い",
+  "paid": "支払済",
+  "person": "人",
+  "settlePayment": "清算"
 }
