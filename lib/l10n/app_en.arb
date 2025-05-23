@@ -47,5 +47,12 @@
   "selectEventToTransfer": "Please select the event from which you want to transfer members.",
   "confirmTransferFromEvent": "Do you want to transfer members \n from this event?",
   "transferThisMember": "Transfer this member",
-  "enterEventName": "Please enter an event name."
+  "enterEventName": "Please enter an event name.",
+  "tapToAddEvent": "Tap here to add an event.",
+  "longPressToDeleteEvent": "Long press to delete an event.",
+  "tapToAddMember": "Tap here to add a member.",
+  "swipeToEditOrDeleteMember": "Swipe to delete or edit a member.",
+  "tapToSortByPayment": "Tap here to sort by payment status.",
+  "tapToSendReminder": "Tap here to send a reminder message.\n(This feature is under development. Please wait for a future update.)",
+  "skip": "Skip"
 }
