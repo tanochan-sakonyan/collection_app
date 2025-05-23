@@ -319,9 +319,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   TextSpan(
                     children: [
                       TextSpan(
-                          text: S
-                              .of(context)!
-                              .termsAndPrivacyIntro), // "I agree to the\n"
+                          text: S.of(context)?.termsAndPrivacyIntro ??
+                              "I agree to the \n"),
                       WidgetSpan(
                         alignment: PlaceholderAlignment.baseline,
                         baseline: TextBaseline.alphabetic,
@@ -333,13 +332,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     const TermsOfServiceScreen()),
                           ),
                           child: Text(
-                            S.of(context)!.termsOfService, // "Terms of Service"
+                            S.of(context)?.termsOfService ??
+                                "Terms Of Service", // "Terms of Service"
                             style: const TextStyle(
                                 fontSize: 14, color: Colors.blue),
                           ),
                         ),
                       ),
-                      TextSpan(text: S.of(context)?.and ?? ""), // または翻訳キーへ
+                      TextSpan(text: S.of(context)?.and ?? "and"),
                       WidgetSpan(
                         alignment: PlaceholderAlignment.baseline,
                         baseline: TextBaseline.alphabetic,
@@ -351,16 +351,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     const PrivacyPolicyScreen()),
                           ),
                           child: Text(
-                            S.of(context)!.privacyPolicy, // "Privacy Policy"
+                            S.of(context)?.privacyPolicy ?? "Privacy Policy",
                             style: const TextStyle(
                                 fontSize: 14, color: Colors.blue),
                           ),
                         ),
                       ),
                       TextSpan(
-                          text: S
-                              .of(context)
-                              ?.termsAndPrivacySuffix), // 末尾（例："." や "\nに同意します。"）
+                          text: S.of(context)?.termsAndPrivacySuffix ?? "."),
                     ],
                   ),
                 )
