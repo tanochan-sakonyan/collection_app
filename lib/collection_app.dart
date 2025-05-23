@@ -17,6 +17,9 @@ class CollectionApp extends ConsumerStatefulWidget {
 }
 
 class _CollectionAppState extends ConsumerState<CollectionApp> {
+  // ここで言語を指定(デバッグ時のみ)
+  final _locale = const Locale('en');
+
   Future<Map<String, bool>> _checkLoginStatus() async {
     final prefs = await SharedPreferences.getInstance();
     bool isLineLoggedIn = prefs.getBool('isLineLoggedIn') ?? false;
@@ -51,6 +54,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
     );
 
     return MaterialApp(
+      locale: _locale, //デバッグ時のみ 本番環境ではこの行を消す
       title: '集金くん',
       theme: ThemeData(
         useMaterial3: true,
@@ -74,7 +78,6 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: S.supportedLocales,
-      locale: const Locale('ja'),
       home: FutureBuilder<Map<String, bool>>(
         future: _checkLoginStatus(),
         builder: (context, snapshot) {
