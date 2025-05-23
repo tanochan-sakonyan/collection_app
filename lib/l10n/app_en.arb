@@ -1,5 +1,6 @@
 {
   "@@locale": "en",
+  "shukinkun": "Shukinkun",
   "member": "Member",
   "paymentStatus": "Payment Status",
   "addMembers": "Add Members",
@@ -27,5 +28,7 @@
   "confirmAction": "Are you sure?",
   "confirmDeleteAction": "I understand and want to delete my account.",
   "deletionComplete": "Deletion completed.",
-  "ok": "OK"
+  "ok": "OK",
+  "loginWithLine": "Log in with LINE",
+  "signInWithApple": "Sign in with Apple"
 }

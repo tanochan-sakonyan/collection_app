@@ -1,5 +1,6 @@
 {
   "@@locale": "ja",
+  "shukinkun": "集金くん",
   "member": "メンバー",
   "paymentStatus": "支払い状況",
   "addMembers": "メンバー追加",
@@ -27,5 +28,7 @@
   "confirmAction": "本当によろしいですか？",
   "confirmDeleteAction": "上記を確認し、削除を希望する",
   "deletionComplete": "削除が完了しました。",
-  "ok": "OK"
+  "ok": "OK",
+  "loginWithLine": "LINEでログイン",
+  "signInWithApple": "Appleでサインイン"
 }
