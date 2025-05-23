@@ -61,5 +61,8 @@
   "edit": "Edit",
   "delete": "Delete",
   "editMemberName": "Edit Member Name",
-  "confirmDeleteMember": "Do you want to delete this member?"
+  "confirmDeleteMember": "Do you want to delete this member?",
+  "enterTotalAmount": "Enter total amount",
+  "currencyUnit": "USD",
+  "next": "Next"
 }
