@@ -15,5 +15,8 @@
   "logout": "ログアウト",
   "termsOfService": "利用規約",
   "privacyPolicy": "プライバシーポリシー",
-  "deleteAccount": "アカウントの削除"
+  "deleteAccount": "アカウントの削除",
+  "questionnaireDescription": "「集金くん」にあったらいいなと思う機能があれば、ご意見いただけると幸いです。",
+  "feedbackThanks": "今後のアップデートの参考にさせていただきます。",
+  "suggest": "機能を提案する"
 }

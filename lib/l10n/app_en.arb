@@ -15,5 +15,8 @@
   "logout": "Logout",
   "termsOfService": "Terms Of Service",
   "privacyPolicy": "Privacy Policy",
-  "deleteAccount": "Delete Account"
+  "deleteAccount": "Delete Account",
+  "questionnaireDescription": "If there's a feature you'd like to see in Shukinkun, we'd love to hear your thoughts.",
+  "feedbackThanks": "Your input will help us improve future versions.",
+  "suggest": "Suggest"
 }
