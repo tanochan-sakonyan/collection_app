@@ -30,5 +30,8 @@
   "deletionComplete": "削除が完了しました。",
   "ok": "OK",
   "loginWithLine": "LINEでログイン",
-  "signInWithApple": "Appleでサインイン"
+  "signInWithApple": "Appleでサインイン",
+  "termsAndPrivacyIntro": "",
+  "and": "と",
+  "termsAndPrivacySuffix": "に同意します。"
 }

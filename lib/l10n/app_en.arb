@@ -30,5 +30,8 @@
   "deletionComplete": "Deletion completed.",
   "ok": "OK",
   "loginWithLine": "Log in with LINE",
-  "signInWithApple": "Sign in with Apple"
+  "signInWithApple": "Sign in with Apple",
+  "termsAndPrivacyIntro": "I agree to the\n",
+  "and": "and",
+  "termsAndPrivacySuffix": "."
 }
