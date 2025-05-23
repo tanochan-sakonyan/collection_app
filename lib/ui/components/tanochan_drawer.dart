@@ -25,7 +25,7 @@ class TanochanDrawer extends StatelessWidget {
           children: [
             SizedBox(height: MediaQuery.of(context).size.height * 0.1),
             Text(
-              "設定",
+              S.of(context)?.setting ?? "Settings",
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
@@ -39,7 +39,7 @@ class TanochanDrawer extends StatelessWidget {
             const SizedBox(height: 20),
             _buildMenuItem(
               context,
-              text: "PayPay連携",
+              text: S.of(context)?.paypay ?? "PayPay Connection",
               icon: SvgPicture.asset("assets/icons/drawer_yen.svg"),
               onTap: () {
                 // showDialog(
@@ -80,7 +80,7 @@ class TanochanDrawer extends StatelessWidget {
             const SizedBox(height: 20),
             _buildMenuItem(
               context,
-              text: "目安箱",
+              text: S.of(context)?.questionnaire ?? "Feedback Form",
               icon: SvgPicture.asset("assets/icons/drawer_envelope.svg"),
               onTap: () {
                 showDialog(
@@ -93,7 +93,7 @@ class TanochanDrawer extends StatelessWidget {
             const SizedBox(height: 20),
             _buildMenuItem(
               context,
-              text: "ログアウト",
+              text: S.of(context)?.logout ?? "Logout",
               icon: SvgPicture.asset("assets/icons/drawer_key.svg"),
               onTap: () {
                 showDialog(
@@ -104,7 +104,7 @@ class TanochanDrawer extends StatelessWidget {
             const SizedBox(height: 20),
             _buildMenuItem(
               context,
-              text: "利用規約",
+              text: S.of(context)?.termsOfService ?? "Terms Of Service",
               icon: SvgPicture.asset("assets/icons/drawer_file.svg"),
               onTap: () {
                 Navigator.push(
@@ -117,7 +117,7 @@ class TanochanDrawer extends StatelessWidget {
             const SizedBox(height: 20),
             _buildMenuItem(
               context,
-              text: "プライバシーポリシー",
+              text: S.of(context)?.privacyPolicy ?? "Privacy Policy",
               onTap: () {
                 Navigator.push(
                   context,
@@ -132,7 +132,7 @@ class TanochanDrawer extends StatelessWidget {
               final user = ref.watch(userProvider);
               return _buildMenuItem(
                 context,
-                text: "アカウントの削除",
+                text: S.of(context)?.deleteAccount ?? "Delete Account",
                 onTap: () {
                   if (user != null) {
                     showDialog(

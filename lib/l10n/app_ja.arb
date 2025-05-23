@@ -8,5 +8,12 @@
   "person": "人",
   "settlePayment": "清算",
   "update_1": "LINEとの連携機能を現在開発中です。",
-  "update_2": "アップデートをお待ちください。"
+  "update_2": "アップデートをお待ちください。",
+  "setting": "設定",
+  "paypay": "PayPay連携",
+  "questionnaire": "目安箱",
+  "logout": "ログアウト",
+  "termsOfService": "利用規約",
+  "privacyPolicy": "プライバシーポリシー",
+  "deleteAccount": "アカウントの削除"
 }
