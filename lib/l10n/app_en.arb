@@ -79,5 +79,6 @@
   "example_4": "Manager Tom",
   "example_5": "Olivia",
   "example_6": "Daniel",
-  "confirmDeleteEvent": "Delete this event?"
+  "confirmDeleteEvent": "Delete this event?",
+  "suggestFeature": "Suggest features"
 }

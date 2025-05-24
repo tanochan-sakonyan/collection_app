@@ -79,5 +79,6 @@
   "example_4": "進藤部長",
   "example_5": "斉藤ちゃん",
   "example_6": "田中くん",
-  "confirmDeleteEvent": "このイベントを削除しますか？"
+  "confirmDeleteEvent": "このイベントを削除しますか？",
+  "suggestFeature": "機能を提案する"
 }
