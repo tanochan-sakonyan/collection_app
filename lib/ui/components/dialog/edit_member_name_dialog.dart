@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_gen/gen_l10n/s.dart';
 
 class EditMemberNameDialog extends ConsumerStatefulWidget {
   final String userId;
@@ -10,16 +10,16 @@ class EditMemberNameDialog extends ConsumerStatefulWidget {
   final String memberId;
   final String currentName;
 
-  const EditMemberNameDialog({
-    required this.userId,
-    required this.eventId,
-    required this.memberId,
-    required this.currentName,
-    super.key
-  });
+  const EditMemberNameDialog(
+      {required this.userId,
+      required this.eventId,
+      required this.memberId,
+      required this.currentName,
+      super.key});
 
   @override
-  ConsumerState<EditMemberNameDialog> createState() => EditMemberNameDialogState();
+  ConsumerState<EditMemberNameDialog> createState() =>
+      EditMemberNameDialogState();
 }
 
 class EditMemberNameDialogState extends ConsumerState<EditMemberNameDialog> {
@@ -36,7 +36,8 @@ class EditMemberNameDialogState extends ConsumerState<EditMemberNameDialog> {
       final text = _controller.text.trim();
       if (text.length > 9) {
         setState(() {
-          _errorMessage = '最大9文字まで入力可能です';
+          _errorMessage = S.of(context)?.maxCharacterMessage_9 ??
+              "You can enter up to 9 characters.";
         });
       } else {
         setState(() {
@@ -59,9 +60,11 @@ class EditMemberNameDialogState extends ConsumerState<EditMemberNameDialog> {
     setState(() {
       _isButtonEnabled = false;
       if (memberName.isEmpty) {
-        _errorMessage = 'メンバーを入力してください';
+        _errorMessage =
+            S.of(context)?.enterMemberPrompt ?? "Please enter a member name.";
       } else if (memberName.length > 9) {
-        _errorMessage = '最大9文字まで入力可能です';
+        _errorMessage = S.of(context)?.maxCharacterMessage_9 ??
+            "You can enter up to 9 characters.";
       } else {
         _errorMessage = null;
       }
@@ -75,9 +78,8 @@ class EditMemberNameDialogState extends ConsumerState<EditMemberNameDialog> {
     }
 
     try {
-      await ref
-          .read(userProvider.notifier)
-          .editMemberName(widget.userId, widget.eventId, widget.memberId, _controller.text.trim());
+      await ref.read(userProvider.notifier).editMemberName(widget.userId,
+          widget.eventId, widget.memberId, _controller.text.trim());
       Future.delayed(const Duration(seconds: 2), () {
         setState(() {
           _isButtonEnabled = true;
@@ -108,11 +110,11 @@ class EditMemberNameDialogState extends ConsumerState<EditMemberNameDialog> {
             children: [
               const SizedBox(height: 12),
               Text(
-                'メンバー名編集',
+                S.of(context)?.editMemberName ?? "Edit Member Name",
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                ),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
               ),
               const SizedBox(height: 20),
               Row(
@@ -121,9 +123,9 @@ class EditMemberNameDialogState extends ConsumerState<EditMemberNameDialog> {
                   Text(
                     "Name",
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w700,
-                    ),
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                        ),
                   ),
                 ],
               ),
@@ -150,13 +152,13 @@ class EditMemberNameDialogState extends ConsumerState<EditMemberNameDialog> {
                 alignment: Alignment.centerRight,
                 child: _errorMessage != null
                     ? Text(
-                  _errorMessage!,
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w300,
-                    color: Colors.red,
-                  ),
-                )
+                        _errorMessage!,
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.red,
+                            ),
+                      )
                     : null,
               ),
               const SizedBox(height: 24),
@@ -171,7 +173,7 @@ class EditMemberNameDialogState extends ConsumerState<EditMemberNameDialog> {
                     shape: const StadiumBorder(),
                   ),
                   child: Text(
-                    '決定',
+                    S.of(context)?.confirm ?? "Confirm",
                     style: GoogleFonts.notoSansJp(
                       color: Colors.black,
                       fontSize: 14.0,

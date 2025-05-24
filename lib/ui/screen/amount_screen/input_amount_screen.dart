@@ -3,9 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:ui' show FontFeature;
-
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/ui/screen/amount_screen/split_amount_screen.dart';
+import 'package:flutter_gen/gen_l10n/s.dart';
 
 class InputAmountScreen extends StatefulWidget {
   final String eventId;
@@ -144,7 +144,7 @@ class InputAmountScreenState extends State<InputAmountScreen> {
             decoration: InputDecoration(
               border: InputBorder.none,
               isCollapsed: true,
-              suffixText: '円',
+              suffixText: S.of(context)?.currencyUnit ?? "USD",
               suffixStyle: yenStyle,
               contentPadding: EdgeInsets.zero,
             ),
@@ -163,10 +163,10 @@ class InputAmountScreenState extends State<InputAmountScreen> {
               fontSize: 48,
               fontWeight: FontWeight.bold,
               color: Colors.black),
-          children: const [
+          children: [
             TextSpan(
-                text: ' 円',
-                style: TextStyle(
+                text: S.of(context)?.currencyUnit ?? "USD",
+                style: const TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 36,
                     fontWeight: FontWeight.bold,
@@ -192,7 +192,7 @@ class InputAmountScreenState extends State<InputAmountScreen> {
                 height: 44,
               ),
               Text(
-                '戻る',
+                S.of(context)?.back ?? "Back",
                 style: GoogleFonts.notoSansJp(
                     color: const Color(0xFF76DCC6),
                     fontSize: 15,
@@ -218,7 +218,7 @@ class InputAmountScreenState extends State<InputAmountScreen> {
             ),
             const SizedBox(height: 32),
             Text(
-              '合計金額の入力',
+              S.of(context)?.enterTotalAmount ?? "Enter total amount",
               style: GoogleFonts.notoSansJp(
                   fontSize: 24, fontWeight: FontWeight.w700),
             ),
@@ -262,21 +262,12 @@ class InputAmountScreenState extends State<InputAmountScreen> {
                     ),
                   );
                 },
-                child: const Row(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '次',
-                      style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white),
-                    ),
-                    SizedBox(width: 4),
-                    Text(
-                      'へ',
-                      style: TextStyle(
+                      S.of(context)?.next ?? "Next",
+                      style: const TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 20,
                           fontWeight: FontWeight.w600,

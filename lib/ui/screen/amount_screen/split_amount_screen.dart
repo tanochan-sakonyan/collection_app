@@ -4,10 +4,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'dart:ui' show FontFeature;
-
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/ui/components/dialog/amount_guide_dialog.dart';
+import 'package:flutter_gen/gen_l10n/s.dart';
 
 class _TabPill extends StatelessWidget {
   const _TabPill({
@@ -319,7 +319,7 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
                 height: 44,
               ),
               Text(
-                '戻る',
+                S.of(context)?.back ?? "Back",
                 style: GoogleFonts.notoSansJp(
                     color: const Color(0xFF76DCC6),
                     fontSize: 15,
@@ -348,7 +348,8 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
               children: [
                 const Spacer(flex: 10),
                 Text(
-                  '個別金額の設定',
+                  S.of(context)?.setIndividualAmounts ??
+                      "Set individual amounts",
                   style: GoogleFonts.notoSansJp(
                       fontSize: 24, fontWeight: FontWeight.bold),
                 ),
@@ -369,7 +370,9 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
                 text: _numFmt.format(widget.amount),
                 style: _numberStyle,
                 children: [
-                  TextSpan(text: ' 円', style: _yenStyle),
+                  TextSpan(
+                      text: S.of(context)?.currencyUnit ?? "USD",
+                      style: _yenStyle),
                 ],
               ),
               textAlign: TextAlign.center,
@@ -380,7 +383,7 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
               child: Row(
                 children: [
                   _TabPill(
-                    label: '割り勘',
+                    label: S.of(context)?.splitEqually ?? "Split Equally",
                     selected: _currentTab == 0,
                     onTap: () {
                       if (_currentTab == 0) return;
@@ -390,7 +393,7 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
                   ),
                   const SizedBox(width: 12),
                   _TabPill(
-                    label: '金額の調整',
+                    label: S.of(context)?.adjustAmounts ?? "Adjust Amounts",
                     selected: _currentTab == 1,
                     onTap: () {
                       if (_currentTab == 1) return;
@@ -437,7 +440,8 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            "欠席",
+                                            S.of(context)?.status_absence ??
+                                                "Absence",
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodyMedium
@@ -466,7 +470,8 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
                                           ),
                                           const SizedBox(width: 4),
                                           Text(
-                                            '円',
+                                            S.of(context)?.currencyUnit ??
+                                                "USD",
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodyLarge
@@ -514,7 +519,8 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            "欠席",
+                                            S.of(context)?.status_absence ??
+                                                "Absence",
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodyMedium
@@ -573,7 +579,8 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
                                           ),
                                           const SizedBox(width: 6),
                                           Text(
-                                            '円',
+                                            S.of(context)?.currencyUnit ??
+                                                "USD",
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodyLarge
@@ -618,7 +625,7 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
           padding:
               const EdgeInsets.only(top: 30, bottom: 60, right: 141, left: 141),
           child: SizedBox(
-            width: 108,
+            width: 140,
             height: 40,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -627,22 +634,11 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
                     borderRadius: BorderRadius.circular(12)),
               ),
               onPressed: _onConfirm,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('確',
-                      style: GoogleFonts.inter(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white)),
-                  const SizedBox(width: 8),
-                  Text('定',
-                      style: GoogleFonts.inter(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white)),
-                ],
-              ),
+              child: Text(S.of(context)?.confirm ?? "Confirm",
+                  style: GoogleFonts.inter(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white)),
             ),
           ),
         ),

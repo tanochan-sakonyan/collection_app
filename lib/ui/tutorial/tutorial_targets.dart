@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
+import 'package:flutter_gen/gen_l10n/s.dart';
 
 class TutorialTargets {
   static List<TargetFocus> createTargets({
@@ -32,7 +33,7 @@ class TutorialTargets {
                   horizontal: 8,
                 ),
                 child: Text(
-                  "こちらをタップでイベントを\n追加できます",
+                  S.of(context)?.tapToAddEvent ?? "Tap here to add an event.",
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ),
@@ -60,7 +61,8 @@ class TutorialTargets {
                   horizontal: 8,
                 ),
                 child: Text(
-                  "長押しでイベントを削除\nできます",
+                  S.of(context)?.longPressToDeleteEvent ??
+                      "Long press to delete an event.",
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ),
@@ -88,7 +90,7 @@ class TutorialTargets {
                   horizontal: 8,
                 ),
                 child: Text(
-                  "こちらをタップでメンバーを\n追加できます",
+                  S.of(context)?.tapToAddMember ?? "Tap here to add a member.",
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ),
@@ -116,7 +118,8 @@ class TutorialTargets {
                   horizontal: 8,
                 ),
                 child: Text(
-                  "スワイプでメンバーの削除及び\nメンバー名の変更ができます",
+                  S.of(context)?.swipeToEditOrDeleteMember ??
+                      "Swipe to delete or edit a member.",
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ),
@@ -144,7 +147,8 @@ class TutorialTargets {
                   horizontal: 8,
                 ),
                 child: Text(
-                  "こちらをタップで支払い状況順に\n並び変えることができます",
+                  S.of(context)?.tapToSortByPayment ??
+                      "Tap here to sort by payment status.",
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ),
@@ -172,7 +176,8 @@ class TutorialTargets {
                   horizontal: 8,
                 ),
                 child: Text(
-                  "こちらをタップで催促メッセージを\n送信できます\n(現在機能申請中ですのでアップデートを\nお待ちください)",
+                  S.of(context)?.tapToSendReminder ??
+                      "Tap here to send a reminder message.\n(This feature is under development. Please wait for a future update.)",
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ),

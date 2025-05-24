@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:flutter_gen/gen_l10n/s.dart';
 
 class AmountGuideDialog extends StatefulWidget {
   const AmountGuideDialog({
@@ -109,28 +110,43 @@ class _SplitModePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text('割り勘モード',
+        Text(S.of(context)?.splitMode ?? 'Split Mode',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontWeight: FontWeight.w700,
                 )),
         const SizedBox(height: 24),
-        const Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _MockPill(label: '割り勘', selected: true),
-            SizedBox(width: 12),
-            _MockPill(label: '金額の調整', selected: false),
+            _MockPill(
+                label: S.of(context)?.splitEqually ?? "Split Equally",
+                selected: true),
+            const SizedBox(width: 12),
+            _MockPill(
+                label: S.of(context)?.adjustAmounts ?? "Adjust Amounts",
+                selected: false),
           ],
         ),
         const SizedBox(height: 16),
-        const _MockRow(
-            name: '田中さん', amount: '2,000', isLockExist: false, isLocked: false),
-        const _MockRow(
-            name: '鈴木さん', amount: '2,000', isLockExist: false, isLocked: false),
-        const _MockRow(
-            name: '進藤さん', amount: '2,000', isLockExist: false, isLocked: false),
+        _MockRow(
+            name: S.of(context)?.example_1 ?? "James",
+            amount: '2,000',
+            isLockExist: false,
+            isLocked: false),
+        _MockRow(
+            name: S.of(context)?.example_2 ?? "Michael",
+            amount: '2,000',
+            isLockExist: false,
+            isLocked: false),
+        _MockRow(
+            name: S.of(context)?.example_3 ?? "Emma",
+            amount: '2,000',
+            isLockExist: false,
+            isLocked: false),
         const SizedBox(height: 24),
-        const _CheckLine(text: '全員が同じ金額でのお支払い'),
+        _CheckLine(
+            text: S.of(context)?.sameAmountForAll ??
+                "Everyone pays the same amount."),
       ],
     );
   }
@@ -143,33 +159,47 @@ class _AdjustModePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text('金額の調整モード',
+        Text(S.of(context)?.adjustMode ?? "Adjust Mode",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontWeight: FontWeight.w700,
                 )),
         const SizedBox(height: 24),
-        const Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _MockPill(label: '割り勘', selected: false),
-            SizedBox(width: 12),
-            _MockPill(label: '金額の調整', selected: true),
+            _MockPill(
+                label: S.of(context)?.splitEqually ?? "Split Equally",
+                selected: false),
+            const SizedBox(width: 12),
+            _MockPill(
+                label: S.of(context)?.adjustAmounts ?? "Adjust Amounts",
+                selected: true),
           ],
         ),
         const SizedBox(height: 16),
-        const _MockRow(
-            name: '進藤部長',
+        _MockRow(
+            name: S.of(context)?.example_4 ?? "Manager Tom",
             amount: '5,000',
             isLockExist: true,
             isLocked: true,
             isBold: true),
-        const _MockRow(
-            name: '斎藤ちゃん', amount: '1,000', isLockExist: true, isLocked: false),
-        const _MockRow(
-            name: '田中くん', amount: '1,000', isLockExist: true, isLocked: false),
-        const SizedBox(height: 24),
-        const _CheckLine(text: 'ロック🔒で特定のメンバーの金額を固定！'),
-        const _CheckLine(text: '残りのメンバーで割り勘！'),
+        _MockRow(
+            name: S.of(context)?.example_5 ?? "Olivia",
+            amount: '1,000',
+            isLockExist: true,
+            isLocked: false),
+        _MockRow(
+            name: S.of(context)?.example_6 ?? "Daniel",
+            amount: '1,000',
+            isLockExist: true,
+            isLocked: false),
+        const SizedBox(height: 20),
+        _CheckLine(
+            text: S.of(context)?.lockMemberAmount ??
+                "Lock a member’s amount with 🔒 to keep it fixed!"),
+        _CheckLine(
+            text: S.of(context)?.splitRemaining ??
+                "Split the rest among the remaining members!"),
       ],
     );
   }
@@ -262,7 +292,8 @@ class _MockRow extends StatelessWidget {
                     : Text(amount,
                         style: Theme.of(context).textTheme.bodyMedium),
                 const SizedBox(width: 4),
-                Text('円', style: Theme.of(context).textTheme.bodyMedium),
+                Text(S.of(context)?.currencyUnit ?? "USD",
+                    style: Theme.of(context).textTheme.bodyMedium),
                 if (isLockExist) ...[
                   const SizedBox(width: 8),
                   SvgPicture.asset(
