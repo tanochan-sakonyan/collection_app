@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/provider/user_provider.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_gen/gen_l10n/s.dart';
 
 class AddMemberDialog extends ConsumerStatefulWidget {
   final String userId;
@@ -25,12 +24,13 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
     super.initState();
     _controller.addListener(() {
       final lines = _controller.text
-        .split('\n')
-        .map((e) => e.trim())
-        .where((e) => e.isNotEmpty);
+          .split('\n')
+          .map((e) => e.trim())
+          .where((e) => e.isNotEmpty);
       if (lines.any((n) => n.length > 9)) {
         setState(() {
-          _errorMessage = '最大9文字まで入力可能です';
+          _errorMessage = S.of(context)?.maxCharacterMessage_9 ??
+              "You can enter up to 9 characters.";
         });
       } else {
         setState(() {
@@ -54,13 +54,15 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
         .where((e) => e.isNotEmpty)
         .toList();
 
-    if(memberNames.isEmpty){
-      setState(() => _errorMessage = 'メンバーを入力してください');
+    if (memberNames.isEmpty) {
+      setState(() => _errorMessage =
+          S.of(context)?.enterMemberPrompt ?? "Please enter a member name.");
       return;
-    }else if(memberNames.any((n) => n.length > 9)){
-      setState(() => _errorMessage = '最大9文字まで入力可能です');
+    } else if (memberNames.any((n) => n.length > 9)) {
+      setState(() => _errorMessage = S.of(context)?.maxCharacterMessage_9 ??
+          "You can enter up to 9 characters.");
       return;
-    }else{
+    } else {
       _errorMessage = null;
     }
 
@@ -78,8 +80,7 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
       setState(() {
         _errorMessage = 'メンバーの追加に失敗しました';
       });
-    }
-    finally {
+    } finally {
       if (mounted) {
         setState(() {
           _isButtonEnabled = true;
@@ -105,7 +106,7 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
             children: [
               const SizedBox(height: 8),
               Text(
-                'メンバー追加',
+                S.of(context)?.addMembers ?? "Add Members",
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
@@ -115,45 +116,48 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Text(
-                    "Name",
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w700,
-                        ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Text(
+                      "Name",
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
+                          ),
+                    ),
                   ),
-              ),
                 ],
               ),
               const SizedBox(height: 4),
-          SizedBox(
-            width: 272,
-            height: 220,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: const Color(0xFFE8E8E8)),
-                ),
-                child: TextField(
-                  controller: _controller,
-                  keyboardType: TextInputType.multiline,
-                  maxLines: 10,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "メンバーを改行区切りでまとめて登録できます",
-                    hintStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w300,
-                      color: const Color(0xFF999999)
+              SizedBox(
+                width: 272,
+                height: 220,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: const Color(0xFFE8E8E8)),
+                  ),
+                  child: TextField(
+                    controller: _controller,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: 10,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: S.of(context)?.multiMemberHint ??
+                          "You can add multiple members by separating them with line breaks.",
+                      hintStyle: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w300,
+                              color: const Color(0xFF999999)),
                     ),
                   ),
                 ),
               ),
-            ),
               const SizedBox(height: 4),
               Container(
                 height: 20,
@@ -182,9 +186,9 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
                     elevation: 2,
                     shape: const StadiumBorder(),
                   ),
-                  child: const Text(
-                    '決定',
-                    style: TextStyle(
+                  child: Text(
+                    S.of(context)?.confirm ?? "Confirm",
+                    style: const TextStyle(
                       color: Colors.black,
                       fontSize: 14.0,
                     ),

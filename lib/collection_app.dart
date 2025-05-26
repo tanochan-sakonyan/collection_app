@@ -6,6 +6,8 @@ import 'package:mr_collection/provider/user_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mr_collection/ui/screen/home_screen.dart';
 import 'package:mr_collection/ui/screen/login_screen.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/s.dart';
 
 class CollectionApp extends ConsumerStatefulWidget {
   const CollectionApp({super.key});
@@ -15,6 +17,9 @@ class CollectionApp extends ConsumerStatefulWidget {
 }
 
 class _CollectionAppState extends ConsumerState<CollectionApp> {
+  // ここで言語を指定(デバッグ時のみ)
+  // final _locale = const Locale('en');
+
   Future<Map<String, bool>> _checkLoginStatus() async {
     final prefs = await SharedPreferences.getInstance();
     bool isLineLoggedIn = prefs.getBool('isLineLoggedIn') ?? false;
@@ -49,6 +54,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
     );
 
     return MaterialApp(
+      // locale: _locale, //デバッグ時のみ 本番環境ではこの行を消す
       title: '集金くん',
       theme: ThemeData(
         useMaterial3: true,
@@ -65,6 +71,13 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
         ),
       ),
       debugShowCheckedModeBanner: false,
+      localizationsDelegates: const [
+        S.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: S.supportedLocales,
       home: FutureBuilder<Map<String, bool>>(
         future: _checkLoginStatus(),
         builder: (context, snapshot) {

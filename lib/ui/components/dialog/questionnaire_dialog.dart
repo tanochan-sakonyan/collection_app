@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mr_collection/ui/components/webview/webview.dart';
+import 'package:flutter_gen/gen_l10n/s.dart';
 
 class QuestionnaireDialog extends StatelessWidget {
   const QuestionnaireDialog({super.key});
@@ -17,7 +18,7 @@ class QuestionnaireDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              '目安箱',
+              S.of(context)?.questionnaire ?? "Feedback Form",
               style: Theme.of(context)
                   .textTheme
                   .bodyLarge
@@ -25,7 +26,8 @@ class QuestionnaireDialog extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              '「集金くん」にあったらいいな\nと思う機能があれば、\nご意見いただけると幸いです。',
+              S.of(context)?.questionnaireDescription ??
+                  "If there's a feature you'd like to see in Shukinkun, we'd love to hear your thoughts.",
               textAlign: TextAlign.center,
               style: Theme.of(context)
                   .textTheme
@@ -34,7 +36,8 @@ class QuestionnaireDialog extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              '今後のアップデートの\n参考にさせていただきます。',
+              S.of(context)?.feedbackThanks ??
+                  "Your input will help us improve future versions.",
               textAlign: TextAlign.center,
               style: Theme.of(context)
                   .textTheme
@@ -62,7 +65,7 @@ class QuestionnaireDialog extends StatelessWidget {
                   );
                 },
                 child: Text(
-                  '機能を提案する',
+                  S.of(context)?.suggest ?? "Suggest",
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: const Color(0xFF76DCC6),
