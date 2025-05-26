@@ -14,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_gen/gen_l10n/s.dart';
 
 final checkboxProvider = StateProvider<bool>((ref) => false);
 
@@ -45,8 +46,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(height: 100),
-            Text("集金くん",
-                style: GoogleFonts.roboto(fontSize: 32, fontWeight: FontWeight.bold),),
+            Text(
+              S.of(context)?.shukinkun ?? "Shukinkun",
+              style:
+                  GoogleFonts.roboto(fontSize: 32, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 100),
             SizedBox(
               width: 300,
@@ -140,7 +144,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                     const SizedBox(width: 40),
                     Text(
-                      'LINEでログイン',
+                      S.of(context)?.loginWithLine ?? "Log in with LINE",
                       style: GoogleFonts.notoSansJp(
                           color: Colors.white,
                           fontSize: 16,
@@ -295,7 +299,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                     const SizedBox(width: 50),
                     Text(
-                      'Appleでサインイン',
+                      S.of(context)?.signInWithApple ?? "Sign in with Apple",
                       style: GoogleFonts.notoSansJp(
                           color: Colors.white,
                           fontSize: 16,
@@ -316,34 +320,53 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   },
                   activeColor: Colors.black,
                 ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const TermsOfServiceScreen()),
-                    );
-                  },
-                  child: Text(
-                    '利用規約',
-                    style: GoogleFonts.notoSansJp(color: Colors.blue, fontSize: 14),
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                          text: S.of(context)?.termsAndPrivacyIntro ??
+                              "I agree to the \n"),
+                      WidgetSpan(
+                        alignment: PlaceholderAlignment.baseline,
+                        baseline: TextBaseline.alphabetic,
+                        child: GestureDetector(
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const TermsOfServiceScreen()),
+                          ),
+                          child: Text(
+                            S.of(context)?.termsOfService ??
+                                "Terms Of Service", // "Terms of Service"
+                            style: const TextStyle(
+                                fontSize: 14, color: Colors.blue),
+                          ),
+                        ),
+                      ),
+                      TextSpan(text: S.of(context)?.and ?? "and"),
+                      WidgetSpan(
+                        alignment: PlaceholderAlignment.baseline,
+                        baseline: TextBaseline.alphabetic,
+                        child: GestureDetector(
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const PrivacyPolicyScreen()),
+                          ),
+                          child: Text(
+                            S.of(context)?.privacyPolicy ?? "Privacy Policy",
+                            style: const TextStyle(
+                                fontSize: 14, color: Colors.blue),
+                          ),
+                        ),
+                      ),
+                      TextSpan(
+                          text: S.of(context)?.termsAndPrivacySuffix ?? "."),
+                    ],
                   ),
-                ),
-                Text(' と ', style: GoogleFonts.notoSansJp(color: Colors.black, fontSize: 14)),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const PrivacyPolicyScreen()),
-                    );
-                  },
-                  child: Text(
-                    'プライバシーポリシー',
-                    style: GoogleFonts.notoSansJp(color: Colors.blue, fontSize: 14),
-                  ),
-                ),
-                Text(' に同意します。', style: GoogleFonts.notoSansJp(color: Colors.black, fontSize: 14)),
+                )
               ],
             ),
           ],

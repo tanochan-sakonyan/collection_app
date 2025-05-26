@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_gen/gen_l10n/s.dart';
 
 class DeleteEventDialog extends ConsumerStatefulWidget {
   final String userId;
   final String eventId;
-  const DeleteEventDialog(
-      {required this.userId, required this.eventId, super.key});
+  const DeleteEventDialog({
+    required this.userId,
+    required this.eventId,
+    super.key,
+  });
 
   get eventRepository => null;
 
@@ -33,9 +37,7 @@ class _DeleteEventDialogState extends ConsumerState<DeleteEventDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Container(
         width: 320,
         height: 179,
@@ -47,12 +49,13 @@ class _DeleteEventDialogState extends ConsumerState<DeleteEventDialog> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'このイベントを削除しますか？', //TODO 実際にイベント名を取得
+              S.of(context)?.confirmDeleteEvent ??
+                  "Delete this event?", //TODO：イベント名を取得して表示
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                fontWeight: FontWeight.w500,
-                fontSize: 16,
-                color: Colors.black,
-              ),
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16,
+                    color: Colors.black,
+                  ),
             ),
             const SizedBox(height: 40),
             Row(
@@ -74,11 +77,11 @@ class _DeleteEventDialogState extends ConsumerState<DeleteEventDialog> {
                       ),
                     ),
                     child: Text(
-                      'いいえ',
+                      S.of(context)?.no ?? "No",
                       style: GoogleFonts.notoSansJp(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
-                        color: Colors.black
+                        color: Colors.black,
                       ),
                     ),
                   ),
@@ -99,11 +102,11 @@ class _DeleteEventDialogState extends ConsumerState<DeleteEventDialog> {
                       ),
                     ),
                     child: Text(
-                      'はい',
+                      S.of(context)?.yes ?? "Yes",
                       style: GoogleFonts.notoSansJp(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black,
                       ),
                     ),
                   ),
