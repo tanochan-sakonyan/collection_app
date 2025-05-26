@@ -46,7 +46,7 @@ class _DeleteAccountDialogState extends ConsumerState<DeleteAccountDialog> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                S.of(context)?.deleteAccount ?? "",
+                S.of(context)?.deleteAccount ?? "Delete Account",
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.w700,
                       fontSize: 16,
