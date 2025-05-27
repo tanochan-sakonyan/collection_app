@@ -7,8 +7,8 @@ plugins {
 
 android {
     namespace = "app.web.mr_collection"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = "25.1.8937393"
+    compileSdkVersion 35
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -25,7 +25,7 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 24
-        targetSdk = 33
+        targetSdkVersion 35
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
@@ -50,4 +50,8 @@ flutter {
 tasks.withType(JavaCompile) {
     options.fork = true
     options.forkOptions.jvmArgs += ['--add-opens', 'java.base/java.util=ALL-UNNAMED']
+}
+
+dependencies {
+    implementation "androidx.core:core-splashscreen:1.0.1"
 }
