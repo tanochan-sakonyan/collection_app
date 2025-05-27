@@ -3,7 +3,12 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@color/splash_background" />
 
-    <item
-         android:gravity="center"
-         android:drawable="@mipmap/launch_image"/>
+    <item>
+        <scale
+            android:gravity="center"
+            android:drawable="@mipmap/launch_image"
+            android:scalewidth="@dimen/splash_icon_size"
+            android:scaleheight="@dimen/splash_icon_size"
+            android:useIntrinsicSizeAsMinimum="true"/>
+    </item>
 </layer-list>
