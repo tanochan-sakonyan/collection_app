@@ -208,8 +208,8 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
-  Future<void> inputMembersMoney(
-      String userId, String eventId, List<String> membersMoneyList) async {
+  Future<void> inputMembersMoney(String userId, String eventId,
+      List<Map<String, dynamic>> membersMoneyList) async {
     try {
       final updatedMembers = await memberRepository.inputMembersMoney(
           userId, eventId, membersMoneyList);

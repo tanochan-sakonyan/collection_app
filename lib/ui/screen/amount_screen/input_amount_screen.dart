@@ -280,6 +280,7 @@ class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (_) => SplitAmountScreen(
+                        eventId: widget.eventId,
                         eventName: widget.eventName,
                         members: widget.members,
                         amount: _amount,

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'dart:ui' show FontFeature;
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
+import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/amount_guide_dialog.dart';
 import 'package:flutter_gen/gen_l10n/s.dart';
 
@@ -64,22 +66,24 @@ class _TabPill extends StatelessWidget {
   }
 }
 
-class SplitAmountScreen extends StatefulWidget {
+class SplitAmountScreen extends ConsumerStatefulWidget {
+  final String eventId;
   final String eventName;
   final int amount;
   final List<Member> members;
   const SplitAmountScreen({
     super.key,
+    required this.eventId,
     required this.eventName,
     required this.amount,
     required this.members,
   });
 
   @override
-  State<SplitAmountScreen> createState() => _SplitAmountScreenState();
+  ConsumerState<SplitAmountScreen> createState() => _SplitAmountScreenState();
 }
 
-class _SplitAmountScreenState extends State<SplitAmountScreen>
+class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
     with SingleTickerProviderStateMixin {
   late List<TextEditingController> _controllers;
   late List<FocusNode> _focusNodes;
@@ -161,7 +165,10 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
       );
   TextStyle get _yenStyle => _numberStyle.copyWith(fontSize: 36);
 
-  Future<void> _onConfirm() async {
+  Future<void> _onConfirm(
+    userId,
+    eventId,
+  ) async {
     final Map<String, int> amountMap = {};
 
     if (_tabController.index == 0) {
@@ -181,8 +188,26 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
                 : int.tryParse(_controllers[i].text.replaceAll(',', '')) ?? 0;
       }
     }
-
     debugPrint('送信する金額マップ: $amountMap');
+
+    final List<Map<String, dynamic>> membersMoneyList = amountMap.entries
+        .map((entry) => {
+              'memberId': entry.key,
+              'memberMoney': entry.value,
+            })
+        .toList();
+
+    try {
+      debugPrint("金額入力をします：$membersMoneyList");
+      await ref.read(userProvider.notifier).inputMembersMoney(
+            userId,
+            eventId,
+            membersMoneyList,
+          );
+    } catch (e) {
+      debugPrint('金額入力中にエラーが発生しました: $e');
+      return;
+    }
   }
 
   void _handleSubmitted(int index, String rawText) {
@@ -299,6 +324,7 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
 
   @override
   Widget build(BuildContext context) {
+    final userId = ref.watch(userProvider)!.userId;
     final activeCount =
         widget.members.where((m) => m.status != PaymentStatus.absence).length;
     final evenShare =
@@ -633,7 +659,12 @@ class _SplitAmountScreenState extends State<SplitAmountScreen>
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
               ),
-              onPressed: _onConfirm,
+              onPressed: () {
+                _onConfirm(
+                  userId,
+                  widget.eventId,
+                );
+              },
               child: Text(S.of(context)?.confirm ?? "Confirm",
                   style: GoogleFonts.inter(
                       fontSize: 14,

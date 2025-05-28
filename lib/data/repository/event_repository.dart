@@ -51,6 +51,7 @@ class EventRepository {
 
   Future<Event> inputTotalMoney(
       String userId, String eventId, int totalMoney) async {
+    debugPrint("Repository内でinputTotalMoney関数が呼ばれました。");
     final url = Uri.parse('$baseUrl/users/$userId/events/$eventId/money');
     final response = await http.put(
       url,
