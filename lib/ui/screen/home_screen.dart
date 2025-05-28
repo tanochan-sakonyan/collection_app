@@ -408,15 +408,16 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                             totalMoney: 0),
                       );
                       return MemberList(
+                        event: event,
+                        members: event.eventId != "" ? event.members : [],
+                        eventId: event.eventId != "" ? event.eventId : "",
+                        eventName: event.eventName,
                         memberAddKey:
                             (_currentTabIndex == index) ? memberAddKey : null,
                         slidableKey:
                             (_currentTabIndex == index) ? slidableKey : null,
                         sortKey: (_currentTabIndex == index) ? sortKey : null,
                         fabKey: (_currentTabIndex == index) ? fabKey : null,
-                        members: event.eventId != "" ? event.members : [],
-                        eventId: event.eventId != "" ? event.eventId : "",
-                        eventName: event.eventName,
                       );
                     }).toList(),
                   ),

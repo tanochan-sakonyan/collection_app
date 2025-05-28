@@ -24,7 +24,7 @@ mixin _$Member {
   String get memberName => throw _privateConstructorUsedError;
   String? get lineUserId => throw _privateConstructorUsedError;
   PaymentStatus get status => throw _privateConstructorUsedError;
-  int get memberMoney => throw _privateConstructorUsedError;
+  int? get memberMoney => throw _privateConstructorUsedError;
 
   /// Serializes this Member to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -45,7 +45,7 @@ abstract class $MemberCopyWith<$Res> {
       String memberName,
       String? lineUserId,
       PaymentStatus status,
-      int memberMoney});
+      int? memberMoney});
 }
 
 /// @nodoc
@@ -67,7 +67,7 @@ class _$MemberCopyWithImpl<$Res, $Val extends Member>
     Object? memberName = null,
     Object? lineUserId = freezed,
     Object? status = null,
-    Object? memberMoney = null,
+    Object? memberMoney = freezed,
   }) {
     return _then(_value.copyWith(
       memberId: null == memberId
@@ -86,10 +86,10 @@ class _$MemberCopyWithImpl<$Res, $Val extends Member>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as PaymentStatus,
-      memberMoney: null == memberMoney
+      memberMoney: freezed == memberMoney
           ? _value.memberMoney
           : memberMoney // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
     ) as $Val);
   }
 }
@@ -106,7 +106,7 @@ abstract class _$$MemberImplCopyWith<$Res> implements $MemberCopyWith<$Res> {
       String memberName,
       String? lineUserId,
       PaymentStatus status,
-      int memberMoney});
+      int? memberMoney});
 }
 
 /// @nodoc
@@ -126,7 +126,7 @@ class __$$MemberImplCopyWithImpl<$Res>
     Object? memberName = null,
     Object? lineUserId = freezed,
     Object? status = null,
-    Object? memberMoney = null,
+    Object? memberMoney = freezed,
   }) {
     return _then(_$MemberImpl(
       memberId: null == memberId
@@ -145,10 +145,10 @@ class __$$MemberImplCopyWithImpl<$Res>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as PaymentStatus,
-      memberMoney: null == memberMoney
+      memberMoney: freezed == memberMoney
           ? _value.memberMoney
           : memberMoney // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
     ));
   }
 }
@@ -162,7 +162,7 @@ class _$MemberImpl implements _Member {
       required this.memberName,
       this.lineUserId,
       required this.status,
-      required this.memberMoney});
+      this.memberMoney});
 
   factory _$MemberImpl.fromJson(Map<String, dynamic> json) =>
       _$$MemberImplFromJson(json);
@@ -176,7 +176,7 @@ class _$MemberImpl implements _Member {
   @override
   final PaymentStatus status;
   @override
-  final int memberMoney;
+  final int? memberMoney;
 
   @override
   String toString() {
@@ -226,7 +226,7 @@ abstract class _Member implements Member {
       required final String memberName,
       final String? lineUserId,
       required final PaymentStatus status,
-      required final int memberMoney}) = _$MemberImpl;
+      final int? memberMoney}) = _$MemberImpl;
 
   factory _Member.fromJson(Map<String, dynamic> json) = _$MemberImpl.fromJson;
 
@@ -239,7 +239,7 @@ abstract class _Member implements Member {
   @override
   PaymentStatus get status;
   @override
-  int get memberMoney;
+  int? get memberMoney;
 
   /// Create a copy of Member
   /// with the given fields replaced by the non-null parameter values.

@@ -11,7 +11,7 @@ _$MemberImpl _$$MemberImplFromJson(Map<String, dynamic> json) => _$MemberImpl(
       memberName: json['member_name'] as String,
       lineUserId: json['line_user_id'] as String?,
       status: $enumDecode(_$PaymentStatusEnumMap, json['status']),
-      memberMoney: (json['member_money'] as num).toInt(),
+      memberMoney: (json['member_money'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$$MemberImplToJson(_$MemberImpl instance) =>

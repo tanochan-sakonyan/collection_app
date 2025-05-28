@@ -23,7 +23,7 @@ mixin _$Event {
   String get eventId => throw _privateConstructorUsedError;
   String get eventName => throw _privateConstructorUsedError;
   List<Member> get members => throw _privateConstructorUsedError;
-  int get totalMoney => throw _privateConstructorUsedError;
+  int? get totalMoney => throw _privateConstructorUsedError;
 
   /// Serializes this Event to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -40,7 +40,10 @@ abstract class $EventCopyWith<$Res> {
       _$EventCopyWithImpl<$Res, Event>;
   @useResult
   $Res call(
-      {String eventId, String eventName, List<Member> members, int totalMoney});
+      {String eventId,
+      String eventName,
+      List<Member> members,
+      int? totalMoney});
 }
 
 /// @nodoc
@@ -61,7 +64,7 @@ class _$EventCopyWithImpl<$Res, $Val extends Event>
     Object? eventId = null,
     Object? eventName = null,
     Object? members = null,
-    Object? totalMoney = null,
+    Object? totalMoney = freezed,
   }) {
     return _then(_value.copyWith(
       eventId: null == eventId
@@ -76,10 +79,10 @@ class _$EventCopyWithImpl<$Res, $Val extends Event>
           ? _value.members
           : members // ignore: cast_nullable_to_non_nullable
               as List<Member>,
-      totalMoney: null == totalMoney
+      totalMoney: freezed == totalMoney
           ? _value.totalMoney
           : totalMoney // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
     ) as $Val);
   }
 }
@@ -92,7 +95,10 @@ abstract class _$$EventImplCopyWith<$Res> implements $EventCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String eventId, String eventName, List<Member> members, int totalMoney});
+      {String eventId,
+      String eventName,
+      List<Member> members,
+      int? totalMoney});
 }
 
 /// @nodoc
@@ -111,7 +117,7 @@ class __$$EventImplCopyWithImpl<$Res>
     Object? eventId = null,
     Object? eventName = null,
     Object? members = null,
-    Object? totalMoney = null,
+    Object? totalMoney = freezed,
   }) {
     return _then(_$EventImpl(
       eventId: null == eventId
@@ -126,10 +132,10 @@ class __$$EventImplCopyWithImpl<$Res>
           ? _value._members
           : members // ignore: cast_nullable_to_non_nullable
               as List<Member>,
-      totalMoney: null == totalMoney
+      totalMoney: freezed == totalMoney
           ? _value.totalMoney
           : totalMoney // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
     ));
   }
 }
@@ -142,7 +148,7 @@ class _$EventImpl implements _Event {
       {required this.eventId,
       required this.eventName,
       required final List<Member> members,
-      required this.totalMoney})
+      this.totalMoney})
       : _members = members;
 
   factory _$EventImpl.fromJson(Map<String, dynamic> json) =>
@@ -161,7 +167,7 @@ class _$EventImpl implements _Event {
   }
 
   @override
-  final int totalMoney;
+  final int? totalMoney;
 
   @override
   String toString() {
@@ -207,7 +213,7 @@ abstract class _Event implements Event {
       {required final String eventId,
       required final String eventName,
       required final List<Member> members,
-      required final int totalMoney}) = _$EventImpl;
+      final int? totalMoney}) = _$EventImpl;
 
   factory _Event.fromJson(Map<String, dynamic> json) = _$EventImpl.fromJson;
 
@@ -218,7 +224,7 @@ abstract class _Event implements Event {
   @override
   List<Member> get members;
   @override
-  int get totalMoney;
+  int? get totalMoney;
 
   /// Create a copy of Event
   /// with the given fields replaced by the non-null parameter values.

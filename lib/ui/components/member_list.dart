@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/provider/user_provider.dart';
@@ -15,6 +16,7 @@ import 'dialog/member/edit_member_name_dialog.dart';
 import 'package:flutter_gen/gen_l10n/s.dart';
 
 class MemberList extends ConsumerWidget {
+  final Event event;
   final List<Member>? members;
   final String eventId;
   final String eventName;
@@ -26,6 +28,7 @@ class MemberList extends ConsumerWidget {
 
   const MemberList({
     super.key,
+    required this.event,
     required this.members,
     required this.eventId,
     required this.eventName,
@@ -245,6 +248,10 @@ class MemberList extends ConsumerWidget {
                                                       ),
                                                 )
                                               : null,
+                                          subtitle: (member.memberMoney != null)
+                                              ? Text(
+                                                  "${member.memberMoney}${S.of(context)?.currencyUnit ?? "USD"}")
+                                              : null,
                                           trailing: _buildStatusIcon(
                                             member.status,
                                           ),
@@ -400,14 +407,29 @@ class MemberList extends ConsumerWidget {
                         height: 35,
                       ),
                       const SizedBox(width: 6),
-                      Text(
-                        S.of(context)?.settlePayment ?? "Settle Payment",
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
+                      (event.totalMoney != null)
+                          ? Text(
+                              "合計${event.totalMoney.toString()}${S.of(context)?.currencyUnit ?? "USD"}",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                  ),
+                            )
+                          : Text(
+                              S.of(context)?.settlePayment ?? "Settle Payment",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                  ),
                             ),
-                      ),
                       const SizedBox(width: 12),
                     ],
                   ),
