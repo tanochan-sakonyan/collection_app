@@ -251,6 +251,7 @@ class InputAmountScreenState extends State<InputAmountScreen> {
                 ),
                 onPressed: () {
                   if (_isEditing) _finishEditing();
+                  // TODO: ここで合計金額を入力させる
                   Navigator.push(
                     context,
                     MaterialPageRoute(

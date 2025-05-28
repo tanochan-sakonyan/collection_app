@@ -5,13 +5,13 @@ import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/provider/user_provider.dart';
-import 'package:mr_collection/ui/components/dialog/add_member_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/delete_member_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/status_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/member/add_member_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/member/delete_member_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/member/status_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:mr_collection/ui/screen/amount_screen/input_amount_screen.dart';
-import 'dialog/edit_member_name_dialog.dart';
+import 'dialog/member/edit_member_name_dialog.dart';
 import 'package:flutter_gen/gen_l10n/s.dart';
 
 class MemberList extends ConsumerWidget {
