@@ -64,7 +64,7 @@ class MemberRepository {
   }
 
   Future<List<Member>> inputMembersMoney(
-      String userId, String eventId, List<Member> membersMoneyList) async {
+      String userId, String eventId, List<String> membersMoneyList) async {
     final url =
         Uri.parse('$baseUrl/users/$userId/events/$eventId/members/money-bulk');
     final response = await http.put(url,
