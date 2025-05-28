@@ -11,6 +11,7 @@ class Event with _$Event {
     required String eventId,
     required String eventName,
     required List<Member> members,
+    required int totalMoney,
   }) = _Event;
 
   factory Event.fromJson(Map<String, dynamic> json) => _$EventFromJson(json);

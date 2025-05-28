@@ -298,7 +298,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                             final event = user!.events.firstWhere(
                               (e) => e.eventId == eventId,
                               orElse: () => const Event(
-                                  eventId: "", eventName: '', members: []),
+                                  eventId: "",
+                                  eventName: '',
+                                  members: [],
+                                  totalMoney: 0),
                             );
                             final bool isFullyPaid = event.members.isNotEmpty &&
                                 event.members.every((member) =>
@@ -399,7 +402,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                       final event = user!.events.firstWhere(
                         (e) => e.eventId == eventId,
                         orElse: () => const Event(
-                            eventId: "", eventName: '', members: []),
+                            eventId: "",
+                            eventName: '',
+                            members: [],
+                            totalMoney: 0),
                       );
                       return MemberList(
                         memberAddKey:
