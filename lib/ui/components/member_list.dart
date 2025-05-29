@@ -250,7 +250,15 @@ class MemberList extends ConsumerWidget {
                                               : null,
                                           subtitle: (member.memberMoney != null)
                                               ? Text(
-                                                  "${member.memberMoney}${S.of(context)?.currencyUnit ?? "USD"}")
+                                                  "${member.memberMoney} ${S.of(context)?.currencyUnit ?? "USD"}",
+                                                  style: TextStyle(
+                                                    color: member.status ==
+                                                            PaymentStatus
+                                                                .absence
+                                                        ? Colors.grey
+                                                        : Colors.black,
+                                                  ),
+                                                )
                                               : null,
                                           trailing: _buildStatusIcon(
                                             member.status,
@@ -409,7 +417,7 @@ class MemberList extends ConsumerWidget {
                       const SizedBox(width: 6),
                       (event.totalMoney != null)
                           ? Text(
-                              "合計${event.totalMoney.toString()}${S.of(context)?.currencyUnit ?? "USD"}",
+                              "合計 ${event.totalMoney.toString()} ${S.of(context)?.currencyUnit ?? "USD"}",
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyLarge
