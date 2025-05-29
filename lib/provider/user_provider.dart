@@ -77,42 +77,13 @@ class UserNotifier extends StateNotifier<User?> {
     state = null;
   }
 
-  Future<void> deleteUser( String userId ) async{
+  Future<void> deleteUser(String userId) async {
     try {
       await ref.read(userRepositoryProvider).deleteUser(userId);
       state = null;
     } catch (e) {
       debugPrint('ユーザーの削除中にエラーが発生しました: $e: user_provider.dart ');
       rethrow;
-    }
-  }
-
-  Future<void> updateMemberStatus(
-      String userId, String eventId, String memberId, int newStatus) async {
-    try {
-      final updatedMember = await memberRepository.updateMemberStatus(
-          userId, eventId, memberId, newStatus);
-
-      final updatedUser = state?.copyWith(
-        events: state?.events.map((event) {
-              if (event.eventId == eventId) {
-                return event.copyWith(
-                  members: event.members.map((member) {
-                    if (member.memberId == memberId) {
-                      return updatedMember;
-                    }
-                    return member;
-                  }).toList(),
-                );
-              }
-              return event;
-            }).toList() ??
-            [],
-      );
-
-      state = updatedUser;
-    } catch (e) {
-      debugPrint('メンバーのステータス更新中にエラーが発生しました: $e');
     }
   }
 
@@ -128,15 +99,36 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
-  Future<void> createEventAndTransferMembers(String eventId, String eventName, String userId) async {
+  Future<void> createEventAndTransferMembers(
+      String eventId, String eventName, String userId) async {
     try {
-      final newEvent = await eventRepository.createEventAndTransferMembers(eventId, eventName, userId);
+      final newEvent = await eventRepository.createEventAndTransferMembers(
+          eventId, eventName, userId);
       final updatedUser = state?.copyWith(
         events: [...state!.events, newEvent],
       );
       state = updatedUser;
     } catch (e) {
       debugPrint('イベントの作成中にエラーが発生しました: $e');
+    }
+  }
+
+  Future<void> inputTotalMoney(
+      String userId, String eventId, int totalMoney) async {
+    try {
+      final updatedEvent =
+          await eventRepository.inputTotalMoney(userId, eventId, totalMoney);
+      final updatedUser = state?.copyWith(
+        events: state!.events.map((event) {
+          if (event.eventId == eventId) {
+            return updatedEvent;
+          }
+          return event;
+        }).toList(),
+      );
+      state = updatedUser;
+    } catch (e) {
+      debugPrint('イベントの合計金額の入力中にエラーが発生しました: $e');
     }
   }
 
@@ -173,17 +165,68 @@ class UserNotifier extends StateNotifier<User?> {
       if (names.isEmpty) {
         throw Exception('名前が１つもありません');
       }
-        final newMembers =
-        await memberRepository.createMembers(userId, eventId, names);
-        state = state?.copyWith(
-          events: state!.events.map((evt) {
-            if (evt.eventId != eventId) return evt;
-            return evt.copyWith(members: [...evt.members, ...newMembers]);
-          }).toList(),
-        );
+      final newMembers =
+          await memberRepository.createMembers(userId, eventId, names);
+      state = state?.copyWith(
+        events: state!.events.map((evt) {
+          if (evt.eventId != eventId) return evt;
+          return evt.copyWith(members: [...evt.members, ...newMembers]);
+        }).toList(),
+      );
       debugPrint('メンバーの一括追加に成功しました: $names : user_provider.dart');
     } catch (e) {
       debugPrint('メンバーの作成中にエラーが発生しました: $e : user_provider.dart');
+    }
+  }
+
+  Future<void> updateMemberStatus(
+      String userId, String eventId, String memberId, int newStatus) async {
+    try {
+      final updatedMember = await memberRepository.updateMemberStatus(
+          userId, eventId, memberId, newStatus);
+
+      final updatedUser = state?.copyWith(
+        events: state?.events.map((event) {
+              if (event.eventId == eventId) {
+                return event.copyWith(
+                  members: event.members.map((member) {
+                    if (member.memberId == memberId) {
+                      return updatedMember;
+                    }
+                    return member;
+                  }).toList(),
+                );
+              }
+              return event;
+            }).toList() ??
+            [],
+      );
+
+      state = updatedUser;
+    } catch (e) {
+      debugPrint('メンバーのステータス更新中にエラーが発生しました: $e');
+    }
+  }
+
+  Future<void> inputMembersMoney(String userId, String eventId,
+      List<Map<String, dynamic>> membersMoneyList) async {
+    try {
+      final updatedMembers = await memberRepository.inputMembersMoney(
+          userId, eventId, membersMoneyList);
+
+      final updatedEvents = state?.events.map((event) {
+            if (event.eventId != eventId) return event;
+            return event.copyWith(
+              members: updatedMembers,
+            );
+          }).toList() ??
+          [];
+
+      state = state?.copyWith(events: updatedEvents);
+
+      debugPrint('メンバーの金額入力に成功しました: $membersMoneyList');
+    } catch (e) {
+      debugPrint('メンバーの金額入力中にエラーが発生しました: $e');
     }
   }
 
@@ -226,7 +269,7 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
-  Future<void> sortingMembers( String eventId ) async {
+  Future<void> sortingMembers(String eventId) async {
     if (state == null) return;
 
     final updatedEvents = state!.events.map((event) {
@@ -243,11 +286,11 @@ class UserNotifier extends StateNotifier<User?> {
     state = state!.copyWith(events: updatedEvents);
   }
 
-  Future<void> editMemberName(
-      String userId, String eventId, String memberId, String newMemberName ) async {
+  Future<void> editMemberName(String userId, String eventId, String memberId,
+      String newMemberName) async {
     try {
-      final updatedMember =
-      await memberRepository.editMemberName(userId, eventId, memberId, newMemberName);
+      final updatedMember = await memberRepository.editMemberName(
+          userId, eventId, memberId, newMemberName);
       final updatedEvents = state?.events.map((event) {
         if (event.eventId != eventId) return event;
         return event.copyWith(

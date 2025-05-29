@@ -4,8 +4,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/provider/tab_titles_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
-import 'package:mr_collection/ui/components/dialog/add_event_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/delete_event_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/event/add_event_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/event/delete_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_for_120_and_suggest_official_line_dialog.dart';
 import 'package:mr_collection/ui/components/member_list.dart';
 import 'package:mr_collection/ui/components/tanochan_drawer.dart';
@@ -298,7 +298,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                             final event = user!.events.firstWhere(
                               (e) => e.eventId == eventId,
                               orElse: () => const Event(
-                                  eventId: "", eventName: '', members: []),
+                                  eventId: "",
+                                  eventName: '',
+                                  members: [],
+                                  totalMoney: 0),
                             );
                             final bool isFullyPaid = event.members.isNotEmpty &&
                                 event.members.every((member) =>
@@ -399,18 +402,22 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                       final event = user!.events.firstWhere(
                         (e) => e.eventId == eventId,
                         orElse: () => const Event(
-                            eventId: "", eventName: '', members: []),
+                            eventId: "",
+                            eventName: '',
+                            members: [],
+                            totalMoney: 0),
                       );
                       return MemberList(
+                        event: event,
+                        members: event.eventId != "" ? event.members : [],
+                        eventId: event.eventId != "" ? event.eventId : "",
+                        eventName: event.eventName,
                         memberAddKey:
                             (_currentTabIndex == index) ? memberAddKey : null,
                         slidableKey:
                             (_currentTabIndex == index) ? slidableKey : null,
                         sortKey: (_currentTabIndex == index) ? sortKey : null,
                         fabKey: (_currentTabIndex == index) ? fabKey : null,
-                        members: event.eventId != "" ? event.members : [],
-                        eventId: event.eventId != "" ? event.eventId : "",
-                        eventName: event.eventName,
                       );
                     }).toList(),
                   ),

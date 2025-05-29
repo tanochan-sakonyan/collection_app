@@ -25,7 +25,8 @@ class EventRepository {
     }
   }
 
-  Future<Event> createEventAndTransferMembers(String eventId, String eventName, String userId) async {
+  Future<Event> createEventAndTransferMembers(
+      String eventId, String eventName, String userId) async {
     final url = Uri.parse('$baseUrl/users/$userId/events/clone');
     final response = await http.post(
       url,
@@ -46,6 +47,25 @@ class EventRepository {
     }
 
     return Event.fromJson(data);
+  }
+
+  Future<Event> inputTotalMoney(
+      String userId, String eventId, int totalMoney) async {
+    debugPrint("Repository内でinputTotalMoney関数が呼ばれました。");
+    final url = Uri.parse('$baseUrl/users/$userId/events/$eventId/money');
+    final response = await http.put(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'totalMoney': totalMoney}),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      debugPrint('イベントの合計金額の入力に成功しました。');
+      final data = jsonDecode(response.body);
+      return Event.fromJson(data);
+    } else {
+      throw Exception('イベントの合計金額の入力に失敗しました');
+    }
   }
 
   Future<Map<String, bool>> deleteEvent(String userId, String eventId) async {

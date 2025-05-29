@@ -2,19 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/provider/user_provider.dart';
-import 'package:mr_collection/ui/components/dialog/add_member_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/delete_member_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/status_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/member/add_member_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/member/delete_member_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/member/status_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:mr_collection/ui/screen/amount_screen/input_amount_screen.dart';
-import 'dialog/edit_member_name_dialog.dart';
+import 'dialog/member/edit_member_name_dialog.dart';
 import 'package:flutter_gen/gen_l10n/s.dart';
 
 class MemberList extends ConsumerWidget {
+  final Event event;
   final List<Member>? members;
   final String eventId;
   final String eventName;
@@ -26,6 +28,7 @@ class MemberList extends ConsumerWidget {
 
   const MemberList({
     super.key,
+    required this.event,
     required this.members,
     required this.eventId,
     required this.eventName,
@@ -245,6 +248,18 @@ class MemberList extends ConsumerWidget {
                                                       ),
                                                 )
                                               : null,
+                                          subtitle: (member.memberMoney != null)
+                                              ? Text(
+                                                  "${member.memberMoney} ${S.of(context)?.currencyUnit ?? "USD"}",
+                                                  style: TextStyle(
+                                                    color: member.status ==
+                                                            PaymentStatus
+                                                                .absence
+                                                        ? Colors.grey
+                                                        : Colors.black,
+                                                  ),
+                                                )
+                                              : null,
                                           trailing: _buildStatusIcon(
                                             member.status,
                                           ),
@@ -400,14 +415,29 @@ class MemberList extends ConsumerWidget {
                         height: 35,
                       ),
                       const SizedBox(width: 6),
-                      Text(
-                        S.of(context)?.settlePayment ?? "Settle Payment",
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
+                      (event.totalMoney != null)
+                          ? Text(
+                              "合計 ${event.totalMoney.toString()} ${S.of(context)?.currencyUnit ?? "USD"}",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                  ),
+                            )
+                          : Text(
+                              S.of(context)?.settlePayment ?? "Settle Payment",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                  ),
                             ),
-                      ),
                       const SizedBox(width: 12),
                     ],
                   ),
