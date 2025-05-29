@@ -39,8 +39,13 @@ class _UpdateInfoFor130AndSuggestOfficialLineDialogState
                 controller: _pageController,
                 onPageChanged: widget.onPageChanged,
                 children: const [
+                  UpdateInfoDialogFor130(
+                    version: "1.3.0",
+                    first: "まとめてメンバー追加&引き継ぎ",
+                    second: "金額設定機能(割り勘&傾斜)",
+                    third: "多言語対応(日本語&英語)",
+                  ),
                   SuggestOfficialLineDialogAfter(),
-                  UpdateInfoDialogFor130(),
                 ],
               ),
             ),

@@ -36,7 +36,7 @@ class SuggestOfficialLineDialogAfter extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            '現在、LINE公式アカウントの認証通過を目指して\n取り組んでいます！認証通過には友だち数も重要です。',
+            'おかげさまで、LINE公式アカウントが認証されました！\nLINEと連携した機能を来月頃実装予定です！',
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   color: const Color(0xFF6A6A6A),
@@ -56,19 +56,19 @@ class SuggestOfficialLineDialogAfter extends StatelessWidget {
               )),
           const SizedBox(height: 24),
           Text(
-            "アカウントが認証されたらできること",
+            "次回アップデート(2.0.0)からできること",
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const SizedBox(width: 30),
+                  const SizedBox(width: 20),
                   SvgPicture.asset(
                     'assets/icons/ic_check_badge_green.svg',
                     width: 24,
@@ -76,7 +76,7 @@ class SuggestOfficialLineDialogAfter extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    'LINEグループから自動メンバー追加',
+                    'LINEグループからメンバーを一括追加',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -87,7 +87,7 @@ class SuggestOfficialLineDialogAfter extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const SizedBox(width: 30),
+                  const SizedBox(width: 20),
                   SvgPicture.asset(
                     'assets/icons/ic_check_badge_green.svg',
                     width: 24,

@@ -2,8 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class UpdateInfoDialogFor130 extends StatelessWidget {
-  const UpdateInfoDialogFor130({super.key});
+  const UpdateInfoDialogFor130(
+      {super.key,
+      required this.version,
+      required this.first,
+      required this.second,
+      required this.third});
 
+  final String version;
+  final String first;
+  final String? second;
+  final String? third;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -21,7 +30,13 @@ class UpdateInfoDialogFor130 extends StatelessWidget {
                 ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 6),
+          Text("Ver.$version",
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.copyWith(color: Colors.grey, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 4),
           SizedBox(
             width: 120,
             height: 120,
@@ -62,7 +77,7 @@ class UpdateInfoDialogFor130 extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const SizedBox(width: 30),
+                  const SizedBox(width: 20),
                   SvgPicture.asset(
                     'assets/icons/ic_check_circle_teal.svg',
                     width: 24,
@@ -70,7 +85,7 @@ class UpdateInfoDialogFor130 extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    'チュートリアルの追加',
+                    first,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -78,43 +93,49 @@ class UpdateInfoDialogFor130 extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const SizedBox(width: 30),
-                  SvgPicture.asset(
-                    'assets/icons/ic_check_circle_teal.svg',
-                    width: 24,
-                    height: 24,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'スワイプでメンバー名編集',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
+              (second != null)
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const SizedBox(width: 20),
+                        SvgPicture.asset(
+                          'assets/icons/ic_check_circle_teal.svg',
+                          width: 24,
+                          height: 24,
                         ),
-                  ),
-                ],
-              ),
+                        const SizedBox(width: 8),
+                        Text(
+                          second!,
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                        ),
+                      ],
+                    )
+                  : const SizedBox(height: 20),
               const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const SizedBox(width: 30),
-                  SvgPicture.asset(
-                    'assets/icons/ic_check_circle_teal.svg',
-                    width: 24,
-                    height: 24,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    '設定画面に目安箱を設置',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
+              (third != null)
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const SizedBox(width: 20),
+                        SvgPicture.asset(
+                          'assets/icons/ic_check_circle_teal.svg',
+                          width: 24,
+                          height: 24,
                         ),
-                  ),
-                ],
-              ),
+                        const SizedBox(width: 8),
+                        Text(
+                          third!,
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                        ),
+                      ],
+                    )
+                  : const SizedBox(height: 20),
             ],
           ),
           const SizedBox(height: 16),
