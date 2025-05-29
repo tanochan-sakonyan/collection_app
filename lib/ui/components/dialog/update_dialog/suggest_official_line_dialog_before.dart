@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class SuggestOfficialLineDialog extends StatelessWidget {
-  const SuggestOfficialLineDialog({super.key});
+// 公式LINEが認証される前のダイアログ(もう使わない)
+class SuggestOfficialLineDialogBefore extends StatelessWidget {
+  const SuggestOfficialLineDialogBefore({super.key});
 
   Future<void> _launchLine() async {
     final uri = Uri.parse('https://lin.ee/cLwUgQtP');

@@ -184,9 +184,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   // versionForUpdateDialogを、2025/04現在は1.2.0で定義
   // これがshownVersionFor120と異なる時、ポップアップを出す。
   // 今後のアップデートの際は、shownVersionFor〇〇〇のpreferenceを更新する。
+  // 20240529追記。shownVersionFor130作成済み
   Future<void> _checkAndShowUpdateDialog() async {
     final prefs = await SharedPreferences.getInstance();
-    final shown = prefs.getBool('shownVersionFor120') ?? false;
+    final shown = prefs.getBool('shownVersionFor130') ?? false;
     debugPrint('shownVersion: $shown');
     if (!shown) {
       showDialog(
@@ -196,7 +197,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           onPageChanged: (i) {},
         ),
       );
-      await prefs.setBool('shownVersionFor120', true);
+      // await prefs.setBool('shownVersionFor130', true); TODO: mergeする前に絶対元に戻す。
       debugPrint('Update dialog shown for version "true"');
     } else {
       debugPrint('すでに表示されています。');

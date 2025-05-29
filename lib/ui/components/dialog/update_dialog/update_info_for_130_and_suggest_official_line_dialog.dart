@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_dialog_for_120.dart.dart';
-import 'package:mr_collection/ui/components/dialog/update_dialog/suggest_official_line_dialog_before.dart';
+import 'package:mr_collection/ui/components/dialog/update_dialog/suggest_official_line_dialog_after.dart';
+import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_dialog_for_130.dart.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class UpdateInfoFor120AndSuggestOfficialLineDialog extends StatefulWidget {
+class UpdateInfoFor130AndSuggestOfficialLineDialog extends StatefulWidget {
   final TickerProvider vsync;
   final void Function(int) onPageChanged;
-  const UpdateInfoFor120AndSuggestOfficialLineDialog(
+  const UpdateInfoFor130AndSuggestOfficialLineDialog(
       {super.key, required this.vsync, required this.onPageChanged});
 
   @override
-  State<UpdateInfoFor120AndSuggestOfficialLineDialog> createState() =>
-      _UpdateInfoFor120AndSuggestOfficialLineDialogState();
+  State<UpdateInfoFor130AndSuggestOfficialLineDialog> createState() =>
+      _UpdateInfoFor130AndSuggestOfficialLineDialogState();
 }
 
-class _UpdateInfoFor120AndSuggestOfficialLineDialogState
-    extends State<UpdateInfoFor120AndSuggestOfficialLineDialog> {
+class _UpdateInfoFor130AndSuggestOfficialLineDialogState
+    extends State<UpdateInfoFor130AndSuggestOfficialLineDialog> {
   late final PageController _pageController;
 
   @override
@@ -39,8 +39,8 @@ class _UpdateInfoFor120AndSuggestOfficialLineDialogState
                 controller: _pageController,
                 onPageChanged: widget.onPageChanged,
                 children: const [
-                  SuggestOfficialLineDialogBefore(),
-                  UpdateInfoDialogFor120(),
+                  SuggestOfficialLineDialogAfter(),
+                  UpdateInfoDialogFor130(),
                 ],
               ),
             ),
