@@ -36,7 +36,7 @@ class SuggestOfficialLineDialogAfter extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'おかげさまで、LINE公式アカウントが認証されました！\nLINEと連携した機能を来月頃実装予定です！',
+            'おかげさまで、LINE公式アカウントが認証されました！\nLINEと連携した機能を7月に実装予定です！',
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   color: const Color(0xFF6A6A6A),
