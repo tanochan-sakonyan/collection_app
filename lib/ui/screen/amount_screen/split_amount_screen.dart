@@ -10,6 +10,7 @@ import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/amount_guide_dialog.dart';
 import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:mr_collection/ui/screen/home_screen.dart';
 
 class _TabPill extends StatelessWidget {
   const _TabPill({
@@ -664,6 +665,10 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                   userId,
                   widget.eventId,
                 );
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const HomeScreen()));
               },
               child: Text(S.of(context)?.confirm ?? "Confirm",
                   style: GoogleFonts.inter(
