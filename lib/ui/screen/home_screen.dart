@@ -4,9 +4,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/provider/tab_titles_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
-import 'package:mr_collection/ui/components/dialog/event/add_event_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/event/delete_event_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_for_120_and_suggest_official_line_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/add_event_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/delete_event_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_and_suggest_official_line_dialog.dart';
 import 'package:mr_collection/ui/components/member_list.dart';
 import 'package:mr_collection/ui/components/tanochan_drawer.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
@@ -66,22 +66,34 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     _loadSavedTabIndex();
   }
 
+  bool _updateDialogChecked = false; // 追加：一度だけ呼ぶためのフラグ
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    if (_updateDialogChecked) return; // 2 回目以降はスキップ
 
     final route = ModalRoute.of(context);
-    if (route?.animation != null) {
-      route!.animation!.addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          _checkTutorialStatus();
-        }
+    final anim = route?.animation;
+
+    // アニメーションが無い、またはすでに完了しているならすぐ判定
+    if (anim == null || anim.status == AnimationStatus.completed) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _checkAndShowUpdateDialog();
       });
     } else {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _checkTutorialStatus();
-      });
+      // アニメーションが動いている場合だけ listener を付ける
+      void listener(AnimationStatus status) {
+        if (status == AnimationStatus.completed && mounted) {
+          _checkAndShowUpdateDialog();
+          anim.removeStatusListener(listener); // listener を外してリーク防止
+        }
+      }
+
+      anim.addStatusListener(listener);
     }
+
+    _updateDialogChecked = true; // これ以上は呼ばない
   }
 
   Future<void> _checkTutorialStatus() async {
@@ -120,11 +132,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       paddingFocus: 6,
       onFinish: () {
         _setTutorialShown();
-        _checkAndShowUpdateDialog();
       },
       onSkip: () {
         _setTutorialShown();
-        _checkAndShowUpdateDialog();
         return true;
       },
     );
@@ -184,19 +194,20 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   // versionForUpdateDialogを、2025/04現在は1.2.0で定義
   // これがshownVersionFor120と異なる時、ポップアップを出す。
   // 今後のアップデートの際は、shownVersionFor〇〇〇のpreferenceを更新する。
+  // 20240529追記。shownVersionFor130作成済み
   Future<void> _checkAndShowUpdateDialog() async {
     final prefs = await SharedPreferences.getInstance();
-    final shown = prefs.getBool('shownVersionFor120') ?? false;
+    final shown = prefs.getBool('shownVersionFor130') ?? false;
     debugPrint('shownVersion: $shown');
     if (!shown) {
       showDialog(
         context: context,
-        builder: (_) => UpdateInfoFor120AndSuggestOfficialLineDialog(
+        builder: (_) => UpdateInfoAndSuggestOfficialLineDialog(
           vsync: this,
           onPageChanged: (i) {},
         ),
       );
-      await prefs.setBool('shownVersionFor120', true);
+      await prefs.setBool('shownVersionFor130', true);
       debugPrint('Update dialog shown for version "true"');
     } else {
       debugPrint('すでに表示されています。');
