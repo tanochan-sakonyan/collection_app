@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_dialog_for_120.dart.dart';
+import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_dialog_for_120.dart';
 import 'package:mr_collection/ui/components/dialog/update_dialog/suggest_official_line_dialog_before.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class UpdateInfoFor120AndSuggestOfficialLineDialog extends StatefulWidget {
+class UpdateInfoAndSuggestOfficialLineDialog extends StatefulWidget {
   final TickerProvider vsync;
   final void Function(int) onPageChanged;
-  const UpdateInfoFor120AndSuggestOfficialLineDialog(
+  const UpdateInfoAndSuggestOfficialLineDialog(
       {super.key, required this.vsync, required this.onPageChanged});
 
   @override
-  State<UpdateInfoFor120AndSuggestOfficialLineDialog> createState() =>
-      _UpdateInfoFor120AndSuggestOfficialLineDialogState();
+  State<UpdateInfoAndSuggestOfficialLineDialog> createState() =>
+      _UpdateInfoAndSuggestOfficialLineDialogState();
 }
 
-class _UpdateInfoFor120AndSuggestOfficialLineDialogState
-    extends State<UpdateInfoFor120AndSuggestOfficialLineDialog> {
+class _UpdateInfoAndSuggestOfficialLineDialogState
+    extends State<UpdateInfoAndSuggestOfficialLineDialog> {
   late final PageController _pageController;
 
   @override

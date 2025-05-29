@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:mr_collection/ui/components/dialog/update_dialog/suggest_official_line_dialog_after.dart';
-import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_dialog_for_130.dart.dart';
+import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_dialog.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class UpdateInfoFor130AndSuggestOfficialLineDialog extends StatefulWidget {
+// 44行目のversion,first,second,thirdを変えて、どのバージョンでも実装可能
+class UpdateInfoAndSuggestOfficialLineDialog extends StatefulWidget {
   final TickerProvider vsync;
   final void Function(int) onPageChanged;
-  const UpdateInfoFor130AndSuggestOfficialLineDialog(
+  const UpdateInfoAndSuggestOfficialLineDialog(
       {super.key, required this.vsync, required this.onPageChanged});
 
   @override
-  State<UpdateInfoFor130AndSuggestOfficialLineDialog> createState() =>
-      _UpdateInfoFor130AndSuggestOfficialLineDialogState();
+  State<UpdateInfoAndSuggestOfficialLineDialog> createState() =>
+      _UpdateInfoAndSuggestOfficialLineDialogState();
 }
 
-class _UpdateInfoFor130AndSuggestOfficialLineDialogState
-    extends State<UpdateInfoFor130AndSuggestOfficialLineDialog> {
+class _UpdateInfoAndSuggestOfficialLineDialogState
+    extends State<UpdateInfoAndSuggestOfficialLineDialog> {
   late final PageController _pageController;
 
   @override
@@ -39,7 +40,7 @@ class _UpdateInfoFor130AndSuggestOfficialLineDialogState
                 controller: _pageController,
                 onPageChanged: widget.onPageChanged,
                 children: const [
-                  UpdateInfoDialogFor130(
+                  UpdateInfoDialog(
                     version: "1.3.0",
                     first: "まとめてメンバー追加&引き継ぎ",
                     second: "金額設定機能(割り勘&傾斜)",

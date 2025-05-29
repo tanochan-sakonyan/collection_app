@@ -6,9 +6,7 @@ import 'package:mr_collection/provider/tab_titles_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/add_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/delete_event_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_dialog_for_120.dart.dart';
 import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_for_120_and_suggest_official_line_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_for_130_and_suggest_official_line_dialog.dart';
 import 'package:mr_collection/ui/components/member_list.dart';
 import 'package:mr_collection/ui/components/tanochan_drawer.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
@@ -194,7 +192,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     if (!shown) {
       showDialog(
         context: context,
-        builder: (_) => UpdateInfoFor120AndSuggestOfficialLineDialog(
+        builder: (_) => UpdateInfoAndSuggestOfficialLineDialog(
           vsync: this,
           onPageChanged: (i) {},
         ),
@@ -379,17 +377,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                         //   icon: SvgPicture.asset('assets/icons/delete.svg'),
                         // ),
                         // const SizedBox(width: 8),
-                        ElevatedButton(
-                            onPressed: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) =>
-                                      UpdateInfoFor130AndSuggestOfficialLineDialog(
-                                        vsync: this,
-                                        onPageChanged: (i) {},
-                                      ));
-                            },
-                            child: const Text("デバッグ用。アップデートダイアログを表示"))
                       ],
                     ),
                   ],

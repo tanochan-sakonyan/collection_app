@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-class UpdateInfoDialogFor130 extends StatelessWidget {
-  const UpdateInfoDialogFor130(
+class UpdateInfoDialog extends StatelessWidget {
+  const UpdateInfoDialog(
       {super.key,
       required this.version,
       required this.first,
