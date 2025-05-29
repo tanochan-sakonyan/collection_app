@@ -309,7 +309,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                             final event = user!.events.firstWhere(
                               (e) => e.eventId == eventId,
                               orElse: () => const Event(
-                                  eventId: "", eventName: '', members: []),
+                                  eventId: "",
+                                  eventName: '',
+                                  members: [],
+                                  totalMoney: 0),
                             );
                             final bool isFullyPaid = event.members.isNotEmpty &&
                                 event.members.every((member) =>
@@ -410,18 +413,22 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                       final event = user!.events.firstWhere(
                         (e) => e.eventId == eventId,
                         orElse: () => const Event(
-                            eventId: "", eventName: '', members: []),
+                            eventId: "",
+                            eventName: '',
+                            members: [],
+                            totalMoney: 0),
                       );
                       return MemberList(
+                        event: event,
+                        members: event.eventId != "" ? event.members : [],
+                        eventId: event.eventId != "" ? event.eventId : "",
+                        eventName: event.eventName,
                         memberAddKey:
                             (_currentTabIndex == index) ? memberAddKey : null,
                         slidableKey:
                             (_currentTabIndex == index) ? slidableKey : null,
                         sortKey: (_currentTabIndex == index) ? sortKey : null,
                         fabKey: (_currentTabIndex == index) ? fabKey : null,
-                        members: event.eventId != "" ? event.members : [],
-                        eventId: event.eventId != "" ? event.eventId : "",
-                        eventName: event.eventName,
                       );
                     }).toList(),
                   ),

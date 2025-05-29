@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:ui' show FontFeature;
 import 'package:mr_collection/data/model/freezed/member.dart';
+import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/screen/amount_screen/split_amount_screen.dart';
 import 'package:flutter_gen/gen_l10n/s.dart';
 
-class InputAmountScreen extends StatefulWidget {
+class InputAmountScreen extends ConsumerStatefulWidget {
   final String eventId;
   final String eventName;
   final List<Member> members;
@@ -22,7 +24,7 @@ class InputAmountScreen extends StatefulWidget {
   InputAmountScreenState createState() => InputAmountScreenState();
 }
 
-class InputAmountScreenState extends State<InputAmountScreen> {
+class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
   bool _isEditing = false;
 
   late TextEditingController _controller;
@@ -121,8 +123,26 @@ class InputAmountScreenState extends State<InputAmountScreen> {
     _focusNode.unfocus();
   }
 
+  Future<void> _inputTotalMoney(
+    String userId,
+    String eventId,
+    int totalMoney,
+  ) async {
+    try {
+      debugPrint("_inputTotalMoney関数が呼ばれました。金額： $totalMoney");
+      await ref.read(userProvider.notifier).inputTotalMoney(
+            userId,
+            eventId,
+            totalMoney,
+          );
+    } catch (e) {
+      debugPrint('Error inputting total money: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final userId = ref.watch(userProvider)!.userId;
     final yenStyle = _numberStyle.copyWith(fontSize: 36);
     Widget amountDisplay;
     if (_isEditing) {
@@ -251,13 +271,19 @@ class InputAmountScreenState extends State<InputAmountScreen> {
                 ),
                 onPressed: () {
                   if (_isEditing) _finishEditing();
+                  _inputTotalMoney(
+                    userId,
+                    widget.eventId,
+                    _amount,
+                  );
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (_) => SplitAmountScreen(
+                        eventId: widget.eventId,
                         eventName: widget.eventName,
-                        amount: _amount,
                         members: widget.members,
+                        amount: _amount,
                       ),
                     ),
                   );
