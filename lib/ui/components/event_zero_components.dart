@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mr_collection/provider/user_provider.dart';
 
-import '../../provider/user_provider.dart';
 import 'dialog/event/add_event_dialog.dart';
 
 class EventZeroComponents extends ConsumerWidget {

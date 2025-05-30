@@ -66,34 +66,31 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     _loadSavedTabIndex();
   }
 
-  bool _updateDialogChecked = false; // 追加：一度だけ呼ぶためのフラグ
+  bool _updateDialogChecked = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (_updateDialogChecked) return; // 2 回目以降はスキップ
+    if (_updateDialogChecked) return;
 
     final route = ModalRoute.of(context);
     final anim = route?.animation;
 
-    // アニメーションが無い、またはすでに完了しているならすぐ判定
     if (anim == null || anim.status == AnimationStatus.completed) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) _checkAndShowUpdateDialog();
       });
     } else {
-      // アニメーションが動いている場合だけ listener を付ける
       void listener(AnimationStatus status) {
         if (status == AnimationStatus.completed && mounted) {
           _checkAndShowUpdateDialog();
-          anim.removeStatusListener(listener); // listener を外してリーク防止
+          anim.removeStatusListener(listener);
         }
       }
 
       anim.addStatusListener(listener);
     }
-
-    _updateDialogChecked = true; // これ以上は呼ばない
+    _updateDialogChecked = true;
   }
 
   Future<void> _checkTutorialStatus() async {
