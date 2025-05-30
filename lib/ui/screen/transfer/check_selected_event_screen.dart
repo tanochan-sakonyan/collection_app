@@ -79,80 +79,82 @@ class CheckSelectedEventScreenState
               ),
               child: SizedBox(
                 height: 352,
-                child: Column(
-                  children: [
-                    Container(
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFE8E8E8),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(12),
-                          topRight: Radius.circular(12),
-                        ),
-                        border: Border(
-                          bottom: BorderSide(color: Colors.black),
-                        ),
-                      ),
-                      height: 32,
-                      child: Row(
-                        children: [
-                          const SizedBox(width: 24),
-                          Text(
-                            S.of(context)?.member ?? "Member",
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodySmall
-                                ?.copyWith(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Container(
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFE8E8E8),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(12),
+                            topRight: Radius.circular(12),
                           ),
-                        ],
+                          border: Border(
+                            bottom: BorderSide(color: Colors.black),
+                          ),
+                        ),
+                        height: 32,
+                        child: Row(
+                          children: [
+                            const SizedBox(width: 24),
+                            Text(
+                              S.of(context)?.member ?? "Member",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.copyWith(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(12),
-                        bottomRight: Radius.circular(12),
-                      ),
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: event.members.length,
-                        itemBuilder: (context, index) {
-                          final member = event.members[index];
-                          return Column(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 16, right: 16),
-                                child: SizedBox(
-                                  height: 44,
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      member.memberName,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium
-                                          ?.copyWith(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.black,
-                                          ),
+                      ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(12),
+                          bottomRight: Radius.circular(12),
+                        ),
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: event.members.length,
+                          itemBuilder: (context, index) {
+                            final member = event.members[index];
+                            return Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 16, right: 16),
+                                  child: SizedBox(
+                                    height: 44,
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        member.memberName,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium
+                                            ?.copyWith(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.black,
+                                            ),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              const Divider(
-                                color: Color(0xFFE8E8E8),
-                                thickness: 1,
-                                height: 1,
-                              ),
-                            ],
-                          );
-                        },
+                                const Divider(
+                                  color: Color(0xFFE8E8E8),
+                                  thickness: 1,
+                                  height: 1,
+                                ),
+                              ],
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
