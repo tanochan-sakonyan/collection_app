@@ -1,54 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/provider/user_provider.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_gen/gen_l10n/s.dart';
 
-class DeleteMemberDialog extends ConsumerStatefulWidget {
+class DeleteEventDialog extends ConsumerStatefulWidget {
   final String userId;
   final String eventId;
-  final String memberId;
-  const DeleteMemberDialog({
+  const DeleteEventDialog({
     required this.userId,
     required this.eventId,
-    required this.memberId,
     super.key,
   });
 
+  get eventRepository => null;
+
   @override
-  ConsumerState<DeleteMemberDialog> createState() => _DeleteMemberDialogState();
+  ConsumerState<DeleteEventDialog> createState() => _DeleteEventDialogState();
 }
 
-class _DeleteMemberDialogState extends ConsumerState<DeleteMemberDialog> {
+class _DeleteEventDialogState extends ConsumerState<DeleteEventDialog> {
   bool _isButtonEnabled = true;
-
-  Future<void> _deleteMember() async {
+  Future<void> _deleteEvent(ref, String userId, String eventId) async {
     if (!_isButtonEnabled) return;
-
     setState(() {
       _isButtonEnabled = false;
     });
-
     try {
-      await ref
-          .read(userProvider.notifier)
-          .deleteMember(widget.userId, widget.eventId, widget.memberId);
-      Navigator.of(context).pop();
+      await ref.read(userProvider.notifier).deleteEvent(userId, eventId);
+      Navigator.of(ref).pop();
     } catch (error) {
-      debugPrint('メンバー削除に失敗しました: $error');
-      Future.delayed(const Duration(seconds: 2), () {
-        setState(() {
-          _isButtonEnabled = true;
-        });
-      });
+      debugPrint('イベントの削除に失敗しました: $error');
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Container(
         width: 320,
         height: 179,
@@ -60,12 +49,13 @@ class _DeleteMemberDialogState extends ConsumerState<DeleteMemberDialog> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'このメンバーを削除しますか？',
-              style: GoogleFonts.notoSansJp(
-                fontWeight: FontWeight.w400,
-                fontSize: 13,
-                color: Colors.black,
-              ),
+              S.of(context)?.confirmDeleteEvent ??
+                  "Delete this event?", //TODO：イベント名を取得して表示
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16,
+                    color: Colors.black,
+                  ),
             ),
             const SizedBox(height: 40),
             Row(
@@ -87,8 +77,12 @@ class _DeleteMemberDialogState extends ConsumerState<DeleteMemberDialog> {
                       ),
                     ),
                     child: Text(
-                      'いいえ',
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      S.of(context)?.no ?? "No",
+                      style: GoogleFonts.notoSansJp(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                 ),
@@ -97,7 +91,9 @@ class _DeleteMemberDialogState extends ConsumerState<DeleteMemberDialog> {
                   height: 36,
                   width: 107,
                   child: ElevatedButton(
-                    onPressed: _isButtonEnabled ? _deleteMember : null,
+                    onPressed: _isButtonEnabled
+                        ? () => _deleteEvent(ref, widget.userId, widget.eventId)
+                        : null,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFF2F2F2),
                       elevation: 2,
@@ -106,8 +102,12 @@ class _DeleteMemberDialogState extends ConsumerState<DeleteMemberDialog> {
                       ),
                     ),
                     child: Text(
-                      'はい',
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      S.of(context)?.yes ?? "Yes",
+                      style: GoogleFonts.notoSansJp(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                 ),

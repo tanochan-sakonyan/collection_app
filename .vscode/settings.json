@@ -15,6 +15,7 @@
   "conventionalCommits.scopes": ["app", "core", "feature"],
   "eslint.workingDirectories": ["./functions"],
   "cSpell.words": [
+    "adjustables",
     "cupertino",
     "herokuapp",
     "Ikeo",

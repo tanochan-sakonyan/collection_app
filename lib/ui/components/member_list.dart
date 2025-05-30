@@ -2,19 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/provider/user_provider.dart';
-import 'package:mr_collection/ui/components/dialog/add_member_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/delete_member_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/status_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/member/add_member_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/member/delete_member_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/member/status_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'dialog/edit_member_name_dialog.dart';
+import 'package:mr_collection/ui/screen/amount_screen/input_amount_screen.dart';
+import 'dialog/member/edit_member_name_dialog.dart';
+import 'package:flutter_gen/gen_l10n/s.dart';
 
 class MemberList extends ConsumerWidget {
+  final Event event;
   final List<Member>? members;
   final String eventId;
+  final String eventName;
 
   final GlobalKey? memberAddKey;
   final GlobalKey? slidableKey;
@@ -23,15 +28,22 @@ class MemberList extends ConsumerWidget {
 
   const MemberList({
     super.key,
+    required this.event,
     required this.members,
     required this.eventId,
+    required this.eventName,
     this.memberAddKey,
     this.slidableKey,
     this.sortKey,
     this.fabKey,
   });
-  Future<void> _updateMemberStatus(WidgetRef ref, String userId, String eventId,
-      String memberId, int? status) async {
+  Future<void> _updateMemberStatus(
+    WidgetRef ref,
+    String userId,
+    String eventId,
+    String memberId,
+    int? status,
+  ) async {
     try {
       await ref
           .read(userProvider.notifier)
@@ -72,31 +84,30 @@ class MemberList extends ConsumerWidget {
                           topLeft: Radius.circular(12),
                           topRight: Radius.circular(12),
                         ),
-                        border: Border(
-                          bottom: BorderSide(color: Colors.black),
-                        ),
+                        border: Border(bottom: BorderSide(color: Colors.black)),
                       ),
                       height: 32,
                       child: Row(
                         children: [
                           const SizedBox(width: 24),
                           Text(
-                            'メンバー',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodySmall
-                                ?.copyWith(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black),
+                            S.of(context)?.member ?? "Member",
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodySmall?.copyWith(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black,
+                                ),
                           ),
                           const Spacer(),
                           Text(
-                            '支払い状況',
+                            S.of(context)?.paymentStatus ?? "Payment Status",
                             style: GoogleFonts.notoSansJp(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.black),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black,
+                            ),
                           ),
                           const SizedBox(width: 3),
                           GestureDetector(
@@ -114,31 +125,37 @@ class MemberList extends ConsumerWidget {
                     ),
                     ClipRect(
                       child: SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.4,
+                        height: MediaQuery.of(context).size.height * 0.35,
                         child: SlidableAutoCloseBehavior(
                           child: ListView.builder(
                             itemCount: members?.length,
                             itemBuilder: (context, index) {
                               final member = members?[index];
                               return Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 16, right: 16),
+                                padding: const EdgeInsets.only(
+                                  left: 16,
+                                  right: 16,
+                                ),
                                 child: Column(
                                   children: [
                                     Slidable(
                                       key: ValueKey(member!.memberId),
                                       endActionPane: ActionPane(
                                         motion: const ScrollMotion(),
-                                        extentRatio: 0.52,
+                                        extentRatio: 0.60,
                                         children: [
                                           CustomSlidableAction(
                                             onPressed: (context) {
                                               showDialog(
                                                 context: context,
-                                                builder: (context) =>
+                                                builder: (
+                                                  context,
+                                                ) =>
                                                     EditMemberNameDialog(
                                                   userId: ref
-                                                      .read(userProvider)!
+                                                      .read(
+                                                        userProvider,
+                                                      )!
                                                       .userId,
                                                   eventId: eventId,
                                                   memberId: member.memberId,
@@ -154,7 +171,7 @@ class MemberList extends ConsumerWidget {
                                               children: [
                                                 const SizedBox(height: 4),
                                                 AutoSizeText(
-                                                  '編集',
+                                                  S.of(context)?.edit ?? "Edit",
                                                   maxLines: 1,
                                                   style: GoogleFonts.inter(
                                                     fontSize: 14,
@@ -169,10 +186,14 @@ class MemberList extends ConsumerWidget {
                                             onPressed: (context) {
                                               showDialog(
                                                 context: context,
-                                                builder: (context) =>
+                                                builder: (
+                                                  context,
+                                                ) =>
                                                     DeleteMemberDialog(
                                                   userId: ref
-                                                      .read(userProvider)!
+                                                      .read(
+                                                        userProvider,
+                                                      )!
                                                       .userId,
                                                   eventId: eventId,
                                                   memberId: member.memberId,
@@ -186,7 +207,8 @@ class MemberList extends ConsumerWidget {
                                               children: [
                                                 const SizedBox(height: 4),
                                                 AutoSizeText(
-                                                  '削除',
+                                                  S.of(context)?.delete ??
+                                                      "Delete",
                                                   maxLines: 1,
                                                   style: GoogleFonts.inter(
                                                     fontSize: 14,
@@ -209,7 +231,9 @@ class MemberList extends ConsumerWidget {
                                                   maxLines: 1,
                                                   overflow:
                                                       TextOverflow.ellipsis,
-                                                  style: Theme.of(context)
+                                                  style: Theme.of(
+                                                    context,
+                                                  )
                                                       .textTheme
                                                       .bodyMedium
                                                       ?.copyWith(
@@ -224,8 +248,21 @@ class MemberList extends ConsumerWidget {
                                                       ),
                                                 )
                                               : null,
-                                          trailing:
-                                              _buildStatusIcon(member.status),
+                                          subtitle: (member.memberMoney != null)
+                                              ? Text(
+                                                  "${member.memberMoney} ${S.of(context)?.currencyUnit ?? "USD"}",
+                                                  style: TextStyle(
+                                                    color: member.status ==
+                                                            PaymentStatus
+                                                                .absence
+                                                        ? Colors.grey
+                                                        : Colors.black,
+                                                  ),
+                                                )
+                                              : null,
+                                          trailing: _buildStatusIcon(
+                                            member.status,
+                                          ),
                                           onTap: () {
                                             showDialog(
                                               context: context,
@@ -237,16 +274,19 @@ class MemberList extends ConsumerWidget {
                                                 eventId: eventId.toString(),
                                                 memberId: member.memberId,
                                                 member: member.memberName,
-                                                onStatusChange: (String userId,
-                                                    String eventId,
-                                                    String memberId,
-                                                    int status) {
+                                                onStatusChange: (
+                                                  String userId,
+                                                  String eventId,
+                                                  String memberId,
+                                                  int status,
+                                                ) {
                                                   _updateMemberStatus(
-                                                      ref,
-                                                      userId,
-                                                      eventId,
-                                                      memberId,
-                                                      status);
+                                                    ref,
+                                                    userId,
+                                                    eventId,
+                                                    memberId,
+                                                    status,
+                                                  );
                                                 },
                                               ),
                                             );
@@ -267,11 +307,7 @@ class MemberList extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    const Divider(
-                      color: Colors.black,
-                      thickness: 1,
-                      height: 1,
-                    ),
+                    const Divider(color: Colors.black, thickness: 1, height: 1),
                     SizedBox(
                       height: 44,
                       child: Row(
@@ -320,17 +356,18 @@ class MemberList extends ConsumerWidget {
                               key: memberAddKey,
                               children: [
                                 SizedBox(
-                                    height: 24,
-                                    width: 24,
-                                    child: SvgPicture.asset(
-                                        'assets/icons/user-add.svg')),
+                                  height: 24,
+                                  width: 24,
+                                  child: SvgPicture.asset(
+                                    'assets/icons/user-add.svg',
+                                  ),
+                                ),
                                 const SizedBox(width: 4),
                                 Text(
-                                  'メンバー追加',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
-                                      ?.copyWith(
+                                  S.of(context)?.addMembers ?? "Add Members",
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.bodySmall?.copyWith(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w500,
                                         color: Colors.black,
@@ -343,36 +380,93 @@ class MemberList extends ConsumerWidget {
                           // const SizedBox(width: 30),
                         ],
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
-              const SizedBox(height: 24),
-              //TODO メンバーのステータスによって表示を変える
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child:
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  SizedBox(
-                    width: 60,
-                    child: Text(
-                      "未払い",
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                      textAlign: TextAlign.center,
+              const SizedBox(height: 12),
+              SizedBox(
+                height: 40,
+                width: 324,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF75DCC6),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.25,
-                    height: iconSize,
-                    child: Stack(
-                      children: unpaidCount != null
-                          ? List.generate(
-                              unpaidCount,
-                              (index) {
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => InputAmountScreen(
+                          eventId: eventId,
+                          eventName: eventName,
+                          members: members!,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/icons/ic_amount.svg',
+                        width: 35,
+                        height: 35,
+                      ),
+                      const SizedBox(width: 6),
+                      (event.totalMoney != null)
+                          ? Text(
+                              "合計 ${event.totalMoney.toString()} ${S.of(context)?.currencyUnit ?? "USD"}",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                  ),
+                            )
+                          : Text(
+                              S.of(context)?.settlePayment ?? "Settle Payment",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                  ),
+                            ),
+                      const SizedBox(width: 12),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 64,
+                      child: Text(
+                        S.of(context)?.unpaid ?? "",
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.25,
+                      height: iconSize,
+                      child: Stack(
+                        children: unpaidCount != null
+                            ? List.generate(unpaidCount, (index) {
                                 double containerWidth =
                                     MediaQuery.of(context).size.width * 0.25;
                                 double spacing = (unpaidCount > 1)
@@ -390,49 +484,48 @@ class MemberList extends ConsumerWidget {
                                     height: iconSize,
                                   ),
                                 );
-                              },
-                            )
-                          : const <Widget>[],
+                              })
+                            : const <Widget>[],
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 4),
-                  const Text("・・・・・"),
-                  const SizedBox(width: 20),
-                  Text(
-                    "$unpaidCount人",
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black,
-                        ),
-                  ),
-                ]),
+                    const SizedBox(width: 4),
+                    const Text("・・・・・"),
+                    const SizedBox(width: 20),
+                    Text(
+                      "$unpaidCount${S.of(context)?.person ?? ""}",
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black,
+                          ),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child:
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  SizedBox(
-                    width: 60,
-                    child: Text(
-                      "支払済",
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                      textAlign: TextAlign.center,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 60,
+                      child: Text(
+                        S.of(context)?.paid ?? "",
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            ),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.25,
-                    height: iconSize,
-                    child: Stack(
-                      children: attendanceCount != null
-                          ? List.generate(
-                              attendanceCount,
-                              (index) {
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.25,
+                      height: iconSize,
+                      child: Stack(
+                        children: attendanceCount != null
+                            ? List.generate(attendanceCount, (index) {
                                 double containerWidth =
                                     MediaQuery.of(context).size.width * 0.25;
                                 double spacing = (attendanceCount > 1)
@@ -450,23 +543,23 @@ class MemberList extends ConsumerWidget {
                                     height: iconSize,
                                   ),
                                 );
-                              },
-                            )
-                          : const <Widget>[],
+                              })
+                            : const <Widget>[],
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 4),
-                  const Text("・・・・・"),
-                  const SizedBox(width: 20),
-                  Text(
-                    "$attendanceCount人",
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black,
-                        ),
-                  ),
-                ]),
+                    const SizedBox(width: 4),
+                    const Text("・・・・・"),
+                    const SizedBox(width: 20),
+                    Text(
+                      "$attendanceCount${S.of(context)?.person ?? ""}",
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black,
+                          ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -487,11 +580,15 @@ class MemberList extends ConsumerWidget {
                     context: context,
                     builder: (context) => AlertDialog(
                       contentPadding: const EdgeInsets.symmetric(
-                          vertical: 56.0, horizontal: 24.0),
+                        vertical: 56.0,
+                        horizontal: 24.0,
+                      ),
                       content: Text(
-                        'LINEへの認証申請中のため、\nアップデートをお待ちください。',
+                        '${S.of(context)?.update_1}\n ${S.of(context)?.update_2}',
                         textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodyLarge?.copyWith(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                               color: Colors.black,
@@ -514,14 +611,18 @@ class MemberList extends ConsumerWidget {
                         width: 28,
                         height: 28,
                         colorFilter: const ColorFilter.mode(
-                            Colors.white, BlendMode.srcIn),
+                          Colors.white,
+                          BlendMode.srcIn,
+                        ),
                       ),
                       SvgPicture.asset(
                         'assets/icons/yen.svg',
                         width: 16,
                         height: 16,
                         colorFilter: const ColorFilter.mode(
-                            Color(0xFFBABABA), BlendMode.srcIn),
+                          Color(0xFFBABABA),
+                          BlendMode.srcIn,
+                        ),
                       ),
                     ],
                   ),
