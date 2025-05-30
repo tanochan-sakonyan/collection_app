@@ -1,9 +1,12 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="app.web.mr_collection">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
-        android:label="mr_collection"
+        android:label="集金くん"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        android:theme="@style/LaunchTheme"
         <activity
             android:name=".MainActivity"
             android:exported="true"
