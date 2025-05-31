@@ -2,13 +2,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/delete_account_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/logout_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/questionnaire_dialog.dart';
 import 'package:mr_collection/ui/screen/privacy_policy_screen.dart';
 import 'package:mr_collection/ui/screen/terms_of_service_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TanochanDrawer extends StatelessWidget {
   const TanochanDrawer({super.key});
@@ -27,9 +27,9 @@ class TanochanDrawer extends StatelessWidget {
             Text(
               "設定",
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                  ),
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+              ),
             ),
             const SizedBox(height: 8),
             const Divider(
@@ -55,10 +55,10 @@ class TanochanDrawer extends StatelessWidget {
                       'LINEへの認証申請中のため、\nアップデートをお待ちください。',
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                 );
@@ -104,6 +104,38 @@ class TanochanDrawer extends StatelessWidget {
             const SizedBox(height: 20),
             _buildMenuItem(
               context,
+              text: "Xリンク",
+              icon: SvgPicture.asset("assets/icons/ic_x.svg"),
+              onTap: () async {
+                const url = "https://x.com/shukinkun";
+                if (await canLaunchUrl(Uri.parse(url))) {
+                  await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('ページを開けませんでした')),
+                  );
+                }
+              },
+            ),
+            const SizedBox(height: 20),
+            _buildMenuItem(
+              context,
+              text: "公式サイト",
+              icon: SvgPicture.asset("assets/icons/ic_monitor.svg"),
+              onTap: () async {
+                const url = "https://tanochan.studio.site/";
+                if (await canLaunchUrl(Uri.parse(url))) {
+                  await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('ページを開けませんでした')),
+                  );
+                }
+              },
+            ),
+            const SizedBox(height: 20),
+            _buildMenuItem(
+              context,
               text: "利用規約",
               icon: SvgPicture.asset("assets/icons/drawer_file.svg"),
               onTap: () {
@@ -142,7 +174,7 @@ class TanochanDrawer extends StatelessWidget {
                   }
                 },
                 icon:
-                    SvgPicture.asset("assets/icons/drawer_delete_account.svg"),
+                SvgPicture.asset("assets/icons/drawer_delete_account.svg"),
               );
             }),
           ],
@@ -153,8 +185,8 @@ class TanochanDrawer extends StatelessWidget {
 
   Widget _buildMenuItem(BuildContext context,
       {required String text,
-      required Widget icon,
-      required VoidCallback onTap}) {
+        required Widget icon,
+        required VoidCallback onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: SizedBox(
@@ -166,10 +198,10 @@ class TanochanDrawer extends StatelessWidget {
             Text(
               text,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                  ),
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+              ),
             ),
           ],
         ),
