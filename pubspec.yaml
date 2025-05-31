@@ -39,6 +39,7 @@ dev_dependencies:
   freezed: ^2.5.2
   json_serializable: ^6.8.0
   flutter_launcher_icons: ^0.14.1
+  flutter_native_splash: ^2.4.6
 
 flutter_icons:
   ios: true
@@ -77,6 +78,8 @@ flutter:
     - assets/icons/drawer_file.svg
     - assets/icons/drawer_envelope.svg
     - assets/icons/drawer_delete_account.svg
+    - assets/icons/splash.png
+    - assets/icons/splash_android12.png
 
   fonts:
     - family: Montserrat
