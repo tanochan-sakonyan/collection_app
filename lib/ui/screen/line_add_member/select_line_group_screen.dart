@@ -3,9 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
-import 'package:mr_collection/ui/components/dialog/event/invite_official_acount_to_line_group.dart';
-import 'package:mr_collection/ui/screen/transfer/check_selected_event_screen.dart';
-import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:mr_collection/ui/components/dialog/event/invite_official_acount_to_line_group_dialog.dart';
+import 'check_selected_line_group_screen.dart';
 
 class SelectLineGroupScreen extends ConsumerStatefulWidget {
   const SelectLineGroupScreen({super.key});
@@ -14,14 +13,11 @@ class SelectLineGroupScreen extends ConsumerStatefulWidget {
 }
 
 class SelectLineGroupScreenState extends ConsumerState<SelectLineGroupScreen> {
-  Future<void> _checkSelectedEvent(Event event) async {
-    final picked = await Navigator.of(context).push<Event>(
+  Future<void> _checkSelectedLineGroup() async {
+    Navigator.of(context).push<Event>(
       MaterialPageRoute(
-          builder: (_) => CheckSelectedEventScreen(selectedEvent: event)),
+          builder: (_) => const CheckSelectedLineGroupScreen()),
     );
-    if (picked != null) {
-      Navigator.of(context).pop(picked);
-    }
   }
 
   @override
@@ -94,6 +90,7 @@ class SelectLineGroupScreenState extends ConsumerState<SelectLineGroupScreen> {
               fontSize: 24,
               fontWeight: FontWeight.w700,
               color: const Color(0xFF06C755),
+              height: 1.1,
             ),
             textAlign: TextAlign.center,
           ),
@@ -132,7 +129,7 @@ class SelectLineGroupScreenState extends ConsumerState<SelectLineGroupScreen> {
                               height: 16,
                               child: SvgPicture.asset('assets/icons/ic_next.svg'),
                             ),
-                            onTap: () => _checkSelectedEvent(event)),
+                            onTap: () => _checkSelectedLineGroup()),
                       ),
                       const Divider(
                         color: Color(0xFFE8E8E8),

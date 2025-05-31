@@ -8,8 +8,7 @@ import 'package:mr_collection/data/repository/event_repository.dart';
 import 'package:mr_collection/ui/screen/transfer/choice_event_screen.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:flutter_gen/gen_l10n/s.dart';
-
-import '../../../screen/line_add_member/select_line_group.dart';
+import 'package:mr_collection/ui/screen/line_add_member/select_line_group_screen.dart';
 
 class AddEventDialog extends ConsumerStatefulWidget {
   final String userId;
