@@ -51,7 +51,3 @@ tasks.withType(JavaCompile) {
     options.fork = true
     options.forkOptions.jvmArgs += ['--add-opens', 'java.base/java.util=ALL-UNNAMED']
 }
-
-dependencies {
-    implementation "androidx.core:core-splashscreen:1.0.1"
-}
