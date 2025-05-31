@@ -9,6 +9,8 @@ import 'package:mr_collection/ui/screen/transfer/choice_event_screen.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:flutter_gen/gen_l10n/s.dart';
 
+import '../../../screen/line_add_member/select_line_group.dart';
+
 class AddEventDialog extends ConsumerStatefulWidget {
   final String userId;
 
@@ -102,6 +104,13 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
         _selectedEvent = picked;
       });
     }
+  }
+
+  Future<void> _selectLineGroup() async {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+          builder: (_) => const SelectLineGroupScreen()),
+    );
   }
 
   @override
@@ -255,33 +264,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                             width: 28,
                             height: 28,
                           ),
-                          onPressed: () {
-                            //LINE認証申請前の臨時ダイアログ
-                            showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                contentPadding: const EdgeInsets.symmetric(
-                                    vertical: 56.0, horizontal: 24.0),
-                                content: Text(
-                                  '${S.of(context)?.update_1}\n ${S.of(context)?.update_2}',
-                                  textAlign: TextAlign.center,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge
-                                      ?.copyWith(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black,
-                                      ),
-                                ),
-                              ),
-                            );
-                            //TODO LINE認証申請が通ったらこちらに戻す
-                            /*showDialog(
-                            context: context,
-                            builder: (context) => const ConfirmationDialog(),
-                          );*/
-                          },
+                          onPressed: _isButtonEnabled ? () => _selectLineGroup() : null,
                         ),
                       ),
                     ),
