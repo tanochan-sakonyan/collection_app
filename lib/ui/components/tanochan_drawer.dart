@@ -105,7 +105,7 @@ class TanochanDrawer extends StatelessWidget {
             const SizedBox(height: 20),
             _buildMenuItem(
               context,
-              text: "Xリンク",
+              text: S.of(context)?.xLink ?? "X Link",
               icon: SvgPicture.asset("assets/icons/ic_x.svg"),
               onTap: () async {
                 const url = "https://x.com/shukinkun";
@@ -113,7 +113,7 @@ class TanochanDrawer extends StatelessWidget {
                   await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('ページを開けませんでした')),
+                    SnackBar(content: Text(S.of(context)?.officialSite ?? "Could not open the page")),
                   );
                 }
               },
@@ -121,7 +121,7 @@ class TanochanDrawer extends StatelessWidget {
             const SizedBox(height: 20),
             _buildMenuItem(
               context,
-              text: "公式サイト",
+              text: S.of(context)?.officialSite ?? "Official Website",
               icon: SvgPicture.asset("assets/icons/ic_monitor.svg"),
               onTap: () async {
                 const url = "https://tanochan.studio.site/";
@@ -129,7 +129,7 @@ class TanochanDrawer extends StatelessWidget {
                   await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('ページを開けませんでした')),
+                    SnackBar(content: Text(S.of(context)?.officialSite ?? "Could not open the page")),
                   );
                 }
               },
