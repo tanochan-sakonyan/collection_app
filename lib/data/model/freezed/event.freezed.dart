@@ -23,6 +23,7 @@ mixin _$Event {
   String get eventId => throw _privateConstructorUsedError;
   String get eventName => throw _privateConstructorUsedError;
   List<Member> get members => throw _privateConstructorUsedError;
+  int? get totalMoney => throw _privateConstructorUsedError;
 
   /// Serializes this Event to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -38,7 +39,11 @@ abstract class $EventCopyWith<$Res> {
   factory $EventCopyWith(Event value, $Res Function(Event) then) =
       _$EventCopyWithImpl<$Res, Event>;
   @useResult
-  $Res call({String eventId, String eventName, List<Member> members});
+  $Res call(
+      {String eventId,
+      String eventName,
+      List<Member> members,
+      int? totalMoney});
 }
 
 /// @nodoc
@@ -59,6 +64,7 @@ class _$EventCopyWithImpl<$Res, $Val extends Event>
     Object? eventId = null,
     Object? eventName = null,
     Object? members = null,
+    Object? totalMoney = freezed,
   }) {
     return _then(_value.copyWith(
       eventId: null == eventId
@@ -73,6 +79,10 @@ class _$EventCopyWithImpl<$Res, $Val extends Event>
           ? _value.members
           : members // ignore: cast_nullable_to_non_nullable
               as List<Member>,
+      totalMoney: freezed == totalMoney
+          ? _value.totalMoney
+          : totalMoney // ignore: cast_nullable_to_non_nullable
+              as int?,
     ) as $Val);
   }
 }
@@ -84,7 +94,11 @@ abstract class _$$EventImplCopyWith<$Res> implements $EventCopyWith<$Res> {
       __$$EventImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String eventId, String eventName, List<Member> members});
+  $Res call(
+      {String eventId,
+      String eventName,
+      List<Member> members,
+      int? totalMoney});
 }
 
 /// @nodoc
@@ -103,6 +117,7 @@ class __$$EventImplCopyWithImpl<$Res>
     Object? eventId = null,
     Object? eventName = null,
     Object? members = null,
+    Object? totalMoney = freezed,
   }) {
     return _then(_$EventImpl(
       eventId: null == eventId
@@ -117,6 +132,10 @@ class __$$EventImplCopyWithImpl<$Res>
           ? _value._members
           : members // ignore: cast_nullable_to_non_nullable
               as List<Member>,
+      totalMoney: freezed == totalMoney
+          ? _value.totalMoney
+          : totalMoney // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -128,7 +147,8 @@ class _$EventImpl implements _Event {
   const _$EventImpl(
       {required this.eventId,
       required this.eventName,
-      required final List<Member> members})
+      required final List<Member> members,
+      this.totalMoney})
       : _members = members;
 
   factory _$EventImpl.fromJson(Map<String, dynamic> json) =>
@@ -147,8 +167,11 @@ class _$EventImpl implements _Event {
   }
 
   @override
+  final int? totalMoney;
+
+  @override
   String toString() {
-    return 'Event(eventId: $eventId, eventName: $eventName, members: $members)';
+    return 'Event(eventId: $eventId, eventName: $eventName, members: $members, totalMoney: $totalMoney)';
   }
 
   @override
@@ -159,13 +182,15 @@ class _$EventImpl implements _Event {
             (identical(other.eventId, eventId) || other.eventId == eventId) &&
             (identical(other.eventName, eventName) ||
                 other.eventName == eventName) &&
-            const DeepCollectionEquality().equals(other._members, _members));
+            const DeepCollectionEquality().equals(other._members, _members) &&
+            (identical(other.totalMoney, totalMoney) ||
+                other.totalMoney == totalMoney));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, eventId, eventName,
-      const DeepCollectionEquality().hash(_members));
+      const DeepCollectionEquality().hash(_members), totalMoney);
 
   /// Create a copy of Event
   /// with the given fields replaced by the non-null parameter values.
@@ -187,7 +212,8 @@ abstract class _Event implements Event {
   const factory _Event(
       {required final String eventId,
       required final String eventName,
-      required final List<Member> members}) = _$EventImpl;
+      required final List<Member> members,
+      final int? totalMoney}) = _$EventImpl;
 
   factory _Event.fromJson(Map<String, dynamic> json) = _$EventImpl.fromJson;
 
@@ -197,6 +223,8 @@ abstract class _Event implements Event {
   String get eventName;
   @override
   List<Member> get members;
+  @override
+  int? get totalMoney;
 
   /// Create a copy of Event
   /// with the given fields replaced by the non-null parameter values.

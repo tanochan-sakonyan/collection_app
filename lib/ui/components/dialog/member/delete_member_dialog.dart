@@ -1,32 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mr_collection/provider/user_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mr_collection/provider/user_provider.dart';
+import 'package:flutter_gen/gen_l10n/s.dart';
 
-class DeleteEventDialog extends ConsumerStatefulWidget {
+class DeleteMemberDialog extends ConsumerStatefulWidget {
   final String userId;
   final String eventId;
-  const DeleteEventDialog(
-      {required this.userId, required this.eventId, super.key});
-
-  get eventRepository => null;
+  final String memberId;
+  const DeleteMemberDialog({
+    required this.userId,
+    required this.eventId,
+    required this.memberId,
+    super.key,
+  });
 
   @override
-  ConsumerState<DeleteEventDialog> createState() => _DeleteEventDialogState();
+  ConsumerState<DeleteMemberDialog> createState() => _DeleteMemberDialogState();
 }
 
-class _DeleteEventDialogState extends ConsumerState<DeleteEventDialog> {
+class _DeleteMemberDialogState extends ConsumerState<DeleteMemberDialog> {
   bool _isButtonEnabled = true;
-  Future<void> _deleteEvent(ref, String userId, String eventId) async {
+
+  Future<void> _deleteMember() async {
     if (!_isButtonEnabled) return;
+
     setState(() {
       _isButtonEnabled = false;
     });
+
     try {
-      await ref.read(userProvider.notifier).deleteEvent(userId, eventId);
-      Navigator.of(ref).pop();
+      await ref
+          .read(userProvider.notifier)
+          .deleteMember(widget.userId, widget.eventId, widget.memberId);
+      Navigator.of(context).pop();
     } catch (error) {
-      debugPrint('イベントの削除に失敗しました: $error');
+      debugPrint('メンバー削除に失敗しました: $error');
+      Future.delayed(const Duration(seconds: 2), () {
+        setState(() {
+          _isButtonEnabled = true;
+        });
+      });
     }
   }
 
@@ -47,10 +61,11 @@ class _DeleteEventDialogState extends ConsumerState<DeleteEventDialog> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'このイベントを削除しますか？', //TODO 実際にイベント名を取得
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                fontWeight: FontWeight.w500,
-                fontSize: 16,
+              S.of(context)?.confirmDeleteMember ??
+                  'Do you want to delete this member?',
+              style: GoogleFonts.notoSansJp(
+                fontWeight: FontWeight.w400,
+                fontSize: 13,
                 color: Colors.black,
               ),
             ),
@@ -74,12 +89,8 @@ class _DeleteEventDialogState extends ConsumerState<DeleteEventDialog> {
                       ),
                     ),
                     child: Text(
-                      'いいえ',
-                      style: GoogleFonts.notoSansJp(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black
-                      ),
+                      S.of(context)?.no ?? "No",
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ),
                 ),
@@ -88,9 +99,7 @@ class _DeleteEventDialogState extends ConsumerState<DeleteEventDialog> {
                   height: 36,
                   width: 107,
                   child: ElevatedButton(
-                    onPressed: _isButtonEnabled
-                        ? () => _deleteEvent(ref, widget.userId, widget.eventId)
-                        : null,
+                    onPressed: _isButtonEnabled ? _deleteMember : null,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFF2F2F2),
                       elevation: 2,
@@ -99,12 +108,8 @@ class _DeleteEventDialogState extends ConsumerState<DeleteEventDialog> {
                       ),
                     ),
                     child: Text(
-                      'はい',
-                      style: GoogleFonts.notoSansJp(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black
-                      ),
+                      S.of(context)?.yes ?? "Yes",
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ),
                 ),
