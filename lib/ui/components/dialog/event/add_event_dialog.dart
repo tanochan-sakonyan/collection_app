@@ -9,6 +9,7 @@ import 'package:mr_collection/ui/screen/transfer/choice_event_screen.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:flutter_gen/gen_l10n/s.dart';
 import 'package:mr_collection/ui/screen/line_add_member/select_line_group_screen.dart';
+import 'package:mr_collection/ui/screen/line_add_member/invite_official_account_to_line_group_screen.dart';
 
 class AddEventDialog extends ConsumerStatefulWidget {
   final String userId;
@@ -105,10 +106,13 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
     }
   }
 
+  //TODO: 招待可能なLINEグループの有無によりどちらの画面に遷移するか分岐する
   Future<void> _selectLineGroup() async {
     Navigator.of(context).push(
       MaterialPageRoute(
-          builder: (_) => const SelectLineGroupScreen()),
+          builder: (_) => const SelectLineGroupScreen()
+          //builder: (_) => const InviteOfficialAccountToLineGroupScreen()
+        ),
     );
   }
 

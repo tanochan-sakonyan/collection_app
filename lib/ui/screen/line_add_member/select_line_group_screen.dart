@@ -56,7 +56,7 @@ class SelectLineGroupScreenState extends ConsumerState<SelectLineGroupScreen> {
             onTap: () {
                 showDialog(
                   context: context,
-                  builder: (context) => const InviteOfficialAcountToLineGroupDialog(),
+                  builder: (context) => const InviteOfficialAccountToLineGroupDialog(),
                 );
               },
             child: Row(

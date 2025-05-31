@@ -3,8 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 //公式LINEが認証された後のダイアログ
-class InviteOfficialAcountToLineGroupDialog extends StatelessWidget {
-  const InviteOfficialAcountToLineGroupDialog({super.key});
+class InviteOfficialAccountToLineGroupDialog extends StatelessWidget {
+  const InviteOfficialAccountToLineGroupDialog({super.key});
 
   Future<void> _launchLine() async {
     final uri = Uri.parse('https://lin.ee/cLwUgQtP');

@@ -3,16 +3,29 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class CheckSelectedLineGroupScreen extends ConsumerStatefulWidget {
-  const CheckSelectedLineGroupScreen({super.key});
+class InviteOfficialAccountToLineGroupScreen extends ConsumerStatefulWidget {
+  const InviteOfficialAccountToLineGroupScreen({super.key});
   @override
-  ConsumerState<CheckSelectedLineGroupScreen> createState() =>
+  ConsumerState<InviteOfficialAccountToLineGroupScreen> createState() =>
       CheckSelectedLineGroupScreenState();
 }
 
 class CheckSelectedLineGroupScreenState
-    extends ConsumerState<CheckSelectedLineGroupScreen> {
+    extends ConsumerState<InviteOfficialAccountToLineGroupScreen> {
+
+  Future<void> _launchLine() async {
+    final uri = Uri.parse('https://lin.ee/cLwUgQtP');
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(
+        uri,
+        mode: LaunchMode.externalApplication,
+      );
+    } else {
+      debugPrint('LINE を起動できませんでした');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,13 +68,77 @@ class CheckSelectedLineGroupScreenState
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 18),
           Text(
             "「集金くん」が参加しているLINEグループのみ、\nメンバーを取得することができます。",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
               fontSize: 11,
               fontWeight: FontWeight.w500,
-              color: const Color(0x006A6A6A),
+              color: const Color(0xFF6A6A6A),
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 24),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset(
+                'assets/icons/ic_number_one.svg',
+                width: 40,
+                height: 40,
+              ),
+              const SizedBox(width: 12),
+              Text(
+                "LINE公式アカウントを追加",
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black,
+                ),
+                textAlign: TextAlign.left,
+              )
+            ]
+          ),
+          const SizedBox(height: 20),
+          IconButton(
+              onPressed: () {
+                _launchLine();
+              },
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              icon: SvgPicture.asset(
+                'assets/icons/suggest_official_line.svg',
+                width: 180,
+                height: 56,
+              )),
+          const SizedBox(height: 36),
+          Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset(
+                  'assets/icons/ic_number_two.svg',
+                  width: 40,
+                  height: 40,
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  "LINE公式アカウントを\n集金対象のグループに招待",
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
+                  ),
+                  textAlign: TextAlign.left,
+                )
+              ]
+          ),
+          const SizedBox(height: 24),
+          Text(
+            "「集金くん」がグループ内で\n宣伝メッセージをおくることはありません。",
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+              color: const Color(0xFF6A6A6A),
             ),
             textAlign: TextAlign.center,
           ),
