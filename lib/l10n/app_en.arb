@@ -80,5 +80,8 @@
   "example_5": "Olivia",
   "example_6": "Daniel",
   "confirmDeleteEvent": "Delete this event?",
-  "suggestFeature": "Suggest features"
+  "suggestFeature": "Suggest features",
+  "xLink": "X Link",
+  "officialSite": "Official Website",
+  "openFailed": "Could not open the page"
 }
