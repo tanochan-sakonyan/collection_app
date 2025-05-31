@@ -27,7 +27,8 @@ dependencies:
   auto_size_text: ^3.0.0
   tutorial_coach_mark: ^1.2.13
   smooth_page_indicator: ^1.2.1
-  flutter_line_sdk: ^2.3.8
+  flutter_line_sdk:
+    path: packages/flutter_line_sdk
 
 dev_dependencies:
   flutter_test:
