@@ -1,8 +1,8 @@
 name: mr_collection
 description: "集金くん"
-publish_to: 'none'
+publish_to: "none"
 
-version: 1.2.0
+version: 1.3.0
 
 environment:
   sdk: ^3.5.3
@@ -27,6 +27,9 @@ dependencies:
   auto_size_text: ^3.0.0
   tutorial_coach_mark: ^1.2.13
   smooth_page_indicator: ^1.2.1
+  intl: ^0.19.0
+  flutter_localizations:
+    sdk: flutter
   flutter_line_sdk:
     path: C:/Users/sugar/tanochan/flutter_line_sdk
 
@@ -47,9 +50,9 @@ flutter_icons:
   adaptive_icon_background: "#ffffff"
   image_path: "assets/icons/icon.png"
 
-
 flutter:
-  assets: 
+  generate: true 
+  assets:
     - assets/icons/reverse_icon.svg
     - assets/icons/filter.svg
     - assets/icons/circle_plus.svg
@@ -71,12 +74,18 @@ flutter:
     - assets/icons/suggest_official_line.svg
     - assets/icons/ic_check_badge_green.svg
     - assets/icons/ic_check_circle_teal.svg
+    - assets/icons/ic_amount.svg
+    - assets/icons/ic_lock_open.svg
+    - assets/icons/ic_lock_close.svg
+    - assets/icons/ic_back.svg
     - assets/icons/drawer_yen.svg
     - assets/icons/drawer_star.svg
     - assets/icons/drawer_key.svg
     - assets/icons/drawer_file.svg
     - assets/icons/drawer_envelope.svg
     - assets/icons/drawer_delete_account.svg
+    - assets/icons/ic_back.svg
+    - assets/icons/ic_next.svg
 
   fonts:
     - family: Montserrat

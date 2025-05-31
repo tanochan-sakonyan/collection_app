@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mr_collection/provider/access_token_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
-import 'package:mr_collection/ui/components/dialog/login_error_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/auth/login_error_dialog.dart';
 import 'package:mr_collection/ui/screen/home_screen.dart';
 import 'package:mr_collection/ui/screen/privacy_policy_screen.dart';
 import 'package:mr_collection/ui/screen/terms_of_service_screen.dart';
@@ -14,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_gen/gen_l10n/s.dart';
 import 'dart:io' show Platform;
 
 final checkboxProvider = StateProvider<bool>((ref) => false);
@@ -47,13 +48,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           children: [
             const SizedBox(height: 100),
             Text(
-              "集金くん",
+              S.of(context)?.shukinkun ?? "Shukinkun",
               style:
-                  GoogleFonts.roboto(fontSize: 32, fontWeight: FontWeight.w800),
+                  GoogleFonts.roboto(fontSize: 32, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 100),
             SizedBox(
               width: 300,
+              height: 60,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: isChecked
@@ -137,10 +139,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   children: [
                     SvgPicture.asset(
                       'assets/icons/line-login.svg',
+                      width: 44,
+                      height: 44,
                     ),
                     const SizedBox(width: 40),
                     Text(
-                      'LINEでログイン',
+                      S.of(context)?.loginWithLine ?? "Log in with LINE",
                       style: GoogleFonts.notoSansJp(
                           color: Colors.white,
                           fontSize: 16,
@@ -287,26 +291,28 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         _isAppleButtonEnabled = true;
                       });
                     }
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SvgPicture.asset(
-                        'assets/icons/apple_logo.svg',
-                        height: 24,
-                      ),
-                      const SizedBox(width: 40),
-                      Text(
-                        'Appleでサインイン',
-                        style: GoogleFonts.notoSansJp(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(width: 8),
+                    SvgPicture.asset(
+                      'assets/icons/apple_logo.svg',
+                      width: 28,
+                      height: 28,
+                    ),
+                    const SizedBox(width: 50),
+                    Text(
+                      S.of(context)?.signInWithApple ?? "Sign in with Apple",
+                      style: GoogleFonts.notoSansJp(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
               ),
+                ),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -318,40 +324,53 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   },
                   activeColor: Colors.black,
                 ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const TermsOfServiceScreen()),
-                    );
-                  },
-                  child: Text(
-                    '利用規約',
-                    style: GoogleFonts.notoSansJp(
-                        color: Colors.blue, fontSize: 14),
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                          text: S.of(context)?.termsAndPrivacyIntro ??
+                              "I agree to the \n"),
+                      WidgetSpan(
+                        alignment: PlaceholderAlignment.baseline,
+                        baseline: TextBaseline.alphabetic,
+                        child: GestureDetector(
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const TermsOfServiceScreen()),
+                          ),
+                          child: Text(
+                            S.of(context)?.termsOfService ??
+                                "Terms Of Service", // "Terms of Service"
+                            style: const TextStyle(
+                                fontSize: 14, color: Colors.blue),
+                          ),
+                        ),
+                      ),
+                      TextSpan(text: S.of(context)?.and ?? "and"),
+                      WidgetSpan(
+                        alignment: PlaceholderAlignment.baseline,
+                        baseline: TextBaseline.alphabetic,
+                        child: GestureDetector(
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const PrivacyPolicyScreen()),
+                          ),
+                          child: Text(
+                            S.of(context)?.privacyPolicy ?? "Privacy Policy",
+                            style: const TextStyle(
+                                fontSize: 14, color: Colors.blue),
+                          ),
+                        ),
+                      ),
+                      TextSpan(
+                          text: S.of(context)?.termsAndPrivacySuffix ?? "."),
+                    ],
                   ),
-                ),
-                Text(' と ',
-                    style: GoogleFonts.notoSansJp(
-                        color: Colors.black, fontSize: 14)),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const PrivacyPolicyScreen()),
-                    );
-                  },
-                  child: Text(
-                    'プライバシーポリシー',
-                    style: GoogleFonts.notoSansJp(
-                        color: Colors.blue, fontSize: 14),
-                  ),
-                ),
-                Text(' に同意します。',
-                    style: GoogleFonts.notoSansJp(
-                        color: Colors.black, fontSize: 14)),
+                )
               ],
             ),
           ],
