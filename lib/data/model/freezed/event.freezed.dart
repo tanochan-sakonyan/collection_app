@@ -22,6 +22,7 @@ Event _$EventFromJson(Map<String, dynamic> json) {
 mixin _$Event {
   String get eventId => throw _privateConstructorUsedError;
   String get eventName => throw _privateConstructorUsedError;
+  String? get lineGroupId => throw _privateConstructorUsedError;
   List<Member> get members => throw _privateConstructorUsedError;
   int? get totalMoney => throw _privateConstructorUsedError;
 
@@ -42,6 +43,7 @@ abstract class $EventCopyWith<$Res> {
   $Res call(
       {String eventId,
       String eventName,
+      String? lineGroupId,
       List<Member> members,
       int? totalMoney});
 }
@@ -63,6 +65,7 @@ class _$EventCopyWithImpl<$Res, $Val extends Event>
   $Res call({
     Object? eventId = null,
     Object? eventName = null,
+    Object? lineGroupId = freezed,
     Object? members = null,
     Object? totalMoney = freezed,
   }) {
@@ -75,6 +78,10 @@ class _$EventCopyWithImpl<$Res, $Val extends Event>
           ? _value.eventName
           : eventName // ignore: cast_nullable_to_non_nullable
               as String,
+      lineGroupId: freezed == lineGroupId
+          ? _value.lineGroupId
+          : lineGroupId // ignore: cast_nullable_to_non_nullable
+              as String?,
       members: null == members
           ? _value.members
           : members // ignore: cast_nullable_to_non_nullable
@@ -97,6 +104,7 @@ abstract class _$$EventImplCopyWith<$Res> implements $EventCopyWith<$Res> {
   $Res call(
       {String eventId,
       String eventName,
+      String? lineGroupId,
       List<Member> members,
       int? totalMoney});
 }
@@ -116,6 +124,7 @@ class __$$EventImplCopyWithImpl<$Res>
   $Res call({
     Object? eventId = null,
     Object? eventName = null,
+    Object? lineGroupId = freezed,
     Object? members = null,
     Object? totalMoney = freezed,
   }) {
@@ -128,6 +137,10 @@ class __$$EventImplCopyWithImpl<$Res>
           ? _value.eventName
           : eventName // ignore: cast_nullable_to_non_nullable
               as String,
+      lineGroupId: freezed == lineGroupId
+          ? _value.lineGroupId
+          : lineGroupId // ignore: cast_nullable_to_non_nullable
+              as String?,
       members: null == members
           ? _value._members
           : members // ignore: cast_nullable_to_non_nullable
@@ -147,6 +160,7 @@ class _$EventImpl implements _Event {
   const _$EventImpl(
       {required this.eventId,
       required this.eventName,
+      required this.lineGroupId,
       required final List<Member> members,
       this.totalMoney})
       : _members = members;
@@ -158,6 +172,8 @@ class _$EventImpl implements _Event {
   final String eventId;
   @override
   final String eventName;
+  @override
+  final String? lineGroupId;
   final List<Member> _members;
   @override
   List<Member> get members {
@@ -171,7 +187,7 @@ class _$EventImpl implements _Event {
 
   @override
   String toString() {
-    return 'Event(eventId: $eventId, eventName: $eventName, members: $members, totalMoney: $totalMoney)';
+    return 'Event(eventId: $eventId, eventName: $eventName, lineGroupId: $lineGroupId, members: $members, totalMoney: $totalMoney)';
   }
 
   @override
@@ -182,6 +198,8 @@ class _$EventImpl implements _Event {
             (identical(other.eventId, eventId) || other.eventId == eventId) &&
             (identical(other.eventName, eventName) ||
                 other.eventName == eventName) &&
+            (identical(other.lineGroupId, lineGroupId) ||
+                other.lineGroupId == lineGroupId) &&
             const DeepCollectionEquality().equals(other._members, _members) &&
             (identical(other.totalMoney, totalMoney) ||
                 other.totalMoney == totalMoney));
@@ -189,7 +207,7 @@ class _$EventImpl implements _Event {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, eventId, eventName,
+  int get hashCode => Object.hash(runtimeType, eventId, eventName, lineGroupId,
       const DeepCollectionEquality().hash(_members), totalMoney);
 
   /// Create a copy of Event
@@ -212,6 +230,7 @@ abstract class _Event implements Event {
   const factory _Event(
       {required final String eventId,
       required final String eventName,
+      required final String? lineGroupId,
       required final List<Member> members,
       final int? totalMoney}) = _$EventImpl;
 
@@ -221,6 +240,8 @@ abstract class _Event implements Event {
   String get eventId;
   @override
   String get eventName;
+  @override
+  String? get lineGroupId;
   @override
   List<Member> get members;
   @override

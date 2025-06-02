@@ -10,6 +10,7 @@ class Event with _$Event {
   const factory Event({
     required String eventId,
     required String eventName,
+    required String? lineGroupId,
     required List<Member> members,
     int? totalMoney,
   }) = _Event;

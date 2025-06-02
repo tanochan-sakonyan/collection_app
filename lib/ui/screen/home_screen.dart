@@ -307,7 +307,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                               (e) => e.eventId == eventId,
                               orElse: () => const Event(
                                   eventId: "",
-                                  eventName: '',
+                                  eventName: "",
+                                  lineGroupId: "",
                                   members: [],
                                   totalMoney: 0),
                             );
@@ -411,7 +412,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                         (e) => e.eventId == eventId,
                         orElse: () => const Event(
                             eventId: "",
-                            eventName: '',
+                            eventName: "",
+                            lineGroupId: "",
                             members: [],
                             totalMoney: 0),
                       );
