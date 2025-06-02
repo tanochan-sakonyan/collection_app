@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
+import 'package:mr_collection/ui/components/dialog/line_message_complete_dialog.dart';
+import 'package:mr_collection/ui/screen/home_screen.dart';
 
 class LineMessageConfirmDialog extends StatelessWidget {
   // TODO: merge前に確認。BEに渡すのはeventIdだけで良い？
@@ -85,9 +87,17 @@ class LineMessageConfirmDialog extends StatelessWidget {
                     width: 108,
                     height: 48,
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         // TODO: 送信処理
-                        Navigator.pop(context, true);
+                        await showDialog(
+                            context: context,
+                            builder: (context) =>
+                                const LineMessageCompleteDialog());
+                        Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                              builder: (context) => const HomeScreen()),
+                          (route) => false,
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF75DCC6),
