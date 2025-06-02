@@ -12,6 +12,7 @@ import 'package:mr_collection/ui/components/dialog/member/status_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:mr_collection/ui/screen/amount_screen/input_amount_screen.dart';
+import 'package:mr_collection/ui/screen/line_message_bottom_sheet.dart';
 import '../components/dialog/member/edit_member_name_dialog.dart';
 import 'package:flutter_gen/gen_l10n/s.dart';
 
@@ -575,27 +576,26 @@ class MemberList extends ConsumerWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(48),
                 ),
-                onPressed: () {
-                  showDialog(
+                onPressed: () async {
+                  final unpaidMembers = event.members
+                      .where((m) => m.status == PaymentStatus.unpaid)
+                      .toList();
+
+                  final result = await showModalBottomSheet(
                     context: context,
-                    builder: (context) => AlertDialog(
-                      contentPadding: const EdgeInsets.symmetric(
-                        vertical: 56.0,
-                        horizontal: 24.0,
-                      ),
-                      content: Text(
-                        '${S.of(context)?.update_1}\n ${S.of(context)?.update_2}',
-                        textAlign: TextAlign.center,
-                        style: Theme.of(
-                          context,
-                        ).textTheme.bodyLarge?.copyWith(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-                            ),
-                      ),
+                    isScrollControlled: true,
+                    backgroundColor: Colors.white,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(16)),
+                    ),
+                    builder: (context) =>
+                        UnpaidMessageBottomSheet.lineMessageBottomSheet(
+                      event: event,
+                      unpaidMembers: unpaidMembers,
                     ),
                   );
+                  // resultは送信されたメッセージ内容
                 },
                 child: Center(
                   child: Stack(
