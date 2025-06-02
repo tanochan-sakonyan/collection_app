@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
-import 'package:mr_collection/ui/components/dialog/event/invite_official_acount_to_line_group_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/invite_official_acount_to_line_group_dialog.dart';
 import 'check_selected_line_group_screen.dart';
 
 class SelectLineGroupScreen extends ConsumerStatefulWidget {

@@ -91,6 +91,8 @@ flutter:
     - assets/icons/icon.png
     - assets/icons/ic_number_one.svg
     - assets/icons/ic_number_two.svg
+    - assets/icons/ic_update.svg
+    - assets/icons/line_official_badge.png
 
   fonts:
     - family: Montserrat

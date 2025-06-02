@@ -64,7 +64,7 @@ class MemberList extends ConsumerWidget {
     const double iconSize = 30.0;
 
     return Padding(
-      padding: const EdgeInsets.only(top: 16, left: 29, right: 29),
+      padding: const EdgeInsets.only(top: 8, left: 29, right: 29),
       child: Stack(
         children: [
           Column(

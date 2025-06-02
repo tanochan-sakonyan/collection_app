@@ -50,6 +50,8 @@ class InviteOfficialAccountToLineGroupDialog extends StatelessWidget {
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
                 color: const Color(0xFF6A6A6A),
+                fontSize: 11,
+                fontWeight: FontWeight.w500,
               ),
             ),
             const SizedBox(height: 36),
@@ -78,13 +80,25 @@ class InviteOfficialAccountToLineGroupDialog extends StatelessWidget {
                        fit: BoxFit.cover,
                      ),
                     ),
-                    Text(
-                      "集金くん",
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: Colors.black,
-                        fontSize: 14,
-                      ),
+                    Row(
+                      children: [
+                        Image.asset(
+                          'assets/icons/line_official_badge.png',
+                          width: 12,
+                          height: 12,
+                          fit: BoxFit.cover,
+                        ),
+                        const SizedBox(width: 2),
+                        Text(
+                          "集金くん",
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            color: Colors.black,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ]
                     ),
                   ],
                 ),
@@ -108,6 +122,7 @@ class InviteOfficialAccountToLineGroupDialog extends StatelessWidget {
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
                         color: Colors.black,
                         fontSize: 14,
+                        fontWeight: FontWeight.w700
                       ),
                     ),
                   ],

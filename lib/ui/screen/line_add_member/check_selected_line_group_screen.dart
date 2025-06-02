@@ -175,7 +175,10 @@ class CheckSelectedLineGroupScreenState
             width: 240,
             height: 40,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                //TODO: イベント作成ダイアログに戻す
+                Navigator.of(context).pop(event);
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF76DCC6),
                 elevation: 2,

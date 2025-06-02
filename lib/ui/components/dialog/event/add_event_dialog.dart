@@ -107,11 +107,14 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
   }
 
   //TODO: 招待可能なLINEグループの有無によりどちらの画面に遷移するか分岐する
+  //isLineConnectedで分岐
   Future<void> _selectLineGroup() async {
     Navigator.of(context).push(
       MaterialPageRoute(
-          builder: (_) => const SelectLineGroupScreen()
-          //builder: (_) => const InviteOfficialAccountToLineGroupScreen()
+          // 集金くんアカウントを含むLINEグループがあるとき
+          //builder: (_) => const SelectLineGroupScreen()
+          // 集金くんアカウントを含むLINEグループがないとき
+          builder: (_) => const InviteOfficialAccountToLineGroupScreen()
         ),
     );
   }

@@ -156,13 +156,25 @@ class CheckSelectedLineGroupScreenState
                       fit: BoxFit.cover,
                     ),
                   ),
-                  Text(
-                    "集金くん",
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: Colors.black,
-                      fontSize: 14,
-                    ),
+                  Row(
+                    children: [
+                      Image.asset(
+                        'assets/icons/line_official_badge.png',
+                        width: 12,
+                        height: 12,
+                        fit: BoxFit.cover,
+                      ),
+                      const SizedBox(width: 2),
+                      Text(
+                        "集金くん",
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: Colors.black,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700
+                        ),
+                      ),
+                    ]
                   ),
                 ],
               ),
@@ -186,6 +198,7 @@ class CheckSelectedLineGroupScreenState
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: Colors.black,
                       fontSize: 14,
+                      fontWeight: FontWeight.w700
                     ),
                   ),
                 ],
