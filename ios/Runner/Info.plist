@@ -2,6 +2,19 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <!-- ① iOS 用 AdMob App ID（Android と別のことが多い）-->
+    <key>GADApplicationIdentifier</key>
+    <string>ca-app-pub-8038336425425966~6556024231</string>
+
+    <!-- ② SKAdNetwork（Google 分は必須）-->
+    <key>SKAdNetworkItems</key>
+    <array>
+        <dict>
+            <key>SKAdNetworkIdentifier</key>
+            <string>cstr6suwn9.skadnetwork</string>
+        </dict>
+        <!-- Mediation を使うなら、各ネットワーク ID をここに追加 -->
+    </array>
     <key>CFBundleDevelopmentRegion</key>
     <string>$(DEVELOPMENT_LANGUAGE)</string>
     <key>CFBundleDisplayName</key>

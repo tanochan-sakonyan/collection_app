@@ -1,12 +1,21 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.mr_collection">   <!-- ← package 属性が必須 -->
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- ① ネット接続 & Advertising ID 取得許可（API 33 以上） -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>  <!-- Android 13+ 必須 :contentReference[oaicite:0]{index=0} -->
 
     <application
-        android:label="集金くん"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
-        android:theme="@style/LaunchTheme"
+        android:label="集金くん"
+        android:icon="@mipmap/ic_launcher"
+        android:theme="@style/LaunchTheme">   <!-- ←テーマ属性はここに入れる -->
+
+        <!-- ② AdMob App ID（Android 用）TODO: App IDは、AndroidのアカウントでAdmobアカウントを作成して、そこのIDを入れる -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="	ca-app-pub-3940256099942544/6300978111"/>
+        <!-- 以下変更なし -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
