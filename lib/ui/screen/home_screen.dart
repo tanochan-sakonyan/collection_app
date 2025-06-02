@@ -168,8 +168,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   @override
   void dispose() {
     _tabController.dispose();
-    super.dispose();
     _banner.dispose();
+    super.dispose();
   }
 
   void _updateTabController(int newLength) {
@@ -417,44 +417,37 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       drawer: const TanochanDrawer(),
       body: Column(
         children: [
-          Column(
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.7,
-                child: tabTitles.isEmpty
-                    ? const EventZeroComponents()
-                    : TabBarView(
-                        controller: _tabController,
-                        children: _tabTitles.asMap().entries.map((entry) {
-                          final index = entry.key;
-                          final eventId = entry.value;
-                          final event = user!.events.firstWhere(
-                            (e) => e.eventId == eventId,
-                            orElse: () => const Event(
-                                eventId: "",
-                                eventName: '',
-                                members: [],
-                                totalMoney: 0),
-                          );
-                          return MemberList(
-                            event: event,
-                            members: event.eventId != "" ? event.members : [],
-                            eventId: event.eventId != "" ? event.eventId : "",
-                            eventName: event.eventName,
-                            memberAddKey: (_currentTabIndex == index)
-                                ? memberAddKey
-                                : null,
-                            slidableKey: (_currentTabIndex == index)
-                                ? slidableKey
-                                : null,
-                            sortKey:
-                                (_currentTabIndex == index) ? sortKey : null,
-                            fabKey: (_currentTabIndex == index) ? fabKey : null,
-                          );
-                        }).toList(),
-                      ),
-              ),
-            ],
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.7,
+            child: tabTitles.isEmpty
+                ? const EventZeroComponents()
+                : TabBarView(
+                    controller: _tabController,
+                    children: _tabTitles.asMap().entries.map((entry) {
+                      final index = entry.key;
+                      final eventId = entry.value;
+                      final event = user!.events.firstWhere(
+                        (e) => e.eventId == eventId,
+                        orElse: () => const Event(
+                            eventId: "",
+                            eventName: '',
+                            members: [],
+                            totalMoney: 0),
+                      );
+                      return MemberList(
+                        event: event,
+                        members: event.eventId != "" ? event.members : [],
+                        eventId: event.eventId != "" ? event.eventId : "",
+                        eventName: event.eventName,
+                        memberAddKey:
+                            (_currentTabIndex == index) ? memberAddKey : null,
+                        slidableKey:
+                            (_currentTabIndex == index) ? slidableKey : null,
+                        sortKey: (_currentTabIndex == index) ? sortKey : null,
+                        fabKey: (_currentTabIndex == index) ? fabKey : null,
+                      );
+                    }).toList(),
+                  ),
           ),
           if (_loaded)
             SafeArea(
