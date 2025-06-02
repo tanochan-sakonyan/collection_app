@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/auth/delete_account_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/auth/logout_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/paypay_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/questionnaire_dialog.dart';
 import 'package:mr_collection/ui/screen/privacy_policy_screen.dart';
 import 'package:mr_collection/ui/screen/terms_of_service_screen.dart';
@@ -42,25 +43,9 @@ class TanochanDrawer extends StatelessWidget {
               text: S.of(context)?.paypay ?? "PayPay Connection",
               icon: SvgPicture.asset("assets/icons/drawer_yen.svg"),
               onTap: () {
-                // showDialog(
-                //   context: context,
-                //   builder: (context) => PayPayDialog(),
-                // );
                 showDialog(
                   context: context,
-                  builder: (context) => AlertDialog(
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 56.0, horizontal: 24.0),
-                    content: Text(
-                      '${S.of(context)?.update_1}\n ${S.of(context)?.update_2}',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                    ),
-                  ),
+                  builder: (context) => const PayPayDialog(),
                 );
               },
             ),

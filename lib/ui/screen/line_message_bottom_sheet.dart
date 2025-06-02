@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart'; // ← Provider用
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/paypay_dialog.dart';
-// ... 他インポート
 
 class LineMessageBottomSheet extends ConsumerStatefulWidget {
   final Event event;
@@ -44,7 +43,7 @@ class _UnpaidMessageBottomSheetState
 
     final namesAndMoney = widget.unpaidMembers.map((m) {
       final spaceCount = maxNameLength - m.memberName.length + 2;
-      final spaces = '　' * spaceCount;
+      final spaces = ' ' * spaceCount;
       return '@${m.memberName}$spaces${m.memberMoney ?? ""}円';
     }).join('\n');
 
@@ -162,7 +161,7 @@ class _UnpaidMessageBottomSheetState
               height: 40,
               child: ElevatedButton(
                 onPressed: () {
-                  // TODO: PayPayリンクにチェックが入っているかで場合分け
+                  // TODO: 次のポップアップに遷移
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF75DCC6),

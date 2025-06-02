@@ -30,7 +30,14 @@ class PayPayDialogState extends ConsumerState<PayPayDialog> {
 
       await userRepository.sendPaypayLink(userId, paypayLink);
       Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('PayPayリンクを送信しました。')),
+      );
+      debugPrint("PayPayリンクを送信しました");
     } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('PayPayリンクを送信しました。')),
+      );
       debugPrint("PayPayリンクの送信に失敗しました");
     }
   }
@@ -38,6 +45,7 @@ class PayPayDialogState extends ConsumerState<PayPayDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
+      backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(23),
       ),
