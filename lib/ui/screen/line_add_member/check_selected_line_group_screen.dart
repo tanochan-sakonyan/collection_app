@@ -18,6 +18,7 @@ class CheckSelectedLineGroupScreenState
 
   @override
   Widget build(BuildContext context) {
+    // TODO: バックと繋いだら消すダミーデータ
     const event =  Event(
       eventId: 'dummy-id',
       eventName: 'テストグループ',
@@ -126,7 +127,7 @@ class CheckSelectedLineGroupScreenState
                           bottomLeft: Radius.circular(12),
                           bottomRight: Radius.circular(12),
                         ),
-                        child: ListView.builder(
+                        child: ListView.builder( //TODO: バックとつないだら選択したグループのメンバーをリスト表示する
                           shrinkWrap: true,
                           itemCount: event.members.length,
                           itemBuilder: (context, index) {

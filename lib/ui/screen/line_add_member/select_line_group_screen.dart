@@ -116,7 +116,7 @@ class SelectLineGroupScreenState extends ConsumerState<SelectLineGroupScreen> {
                         height: 44,
                         child: ListTile(
                             title: Text(
-                              //TODO: 現在はイベント引継ぎ画面を再利用しているが、バックと繋ぐときにLINEグループ名をリスト表示するように変更する
+                              //TODO: 現在はイベント引継ぎ画面を再利用しているが、あとでバックと繋ぐときに取得したLINEグループ名をリスト表示するように変更する
                               event.eventName,
                               style:
                               Theme.of(context).textTheme.bodyMedium?.copyWith(

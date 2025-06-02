@@ -402,6 +402,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       body: Column(
         children: [
           const SizedBox(height: 6),
+          //TODO: isLineConnectedで表示非表示切り替える
+          //文字からダイアログへの遷移、アイコンからメンバーの更新で処理を分ける
           GestureDetector(
             onTap: () {
               showDialog(
@@ -411,7 +413,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                 },
               );
             },
-            child: //TODO: //isLineConnectedで表示非表示切り替える
+            child:
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [

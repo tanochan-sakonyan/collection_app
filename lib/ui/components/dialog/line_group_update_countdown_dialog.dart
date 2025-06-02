@@ -39,7 +39,7 @@ class LineGroupUpdateCountdownDialog extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            //TODO: LINEグループ取得24時間以内のカウントダウン表示
+            //TODO: LINEグループ取得後oo時間のカウントダウン表示
             CountdownTimer(
               expiretime: DateTime.now().add(const Duration(hours: 23, minutes: 55, seconds: 23)),
               textStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -83,7 +83,7 @@ class LineGroupUpdateCountdownDialog extends StatelessWidget {
                   width: 120,
                   child: ElevatedButton(
                     onPressed: (){
-                      //TODO: ボタンを押し下した時にLINEグループ取得APIたたく
+                      //TODO: 「再取得」のボタンを押し下した時にメンバー情報取得APIたたく
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,

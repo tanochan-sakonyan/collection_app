@@ -91,6 +91,8 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
     } catch (error) {
       debugPrint('イベントの追加に失敗しました: $error');
     }
+
+    //TODO: LINEグループからメンバー取得モードでも別APIたたくように切り替える
   }
 
   Future<void> _choiceEvent() async {
@@ -107,7 +109,6 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
   }
 
   //TODO: 招待可能なLINEグループの有無によりどちらの画面に遷移するか分岐する
-  //isLineConnectedで分岐
   Future<void> _selectLineGroup() async {
     Navigator.of(context).push(
       MaterialPageRoute(
