@@ -61,6 +61,7 @@
   "edit": "編集",
   "delete": "削除",
   "editMemberName": "メンバー名編集",
+  "editEventName": "イベント名編集",
   "confirmDeleteMember": "このメンバーを削除しますか？",
   "enterTotalAmount": "合計金額の入力",
   "currencyUnit": "円",

@@ -8,6 +8,7 @@ import 'package:mr_collection/provider/tab_titles_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/event/add_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/event/delete_event_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/event/edit_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_and_suggest_official_line_dialog.dart';
 import 'package:mr_collection/ui/components/member_list.dart';
 import 'package:mr_collection/ui/components/tanochan_drawer.dart';
@@ -345,6 +346,17 @@ class HomeScreenState extends ConsumerState<HomeScreen>
 
                             return GestureDetector(
                               key: isFirstTab ? leftTabKey : null,
+                              onTap: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return EditEventDialog(
+                                          userId:
+                                              ref.read(userProvider)!.userId,
+                                          eventId: eventId,
+                                          currentEventName: event.eventName);
+                                    });
+                              },
                               onLongPress: () => showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
