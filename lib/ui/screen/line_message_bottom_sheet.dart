@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/provider/user_provider.dart';
+import 'package:mr_collection/ui/components/dialog/line-message-confiem-dialog.dart';
 import 'package:mr_collection/ui/components/dialog/paypay_dialog.dart';
 
 class LineMessageBottomSheet extends ConsumerStatefulWidget {
@@ -48,7 +49,7 @@ class _UnpaidMessageBottomSheetState
     }).join('\n');
 
     return '下記の方は、まだ${widget.event.eventName}の支払いが完了していません。\n'
-        '以下のPaypayリンクから\n'
+        '以下のPayPayリンクから\n'
         'お支払いをお願いいたします。\n'
         '$namesAndMoney\n';
   }
@@ -160,8 +161,15 @@ class _UnpaidMessageBottomSheetState
               width: 108,
               height: 40,
               child: ElevatedButton(
-                onPressed: () {
-                  // TODO: 次のポップアップに遷移
+                onPressed: () async {
+                  if (_controller.text.trim().isEmpty) {
+                    return;
+                  }
+                  await showDialog(
+                    context: context,
+                    builder: (context) => LineMessageConfirmDialog(
+                        event: widget.event, message: _controller.text),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF75DCC6),
