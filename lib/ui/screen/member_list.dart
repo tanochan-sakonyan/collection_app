@@ -590,7 +590,7 @@ class MemberList extends ConsumerWidget {
                           BorderRadius.vertical(top: Radius.circular(16)),
                     ),
                     builder: (context) =>
-                        UnpaidMessageBottomSheet.lineMessageBottomSheet(
+                        LineMessageBottomSheet.lineMessageBottomSheet(
                       event: event,
                       unpaidMembers: unpaidMembers,
                     ),

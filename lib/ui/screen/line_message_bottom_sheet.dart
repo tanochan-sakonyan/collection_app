@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart'; // ← Provider用
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
+import 'package:mr_collection/provider/user_provider.dart';
+import 'package:mr_collection/ui/components/dialog/paypay_dialog.dart';
+// ... 他インポート
 
-class UnpaidMessageBottomSheet extends StatefulWidget {
+class LineMessageBottomSheet extends ConsumerStatefulWidget {
   final Event event;
   final List<Member> unpaidMembers;
   final String defaultPaypayUrl;
 
-  const UnpaidMessageBottomSheet.lineMessageBottomSheet({
+  const LineMessageBottomSheet.lineMessageBottomSheet({
     super.key,
     required this.event,
     required this.unpaidMembers,
@@ -17,13 +21,15 @@ class UnpaidMessageBottomSheet extends StatefulWidget {
   });
 
   @override
-  State<UnpaidMessageBottomSheet> createState() =>
+  ConsumerState<LineMessageBottomSheet> createState() =>
       _UnpaidMessageBottomSheetState();
 }
 
-class _UnpaidMessageBottomSheetState extends State<UnpaidMessageBottomSheet> {
+class _UnpaidMessageBottomSheetState
+    extends ConsumerState<LineMessageBottomSheet> {
   late TextEditingController _controller;
   bool _includePaypayLink = false;
+  String? _paypayUrl;
 
   @override
   void initState() {
@@ -38,7 +44,7 @@ class _UnpaidMessageBottomSheetState extends State<UnpaidMessageBottomSheet> {
 
     final namesAndMoney = widget.unpaidMembers.map((m) {
       final spaceCount = maxNameLength - m.memberName.length + 2;
-      final spaces = ' ' * spaceCount;
+      final spaces = '　' * spaceCount;
       return '@${m.memberName}$spaces${m.memberMoney ?? ""}円';
     }).join('\n');
 
@@ -48,13 +54,22 @@ class _UnpaidMessageBottomSheetState extends State<UnpaidMessageBottomSheet> {
         '$namesAndMoney\n';
   }
 
-  void _onCheckChanged(bool value) {
+  Future<void> _onCheckChanged(BuildContext context, bool value) async {
+    final user = ref.read(userProvider);
+    String? paypayUrl = user?.paypayUrl;
+
+    if (value && (paypayUrl == null || paypayUrl.isEmpty)) {
+      await showDialog(
+        context: context,
+        builder: (context) => const PayPayDialog(),
+      );
+      paypayUrl = ref.read(userProvider)?.paypayUrl;
+      if (paypayUrl == null || paypayUrl.isEmpty) return;
+    }
     setState(() {
       _includePaypayLink = value;
-
-      final paypayLine = '\nPayPayリンク：${widget.defaultPaypayUrl}';
-
-      // 現在のテキスト
+      _paypayUrl = paypayUrl ?? widget.defaultPaypayUrl;
+      final paypayLine = '\nPayPayリンク：$_paypayUrl';
       var currentText = _controller.text;
 
       if (_includePaypayLink) {
@@ -79,7 +94,7 @@ class _UnpaidMessageBottomSheetState extends State<UnpaidMessageBottomSheet> {
     final mq = MediaQuery.of(context);
 
     return FractionallySizedBox(
-      heightFactor: 0.85, // 高さ制限
+      heightFactor: 0.85,
       child: Padding(
         padding: EdgeInsets.only(
           left: 24,
@@ -124,7 +139,7 @@ class _UnpaidMessageBottomSheetState extends State<UnpaidMessageBottomSheet> {
               children: [
                 const SizedBox(width: 8),
                 GestureDetector(
-                  onTap: () => _onCheckChanged(!_includePaypayLink),
+                  onTap: () => _onCheckChanged(context, !_includePaypayLink),
                   child: SvgPicture.asset(
                     _includePaypayLink
                         ? 'assets/icons/ic_check_circle_teal.svg'
