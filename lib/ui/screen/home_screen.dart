@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:mr_collection/ads/ad_helper.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/provider/tab_titles_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
@@ -30,6 +32,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<String> _tabTitles = [];
   int _currentTabIndex = 0;
+  late final BannerAd _banner;
+  bool _loaded = false;
 
   final GlobalKey eventAddKey = GlobalKey();
   final GlobalKey leftTabKey = GlobalKey();
@@ -64,6 +68,19 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       }
     });
     _loadSavedTabIndex();
+
+    _banner = BannerAd(
+      adUnitId: AdHelper.bannerTestId(), // ad_helperを呼び出す
+      request: const AdRequest(),
+      size: AdSize.banner,
+      listener: BannerAdListener(
+        onAdLoaded: (_) => setState(() => _loaded = true),
+        onAdFailedToLoad: (ad, error) {
+          ad.dispose();
+          debugPrint('Ad load failed: $error');
+        },
+      ),
+    )..load();
   }
 
   bool _updateDialogChecked = false;
@@ -152,6 +169,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   void dispose() {
     _tabController.dispose();
     super.dispose();
+    _banner.dispose();
   }
 
   void _updateTabController(int newLength) {
@@ -399,37 +417,54 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       drawer: const TanochanDrawer(),
       body: Column(
         children: [
-          Expanded(
-            child: tabTitles.isEmpty
-                ? const EventZeroComponents()
-                : TabBarView(
-                    controller: _tabController,
-                    children: _tabTitles.asMap().entries.map((entry) {
-                      final index = entry.key;
-                      final eventId = entry.value;
-                      final event = user!.events.firstWhere(
-                        (e) => e.eventId == eventId,
-                        orElse: () => const Event(
-                            eventId: "",
-                            eventName: '',
-                            members: [],
-                            totalMoney: 0),
-                      );
-                      return MemberList(
-                        event: event,
-                        members: event.eventId != "" ? event.members : [],
-                        eventId: event.eventId != "" ? event.eventId : "",
-                        eventName: event.eventName,
-                        memberAddKey:
-                            (_currentTabIndex == index) ? memberAddKey : null,
-                        slidableKey:
-                            (_currentTabIndex == index) ? slidableKey : null,
-                        sortKey: (_currentTabIndex == index) ? sortKey : null,
-                        fabKey: (_currentTabIndex == index) ? fabKey : null,
-                      );
-                    }).toList(),
-                  ),
+          Column(
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.7,
+                child: tabTitles.isEmpty
+                    ? const EventZeroComponents()
+                    : TabBarView(
+                        controller: _tabController,
+                        children: _tabTitles.asMap().entries.map((entry) {
+                          final index = entry.key;
+                          final eventId = entry.value;
+                          final event = user!.events.firstWhere(
+                            (e) => e.eventId == eventId,
+                            orElse: () => const Event(
+                                eventId: "",
+                                eventName: '',
+                                members: [],
+                                totalMoney: 0),
+                          );
+                          return MemberList(
+                            event: event,
+                            members: event.eventId != "" ? event.members : [],
+                            eventId: event.eventId != "" ? event.eventId : "",
+                            eventName: event.eventName,
+                            memberAddKey: (_currentTabIndex == index)
+                                ? memberAddKey
+                                : null,
+                            slidableKey: (_currentTabIndex == index)
+                                ? slidableKey
+                                : null,
+                            sortKey:
+                                (_currentTabIndex == index) ? sortKey : null,
+                            fabKey: (_currentTabIndex == index) ? fabKey : null,
+                          );
+                        }).toList(),
+                      ),
+              ),
+            ],
           ),
+          if (_loaded)
+            SafeArea(
+              top: false,
+              child: SizedBox(
+                width: _banner.size.width.toDouble(),
+                height: _banner.size.height.toDouble(),
+                child: AdWidget(ad: _banner),
+              ),
+            ),
         ],
       ),
     );
