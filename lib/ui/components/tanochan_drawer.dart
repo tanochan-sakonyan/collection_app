@@ -106,7 +106,7 @@ class TanochanDrawer extends StatelessWidget {
             _buildMenuItem(
               context,
               text: S.of(context)?.xLink ?? "X Link",
-              icon: SvgPicture.asset("assets/icons/ic_x.svg"),
+              icon: SvgPicture.asset("assets/icons/drawer_x.svg"),
               onTap: () async {
                 const url = "https://x.com/shukinkun";
                 if (await canLaunchUrl(Uri.parse(url))) {
@@ -122,7 +122,7 @@ class TanochanDrawer extends StatelessWidget {
             _buildMenuItem(
               context,
               text: S.of(context)?.officialSite ?? "Official Website",
-              icon: SvgPicture.asset("assets/icons/ic_monitor.svg"),
+              icon: SvgPicture.asset("assets/icons/drawer_monitor.svg"),
               onTap: () async {
                 const url = "https://tanochan.studio.site/";
                 if (await canLaunchUrl(Uri.parse(url))) {

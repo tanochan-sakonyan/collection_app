@@ -85,8 +85,8 @@ flutter:
     - assets/icons/drawer_envelope.svg
     - assets/icons/drawer_delete_account.svg
     - assets/icons/ic_next.svg
-    - assets/icons/ic_x.svg
-    - assets/icons/ic_monitor.svg
+    - assets/icons/drawer_x.svg
+    - assets/icons/drawer_monitor.svg
 
   fonts:
     - family: Montserrat
