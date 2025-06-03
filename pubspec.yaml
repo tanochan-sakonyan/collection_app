@@ -52,7 +52,7 @@ flutter_icons:
   image_path: "assets/icons/icon.png"
 
 flutter:
-  generate: true 
+  generate: true
   assets:
     - assets/icons/reverse_icon.svg
     - assets/icons/filter.svg
@@ -85,8 +85,9 @@ flutter:
     - assets/icons/drawer_file.svg
     - assets/icons/drawer_envelope.svg
     - assets/icons/drawer_delete_account.svg
-    - assets/icons/ic_back.svg
     - assets/icons/ic_next.svg
+    - assets/icons/drawer_x.svg
+    - assets/icons/drawer_monitor.svg
 
   fonts:
     - family: Montserrat
