@@ -199,7 +199,7 @@ class CheckSelectedLineGroupScreenState
           ),
           const SizedBox(height: 16),
           Text(
-            "※LINEグループから取得したメンバー情報は24時間で消去されるため、\nその都度再取得をするようお願いいたします。\n支払い状況は引き継がれます。",
+            "※LINEグループから取得したメンバー情報は24時間で消去されるため、\n24時間が経過する前に再取得をするようお願いいたします。\n再取得の際、支払い状況は引き継がれます。",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
               fontSize: 10,
               fontWeight: FontWeight.w500,

@@ -74,6 +74,7 @@ class SelectLineGroupScreenState extends ConsumerState<SelectLineGroupScreen> {
                   'assets/icons/question_circle.svg',
                   width: 24,
                   height: 24,
+                  colorFilter: const ColorFilter.mode(Color(0xFF8E8E93), BlendMode.srcIn),
                 ),
                 const SizedBox(width: 24),
               ],

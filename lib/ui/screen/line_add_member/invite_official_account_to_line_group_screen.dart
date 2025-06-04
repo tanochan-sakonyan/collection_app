@@ -134,7 +134,7 @@ class CheckSelectedLineGroupScreenState
           ),
           const SizedBox(height: 24),
           Text(
-            "「集金くん」がグループ内で\n宣伝メッセージをおくることはありません。",
+            "「集金くん」がグループ内で\n宣伝メッセージ等を送ることはありません。",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
               fontSize: 11,
               fontWeight: FontWeight.w500,
