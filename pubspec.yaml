@@ -86,6 +86,13 @@ flutter:
     - assets/icons/drawer_envelope.svg
     - assets/icons/drawer_delete_account.svg
     - assets/icons/ic_next.svg
+    - assets/icons/ic_arrow_right.svg
+    - assets/icons/ic_default_group.svg
+    - assets/icons/icon.png
+    - assets/icons/ic_number_one.svg
+    - assets/icons/ic_number_two.svg
+    - assets/icons/ic_update.svg
+    - assets/icons/line_official_badge.png
     - assets/icons/drawer_x.svg
     - assets/icons/drawer_monitor.svg
 

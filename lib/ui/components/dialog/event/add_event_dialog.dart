@@ -8,6 +8,8 @@ import 'package:mr_collection/data/repository/event_repository.dart';
 import 'package:mr_collection/ui/screen/transfer/choice_event_screen.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:mr_collection/ui/screen/line_add_member/select_line_group_screen.dart';
+import 'package:mr_collection/ui/screen/line_add_member/invite_official_account_to_line_group_screen.dart';
 
 class AddEventDialog extends ConsumerStatefulWidget {
   final String userId;
@@ -89,6 +91,8 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
     } catch (error) {
       debugPrint('イベントの追加に失敗しました: $error');
     }
+
+    //TODO: LINEグループからメンバー取得モードでも別APIたたくように切り替える
   }
 
   Future<void> _choiceEvent() async {
@@ -102,6 +106,18 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
         _selectedEvent = picked;
       });
     }
+  }
+
+  //TODO: 招待可能なLINEグループの有無によりどちらの画面に遷移するか分岐する
+  Future<void> _selectLineGroup() async {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+          // 集金くんアカウントを含むLINEグループがあるとき
+          //builder: (_) => const SelectLineGroupScreen()
+          // 集金くんアカウントを含むLINEグループがないとき
+          builder: (_) => const InviteOfficialAccountToLineGroupScreen()
+        ),
+    );
   }
 
   @override
@@ -255,33 +271,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                             width: 28,
                             height: 28,
                           ),
-                          onPressed: () {
-                            //LINE認証申請前の臨時ダイアログ
-                            showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                contentPadding: const EdgeInsets.symmetric(
-                                    vertical: 56.0, horizontal: 24.0),
-                                content: Text(
-                                  '${S.of(context)?.update_1}\n ${S.of(context)?.update_2}',
-                                  textAlign: TextAlign.center,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge
-                                      ?.copyWith(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black,
-                                      ),
-                                ),
-                              ),
-                            );
-                            //TODO LINE認証申請が通ったらこちらに戻す
-                            /*showDialog(
-                            context: context,
-                            builder: (context) => const ConfirmationDialog(),
-                          );*/
-                          },
+                          onPressed: _isButtonEnabled ? () => _selectLineGroup() : null,
                         ),
                       ),
                     ),
