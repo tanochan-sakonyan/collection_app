@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:mr_collection/ads/ad_helper.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/provider/tab_titles_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
@@ -32,6 +34,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<String> _tabTitles = [];
   int _currentTabIndex = 0;
+  late final BannerAd _banner;
+  bool _loaded = false;
 
   final GlobalKey eventAddKey = GlobalKey();
   final GlobalKey leftTabKey = GlobalKey();
@@ -66,6 +70,19 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       }
     });
     _loadSavedTabIndex();
+
+    _banner = BannerAd(
+      adUnitId: AdHelper.bannerTestId(), // ad_helperを呼び出す
+      request: const AdRequest(),
+      size: AdSize.banner,
+      listener: BannerAdListener(
+        onAdLoaded: (_) => setState(() => _loaded = true),
+        onAdFailedToLoad: (ad, error) {
+          ad.dispose();
+          debugPrint('Ad load failed: $error');
+        },
+      ),
+    )..load();
   }
 
   bool _updateDialogChecked = false;
@@ -153,6 +170,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   @override
   void dispose() {
     _tabController.dispose();
+    _banner.dispose();
     super.dispose();
   }
 
@@ -471,6 +489,15 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                     }).toList(),
                   ),
           ),
+          if (_loaded)
+            SafeArea(
+              top: false,
+              child: SizedBox(
+                width: _banner.size.width.toDouble(),
+                height: _banner.size.height.toDouble(),
+                child: AdWidget(ad: _banner),
+              ),
+            ),
         ],
       ),
     );

@@ -9,6 +9,7 @@ import 'package:mr_collection/ui/components/dialog/questionnaire_dialog.dart';
 import 'package:mr_collection/ui/screen/privacy_policy_screen.dart';
 import 'package:mr_collection/ui/screen/terms_of_service_screen.dart';
 import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TanochanDrawer extends StatelessWidget {
   const TanochanDrawer({super.key});
@@ -27,9 +28,9 @@ class TanochanDrawer extends StatelessWidget {
             Text(
               S.of(context)?.setting ?? "Settings",
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                  ),
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+              ),
             ),
             const SizedBox(height: 8),
             const Divider(
@@ -55,10 +56,10 @@ class TanochanDrawer extends StatelessWidget {
                       '${S.of(context)?.update_1}\n ${S.of(context)?.update_2}',
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                 );
@@ -104,6 +105,38 @@ class TanochanDrawer extends StatelessWidget {
             const SizedBox(height: 20),
             _buildMenuItem(
               context,
+              text: S.of(context)?.xLink ?? "X Link",
+              icon: SvgPicture.asset("assets/icons/drawer_x.svg"),
+              onTap: () async {
+                const url = "https://x.com/shukinkun";
+                if (await canLaunchUrl(Uri.parse(url))) {
+                  await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(S.of(context)?.officialSite ?? "Could not open the page")),
+                  );
+                }
+              },
+            ),
+            const SizedBox(height: 20),
+            _buildMenuItem(
+              context,
+              text: S.of(context)?.officialSite ?? "Official Website",
+              icon: SvgPicture.asset("assets/icons/drawer_monitor.svg"),
+              onTap: () async {
+                const url = "https://tanochan.studio.site/";
+                if (await canLaunchUrl(Uri.parse(url))) {
+                  await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(S.of(context)?.officialSite ?? "Could not open the page")),
+                  );
+                }
+              },
+            ),
+            const SizedBox(height: 20),
+            _buildMenuItem(
+              context,
               text: S.of(context)?.termsOfService ?? "Terms Of Service",
               icon: SvgPicture.asset("assets/icons/drawer_file.svg"),
               onTap: () {
@@ -142,7 +175,7 @@ class TanochanDrawer extends StatelessWidget {
                   }
                 },
                 icon:
-                    SvgPicture.asset("assets/icons/drawer_delete_account.svg"),
+                SvgPicture.asset("assets/icons/drawer_delete_account.svg"),
               );
             }),
           ],
@@ -153,8 +186,8 @@ class TanochanDrawer extends StatelessWidget {
 
   Widget _buildMenuItem(BuildContext context,
       {required String text,
-      required Widget icon,
-      required VoidCallback onTap}) {
+        required Widget icon,
+        required VoidCallback onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: SizedBox(
@@ -166,10 +199,10 @@ class TanochanDrawer extends StatelessWidget {
             Text(
               text,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                  ),
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+              ),
             ),
           ],
         ),
