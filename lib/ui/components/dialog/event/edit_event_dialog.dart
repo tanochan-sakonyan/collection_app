@@ -77,16 +77,16 @@ class EditEventDialogState extends ConsumerState<EditEventDialog> {
     try {
       await ref.read(userProvider.notifier).editEventName(
           widget.userId, widget.eventId, _controller.text.trim());
-      Future.delayed(const Duration(seconds: 2), () {
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+    } catch (e) {
+      if (mounted) {
         setState(() {
+          _errorMessage = 'イベント名の更新に失敗しました : edit_event_name_dialog.dart';
           _isButtonEnabled = true;
         });
-      });
-      Navigator.of(context).pop();
-    } catch (e) {
-      setState(() {
-        _errorMessage = 'イベント名の更新に失敗しました : edit_event_name_dialog.dart';
-      });
+      }
     }
   }
 
