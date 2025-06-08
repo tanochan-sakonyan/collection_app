@@ -31,7 +31,7 @@ class EventRepository {
     final response = await http.put(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'eventName': newEventName}),
+      body: jsonEncode({'newEventName': newEventName}),
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
