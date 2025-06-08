@@ -347,15 +347,19 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                             return GestureDetector(
                               key: isFirstTab ? leftTabKey : null,
                               onTap: () {
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return EditEventDialog(
-                                          userId:
-                                              ref.read(userProvider)!.userId,
-                                          eventId: eventId,
-                                          currentEventName: event.eventName);
-                                    });
+                                if (index == _currentTabIndex) {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return EditEventDialog(
+                                            userId:
+                                                ref.read(userProvider)!.userId,
+                                            eventId: eventId,
+                                            currentEventName: event.eventName);
+                                      });
+                                } else {
+                                  _tabController.animateTo(index);
+                                }
                               },
                               onLongPress: () => showDialog(
                                 context: context,
