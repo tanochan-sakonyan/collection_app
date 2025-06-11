@@ -99,6 +99,26 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
+  Future<void> editEventName(
+      String userId, String eventId, String newEventName) async {
+    try {
+      final updateEvent =
+          await eventRepository.editEventName(userId, eventId, newEventName);
+      final updatedUser = state?.copyWith(
+        events: state!.events.map((event) {
+          if (event.eventId == eventId) {
+            return updateEvent;
+          }
+          return event;
+        }).toList(),
+      );
+      state = updatedUser;
+      debugPrint("イベント名を更新しました: $newEventName");
+    } catch (e) {
+      debugPrint("イベント名編集中にエラーが発生しました: $e");
+    }
+  }
+
   Future<void> createEventAndTransferMembers(
       String eventId, String eventName, String userId) async {
     try {
