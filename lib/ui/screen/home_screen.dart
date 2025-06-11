@@ -6,9 +6,11 @@ import 'package:mr_collection/ads/ad_helper.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/provider/tab_titles_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
+import 'package:mr_collection/ui/components/countdown_timer.dart';
 import 'package:mr_collection/ui/components/dialog/event/add_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/event/delete_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/event/edit_event_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/line_group_update_countdown_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_and_suggest_official_line_dialog.dart';
 import 'package:mr_collection/ui/components/member_list.dart';
 import 'package:mr_collection/ui/components/tanochan_drawer.dart';
@@ -433,8 +435,46 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       drawer: const TanochanDrawer(),
       body: Column(
         children: [
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.7,
+          const SizedBox(height: 6),
+          //TODO: isLineConnectedで表示非表示切り替える
+          //文字からダイアログへの遷移、アイコンからメンバーの更新で処理を分ける
+          GestureDetector(
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return const LineGroupUpdateCountdownDialog();
+                },
+              );
+            },
+            child:
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                    "メンバー自動削除まで ",
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: Colors.black
+                    )
+                ),
+                //TODO: LINEグループ取得から24時間以内のカウントダウン
+                CountdownTimer(
+                  expiretime: DateTime.now().add(const Duration(hours: 23, minutes: 55, seconds: 23)),
+                  textStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                SvgPicture.asset(
+                  'assets/icons/ic_update.svg',
+                  width: 20,
+                  height: 20,
+                ),
+                const SizedBox(width: 36),
+              ],
+            ),
+          ),
+          Expanded(
             child: tabTitles.isEmpty
                 ? const EventZeroComponents()
                 : TabBarView(
