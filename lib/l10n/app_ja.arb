@@ -52,7 +52,7 @@
   "transferThisMember": "このメンバーを引継ぐ",
   "enterEventName": "イベント名を入力してください",
     "tapToAddEvent": "こちらをタップでイベントを\n追加できます",
-  "longPressToDeleteEvent": "長押しでイベントを削除\nできます",
+  "longPressToDeleteEvent": "タップでイベントを編集\n長押しでイベントを削除\nできます",
   "tapToAddMember": "こちらをタップでメンバーを\n追加できます",
   "swipeToEditOrDeleteMember": "スワイプでメンバーの削除及び\nメンバー名の変更ができます",
   "tapToSortByPayment": "こちらをタップで支払い状況順に\n並び変えることができます",
