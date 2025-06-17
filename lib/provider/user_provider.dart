@@ -128,6 +128,17 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
+  Future<LineGroup> refreshLineGroupMember(
+      String groupId, String userId) async {
+    try {
+      final updatedGroup = await ref.read(userRepositoryProvider).refreshLineGroupMember(userId, groupId);
+      return updatedGroup;
+    }catch (e){
+      debugPrint('LINEメンバーの再取得にエラーが発生しました: $e');
+      rethrow;
+    }
+  }
+
   Future<void> inputTotalMoney(
       String userId, String eventId, int totalMoney) async {
     try {

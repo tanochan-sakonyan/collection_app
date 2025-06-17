@@ -150,6 +150,40 @@ class UserRepository {
     }
   }
 
+  Future<LineGroup> refreshLineGroupMember(String userId, String groupId) async {
+    debugPrint('refreshLineGroupMember関数が呼ばれました。');
+    final url = Uri.parse('$baseUrl/users/$userId/line-groups/$groupId');
+
+    final response = await http.get(url);
+
+    debugPrint('Response status: ${response.statusCode}');
+    debugPrint('Response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      try {
+        final data = jsonDecode(response.body);
+        if(data['isSuccessful'] != true){
+          throw Exception('API returned isSuccessful = false');
+        }
+        return LineGroup.fromJson(data);
+      } catch (e, stackTrace) {
+        debugPrint('JSONデコード中にエラー: $e');
+        debugPrint('スタックトレース: $stackTrace');
+        rethrow;
+      }
+    } else {
+      try {
+        final errorData = jsonDecode(response.body);
+        final errorMessage = errorData['message'] ?? 'ユーザー情報の取得に失敗しました';
+        throw Exception(
+            'エラー: $errorMessage (ステータスコード: ${response.statusCode})');
+      } catch (e) {
+        throw Exception(
+            'その他のエラー：ユーザー情報の取得に失敗しました (ステータスコード: ${response.statusCode})');
+      }
+    }
+  }
+
   Future<User> sendPaypayLink(String? userId, String paypayLink) async {
     final url = Uri.parse('$baseUrl/users/$userId/paypay-link');
     final response = await http.post(

@@ -18,4 +18,8 @@ class UserService {
   Future<List<LineGroup>> getLineGroups(String userId) {
     return userRepository.getLineGroups(userId);
   }
+
+  Future<LineGroup> refreshLineGroupMember(String userId, String groupId){
+    return userRepository.refreshLineGroupMember(userId, groupId);
+  }
 }

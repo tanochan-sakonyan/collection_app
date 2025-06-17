@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/countdown_timer.dart';
 
-class LineGroupUpdateCountdownDialog extends StatelessWidget {
-  const LineGroupUpdateCountdownDialog({super.key});
+class LineGroupUpdateCountdownDialog extends ConsumerWidget {
+  final String groupId;
+
+  const LineGroupUpdateCountdownDialog({
+    super.key,
+    required this.groupId,
+  });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userId = ref.read(userProvider)?.userId;
+
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Container(
@@ -82,8 +91,10 @@ class LineGroupUpdateCountdownDialog extends StatelessWidget {
                   height: 36,
                   width: 120,
                   child: ElevatedButton(
-                    onPressed: (){
+                    onPressed: () async {
                       //TODO: 「再取得」のボタンを押し下した時にメンバー情報取得APIたたく
+                      final updatedGroup = await ref.read(userProvider.notifier).refreshLineGroupMember(groupId, userId!);
+                      Navigator.of(context).pop(updatedGroup);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
