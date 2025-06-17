@@ -114,6 +114,20 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
+  Future<void> createEventAndGetMembersFromLine(
+      String groupId, String eventName, List<LineGroupMember> members, String userId) async {
+    try{
+      final newEvent = await eventRepository.createEventAndGetMembersFromLine(
+          groupId, eventName, members, userId);
+      final updatedUser = state?.copyWith(
+        events: [...state!.events, newEvent],
+      );
+      state = updatedUser;
+    }catch (e){
+      debugPrint('イベントの作成中にエラーが発生しました: $e');
+    }
+  }
+
   Future<void> inputTotalMoney(
       String userId, String eventId, int totalMoney) async {
     try {

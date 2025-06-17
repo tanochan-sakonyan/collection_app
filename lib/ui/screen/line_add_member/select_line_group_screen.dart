@@ -113,7 +113,7 @@ class SelectLineGroupScreen extends StatelessWidget {
                         height: 44,
                         child: ListTile(
                             title: Text(
-                              lineGroup.group_name,
+                              lineGroup.groupName,
                               style:
                               Theme.of(context).textTheme.bodyMedium?.copyWith(
                                 fontSize: 16,

@@ -102,7 +102,7 @@ class CheckSelectedLineGroupScreenState
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              lineGroup.group_name,
+                              lineGroup.groupName,
                               style: Theme.of(context)
                                   .textTheme
                                   .bodySmall

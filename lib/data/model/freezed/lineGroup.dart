@@ -19,8 +19,8 @@ class LineGroupMember with _$LineGroupMember {
 class LineGroup with _$LineGroup {
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
   const factory LineGroup({
-    required String group_Id,
-    required String group_name,
+    required String groupId,
+    required String groupName,
     required List<LineGroupMember> members,
   }) = _LineGroup;
 
