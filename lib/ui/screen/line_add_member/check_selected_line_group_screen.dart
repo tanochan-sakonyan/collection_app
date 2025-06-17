@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
-import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:mr_collection/data/model/freezed/lineGroup.dart';
+import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 
 class CheckSelectedLineGroupScreen extends ConsumerStatefulWidget {
-  const CheckSelectedLineGroupScreen({super.key});
+  final LineGroup lineGroup;
+  const CheckSelectedLineGroupScreen({Key? key, required this.lineGroup}) : super(key: key);
   @override
   ConsumerState<CheckSelectedLineGroupScreen> createState() =>
       CheckSelectedLineGroupScreenState();
@@ -18,15 +20,7 @@ class CheckSelectedLineGroupScreenState
 
   @override
   Widget build(BuildContext context) {
-    // TODO: バックと繋いだら消すダミーデータ
-    const event =  Event(
-      eventId: 'dummy-id',
-      eventName: 'テストグループ',
-      members: [
-        Member(memberId: '1', memberName: '太郎', status: PaymentStatus.unpaid,memberMoney: 1000,),
-        Member(memberId: '2', memberName: '花子', status: PaymentStatus.unpaid,memberMoney: 1000,),
-      ],
-    );
+    final lineGroup = widget.lineGroup;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -108,8 +102,7 @@ class CheckSelectedLineGroupScreenState
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              //TODO: 取得したlineグループ名
-                              "グループ名",
+                              lineGroup.group_name,
                               style: Theme.of(context)
                                   .textTheme
                                   .bodySmall
@@ -127,11 +120,11 @@ class CheckSelectedLineGroupScreenState
                           bottomLeft: Radius.circular(12),
                           bottomRight: Radius.circular(12),
                         ),
-                        child: ListView.builder( //TODO: バックとつないだら選択したグループのメンバーをリスト表示する
+                        child: ListView.builder(
                           shrinkWrap: true,
-                          itemCount: event.members.length,
+                          itemCount: lineGroup.members.length,
                           itemBuilder: (context, index) {
-                            final member = event.members[index];
+                            final member = lineGroup.members[index];
                             return Column(
                               children: [
                                 Padding(
@@ -142,7 +135,7 @@ class CheckSelectedLineGroupScreenState
                                     child: Align(
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        member.memberName,
+                                        member.member_name,
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyMedium
@@ -178,7 +171,7 @@ class CheckSelectedLineGroupScreenState
             child: ElevatedButton(
               onPressed: () {
                 //TODO: イベント作成ダイアログに戻す
-                Navigator.of(context).pop(event);
+                Navigator.of(context).pop();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF76DCC6),

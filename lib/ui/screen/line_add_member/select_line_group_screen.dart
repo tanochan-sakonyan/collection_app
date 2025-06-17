@@ -11,10 +11,10 @@ class SelectLineGroupScreen extends StatelessWidget {
   final List<LineGroup> lineGroups;
   const SelectLineGroupScreen({Key? key, required this.lineGroups}) : super(key: key);
 
-  Future<void> _checkSelectedLineGroup(BuildContext context) async {
+  Future<void> _checkSelectedLineGroup(BuildContext context, LineGroup lineGroup) async {
     Navigator.of(context).push<Event>(
     MaterialPageRoute(
-    builder: (_) => const CheckSelectedLineGroupScreen()),
+    builder: (_) => CheckSelectedLineGroupScreen(lineGroup: lineGroup)),
     );
   }
 
@@ -125,7 +125,7 @@ class SelectLineGroupScreen extends StatelessWidget {
                               height: 16,
                               child: SvgPicture.asset('assets/icons/ic_next.svg'),
                             ),
-                            onTap: () => _checkSelectedLineGroup(context)),
+                            onTap: () => _checkSelectedLineGroup(context, lineGroup)),
                       ),
                       const Divider(
                         color: Color(0xFFE8E8E8),
