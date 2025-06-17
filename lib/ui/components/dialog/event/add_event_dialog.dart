@@ -7,7 +7,7 @@ import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/data/repository/event_repository.dart';
 import 'package:mr_collection/ui/screen/transfer/choice_event_screen.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
-import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/ui/screen/line_add_member/select_line_group_screen.dart';
 import 'package:mr_collection/ui/screen/line_add_member/invite_official_account_to_line_group_screen.dart';
 
@@ -110,14 +110,28 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
 
   //TODO: 招待可能なLINEグループの有無によりどちらの画面に遷移するか分岐する
   Future<void> _selectLineGroup() async {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-          // 集金くんアカウントを含むLINEグループがあるとき
-          //builder: (_) => const SelectLineGroupScreen()
+    final userId = ref.read(userProvider)?.userId;
+    if( userId == null ) return;
+
+    final lineGroups = await ref.read(userProvider.notifier).getLineGroups(userId);
+    debugPrint('LINE取得APIを実行しました。');
+    debugPrint('取得したLINEグループ : $lineGroups');
+
+    if(lineGroups.isEmpty){
+      Navigator.of(context).push(
+        MaterialPageRoute(
           // 集金くんアカウントを含むLINEグループがないとき
-          builder: (_) => const InviteOfficialAccountToLineGroupScreen()
+            builder: (_) => const InviteOfficialAccountToLineGroupScreen()
         ),
-    );
+      );
+    }else{
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          // 集金くんアカウントを含むLINEグループがあるとき
+          builder: (_) => SelectLineGroupScreen(lineGroups : lineGroups)
+        ),
+      );
+    }
   }
 
   @override

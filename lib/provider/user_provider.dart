@@ -11,6 +11,7 @@ import 'package:mr_collection/provider/member_repository_provider.dart';
 import 'package:mr_collection/services/user_service.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
+import 'package:mr_collection/data/model/freezed/lineGroup.dart';
 
 final userProvider = StateNotifierProvider<UserNotifier, User?>((ref) {
   final userService = ref.read(userServiceProvider);
@@ -303,6 +304,16 @@ class UserNotifier extends StateNotifier<User?> {
       state = state?.copyWith(events: updatedEvents ?? []);
     } catch (e) {
       debugPrint('メンバーの作成中にエラーが発生しました: $e : user_provider.dart');
+    }
+  }
+
+  Future<List<LineGroup>> getLineGroups(String userId) async {
+    try {
+      final lineGroups = await userService.getLineGroups(userId);
+      return lineGroups;
+    } catch (e) {
+      debugPrint('ユーザー情報の取得の際にエラーが発生しました。: $e');
+      return [];
     }
   }
 }

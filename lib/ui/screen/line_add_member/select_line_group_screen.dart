@@ -1,29 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mr_collection/data/model/freezed/lineGroup.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/ui/components/dialog/invite_official_acount_to_line_group_dialog.dart';
 import 'check_selected_line_group_screen.dart';
 
-class SelectLineGroupScreen extends ConsumerStatefulWidget {
-  const SelectLineGroupScreen({super.key});
-  @override
-  ConsumerState<SelectLineGroupScreen> createState() => SelectLineGroupScreenState();
-}
+class SelectLineGroupScreen extends StatelessWidget {
+  final List<LineGroup> lineGroups;
+  const SelectLineGroupScreen({Key? key, required this.lineGroups}) : super(key: key);
 
-class SelectLineGroupScreenState extends ConsumerState<SelectLineGroupScreen> {
-  Future<void> _checkSelectedLineGroup() async {
+  Future<void> _checkSelectedLineGroup(BuildContext context) async {
     Navigator.of(context).push<Event>(
-      MaterialPageRoute(
-          builder: (_) => const CheckSelectedLineGroupScreen()),
+    MaterialPageRoute(
+    builder: (_) => const CheckSelectedLineGroupScreen()),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final user = ref.watch(userProvider);
-    final events = user?.events ?? <Event>[];
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -108,17 +104,16 @@ class SelectLineGroupScreenState extends ConsumerState<SelectLineGroupScreen> {
           const SizedBox(height: 32),
           Expanded(
               child: ListView.builder(
-                itemCount: events.length,
+                itemCount: lineGroups.length,
                 itemBuilder: (context, index) {
-                  final event = events[index];
+                  final lineGroup = lineGroups[index];
                   return Column(
                     children: [
                       SizedBox(
                         height: 44,
                         child: ListTile(
                             title: Text(
-                              //TODO: 現在はイベント引継ぎ画面を再利用しているが、あとでバックと繋ぐときに取得したLINEグループ名をリスト表示するように変更する
-                              event.eventName,
+                              lineGroup.group_name,
                               style:
                               Theme.of(context).textTheme.bodyMedium?.copyWith(
                                 fontSize: 16,
@@ -130,7 +125,7 @@ class SelectLineGroupScreenState extends ConsumerState<SelectLineGroupScreen> {
                               height: 16,
                               child: SvgPicture.asset('assets/icons/ic_next.svg'),
                             ),
-                            onTap: () => _checkSelectedLineGroup()),
+                            onTap: () => _checkSelectedLineGroup(context)),
                       ),
                       const Divider(
                         color: Color(0xFFE8E8E8),
