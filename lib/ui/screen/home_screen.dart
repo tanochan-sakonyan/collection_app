@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:mr_collection/ads/ad_helper.dart';
+import 'package:mr_collection/data/model/freezed/lineGroup.dart';
+import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/provider/tab_titles_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
@@ -19,7 +21,7 @@ import 'package:mr_collection/ui/tutorial/tutorial_targets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:mr_collection/ui/components/event_zero_components.dart';
-import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:mr_collection/generated/s.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key, this.user});
@@ -235,6 +237,13 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
     final tabTitles = ref.watch(tabTitlesProvider);
+    final String currentEventId = tabTitles.isNotEmpty && _currentTabIndex < tabTitles.length
+      ? tabTitles[_currentTabIndex]
+        : "";
+    final Event? currentEvent = user?.events.firstWhere(
+      (e) => e.eventId == currentEventId
+    );
+    final bool isLineConnected = currentEvent != null && currentEvent.lineGroupId != null && currentEvent.lineGroupId!.isNotEmpty;
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -329,7 +338,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                   eventId: "",
                                   eventName: '',
                                   members: [],
-                                  totalMoney: 0),
+                                  totalMoney: 0,
+                                  lineGroupId: "",
+                                  lineMembersFetchedAt: null,
+                              ),
                             );
                             final bool isFullyPaid = event.members.isNotEmpty &&
                                 event.members.every((member) =>
@@ -420,44 +432,47 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       body: Column(
         children: [
           const SizedBox(height: 6),
-          //TODO: isLineConnectedで表示非表示切り替える
-          //文字からダイアログへの遷移、アイコンからメンバーの更新で処理を分ける
-          GestureDetector(
-            onTap: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return const LineGroupUpdateCountdownDialog();
-                },
-              );
-            },
-            child:
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(
-                    "メンバー自動削除まで ",
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: Colors.black
-                    )
-                ),
-                //TODO: LINEグループ取得から24時間以内のカウントダウン
-                CountdownTimer(
-                  expiretime: DateTime.now().add(const Duration(hours: 23, minutes: 55, seconds: 23)),
-                  textStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: Colors.black,
+          if (isLineConnected)
+            GestureDetector(
+              onTap: () async {
+                final updatedGroup = await showDialog<LineGroup>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return LineGroupUpdateCountdownDialog(lineGroupId: currentEvent.lineGroupId!);
+                  },
+                );
+                if(updatedGroup != null){
+                  //メンバー情報だけ書き換える処理
+                  ref.read(userProvider.notifier).updateMemberDifference(updatedGroup.groupId, updatedGroup.members);
+                }
+              },
+              child:
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                      "メンバー自動削除まで ",
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: Colors.black
+                      )
                   ),
-                ),
-                const SizedBox(width: 8),
-                SvgPicture.asset(
-                  'assets/icons/ic_update.svg',
-                  width: 20,
-                  height: 20,
-                ),
-                const SizedBox(width: 36),
-              ],
+                  //TODO: LINEグループ取得から24時間以内のカウントダウン
+                  CountdownTimer(
+                    expiretime: DateTime.now().add(const Duration(hours: 23, minutes: 55, seconds: 23)),
+                    textStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  SvgPicture.asset(
+                    'assets/icons/ic_update.svg',
+                    width: 20,
+                    height: 20,
+                  ),
+                  const SizedBox(width: 36),
+                ],
+              ),
             ),
-          ),
           Expanded(
             child: tabTitles.isEmpty
                 ? const EventZeroComponents()
@@ -471,8 +486,11 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                         orElse: () => const Event(
                             eventId: "",
                             eventName: '',
+                            lineGroupId: "",
                             members: [],
-                            totalMoney: 0),
+                            totalMoney: 0,
+                            lineMembersFetchedAt: null,
+                        ),
                       );
                       return MemberList(
                         event: event,

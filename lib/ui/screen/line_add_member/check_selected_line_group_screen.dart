@@ -135,7 +135,7 @@ class CheckSelectedLineGroupScreenState
                                     child: Align(
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        member.member_name,
+                                        member.memberName,
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyMedium

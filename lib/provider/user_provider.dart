@@ -139,6 +139,38 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
+  Future<void> updateMemberDifference(
+      String lineGroupId, List<LineGroupMember> newMembers) async {
+    final oldEvent = state!.events.firstWhere((e) => e.lineGroupId == lineGroupId);
+    final oldMembers = oldEvent.members;
+
+    final oldMemberIds = oldMembers.map((m) => m.memberId).toSet();
+    final newMemberIds = newMembers.map((m) => m.memberId).toSet();
+
+    final additionalMembers = newMembers
+        .where((m) => !oldMemberIds.contains(m.memberId))
+        .map((lgm) => Member(
+      memberId: lgm.memberId,
+      memberName: lgm.memberName,
+      status: PaymentStatus.unpaid,
+      // amount: 0,
+    )).toList();
+    final deletedMembers = oldMemberIds.difference(newMemberIds);
+
+    final keptMembers = oldMembers.where((m) => !deletedMembers.contains(m.memberId)).toList();
+
+    final updatedMembers = [...keptMembers, ...additionalMembers];
+
+    final updatedEvents = state!.events.map((event) {
+      if (event.lineGroupId == lineGroupId) {
+        return event.copyWith(members: updatedMembers);
+      }
+      return event;
+    }).toList();
+
+    state = state!.copyWith(events: updatedEvents);
+  }
+
   Future<void> inputTotalMoney(
       String userId, String eventId, int totalMoney) async {
     try {

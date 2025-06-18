@@ -8,8 +8,8 @@ part 'lineGroup.g.dart';
 class LineGroupMember with _$LineGroupMember {
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
   const factory LineGroupMember({
-    required String member_Id,
-    required String member_name,
+    required String memberId,
+    required String memberName,
   }) = _LineGroupMember;
 
   factory LineGroupMember.fromJson(Map<String, dynamic> json) => _$LineGroupMemberFromJson(json);

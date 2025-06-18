@@ -5,11 +5,11 @@ import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/countdown_timer.dart';
 
 class LineGroupUpdateCountdownDialog extends ConsumerWidget {
-  final String groupId;
+  final String lineGroupId;
 
   const LineGroupUpdateCountdownDialog({
     super.key,
-    required this.groupId,
+    required this.lineGroupId,
   });
 
   @override
@@ -92,8 +92,7 @@ class LineGroupUpdateCountdownDialog extends ConsumerWidget {
                   width: 120,
                   child: ElevatedButton(
                     onPressed: () async {
-                      //TODO: 「再取得」のボタンを押し下した時にメンバー情報取得APIたたく
-                      final updatedGroup = await ref.read(userProvider.notifier).refreshLineGroupMember(groupId, userId!);
+                      final updatedGroup = await ref.read(userProvider.notifier).refreshLineGroupMember(lineGroupId, userId!);
                       Navigator.of(context).pop(updatedGroup);
                     },
                     style: ElevatedButton.styleFrom(
