@@ -1,5 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mr_collection/provider/event_repository_provider.dart';
+import 'package:mr_collection/provider/member_repository_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/data/repository/member_repository.dart';
 import 'package:mr_collection/data/repository/event_repository.dart';
@@ -61,7 +63,8 @@ void main() {
       await notifier.createMembers('u1', 'e1', 'Alice\nBob');
 
       final updatedMembers = notifier.state!.events.first.members;
-      expect(updatedMembers.map((m) => m.memberName).toList(), ['Alice', 'Bob']);
+      expect(
+          updatedMembers.map((m) => m.memberName).toList(), ['Alice', 'Bob']);
       expect(memberRepo.receivedNames, ['Alice', 'Bob']);
     });
   });
