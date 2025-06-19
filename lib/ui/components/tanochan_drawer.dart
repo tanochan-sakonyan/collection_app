@@ -40,7 +40,7 @@ class TanochanDrawer extends StatelessWidget {
             const SizedBox(height: 20),
             _buildMenuItem(
               context,
-              text: S.of(context)?.paypay ?? "PayPay Connection",
+              text: S.of(context)?.paypay ?? "Register your PayPay link",
               icon: SvgPicture.asset("assets/icons/drawer_yen.svg"),
               onTap: () {
                 showDialog(
