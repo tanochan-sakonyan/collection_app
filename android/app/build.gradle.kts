@@ -35,7 +35,7 @@ android {
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 24
         targetSdk = 34
-        versionCode = 7
+        versionCode = 9
         versionName = "first relrease"
     }
 
