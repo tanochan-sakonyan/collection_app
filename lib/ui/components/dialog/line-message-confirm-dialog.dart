@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
+import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/line_message_complete_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/line_message_failed_dialog.dart';
 import 'package:mr_collection/ui/screen/home_screen.dart';
 
-class LineMessageConfirmDialog extends StatelessWidget {
+class LineMessageConfirmDialog extends ConsumerWidget {
   // TODO: merge前に確認。BEに渡すのはeventIdだけで良い？
   final Event event;
   final String message;
@@ -12,7 +15,7 @@ class LineMessageConfirmDialog extends StatelessWidget {
       {super.key, required this.event, required this.message});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       backgroundColor: Colors.white,
@@ -88,16 +91,28 @@ class LineMessageConfirmDialog extends StatelessWidget {
                     height: 48,
                     child: ElevatedButton(
                       onPressed: () async {
-                        // TODO: 送信処理
-                        await showDialog(
-                            context: context,
-                            builder: (context) =>
-                                const LineMessageCompleteDialog());
-                        Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                              builder: (context) => const HomeScreen()),
-                          (route) => false,
-                        );
+                        final userId = ref.read(userProvider)?.userId;
+                        if (userId == null) return;
+                        final isSuccess = await ref
+                            .read(userProvider.notifier)
+                            .sendMessage(userId, event.eventId, message);
+
+                        if (isSuccess) {
+                          await showDialog(
+                              context: context,
+                              builder: (context) =>
+                                  const LineMessageCompleteDialog());
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                                builder: (context) => const HomeScreen()),
+                            (route) => false,
+                          );
+                        } else {
+                          await showDialog(
+                              context: context,
+                              builder: (context) =>
+                                  const LineMessageFailedDialog());
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF75DCC6),
