@@ -87,4 +87,23 @@ class EventRepository {
       throw Exception('イベントの削除に失敗しました');
     }
   }
+
+  Future<bool> sendMessage(
+      String userId, String eventId, String message) async {
+    final url = Uri.parse('$baseUrl/users/$userId/events/$eventId/message');
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'message': message}),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final data = jsonDecode(response.body) as Map<String, dynamic>;
+      return data['isSuccessful'] as bool? ?? false;
+    } else {
+      debugPrint('メッセージ送信に失敗しました: ${response.statusCode}');
+      throw Exception('メッセージ送信に失敗しました');
+    }
+  }
 }

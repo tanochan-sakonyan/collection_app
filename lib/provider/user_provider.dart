@@ -305,4 +305,16 @@ class UserNotifier extends StateNotifier<User?> {
       debugPrint('メンバーの作成中にエラーが発生しました: $e : user_provider.dart');
     }
   }
+
+  Future<bool> sendMessage(
+      String userId, String eventId, String message) async {
+    try {
+      final result =
+          await eventRepository.sendMessage(userId, eventId, message);
+      return result;
+    } catch (e) {
+      debugPrint('メッセージ送信中にエラーが発生しました: $e');
+      return false;
+    }
+  }
 }
