@@ -4,7 +4,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:mr_collection/ads/ad_helper.dart';
 import 'package:mr_collection/data/model/freezed/lineGroup.dart';
-import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/provider/tab_titles_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
@@ -339,7 +338,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                   eventName: '',
                                   members: [],
                                   totalMoney: 0,
-                                  lineGroupId: "",
+                                  lineGroupId: null,
                                   lineMembersFetchedAt: null,
                               ),
                             );
@@ -438,12 +437,11 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                 final updatedGroup = await showDialog<LineGroup>(
                   context: context,
                   builder: (BuildContext context) {
-                    return LineGroupUpdateCountdownDialog(lineGroupId: currentEvent.lineGroupId!);
+                    return LineGroupUpdateCountdownDialog(currentEvent: currentEvent);
                   },
                 );
                 if(updatedGroup != null){
-                  //メンバー情報だけ書き換える処理
-                  ref.read(userProvider.notifier).updateMemberDifference(updatedGroup.groupId, updatedGroup.members);
+                  ref.read(userProvider.notifier).updateMemberDifference(currentEventId, updatedGroup);
                 }
               },
               child:
@@ -456,9 +454,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                           color: Colors.black
                       )
                   ),
-                  //TODO: LINEグループ取得から24時間以内のカウントダウン
                   CountdownTimer(
-                    expiretime: DateTime.now().add(const Duration(hours: 23, minutes: 55, seconds: 23)),
+                    expiretime: currentEvent.lineMembersFetchedAt!.add(const Duration(hours: 24)),
                     textStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: Colors.black,
                     ),
@@ -486,10 +483,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                         orElse: () => const Event(
                             eventId: "",
                             eventName: '',
-                            lineGroupId: "",
+                            lineGroupId: null,
+                            lineMembersFetchedAt: null,
                             members: [],
                             totalMoney: 0,
-                            lineMembersFetchedAt: null,
                         ),
                       );
                       return MemberList(

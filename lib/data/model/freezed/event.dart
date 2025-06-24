@@ -11,9 +11,9 @@ class Event with _$Event {
     required String eventId,
     required String eventName,
     required String? lineGroupId,
+    required DateTime? lineMembersFetchedAt,
     required List<Member> members,
     int? totalMoney,
-    DateTime? lineMembersFetchedAt,
   }) = _Event;
 
   factory Event.fromJson(Map<String, dynamic> json) => _$EventFromJson(json);

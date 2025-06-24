@@ -96,7 +96,6 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
     } catch (error) {
       debugPrint('イベントの追加に失敗しました: $error');
     }
-    //TODO: LINEグループからメンバー取得モードでも別APIたたくように切り替える
   }
 
   Future<void> _choiceEvent() async {

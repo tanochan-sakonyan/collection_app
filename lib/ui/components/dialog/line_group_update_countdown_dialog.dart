@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/countdown_timer.dart';
 
 class LineGroupUpdateCountdownDialog extends ConsumerWidget {
-  final String lineGroupId;
+  final Event currentEvent;
 
   const LineGroupUpdateCountdownDialog({
     super.key,
-    required this.lineGroupId,
+    required this.currentEvent,
   });
 
   @override
@@ -48,9 +49,8 @@ class LineGroupUpdateCountdownDialog extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 20),
-            //TODO: LINEグループ取得後oo時間のカウントダウン表示
             CountdownTimer(
-              expiretime: DateTime.now().add(const Duration(hours: 23, minutes: 55, seconds: 23)),
+              expiretime: currentEvent.lineMembersFetchedAt!.add(const Duration(hours: 24)),
               textStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
                 color: Colors.black,
                 fontSize: 15,
@@ -92,7 +92,7 @@ class LineGroupUpdateCountdownDialog extends ConsumerWidget {
                   width: 120,
                   child: ElevatedButton(
                     onPressed: () async {
-                      final updatedGroup = await ref.read(userProvider.notifier).refreshLineGroupMember(lineGroupId, userId!);
+                      final updatedGroup = await ref.read(userProvider.notifier).refreshLineGroupMember(currentEvent.lineGroupId!, userId!);
                       Navigator.of(context).pop(updatedGroup);
                     },
                     style: ElevatedButton.styleFrom(

@@ -140,14 +140,14 @@ class UserNotifier extends StateNotifier<User?> {
   }
 
   Future<void> updateMemberDifference(
-      String lineGroupId, List<LineGroupMember> newMembers) async {
-    final oldEvent = state!.events.firstWhere((e) => e.lineGroupId == lineGroupId);
+      String eventId, LineGroup updatedLineGroup ) async {
+    final oldEvent = state!.events.firstWhere((e) => e.eventId == eventId);
     final oldMembers = oldEvent.members;
 
     final oldMemberIds = oldMembers.map((m) => m.memberId).toSet();
-    final newMemberIds = newMembers.map((m) => m.memberId).toSet();
+    final newMemberIds = updatedLineGroup.members.map((m) => m.memberId).toSet();
 
-    final additionalMembers = newMembers
+    final additionalMembers = updatedLineGroup.members
         .where((m) => !oldMemberIds.contains(m.memberId))
         .map((lgm) => Member(
       memberId: lgm.memberId,
@@ -161,9 +161,13 @@ class UserNotifier extends StateNotifier<User?> {
 
     final updatedMembers = [...keptMembers, ...additionalMembers];
 
+
     final updatedEvents = state!.events.map((event) {
-      if (event.lineGroupId == lineGroupId) {
-        return event.copyWith(members: updatedMembers);
+      if (event.eventId == eventId) {
+        return event.copyWith(
+          members: updatedMembers,
+          lineMembersFetchedAt: updatedLineGroup.fetchedAt,
+        );
       }
       return event;
     }).toList();
