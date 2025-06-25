@@ -459,6 +459,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                     textStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: Colors.black,
                     ),
+                    onExpired: () {ref.read(userProvider.notifier).clearMembersOfEvent(currentEventId);},
                   ),
                   const SizedBox(width: 8),
                   SvgPicture.asset(

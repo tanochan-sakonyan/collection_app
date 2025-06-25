@@ -319,6 +319,17 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
+  Future<void> clearMembersOfEvent(
+      String eventId) async {
+    state = state!.copyWith(
+      events: state!.events.map((e) =>
+      e.eventId == eventId
+          ? e.copyWith(members: [])
+          : e
+      ).toList(),
+    );
+  }
+
   int getStatusRank(PaymentStatus status) {
     switch (status) {
       case PaymentStatus.unpaid:

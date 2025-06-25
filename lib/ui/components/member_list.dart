@@ -13,7 +13,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:mr_collection/ui/screen/amount_screen/input_amount_screen.dart';
 import 'dialog/member/edit_member_name_dialog.dart';
-import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:mr_collection/generated/s.dart';
 
 class MemberList extends ConsumerWidget {
   final Event event;
@@ -124,7 +124,18 @@ class MemberList extends ConsumerWidget {
                       ),
                     ),
                     ClipRect(
-                      child: SizedBox(
+                      child: (event.lineGroupId != null && DateTime.now().isAfter(event.lineMembersFetchedAt!.add(const Duration(hours: 24))) && (members == null || members!.isEmpty))
+                          ? Center(
+                        child: Text(
+                          "24時間が経過したためメンバー情報が削除されました",
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                      : SizedBox(
                         height: MediaQuery.of(context).size.height * 0.35,
                         child: SlidableAutoCloseBehavior(
                           child: ListView.builder(
