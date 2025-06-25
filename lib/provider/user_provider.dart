@@ -325,4 +325,24 @@ class UserNotifier extends StateNotifier<User?> {
       debugPrint('メンバーの作成中にエラーが発生しました: $e : user_provider.dart');
     }
   }
+
+  Future<void> addNote(
+      String userId, String eventId, String note) async {
+    try {
+      final updateEvent =
+      await eventRepository.addNote(userId, eventId, note);
+      final updatedUser = state?.copyWith(
+        events: state!.events.map((event) {
+          if (event.eventId == eventId) {
+            return updateEvent;
+          }
+          return event;
+        }).toList(),
+      );
+      state = updatedUser;
+      debugPrint("メモを更新しました: $note : user_provider");
+    } catch (e) {
+      debugPrint("メモ編集中にエラーが発生しました: $e : user_provider");
+    }
+  }
 }

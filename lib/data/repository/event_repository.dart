@@ -105,4 +105,22 @@ class EventRepository {
       throw Exception('イベントの削除に失敗しました');
     }
   }
+
+  Future<Event> addNote(String userId, String eventId, String note) async {
+    final url = Uri.parse('$baseUrl/users/$userId/events/$eventId/memo');
+    final response = await http.put(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'note': note}),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      debugPrint('noteの追加に成功しました。 : event_repository');
+      final data = jsonDecode(response.body);
+      return Event.fromJson(data);
+    } else {
+      throw Exception('イベントの作成に失敗しました');
+    }
+  }
+
 }
