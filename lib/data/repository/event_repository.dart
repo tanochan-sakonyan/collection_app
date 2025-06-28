@@ -106,13 +106,15 @@ class EventRepository {
     }
   }
 
-  Future<Event> addNote(String userId, String eventId, String note) async {
+  Future<Event> addNote(String userId, String eventId, String memo) async {
     final url = Uri.parse('$baseUrl/users/$userId/events/$eventId/memo');
     final response = await http.put(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'note': note}),
+      body: jsonEncode({'memo': memo}),
     );
+
+    debugPrint("APIから返ってきたbody: ${response.body}");
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       debugPrint('noteの追加に成功しました。 : event_repository');

@@ -327,10 +327,10 @@ class UserNotifier extends StateNotifier<User?> {
   }
 
   Future<void> addNote(
-      String userId, String eventId, String note) async {
+      String userId, String eventId, String memo) async {
     try {
       final updateEvent =
-      await eventRepository.addNote(userId, eventId, note);
+      await eventRepository.addNote(userId, eventId, memo);
       final updatedUser = state?.copyWith(
         events: state!.events.map((event) {
           if (event.eventId == eventId) {
@@ -340,7 +340,7 @@ class UserNotifier extends StateNotifier<User?> {
         }).toList(),
       );
       state = updatedUser;
-      debugPrint("メモを更新しました: $note : user_provider");
+      debugPrint("メモを更新しました: $memo : user_provider");
     } catch (e) {
       debugPrint("メモ編集中にエラーが発生しました: $e : user_provider");
     }
