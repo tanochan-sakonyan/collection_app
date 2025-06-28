@@ -249,9 +249,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
             mainAxisSize: MainAxisSize.min,
             children: [
               const SizedBox(height: 24),
-              const Text(
-                "メモの編集",
-                style: TextStyle(
+              Text(
+                  S.of(context)?.editNote ?? "Edit Note",
+                style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
                   color: Colors.grey
@@ -265,7 +265,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                   maxLines: 8,
                   minLines: 8,
                   decoration: InputDecoration(
-                    hintText: "メモを入力できます",
+                    hintText: S.of(context)?.memoPlaceholder ?? "You can enter a note",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -284,8 +284,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                       Navigator.of(context).pop();
                     },
                     child: Text(
-                        '保存',
-                      style: TextStyle(
+                      S.of(context)?.save ?? "Save",
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
                         color: Colors.white
@@ -594,9 +594,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
-                                      "memo",
-                                      style: TextStyle(fontSize: 16, color: Colors.black87),
+                                    Text(
+                                      S.of(context)?.note ?? "note",
+                                      style: const TextStyle(fontSize: 16, color: Colors.black87),
                                     ),
                                     const SizedBox(height: 12),
                                     Expanded(
@@ -606,9 +606,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                                 event.memo!,
                                                 style: const TextStyle(fontSize: 16, color: Colors.black87),
                                               )
-                                            : const Text(
-                                                'メモを入力できます',
-                                                style: TextStyle(
+                                            : Text(
+                                                S.of(context)?.memoPlaceholder ?? "You can enter a note",
+                                                style: const TextStyle(
                                                   fontSize: 16,
                                                   color: Colors.grey,
                                                   letterSpacing: 0.5,
