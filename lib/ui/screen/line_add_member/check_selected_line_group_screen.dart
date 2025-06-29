@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
-import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 
@@ -22,6 +22,7 @@ class CheckSelectedLineGroupScreenState
     const event =  Event(
       eventId: 'dummy-id',
       eventName: 'テストグループ',
+      memo: 'メモ',
       members: [
         Member(memberId: '1', memberName: '太郎', status: PaymentStatus.unpaid,memberMoney: 1000,),
         Member(memberId: '2', memberName: '花子', status: PaymentStatus.unpaid,memberMoney: 1000,),
