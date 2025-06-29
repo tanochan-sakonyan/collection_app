@@ -22,6 +22,7 @@ class CheckSelectedLineGroupScreenState
     const event =  Event(
       eventId: 'dummy-id',
       eventName: 'テストグループ',
+      memo: 'メモ',
       members: [
         Member(memberId: '1', memberName: '太郎', status: PaymentStatus.unpaid,memberMoney: 1000,),
         Member(memberId: '2', memberName: '花子', status: PaymentStatus.unpaid,memberMoney: 1000,),

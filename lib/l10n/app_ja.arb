@@ -84,5 +84,9 @@
   "suggestFeature": "機能を提案する",
   "xLink": "Xリンク",
   "officialSite": "公式サイト",
-  "openFailed": "ページを開けませんでした"
+  "openFailed": "ページを開けませんでした",
+  "note": "memo",
+  "editNote": "メモの編集",
+  "memoPlaceholder": "メモを入力できます",
+  "save": "保存"
 }

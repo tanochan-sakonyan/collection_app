@@ -11,6 +11,7 @@ class Event with _$Event {
     required String eventId,
     required String eventName,
     required List<Member> members,
+    required String? memo,
     int? totalMoney,
   }) = _Event;
 

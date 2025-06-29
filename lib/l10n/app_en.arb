@@ -84,5 +84,9 @@
   "suggestFeature": "Suggest features",
   "xLink": "X Link",
   "officialSite": "Official Website",
-  "openFailed": "Could not open the page"
+  "openFailed": "Could not open the page",
+  "note": "Note",
+  "editNote": "Edit Note",
+  "memoPlaceholder": "You can enter a note",
+  "save": "Save"
 }

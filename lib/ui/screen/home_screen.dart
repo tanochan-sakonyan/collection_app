@@ -232,6 +232,83 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     }
   }
 
+  void _showEditNoteBottomSheet(BuildContext context, Event event) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        final TextEditingController controller =
+        TextEditingController(text: event.memo ?? "");
+        return Padding(
+          padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 24),
+              Text(
+                  S.of(context)?.editNote ?? "Edit Note",
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.grey
+                ),
+              ),
+              const SizedBox(height: 12),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: TextField(
+                  controller: controller,
+                  maxLines: 8,
+                  minLines: 8,
+                  decoration: InputDecoration(
+                    hintText: S.of(context)?.memoPlaceholder ?? "You can enter a note",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: SizedBox(
+                  width: 108,
+                  height: 44,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      final newNote = controller.text.trim();
+                      await ref.read(userProvider.notifier).addNote(ref.read(userProvider)!.userId, event.eventId, newNote);
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      S.of(context)?.save ?? "Save",
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size(double.infinity, 22),
+                      backgroundColor: Color(0xFF76DCC6),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
@@ -330,6 +407,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                   eventId: "",
                                   eventName: '',
                                   members: [],
+                                  memo: '',
                                   totalMoney: 0),
                             );
                             final bool isFullyPaid = event.members.isNotEmpty &&
@@ -488,19 +566,62 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                             eventId: "",
                             eventName: '',
                             members: [],
+                            memo: '',
                             totalMoney: 0),
                       );
-                      return MemberList(
-                        event: event,
-                        members: event.eventId != "" ? event.members : [],
-                        eventId: event.eventId != "" ? event.eventId : "",
-                        eventName: event.eventName,
-                        memberAddKey:
+                      return Column(
+                        children: [
+                          MemberList(
+                            event: event,
+                            members: event.eventId != "" ? event.members : [],
+                            eventId: event.eventId != "" ? event.eventId : "",
+                            eventName: event.eventName,
+                            memberAddKey:
                             (_currentTabIndex == index) ? memberAddKey : null,
-                        slidableKey:
+                            slidableKey:
                             (_currentTabIndex == index) ? slidableKey : null,
-                        sortKey: (_currentTabIndex == index) ? sortKey : null,
-                        fabKey: (_currentTabIndex == index) ? fabKey : null,
+                            sortKey: (_currentTabIndex == index) ? sortKey : null,
+                            fabKey: (_currentTabIndex == index) ? fabKey : null,
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: GestureDetector(
+                              onTap: () => _showEditNoteBottomSheet(context, event),
+                              child: Container(
+                                width: double.infinity,
+                                color: Colors.white,
+                                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      S.of(context)?.note ?? "note",
+                                      style: const TextStyle(fontSize: 16, color: Colors.black87),
+                                    ),
+                                    const SizedBox(height: 12),
+                                    Expanded(
+                                      child: SingleChildScrollView(
+                                        child: (event.memo?.isNotEmpty == true)
+                                            ? Text(
+                                                event.memo!,
+                                                style: const TextStyle(fontSize: 16, color: Colors.black87),
+                                              )
+                                            : Text(
+                                                S.of(context)?.memoPlaceholder ?? "You can enter a note",
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.grey,
+                                                  letterSpacing: 0.5,
+                                              ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       );
                     }).toList(),
                   ),
