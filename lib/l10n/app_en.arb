@@ -83,5 +83,14 @@
   "suggestFeature": "Suggest features",
   "xLink": "X Link",
   "officialSite": "Official Website",
-  "openFailed": "Could not open the page"
+  "openFailed": "Could not open the page",
+  "selectLineGroupTitle": "Add members from LINE group",
+  "selectLineGroupDesc": "Select the LINE group where you want to add members.",
+  "notDisplayedQuestion": "LINE group not displayed?",
+  "inviteOfficialAccountTitle": "Invite the official LINE account to the group",
+  "inviteOfficialAccountDesc1": "You can only get members from LINE groups where 'Shukin-kun' is invited.",
+  "inviteOfficialAccountStep1": "Add the official LINE account",
+  "inviteOfficialAccountStep2": "Invite the official LINE account\nto the group for collection",
+  "inviteOfficialAccountNote": "‘Shukin-kun’ will not send\npromotional messages in the group.",
+  "group": "Group"
 }

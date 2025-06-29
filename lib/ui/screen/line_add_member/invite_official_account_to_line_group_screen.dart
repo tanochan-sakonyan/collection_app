@@ -44,7 +44,7 @@ class CheckSelectedLineGroupScreenState
                 height: 44,
               ),
               Text(
-                '戻る',
+                S.of(context)?.back ?? "Back",
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: const Color(0xFF76DCC6),
                     fontSize: 15,
@@ -60,7 +60,7 @@ class CheckSelectedLineGroupScreenState
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            "LINE公式アカウントを\n集金対象のグループに招待しよう",
+            S.of(context)?.inviteOfficialAccountTitle ?? "Invite the official LINE account to the group",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
               fontSize: 20,
               fontWeight: FontWeight.w700,
@@ -70,7 +70,7 @@ class CheckSelectedLineGroupScreenState
           ),
           const SizedBox(height: 18),
           Text(
-            "「集金くん」が参加しているLINEグループのみ、\nメンバーを取得することができます。",
+            S.of(context)?.inviteOfficialAccountDesc1 ?? "You can only get members from LINE groups where 'Shuukin-kun' is invited.",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
               fontSize: 11,
               fontWeight: FontWeight.w500,
@@ -89,7 +89,7 @@ class CheckSelectedLineGroupScreenState
               ),
               const SizedBox(width: 12),
               Text(
-                "LINE公式アカウントを追加",
+                S.of(context)?.inviteOfficialAccountStep1 ?? "Add the official LINE account",
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
@@ -122,7 +122,7 @@ class CheckSelectedLineGroupScreenState
                 ),
                 const SizedBox(width: 12),
                 Text(
-                  "LINE公式アカウントを\n集金対象のグループに招待",
+                  S.of(context)?.inviteOfficialAccountStep2 ?? "Invite the official LINE account\nto the group for collection",
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
@@ -134,7 +134,7 @@ class CheckSelectedLineGroupScreenState
           ),
           const SizedBox(height: 24),
           Text(
-            "「集金くん」がグループ内で\n宣伝メッセージ等を送ることはありません。",
+            S.of(context)?.inviteOfficialAccountNote ?? "‘Shuukin-kun’ will not send\npromotional messages in the group.",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
               fontSize: 11,
               fontWeight: FontWeight.w500,
@@ -166,7 +166,7 @@ class CheckSelectedLineGroupScreenState
                       ),
                       const SizedBox(width: 2),
                       Text(
-                        "集金くん",
+                        S.of(context)?.shukinkun ?? "Shukinkun",
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
                           color: Colors.black,
@@ -193,7 +193,7 @@ class CheckSelectedLineGroupScreenState
                     height: 44,
                   ),
                   Text(
-                    "グループ",
+                    S.of(context)?.group ?? "Group",
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: Colors.black,

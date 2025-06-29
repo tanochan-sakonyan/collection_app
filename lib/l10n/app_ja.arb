@@ -83,5 +83,14 @@
   "suggestFeature": "機能を提案する",
   "xLink": "Xリンク",
   "officialSite": "公式サイト",
-  "openFailed": "ページを開けませんでした"
+  "openFailed": "ページを開けませんでした",
+  "selectLineGroupTitle": "LINEグループから\nメンバー追加",
+  "selectLineGroupDesc": "追加したいメンバーの\nLINEグループを選択してください",
+  "notDisplayedQuestion": "LINEグループが表示されない？",
+  "inviteOfficialAccountTitle": "LINE公式アカウントを、\n集金対象のLINEグループに招待しよう",
+  "inviteOfficialAccountDesc1": "「集金くん」が参加しているLINEグループのみ、\nメンバーを取得することができます。",
+  "inviteOfficialAccountStep1": "LINE公式アカウントを追加",
+  "inviteOfficialAccountStep2": "LINE公式アカウントを\n集金対象のグループに招待",
+  "inviteOfficialAccountNote": "「集金くん」がグループ内で\n宣伝メッセージ等を送ることはありません。",
+  "group": "グループ"
 }

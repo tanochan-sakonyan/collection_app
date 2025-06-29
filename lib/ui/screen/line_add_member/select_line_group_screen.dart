@@ -6,6 +6,7 @@ import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/ui/components/dialog/invite_official_acount_to_line_group_dialog.dart';
 import 'check_selected_line_group_screen.dart';
+import 'package:mr_collection/generated/s.dart';
 
 class SelectLineGroupScreen extends StatelessWidget {
   final List<LineGroup> lineGroups;
@@ -36,7 +37,7 @@ class SelectLineGroupScreen extends StatelessWidget {
                 height: 44,
               ),
               Text(
-                '戻る',
+                S.of(context)?.back ?? "Back",
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: const Color(0xFF76DCC6),
                     fontSize: 15,
@@ -59,7 +60,7 @@ class SelectLineGroupScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  "LINEグループが表示されない？",
+                  S.of(context)?.notDisplayedQuestion ?? "LINE group not displayed?",
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: const Color(0xFF5C5C5C),
                       fontSize: 10,
@@ -82,7 +83,7 @@ class SelectLineGroupScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
           Text(
-            "LINEグループから\nメンバー追加",
+            S.of(context)?.selectLineGroupTitle ?? "Add members from LINE group",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
               fontSize: 24,
               fontWeight: FontWeight.w700,
@@ -93,7 +94,7 @@ class SelectLineGroupScreen extends StatelessWidget {
           ),
           const SizedBox(height: 32),
           Text(
-            "追加したいメンバーの\nLINEグループを選択してください",
+            S.of(context)?.selectLineGroupDesc ?? "Select the LINE group where you want to add members.",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
               fontSize: 16,
               fontWeight: FontWeight.w700,
