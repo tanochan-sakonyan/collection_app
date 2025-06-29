@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/countdown_timer.dart';
+import 'package:mr_collection/generated/s.dart';
 
 class LineGroupUpdateCountdownDialog extends ConsumerWidget {
   final Event currentEvent;
@@ -30,7 +31,7 @@ class LineGroupUpdateCountdownDialog extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "メンバー情報有効期限が\nもうすぐ切れます",
+              S.of(context)?.lineGroupExpireTitle ?? "Member info will expire soon",
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 fontWeight: FontWeight.w700,
                 fontSize: 16,
@@ -40,7 +41,7 @@ class LineGroupUpdateCountdownDialog extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              "LINEの利用規約に則り、メンバー情報有効期限を過ぎる\nと、メンバーと支払い状況の情報が削除されます。\n再取得をし、有効期限をリセットしてください。",
+              S.of(context)?.lineGroupExpireDesc ?? "According to LINE's terms of use, after the member info expires,\nmember and payment status information will be deleted.\nPlease reacquire to reset the expiration date.",
               textAlign: TextAlign.start,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
                 fontWeight: FontWeight.w500,
@@ -77,7 +78,7 @@ class LineGroupUpdateCountdownDialog extends ConsumerWidget {
                       ),
                     ),
                     child: Text(
-                      "取得しない",
+                      S.of(context)?.dontRefresh ?? "Don't refresh",
                       style: GoogleFonts.notoSansJp(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -103,7 +104,7 @@ class LineGroupUpdateCountdownDialog extends ConsumerWidget {
                       ),
                     ),
                     child: Text(
-                      "再取得",
+                      S.of(context)?.refresh ?? "Refresh",
                       style: GoogleFonts.notoSansJp(
                         fontSize: 14,
                         fontWeight: FontWeight.w900,

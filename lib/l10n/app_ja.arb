@@ -92,5 +92,14 @@
   "inviteOfficialAccountStep1": "LINE公式アカウントを追加",
   "inviteOfficialAccountStep2": "LINE公式アカウントを\n集金対象のグループに招待",
   "inviteOfficialAccountNote": "「集金くん」がグループ内で\n宣伝メッセージ等を送ることはありません。",
-  "group": "グループ"
+  "group": "グループ",
+  "selectLineGroupDesc": "このメンバーでイベントを作成しますか？",
+  "selectLineGroupButton": "このメンバーでイベント作成",
+  "selectLineGroupNote": "※LINEグループから取得したメンバー情報は24時間で消去されるため、\n24時間が経過する前に再取得をするようお願いいたします。\n再取得の際、支払い状況は引き継がれます。",
+  "autoDeleteMemberCountdown": "メンバー自動削除まで",
+  "memberDeletedAfter24h": "24時間が経過したためメンバー情報が削除されました",
+  "lineGroupExpireTitle": "メンバー情報有効期限が\nもうすぐ切れます",
+  "lineGroupExpireDesc": "LINEの利用規約に則り、メンバー情報有効期限を過ぎる\nと、メンバーと支払い状況の情報が削除されます。\n再取得をし、有効期限をリセットしてください。",
+  "dontRefresh": "取得しない",
+  "refresh": "再取得"
 }

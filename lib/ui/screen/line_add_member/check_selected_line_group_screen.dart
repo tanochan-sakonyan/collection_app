@@ -37,7 +37,7 @@ class CheckSelectedLineGroupScreenState
                 height: 44,
               ),
               Text(
-                '戻る',
+                S.of(context)?.back ?? "Back",
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: const Color(0xFF76DCC6),
                     fontSize: 15,
@@ -53,7 +53,7 @@ class CheckSelectedLineGroupScreenState
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            "LINEグループから\nメンバー追加",
+            S.of(context)?.selectLineGroupTitle ?? "Add members from LINE group",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
               fontSize: 24,
               fontWeight: FontWeight.w700,
@@ -64,7 +64,7 @@ class CheckSelectedLineGroupScreenState
           ),
           const SizedBox(height: 36),
           Text(
-            "このメンバーでイベントを作成しますか？",
+            S.of(context)?.selectLineGroupDesc ?? "Would you like to create an event with these members?",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
               fontSize: 16,
               fontWeight: FontWeight.w700,
@@ -170,7 +170,6 @@ class CheckSelectedLineGroupScreenState
             height: 40,
             child: ElevatedButton(
               onPressed: () {
-                //TODO: イベント作成ダイアログに戻す
                 Navigator.of(context).pop();
               },
               style: ElevatedButton.styleFrom(
@@ -181,7 +180,7 @@ class CheckSelectedLineGroupScreenState
                 ),
               ),
               child: Text(
-                "このメンバーでイベント作成",
+                S.of(context)?.selectLineGroupButton ?? "Create event with these members",
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -192,7 +191,7 @@ class CheckSelectedLineGroupScreenState
           ),
           const SizedBox(height: 16),
           Text(
-            "※LINEグループから取得したメンバー情報は24時間で消去されるため、\n24時間が経過する前に再取得をするようお願いいたします。\n再取得の際、支払い状況は引き継がれます。",
+            S.of(context)?.selectLineGroupNote ?? "*Member information obtained from the LINE group will be deleted after 24 hours.\nPlease reacquire before 24 hours have passed.\nPayment statuses will be retained when reacquiring.",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
               fontSize: 10,
               fontWeight: FontWeight.w500,

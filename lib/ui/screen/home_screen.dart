@@ -449,10 +449,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                      "メンバー自動削除まで ",
+                      S.of(context)?.autoDeleteMemberCountdown ?? "Auto member deletion in",
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: Colors.black
-                      )
+                        color: Colors.black
+                    )
                   ),
                   CountdownTimer(
                     expiretime: currentEvent.lineMembersFetchedAt!.add(const Duration(hours: 24)),
