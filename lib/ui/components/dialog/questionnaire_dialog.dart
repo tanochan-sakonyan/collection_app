@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mr_collection/ui/components/webview/webview.dart';
-import 'package:mr_collection/generated/s.dart';
+import 'package:flutter_gen/gen_l10n/s.dart';
 
 class QuestionnaireDialog extends StatelessWidget {
   const QuestionnaireDialog({super.key});

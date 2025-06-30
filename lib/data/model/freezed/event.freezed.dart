@@ -45,7 +45,10 @@ abstract class $EventCopyWith<$Res> {
   $Res call(
       {String eventId,
       String eventName,
+      String? lineGroupId,
+      DateTime? lineMembersFetchedAt,
       List<Member> members,
+      String? memo,
       int? totalMoney});
 }
 
@@ -246,9 +249,8 @@ class _$EventImpl implements _Event {
       lineGroupId,
       lineMembersFetchedAt,
       const DeepCollectionEquality().hash(_members),
+      memo,
       totalMoney);
-  int get hashCode => Object.hash(runtimeType, eventId, eventName,
-      const DeepCollectionEquality().hash(_members), memo, totalMoney);
 
   /// Create a copy of Event
   /// with the given fields replaced by the non-null parameter values.
@@ -273,6 +275,7 @@ abstract class _Event implements Event {
       required final String? lineGroupId,
       required final DateTime? lineMembersFetchedAt,
       required final List<Member> members,
+      required final String? memo,
       final int? totalMoney}) = _$EventImpl;
 
   factory _Event.fromJson(Map<String, dynamic> json) = _$EventImpl.fromJson;

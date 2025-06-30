@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/countdown_timer.dart';
-import 'package:mr_collection/generated/s.dart';
+import 'package:flutter_gen/gen_l10n/s.dart';
 
 class LineGroupUpdateCountdownDialog extends ConsumerWidget {
   final Event currentEvent;
