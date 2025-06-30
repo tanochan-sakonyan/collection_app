@@ -49,7 +49,6 @@ class _UnpaidMessageBottomSheetState
     }).join('\n');
 
     return '下記の方は、まだ${widget.event.eventName}の支払いが完了していません。\n'
-        '以下のPayPayリンクから\n'
         'お支払いをお願いいたします。\n'
         '$namesAndMoney\n';
   }
