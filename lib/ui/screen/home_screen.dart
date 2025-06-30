@@ -241,21 +241,20 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       ),
       builder: (context) {
         final TextEditingController controller =
-        TextEditingController(text: event.memo ?? "");
+            TextEditingController(text: event.memo ?? "");
         return Padding(
-          padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom),
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               const SizedBox(height: 24),
               Text(
-                  S.of(context)?.editNote ?? "Edit Note",
+                S.of(context)?.editNote ?? "Edit Note",
                 style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.grey
-                ),
+                    fontSize: 24,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.grey),
               ),
               const SizedBox(height: 12),
               Padding(
@@ -265,7 +264,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                   maxLines: 8,
                   minLines: 8,
                   decoration: InputDecoration(
-                    hintText: S.of(context)?.memoPlaceholder ?? "You can enter a note",
+                    hintText: S.of(context)?.memoPlaceholder ??
+                        "You can enter a note",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -273,23 +273,26 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: SizedBox(
                   width: 108,
                   height: 44,
                   child: ElevatedButton(
                     onPressed: () async {
                       final newNote = controller.text.trim();
-                      await ref.read(userProvider.notifier).addNote(ref.read(userProvider)!.userId, event.eventId, newNote);
+                      await ref.read(userProvider.notifier).addNote(
+                          ref.read(userProvider)!.userId,
+                          event.eventId,
+                          newNote);
                       Navigator.of(context).pop();
                     },
                     child: Text(
                       S.of(context)?.save ?? "Save",
                       style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white
-                      ),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white),
                     ),
                     style: ElevatedButton.styleFrom(
                       minimumSize: Size(double.infinity, 22),
@@ -525,22 +528,21 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                 },
               );
             },
-            child:
-            Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text(
-                    "メンバー自動削除まで ",
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: Colors.black
-                    )
-                ),
+                Text("メンバー自動削除まで ",
+                    style: Theme.of(context)
+                        .textTheme
+                        .labelSmall
+                        ?.copyWith(color: Colors.black)),
                 //TODO: LINEグループ取得から24時間以内のカウントダウン
                 CountdownTimer(
-                  expiretime: DateTime.now().add(const Duration(hours: 23, minutes: 55, seconds: 23)),
+                  expiretime: DateTime.now()
+                      .add(const Duration(hours: 23, minutes: 55, seconds: 23)),
                   textStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: Colors.black,
-                  ),
+                        color: Colors.black,
+                      ),
                 ),
                 const SizedBox(width: 8),
                 SvgPicture.asset(
@@ -569,54 +571,142 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                             memo: '',
                             totalMoney: 0),
                       );
-                      return Column(
+                      return Stack(
                         children: [
-                          MemberList(
-                            event: event,
-                            members: event.eventId != "" ? event.members : [],
-                            eventId: event.eventId != "" ? event.eventId : "",
-                            eventName: event.eventName,
-                            memberAddKey:
-                            (_currentTabIndex == index) ? memberAddKey : null,
-                            slidableKey:
-                            (_currentTabIndex == index) ? slidableKey : null,
-                            sortKey: (_currentTabIndex == index) ? sortKey : null,
-                            fabKey: (_currentTabIndex == index) ? fabKey : null,
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: GestureDetector(
-                              onTap: () => _showEditNoteBottomSheet(context, event),
-                              child: Container(
-                                width: double.infinity,
-                                color: Colors.white,
-                                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      S.of(context)?.note ?? "note",
-                                      style: const TextStyle(fontSize: 16, color: Colors.black87),
-                                    ),
-                                    const SizedBox(height: 12),
-                                    Expanded(
-                                      child: SingleChildScrollView(
-                                        child: (event.memo?.isNotEmpty == true)
-                                            ? Text(
-                                                event.memo!,
-                                                style: const TextStyle(fontSize: 16, color: Colors.black87),
-                                              )
-                                            : Text(
-                                                S.of(context)?.memoPlaceholder ?? "You can enter a note",
-                                                style: const TextStyle(
-                                                  fontSize: 16,
-                                                  color: Colors.grey,
-                                                  letterSpacing: 0.5,
-                                              ),
+                          Column(
+                            children: [
+                              MemberList(
+                                event: event,
+                                members:
+                                    event.eventId != "" ? event.members : [],
+                                eventId:
+                                    event.eventId != "" ? event.eventId : "",
+                                eventName: event.eventName,
+                                memberAddKey: (_currentTabIndex == index)
+                                    ? memberAddKey
+                                    : null,
+                                slidableKey: (_currentTabIndex == index)
+                                    ? slidableKey
+                                    : null,
+                                sortKey: (_currentTabIndex == index)
+                                    ? sortKey
+                                    : null,
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: GestureDetector(
+                                  onTap: () =>
+                                      _showEditNoteBottomSheet(context, event),
+                                  child: Container(
+                                    width: double.infinity,
+                                    color: Colors.white,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 24, vertical: 24),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          S.of(context)?.note ?? "note",
+                                          style: const TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.black87),
                                         ),
+                                        const SizedBox(height: 12),
+                                        Expanded(
+                                          child: SingleChildScrollView(
+                                            child: (event.memo?.isNotEmpty ==
+                                                    true)
+                                                ? Text(
+                                                    event.memo!,
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors.black87),
+                                                  )
+                                                : Text(
+                                                    S
+                                                            .of(context)
+                                                            ?.memoPlaceholder ??
+                                                        "You can enter a note",
+                                                    style: const TextStyle(
+                                                      fontSize: 16,
+                                                      color: Colors.grey,
+                                                      letterSpacing: 0.5,
+                                                    ),
+                                                  ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Positioned(
+                            right: 28,
+                            bottom: 120,
+                            child: SizedBox(
+                              height: 60,
+                              width: 60,
+                              child: FloatingActionButton(
+                                key: fabKey,
+                                backgroundColor: const Color(0xFFBABABA),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(48),
+                                ),
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                        vertical: 56.0,
+                                        horizontal: 24.0,
+                                      ),
+                                      content: Text(
+                                        '${S.of(context)?.update_1}\n ${S.of(context)?.update_2}',
+                                        textAlign: TextAlign.center,
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.bodyLarge?.copyWith(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.black,
+                                            ),
                                       ),
                                     ),
-                                  ],
+                                  );
+                                  //TODO LINE認証申請が通ったらこちらに戻す
+                                  /*showDialog(
+                context: context,
+                builder: (context) => const ConfirmationDialog(),
+              );*/
+                                },
+                                child: Center(
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      SvgPicture.asset(
+                                        'assets/icons/chat_bubble.svg',
+                                        width: 28,
+                                        height: 28,
+                                        colorFilter: const ColorFilter.mode(
+                                          Colors.white,
+                                          BlendMode.srcIn,
+                                        ),
+                                      ),
+                                      SvgPicture.asset(
+                                        'assets/icons/yen.svg',
+                                        width: 16,
+                                        height: 16,
+                                        colorFilter: const ColorFilter.mode(
+                                          Color(0xFFBABABA),
+                                          BlendMode.srcIn,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
