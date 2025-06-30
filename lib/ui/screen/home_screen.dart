@@ -213,9 +213,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   // これがshownVersionFor120と異なる時、ポップアップを出す。
   // 今後のアップデートの際は、shownVersionFor〇〇〇のpreferenceを更新する。
   // 20240529追記。shownVersionFor130作成済み
+  // 20240630追記。shownVersionFor200作成済み
   Future<void> _checkAndShowUpdateDialog() async {
     final prefs = await SharedPreferences.getInstance();
-    final shown = prefs.getBool('shownVersionFor130') ?? false;
+    final shown = prefs.getBool('shownVersionFor200') ?? false;
     debugPrint('shownVersion: $shown');
     if (!shown) {
       showDialog(
@@ -225,8 +226,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           onPageChanged: (i) {},
         ),
       );
-      await prefs.setBool('shownVersionFor130', true);
-      debugPrint('Update dialog shown for version "true"');
+      // await prefs.setBool('shownVersionFor200', true);
+      // debugPrint('Update dialog shown for version "true"');
     } else {
       debugPrint('すでに表示されています。');
     }
@@ -241,21 +242,20 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       ),
       builder: (context) {
         final TextEditingController controller =
-        TextEditingController(text: event.memo ?? "");
+            TextEditingController(text: event.memo ?? "");
         return Padding(
-          padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom),
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               const SizedBox(height: 24),
               Text(
-                  S.of(context)?.editNote ?? "Edit Note",
+                S.of(context)?.editNote ?? "Edit Note",
                 style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.grey
-                ),
+                    fontSize: 24,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.grey),
               ),
               const SizedBox(height: 12),
               Padding(
@@ -265,7 +265,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                   maxLines: 8,
                   minLines: 8,
                   decoration: InputDecoration(
-                    hintText: S.of(context)?.memoPlaceholder ?? "You can enter a note",
+                    hintText: S.of(context)?.memoPlaceholder ??
+                        "You can enter a note",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -273,23 +274,26 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: SizedBox(
                   width: 108,
                   height: 44,
                   child: ElevatedButton(
                     onPressed: () async {
                       final newNote = controller.text.trim();
-                      await ref.read(userProvider.notifier).addNote(ref.read(userProvider)!.userId, event.eventId, newNote);
+                      await ref.read(userProvider.notifier).addNote(
+                          ref.read(userProvider)!.userId,
+                          event.eventId,
+                          newNote);
                       Navigator.of(context).pop();
                     },
                     child: Text(
                       S.of(context)?.save ?? "Save",
                       style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white
-                      ),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white),
                     ),
                     style: ElevatedButton.styleFrom(
                       minimumSize: Size(double.infinity, 22),
@@ -525,22 +529,21 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                 },
               );
             },
-            child:
-            Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text(
-                    "メンバー自動削除まで ",
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: Colors.black
-                    )
-                ),
+                Text("メンバー自動削除まで ",
+                    style: Theme.of(context)
+                        .textTheme
+                        .labelSmall
+                        ?.copyWith(color: Colors.black)),
                 //TODO: LINEグループ取得から24時間以内のカウントダウン
                 CountdownTimer(
-                  expiretime: DateTime.now().add(const Duration(hours: 23, minutes: 55, seconds: 23)),
+                  expiretime: DateTime.now()
+                      .add(const Duration(hours: 23, minutes: 55, seconds: 23)),
                   textStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: Colors.black,
-                  ),
+                        color: Colors.black,
+                      ),
                 ),
                 const SizedBox(width: 8),
                 SvgPicture.asset(
@@ -576,27 +579,33 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                             members: event.eventId != "" ? event.members : [],
                             eventId: event.eventId != "" ? event.eventId : "",
                             eventName: event.eventName,
-                            memberAddKey:
-                            (_currentTabIndex == index) ? memberAddKey : null,
-                            slidableKey:
-                            (_currentTabIndex == index) ? slidableKey : null,
-                            sortKey: (_currentTabIndex == index) ? sortKey : null,
+                            memberAddKey: (_currentTabIndex == index)
+                                ? memberAddKey
+                                : null,
+                            slidableKey: (_currentTabIndex == index)
+                                ? slidableKey
+                                : null,
+                            sortKey:
+                                (_currentTabIndex == index) ? sortKey : null,
                             fabKey: (_currentTabIndex == index) ? fabKey : null,
                           ),
                           Expanded(
                             flex: 1,
                             child: GestureDetector(
-                              onTap: () => _showEditNoteBottomSheet(context, event),
+                              onTap: () =>
+                                  _showEditNoteBottomSheet(context, event),
                               child: Container(
                                 width: double.infinity,
                                 color: Colors.white,
-                                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 24, vertical: 24),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       S.of(context)?.note ?? "note",
-                                      style: const TextStyle(fontSize: 16, color: Colors.black87),
+                                      style: const TextStyle(
+                                          fontSize: 16, color: Colors.black87),
                                     ),
                                     const SizedBox(height: 12),
                                     Expanded(
@@ -604,16 +613,21 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                         child: (event.memo?.isNotEmpty == true)
                                             ? Text(
                                                 event.memo!,
-                                                style: const TextStyle(fontSize: 16, color: Colors.black87),
+                                                style: const TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.black87),
                                               )
                                             : Text(
-                                                S.of(context)?.memoPlaceholder ?? "You can enter a note",
+                                                S
+                                                        .of(context)
+                                                        ?.memoPlaceholder ??
+                                                    "You can enter a note",
                                                 style: const TextStyle(
                                                   fontSize: 16,
                                                   color: Colors.grey,
                                                   letterSpacing: 0.5,
+                                                ),
                                               ),
-                                        ),
                                       ),
                                     ),
                                   ],
