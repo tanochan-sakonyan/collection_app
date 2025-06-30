@@ -56,7 +56,7 @@
   "tapToAddMember": "こちらをタップでメンバーを\n追加できます",
   "swipeToEditOrDeleteMember": "スワイプでメンバーの削除及び\nメンバー名の変更ができます",
   "tapToSortByPayment": "こちらをタップで支払い状況順に\n並び変えることができます",
-  "tapToSendReminder": "こちらをタップで催促メッセージを\n送信できます\n(現在機能実装中ですのでアップデートを\nお待ちください)",
+  "tapToSendReminder": "こちらをタップで催促メッセージを\n送信できます",
   "skip": "スキップ",
   "edit": "編集",
   "delete": "削除",
