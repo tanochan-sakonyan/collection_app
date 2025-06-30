@@ -574,60 +574,128 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                       );
                       return Stack(
                         children: [
-                          MemberList(
-                            event: event,
-                            members: event.eventId != "" ? event.members : [],
-                            eventId: event.eventId != "" ? event.eventId : "",
-                            eventName: event.eventName,
-                            memberAddKey: (_currentTabIndex == index)
-                                ? memberAddKey
-                                : null,
-                            slidableKey: (_currentTabIndex == index)
-                                ? slidableKey
-                                : null,
-                            sortKey:
-                                (_currentTabIndex == index) ? sortKey : null,
-                            fabKey: (_currentTabIndex == index) ? fabKey : null,
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: GestureDetector(
-                              onTap: () =>
-                                  _showEditNoteBottomSheet(context, event),
-                              child: Container(
-                                width: double.infinity,
-                                color: Colors.white,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 24, vertical: 24),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      S.of(context)?.note ?? "note",
-                                      style: const TextStyle(
-                                          fontSize: 16, color: Colors.black87),
+                          Column(
+                            children: [
+                              MemberList(
+                                event: event,
+                                members:
+                                    event.eventId != "" ? event.members : [],
+                                eventId:
+                                    event.eventId != "" ? event.eventId : "",
+                                eventName: event.eventName,
+                                memberAddKey: (_currentTabIndex == index)
+                                    ? memberAddKey
+                                    : null,
+                                slidableKey: (_currentTabIndex == index)
+                                    ? slidableKey
+                                    : null,
+                                sortKey: (_currentTabIndex == index)
+                                    ? sortKey
+                                    : null,
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: GestureDetector(
+                                  onTap: () =>
+                                      _showEditNoteBottomSheet(context, event),
+                                  child: Container(
+                                    width: double.infinity,
+                                    color: Colors.white,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 24, vertical: 24),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          S.of(context)?.note ?? "note",
+                                          style: const TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.black87),
+                                        ),
+                                        const SizedBox(height: 12),
+                                        Expanded(
+                                          child: SingleChildScrollView(
+                                            child: (event.memo?.isNotEmpty ==
+                                                    true)
+                                                ? Text(
+                                                    event.memo!,
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors.black87),
+                                                  )
+                                                : Text(
+                                                    S
+                                                            .of(context)
+                                                            ?.memoPlaceholder ??
+                                                        "You can enter a note",
+                                                    style: const TextStyle(
+                                                      fontSize: 16,
+                                                      color: Colors.grey,
+                                                      letterSpacing: 0.5,
+                                                    ),
+                                                  ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    const SizedBox(height: 12),
-                                    Expanded(
-                                      child: SingleChildScrollView(
-                                        child: (event.memo?.isNotEmpty == true)
-                                            ? Text(
-                                                event.memo!,
-                                                style: const TextStyle(
-                                                    fontSize: 16,
-                                                    color: Colors.black87),
-                                              )
-                                            : Text(
-                                                S
-                                                        .of(context)
-                                                        ?.memoPlaceholder ??
-                                                    "You can enter a note",
-                                                style: const TextStyle(
-                                                  fontSize: 16,
-                                                  color: Colors.grey,
-                                                  letterSpacing: 0.5,
-                                                ),
-                                              ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Positioned(
+                            right: 28,
+                            bottom: 120,
+                            child: SizedBox(
+                              height: 60,
+                              width: 60,
+                              child: FloatingActionButton(
+                                key: fabKey,
+                                backgroundColor: const Color(0xFFBABABA),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(48),
+                                ),
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                        vertical: 56.0,
+                                        horizontal: 24.0,
+                                      ),
+                                      content: Text(
+                                        '${S.of(context)?.update_1}\n ${S.of(context)?.update_2}',
+                                        textAlign: TextAlign.center,
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.bodyLarge?.copyWith(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.black,
+                                            ),
+                                      ),
+                                    ),
+                                  );
+                                  //TODO LINE認証申請が通ったらこちらに戻す
+                                  /*showDialog(
+                context: context,
+                builder: (context) => const ConfirmationDialog(),
+              );*/
+                                },
+                                child: Center(
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      SvgPicture.asset(
+                                        'assets/icons/chat_bubble.svg',
+                                        width: 28,
+                                        height: 28,
+                                        colorFilter: const ColorFilter.mode(
+                                          Colors.white,
+                                          BlendMode.srcIn,
+                                        ),
                                       ),
                                       SvgPicture.asset(
                                         'assets/icons/yen.svg',
