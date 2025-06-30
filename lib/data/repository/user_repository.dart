@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:mr_collection/data/model/freezed/user.dart';
+import 'package:mr_collection/data/model/freezed/lineGroup.dart';
 
 class UserRepository {
   final String baseUrl;
@@ -112,6 +113,74 @@ class UserRepository {
       final message = data['message'] ?? 'Internal Server Error';
       throw Exception(
           'Error deleting user: $message (status code: ${response.statusCode})');
+    }
+  }
+
+  Future<List<LineGroup>> getLineGroups(String userId) async {
+    debugPrint('getLineGroups関数が呼ばれました。');
+    final url = Uri.parse('$baseUrl/users/$userId/line-groups');
+
+    final response = await http.get(url);
+
+    debugPrint('Response status: ${response.statusCode}');
+    debugPrint('Response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      try {
+        final data = jsonDecode(response.body);
+        final lineGroups = (data['line_groups'] as List)
+            .map((g) => LineGroup.fromJson(g))
+            .toList();
+        return lineGroups;
+      } catch (e, stackTrace) {
+        debugPrint('JSONデコード中にエラー: $e');
+        debugPrint('スタックトレース: $stackTrace');
+        rethrow;
+      }
+    } else {
+      try {
+        final errorData = jsonDecode(response.body);
+        final errorMessage = errorData['message'] ?? 'ユーザー情報の取得に失敗しました';
+        throw Exception(
+            'エラー: $errorMessage (ステータスコード: ${response.statusCode})');
+      } catch (e) {
+        throw Exception(
+            'その他のエラー：ユーザー情報の取得に失敗しました (ステータスコード: ${response.statusCode})');
+      }
+    }
+  }
+
+  Future<LineGroup> refreshLineGroupMember(String userId, String groupId) async {
+    debugPrint('refreshLineGroupMember関数が呼ばれました。');
+    final url = Uri.parse('$baseUrl/users/$userId/line-groups/$groupId');
+
+    final response = await http.get(url);
+
+    debugPrint('Response status: ${response.statusCode}');
+    debugPrint('Response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      try {
+        final data = jsonDecode(response.body);
+        if(data['isSuccessful'] != true){
+          throw Exception('API returned isSuccessful = false');
+        }
+        return LineGroup.fromJson(data);
+      } catch (e, stackTrace) {
+        debugPrint('JSONデコード中にエラー: $e');
+        debugPrint('スタックトレース: $stackTrace');
+        rethrow;
+      }
+    } else {
+      try {
+        final errorData = jsonDecode(response.body);
+        final errorMessage = errorData['message'] ?? 'ユーザー情報の取得に失敗しました';
+        throw Exception(
+            'エラー: $errorMessage (ステータスコード: ${response.statusCode})');
+      } catch (e) {
+        throw Exception(
+            'その他のエラー：ユーザー情報の取得に失敗しました (ステータスコード: ${response.statusCode})');
+      }
     }
   }
 

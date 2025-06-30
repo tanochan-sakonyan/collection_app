@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/constants/base_url.dart';
+import 'package:mr_collection/data/model/freezed/lineGroup.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/data/repository/event_repository.dart';
 import 'package:mr_collection/ui/screen/transfer/choice_event_screen.dart';
@@ -26,6 +27,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
   bool _isButtonEnabled = true;
   Event? _selectedEvent;
   bool get _isTransferMode => _selectedEvent != null;
+  LineGroup? lineGroup;
 
   final EventRepository eventRepository = EventRepository(baseUrl: baseUrl);
 
@@ -83,6 +85,9 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
       if (_isTransferMode) {
         await ref.read(userProvider.notifier).createEventAndTransferMembers(
             _selectedEvent!.eventId, eventName, userId);
+      } else if(lineGroup != null){
+        await ref.read(userProvider.notifier).createEventAndGetMembersFromLine(
+            lineGroup!.groupId, eventName, lineGroup!.members, userId);
       } else {
         await ref.read(userProvider.notifier).createEvent(eventName, userId);
       }
@@ -91,8 +96,6 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
     } catch (error) {
       debugPrint('イベントの追加に失敗しました: $error');
     }
-
-    //TODO: LINEグループからメンバー取得モードでも別APIたたくように切り替える
   }
 
   Future<void> _choiceEvent() async {
@@ -108,16 +111,33 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
     }
   }
 
-  //TODO: 招待可能なLINEグループの有無によりどちらの画面に遷移するか分岐する
   Future<void> _selectLineGroup() async {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-          // 集金くんアカウントを含むLINEグループがあるとき
-          //builder: (_) => const SelectLineGroupScreen()
+    final userId = ref.read(userProvider)?.userId;
+    if( userId == null ) return;
+
+    final lineGroups = await ref.read(userProvider.notifier).getLineGroups(userId);
+    debugPrint('LINE取得APIを実行しました。');
+    debugPrint('取得したLINEグループ : $lineGroups');
+
+    if(lineGroups.isEmpty){
+      Navigator.of(context).push(
+        MaterialPageRoute(
           // 集金くんアカウントを含むLINEグループがないとき
-          builder: (_) => const InviteOfficialAccountToLineGroupScreen()
+            builder: (_) => const InviteOfficialAccountToLineGroupScreen()
         ),
-    );
+      );
+    }
+    final pickedLineGroup = await Navigator.of(context).push<LineGroup>(
+        MaterialPageRoute(
+          // 集金くんアカウントを含むLINEグループがあるとき
+          builder: (_) => SelectLineGroupScreen(lineGroups : lineGroups)
+        ),
+      );
+    if(pickedLineGroup != null){
+      setState(() {
+        lineGroup = pickedLineGroup;
+      });
+    }
   }
 
   @override
@@ -265,11 +285,39 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                                   fontWeight: FontWeight.w500,
                                   color: Colors.black),
                         ),
-                        trailing: IconButton(
+                        trailing: lineGroup != null
+                        ? SizedBox(
+                            width: 112,
+                            height: 28,
+                            child: ElevatedButton(
+                              onPressed: null,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF06C755),
+                                elevation: 2,
+                                shape: const StadiumBorder(),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 4, vertical: 0),
+                              ),
+                              child: Text(
+                                lineGroup!.groupName,
+                                maxLines: 1,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w500,
+                                  color: _isTransferMode
+                                      ? Colors.white
+                                      : Colors.black,
+                                ),
+                              ),
+                            )
+                        ): IconButton(
                           icon: SvgPicture.asset(
                             'assets/icons/line.svg',
-                            width: 28,
-                            height: 28,
+                            width: 32,
+                            height: 32,
                           ),
                           onPressed: _isButtonEnabled ? () => _selectLineGroup() : null,
                         ),

@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
+import 'package:mr_collection/data/model/freezed/lineGroup.dart';
 import 'package:flutter_gen/gen_l10n/s.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 
 class CheckSelectedLineGroupScreen extends ConsumerStatefulWidget {
-  const CheckSelectedLineGroupScreen({super.key});
+  final LineGroup lineGroup;
+  const CheckSelectedLineGroupScreen({Key? key, required this.lineGroup}) : super(key: key);
   @override
   ConsumerState<CheckSelectedLineGroupScreen> createState() =>
       CheckSelectedLineGroupScreenState();
@@ -18,16 +20,7 @@ class CheckSelectedLineGroupScreenState
 
   @override
   Widget build(BuildContext context) {
-    // TODO: バックと繋いだら消すダミーデータ
-    const event =  Event(
-      eventId: 'dummy-id',
-      eventName: 'テストグループ',
-      memo: 'メモ',
-      members: [
-        Member(memberId: '1', memberName: '太郎', status: PaymentStatus.unpaid,memberMoney: 1000,),
-        Member(memberId: '2', memberName: '花子', status: PaymentStatus.unpaid,memberMoney: 1000,),
-      ],
-    );
+    final lineGroup = widget.lineGroup;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -44,7 +37,7 @@ class CheckSelectedLineGroupScreenState
                 height: 44,
               ),
               Text(
-                '戻る',
+                S.of(context)?.back ?? "Back",
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: const Color(0xFF76DCC6),
                     fontSize: 15,
@@ -60,7 +53,7 @@ class CheckSelectedLineGroupScreenState
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            "LINEグループから\nメンバー追加",
+            S.of(context)?.selectLineGroupTitle ?? "Add members from LINE group",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
               fontSize: 24,
               fontWeight: FontWeight.w700,
@@ -71,7 +64,7 @@ class CheckSelectedLineGroupScreenState
           ),
           const SizedBox(height: 36),
           Text(
-            "このメンバーでイベントを作成しますか？",
+            S.of(context)?.selectLineGroupDesc ?? "Would you like to create an event with these members?",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
               fontSize: 16,
               fontWeight: FontWeight.w700,
@@ -109,8 +102,7 @@ class CheckSelectedLineGroupScreenState
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              //TODO: 取得したlineグループ名
-                              "グループ名",
+                              lineGroup.groupName,
                               style: Theme.of(context)
                                   .textTheme
                                   .bodySmall
@@ -128,11 +120,11 @@ class CheckSelectedLineGroupScreenState
                           bottomLeft: Radius.circular(12),
                           bottomRight: Radius.circular(12),
                         ),
-                        child: ListView.builder( //TODO: バックとつないだら選択したグループのメンバーをリスト表示する
+                        child: ListView.builder(
                           shrinkWrap: true,
-                          itemCount: event.members.length,
+                          itemCount: lineGroup.members.length,
                           itemBuilder: (context, index) {
-                            final member = event.members[index];
+                            final member = lineGroup.members[index];
                             return Column(
                               children: [
                                 Padding(
@@ -178,8 +170,7 @@ class CheckSelectedLineGroupScreenState
             height: 40,
             child: ElevatedButton(
               onPressed: () {
-                //TODO: イベント作成ダイアログに戻す
-                Navigator.of(context).pop(event);
+                Navigator.of(context).pop();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF76DCC6),
@@ -189,7 +180,7 @@ class CheckSelectedLineGroupScreenState
                 ),
               ),
               child: Text(
-                "このメンバーでイベント作成",
+                S.of(context)?.selectLineGroupButton ?? "Create event with these members",
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -200,7 +191,7 @@ class CheckSelectedLineGroupScreenState
           ),
           const SizedBox(height: 16),
           Text(
-            "※LINEグループから取得したメンバー情報は24時間で消去されるため、\n24時間が経過する前に再取得をするようお願いいたします。\n再取得の際、支払い状況は引き継がれます。",
+            S.of(context)?.selectLineGroupNote ?? "*Member information obtained from the LINE group will be deleted after 24 hours.\nPlease reacquire before 24 hours have passed.\nPayment statuses will be retained when reacquiring.",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
               fontSize: 10,
               fontWeight: FontWeight.w500,

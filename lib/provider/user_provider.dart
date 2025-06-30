@@ -11,6 +11,7 @@ import 'package:mr_collection/provider/member_repository_provider.dart';
 import 'package:mr_collection/services/user_service.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
+import 'package:mr_collection/data/model/freezed/lineGroup.dart';
 
 final userProvider = StateNotifierProvider<UserNotifier, User?>((ref) {
   final userService = ref.read(userServiceProvider);
@@ -131,6 +132,67 @@ class UserNotifier extends StateNotifier<User?> {
     } catch (e) {
       debugPrint('イベントの作成中にエラーが発生しました: $e');
     }
+  }
+
+  Future<void> createEventAndGetMembersFromLine(
+      String groupId, String eventName, List<LineGroupMember> members, String userId) async {
+    try{
+      final newEvent = await eventRepository.createEventAndGetMembersFromLine(
+          groupId, eventName, members, userId);
+      final updatedUser = state?.copyWith(
+        events: [...state!.events, newEvent],
+      );
+      state = updatedUser;
+    }catch (e){
+      debugPrint('イベントの作成中にエラーが発生しました: $e');
+    }
+  }
+
+  Future<LineGroup> refreshLineGroupMember(
+      String groupId, String userId) async {
+    try {
+      final updatedGroup = await ref.read(userRepositoryProvider).refreshLineGroupMember(userId, groupId);
+      return updatedGroup;
+    }catch (e){
+      debugPrint('LINEメンバーの再取得にエラーが発生しました: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> updateMemberDifference(
+      String eventId, LineGroup updatedLineGroup ) async {
+    final oldEvent = state!.events.firstWhere((e) => e.eventId == eventId);
+    final oldMembers = oldEvent.members;
+
+    final oldMemberIds = oldMembers.map((m) => m.memberId).toSet();
+    final newMemberIds = updatedLineGroup.members.map((m) => m.memberId).toSet();
+
+    final additionalMembers = updatedLineGroup.members
+        .where((m) => !oldMemberIds.contains(m.memberId))
+        .map((lgm) => Member(
+      memberId: lgm.memberId,
+      memberName: lgm.memberName,
+      status: PaymentStatus.unpaid,
+      // amount: 0,
+    )).toList();
+    final deletedMembers = oldMemberIds.difference(newMemberIds);
+
+    final keptMembers = oldMembers.where((m) => !deletedMembers.contains(m.memberId)).toList();
+
+    final updatedMembers = [...keptMembers, ...additionalMembers];
+
+
+    final updatedEvents = state!.events.map((event) {
+      if (event.eventId == eventId) {
+        return event.copyWith(
+          members: updatedMembers,
+          lineMembersFetchedAt: updatedLineGroup.fetchedAt,
+        );
+      }
+      return event;
+    }).toList();
+
+    state = state!.copyWith(events: updatedEvents);
   }
 
   Future<void> inputTotalMoney(
@@ -277,6 +339,17 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
+  Future<void> clearMembersOfEvent(
+      String eventId) async {
+    state = state!.copyWith(
+      events: state!.events.map((e) =>
+      e.eventId == eventId
+          ? e.copyWith(members: [])
+          : e
+      ).toList(),
+    );
+  }
+
   int getStatusRank(PaymentStatus status) {
     switch (status) {
       case PaymentStatus.unpaid:
@@ -323,6 +396,16 @@ class UserNotifier extends StateNotifier<User?> {
       state = state?.copyWith(events: updatedEvents ?? []);
     } catch (e) {
       debugPrint('メンバーの作成中にエラーが発生しました: $e : user_provider.dart');
+    }
+  }
+
+  Future<List<LineGroup>> getLineGroups(String userId) async {
+    try {
+      final lineGroups = await userService.getLineGroups(userId);
+      return lineGroups;
+    } catch (e) {
+      debugPrint('ユーザー情報の取得の際にエラーが発生しました。: $e');
+      return [];
     }
   }
 

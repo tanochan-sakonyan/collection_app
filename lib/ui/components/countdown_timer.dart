@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 class CountdownTimer extends StatefulWidget {
   final DateTime expiretime;
   final TextStyle? textStyle;
+  final VoidCallback? onExpired;
 
   const CountdownTimer({
     Key? key,
     required this.expiretime,
     this.textStyle,
+    this.onExpired,
   }) : super(key: key);
 
   @override

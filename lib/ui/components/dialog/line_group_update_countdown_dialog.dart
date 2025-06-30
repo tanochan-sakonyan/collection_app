@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mr_collection/data/model/freezed/event.dart';
+import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/countdown_timer.dart';
+import 'package:flutter_gen/gen_l10n/s.dart';
 
-class LineGroupUpdateCountdownDialog extends StatelessWidget {
-  const LineGroupUpdateCountdownDialog({super.key});
+class LineGroupUpdateCountdownDialog extends ConsumerWidget {
+  final Event currentEvent;
+
+  const LineGroupUpdateCountdownDialog({
+    super.key,
+    required this.currentEvent,
+  });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userId = ref.read(userProvider)?.userId;
+
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Container(
@@ -20,7 +31,7 @@ class LineGroupUpdateCountdownDialog extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "メンバー情報有効期限が\nもうすぐ切れます",
+              S.of(context)?.lineGroupExpireTitle ?? "Member info will expire soon",
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 fontWeight: FontWeight.w700,
                 fontSize: 16,
@@ -30,7 +41,7 @@ class LineGroupUpdateCountdownDialog extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              "LINEの利用規約に則り、メンバー情報有効期限を過ぎる\nと、メンバーと支払い状況の情報が削除されます。\n再取得をし、有効期限をリセットしてください。",
+              S.of(context)?.lineGroupExpireDesc ?? "According to LINE's terms of use, after the member info expires,\nmember and payment status information will be deleted.\nPlease reacquire to reset the expiration date.",
               textAlign: TextAlign.start,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
                 fontWeight: FontWeight.w500,
@@ -39,9 +50,8 @@ class LineGroupUpdateCountdownDialog extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            //TODO: LINEグループ取得後oo時間のカウントダウン表示
             CountdownTimer(
-              expiretime: DateTime.now().add(const Duration(hours: 23, minutes: 55, seconds: 23)),
+              expiretime: currentEvent.lineMembersFetchedAt!.add(const Duration(hours: 24)),
               textStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
                 color: Colors.black,
                 fontSize: 15,
@@ -68,7 +78,7 @@ class LineGroupUpdateCountdownDialog extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      "取得しない",
+                      S.of(context)?.dontRefresh ?? "Don't refresh",
                       style: GoogleFonts.notoSansJp(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -82,8 +92,9 @@ class LineGroupUpdateCountdownDialog extends StatelessWidget {
                   height: 36,
                   width: 120,
                   child: ElevatedButton(
-                    onPressed: (){
-                      //TODO: 「再取得」のボタンを押し下した時にメンバー情報取得APIたたく
+                    onPressed: () async {
+                      final updatedGroup = await ref.read(userProvider.notifier).refreshLineGroupMember(currentEvent.lineGroupId!, userId!);
+                      Navigator.of(context).pop(updatedGroup);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
@@ -93,7 +104,7 @@ class LineGroupUpdateCountdownDialog extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      "再取得",
+                      S.of(context)?.refresh ?? "Refresh",
                       style: GoogleFonts.notoSansJp(
                         fontSize: 14,
                         fontWeight: FontWeight.w900,

@@ -10,6 +10,8 @@ class Event with _$Event {
   const factory Event({
     required String eventId,
     required String eventName,
+    required String? lineGroupId,
+    required DateTime? lineMembersFetchedAt,
     required List<Member> members,
     required String? memo,
     int? totalMoney,

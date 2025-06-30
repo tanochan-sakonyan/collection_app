@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mr_collection/data/model/freezed/event.dart';
+import 'package:mr_collection/data/model/freezed/lineGroup.dart';
+import 'package:mr_collection/data/model/freezed/member.dart';
 
 class EventRepository {
   final String baseUrl;
@@ -50,6 +52,31 @@ class EventRepository {
       url,
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'fromEventId': eventId, 'eventName': eventName}),
+    );
+
+    final data = jsonDecode(response.body) as Map<String, dynamic>;
+
+    if (response.statusCode != 200 && response.statusCode != 201) {
+      final msg = data['message'] as String? ?? 'Unknown error';
+      throw Exception('イベント作成に失敗しました (HTTP ${response.statusCode}): $msg');
+    }
+
+    if (data['isSuccessful'] != true) {
+      final msg = data['message'] as String? ?? 'Unknown error';
+      throw Exception('イベント作成に失敗しました: $msg');
+    }
+
+    return Event.fromJson(data);
+  }
+
+  //LINEからメンバー取得した際に使うイベント作成API
+  Future<Event> createEventAndGetMembersFromLine(
+      String groupId, String eventName, List<LineGroupMember> members,String userId) async {
+    final url = Uri.parse('$baseUrl/users/$userId/line-groups');
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'groupId': groupId, 'eventName': eventName, 'members': members}),
     );
 
     final data = jsonDecode(response.body) as Map<String, dynamic>;

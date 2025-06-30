@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:mr_collection/ads/ad_helper.dart';
+import 'package:mr_collection/data/model/freezed/lineGroup.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/provider/tab_titles_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
@@ -212,8 +213,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   // versionForUpdateDialogを、2025/04現在は1.2.0で定義
   // これがshownVersionFor120と異なる時、ポップアップを出す。
   // 今後のアップデートの際は、shownVersionFor〇〇〇のpreferenceを更新する。
-  // 20240529追記。shownVersionFor130作成済み
-  // 20240630追記。shownVersionFor200作成済み
+  // 20250529追記。shownVersionFor130作成済み
+  // 20250630追記。shownVersionFor200作成済み
   Future<void> _checkAndShowUpdateDialog() async {
     final prefs = await SharedPreferences.getInstance();
     final shown = prefs.getBool('shownVersionFor200') ?? false;
@@ -317,6 +318,13 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
     final tabTitles = ref.watch(tabTitlesProvider);
+    final String currentEventId = tabTitles.isNotEmpty && _currentTabIndex < tabTitles.length
+      ? tabTitles[_currentTabIndex]
+        : "";
+    final Event? currentEvent = user?.events.firstWhere(
+      (e) => e.eventId == currentEventId
+    );
+    final bool isLineConnected = currentEvent != null && currentEvent.lineGroupId != null && currentEvent.lineGroupId!.isNotEmpty;
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -412,7 +420,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                   eventName: '',
                                   members: [],
                                   memo: '',
-                                  totalMoney: 0),
+                                  totalMoney: 0,
+                                  lineGroupId: null,
+                                  lineMembersFetchedAt: null,
+                              ),
                             );
                             final bool isFullyPaid = event.members.isNotEmpty &&
                                 event.members.every((member) =>
@@ -518,43 +529,46 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       body: Column(
         children: [
           const SizedBox(height: 6),
-          //TODO: isLineConnectedで表示非表示切り替える
-          //文字からダイアログへの遷移、アイコンからメンバーの更新で処理を分ける
-          GestureDetector(
-            onTap: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return const LineGroupUpdateCountdownDialog();
-                },
-              );
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text("メンバー自動削除まで ",
-                    style: Theme.of(context)
-                        .textTheme
-                        .labelSmall
-                        ?.copyWith(color: Colors.black)),
-                //TODO: LINEグループ取得から24時間以内のカウントダウン
-                CountdownTimer(
-                  expiretime: DateTime.now()
-                      .add(const Duration(hours: 23, minutes: 55, seconds: 23)),
-                  textStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: Colors.black,
-                      ),
-                ),
-                const SizedBox(width: 8),
-                SvgPicture.asset(
-                  'assets/icons/ic_update.svg',
-                  width: 20,
-                  height: 20,
-                ),
-                const SizedBox(width: 36),
-              ],
+          if (isLineConnected)
+            GestureDetector(
+              onTap: () async {
+                final updatedGroup = await showDialog<LineGroup>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return LineGroupUpdateCountdownDialog(currentEvent: currentEvent);
+                  },
+                );
+                if(updatedGroup != null){
+                  ref.read(userProvider.notifier).updateMemberDifference(currentEventId, updatedGroup);
+                }
+              },
+              child:
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                      S.of(context)?.autoDeleteMemberCountdown ?? "Auto member deletion in",
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: Colors.black
+                    )
+                  ),
+                  CountdownTimer(
+                    expiretime: currentEvent.lineMembersFetchedAt!.add(const Duration(hours: 24)),
+                    textStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: Colors.black,
+                    ),
+                    onExpired: () {ref.read(userProvider.notifier).clearMembersOfEvent(currentEventId);},
+                  ),
+                  const SizedBox(width: 8),
+                  SvgPicture.asset(
+                    'assets/icons/ic_update.svg',
+                    width: 20,
+                    height: 20,
+                  ),
+                  const SizedBox(width: 36),
+                ],
+              ),
             ),
-          ),
           Expanded(
             child: tabTitles.isEmpty
                 ? const EventZeroComponents()
@@ -568,9 +582,12 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                         orElse: () => const Event(
                             eventId: "",
                             eventName: '',
+                            lineGroupId: null,
+                            lineMembersFetchedAt: null,
                             members: [],
                             memo: '',
-                            totalMoney: 0),
+                            totalMoney: 0,
+                        ),
                       );
                       return Stack(
                         children: [
