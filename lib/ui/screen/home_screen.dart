@@ -226,8 +226,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           onPageChanged: (i) {},
         ),
       );
-      // await prefs.setBool('shownVersionFor200', true);
-      // debugPrint('Update dialog shown for version "true"');
+      await prefs.setBool('shownVersionFor200', true);
+      debugPrint('Update dialog shown for version "true"');
     } else {
       debugPrint('すでに表示されています。');
     }
