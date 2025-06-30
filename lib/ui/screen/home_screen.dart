@@ -572,7 +572,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                             memo: '',
                             totalMoney: 0),
                       );
-                      return Column(
+                      return Stack(
                         children: [
                           MemberList(
                             event: event,
@@ -629,8 +629,17 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                                 ),
                                               ),
                                       ),
-                                    ),
-                                  ],
+                                      SvgPicture.asset(
+                                        'assets/icons/yen.svg',
+                                        width: 16,
+                                        height: 16,
+                                        colorFilter: const ColorFilter.mode(
+                                          Color(0xFFBABABA),
+                                          BlendMode.srcIn,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
