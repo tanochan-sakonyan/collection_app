@@ -441,7 +441,6 @@ class MemberList extends ConsumerWidget {
                   ),
                 ),
               ),
-              // const SizedBox(height: 12),
               // Padding(
               //   padding: const EdgeInsets.symmetric(horizontal: 16.0),
               //   child: Row(
