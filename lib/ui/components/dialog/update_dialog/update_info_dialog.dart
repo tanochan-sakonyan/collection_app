@@ -77,7 +77,7 @@ class UpdateInfoDialog extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const SizedBox(width: 20),
+                  const SizedBox(width: 10),
                   SvgPicture.asset(
                     'assets/icons/ic_check_circle_teal.svg',
                     width: 24,
@@ -97,7 +97,7 @@ class UpdateInfoDialog extends StatelessWidget {
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        const SizedBox(width: 20),
+                        const SizedBox(width: 10),
                         SvgPicture.asset(
                           'assets/icons/ic_check_circle_teal.svg',
                           width: 24,
@@ -119,7 +119,7 @@ class UpdateInfoDialog extends StatelessWidget {
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        const SizedBox(width: 20),
+                        const SizedBox(width: 10),
                         SvgPicture.asset(
                           'assets/icons/ic_check_circle_teal.svg',
                           width: 24,

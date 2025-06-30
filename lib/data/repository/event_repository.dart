@@ -27,6 +27,24 @@ class EventRepository {
     }
   }
 
+  Future<Event> editEventName(
+      String userId, String eventId, String newEventName) async {
+    final url = Uri.parse('$baseUrl/users/$userId/events/$eventId');
+    final response = await http.put(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'newEventName': newEventName}),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      debugPrint('イベント名の更新に成功しました。');
+      final data = jsonDecode(response.body);
+      return Event.fromJson(data);
+    } else {
+      throw Exception('イベント名の更新に失敗しました');
+    }
+  }
+
   Future<Event> createEventAndTransferMembers(
       String eventId, String eventName, String userId) async {
     final url = Uri.parse('$baseUrl/users/$userId/events/clone');
@@ -114,4 +132,24 @@ class EventRepository {
       throw Exception('イベントの削除に失敗しました');
     }
   }
+
+  Future<Event> addNote(String userId, String eventId, String memo) async {
+    final url = Uri.parse('$baseUrl/users/$userId/events/$eventId/memo');
+    final response = await http.put(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'memo': memo}),
+    );
+
+    debugPrint("APIから返ってきたbody: ${response.body}");
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      debugPrint('noteの追加に成功しました。 : event_repository');
+      final data = jsonDecode(response.body);
+      return Event.fromJson(data);
+    } else {
+      throw Exception('イベントの作成に失敗しました');
+    }
+  }
+
 }

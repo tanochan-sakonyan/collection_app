@@ -52,7 +52,7 @@
   "transferThisMember": "Transfer this member",
   "enterEventName": "Please enter an event name.",
   "tapToAddEvent": "Tap here to add an event.",
-  "longPressToDeleteEvent": "Long press to delete an event.",
+  "longPressToDeleteEvent": "Tap to edit an event.\nLong press to delete an event.",
   "tapToAddMember": "Tap here to add a member.",
   "swipeToEditOrDeleteMember": "Swipe to delete or edit a member.",
   "tapToSortByPayment": "Tap here to sort by payment status.",
@@ -61,6 +61,7 @@
   "edit": "Edit",
   "delete": "Delete",
   "editMemberName": "Edit Member Name",
+  "editEventName": "Edit Event Name",
   "confirmDeleteMember": "Do you want to delete this member?",
   "enterTotalAmount": "Enter total amount",
   "currencyUnit": "USD",
@@ -101,5 +102,9 @@
   "lineGroupExpireTitle": "Member info will expire soon",
   "lineGroupExpireDesc": "According to LINE's terms of use, after the member info expires,\nmember and payment status information will be deleted.\nPlease reacquire to reset the expiration date.",
   "dontRefresh": "Don't refresh",
-  "refresh": "Refresh"
+  "refresh": "Refresh",
+  "note": "Note",
+  "editNote": "Edit Note",
+  "memoPlaceholder": "You can enter a note",
+  "save": "Save"
 }
