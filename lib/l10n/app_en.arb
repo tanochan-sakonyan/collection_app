@@ -88,7 +88,7 @@
   "selectLineGroupDesc": "Select the LINE group where you want to add members.",
   "notDisplayedQuestion": "LINE group not displayed?",
   "inviteOfficialAccountTitle": "Invite the official LINE account to the group",
-  "inviteOfficialAccountDesc1": "You can only get members from LINE groups where 'Shukin-kun' is invited.",
+  "inviteOfficialAccountDesc1": "You can only get members from LINE groups where 'Shukin-kun' is invited.If the LINE group is not displayed,\nplease remove the \"Shuukin-kun Official LINE\" bot from the group once,\nand then add it to the same group again.",
   "inviteOfficialAccountStep1": "Add the official LINE account",
   "inviteOfficialAccountStep2": "Invite the official LINE account\nto the group for collection",
   "inviteOfficialAccountNote": "‘Shukin-kun’ will not send\npromotional messages in the group.",
