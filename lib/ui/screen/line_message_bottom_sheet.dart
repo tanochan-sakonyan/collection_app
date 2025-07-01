@@ -11,13 +11,11 @@ import 'package:mr_collection/ui/components/dialog/paypay_dialog.dart';
 class LineMessageBottomSheet extends ConsumerStatefulWidget {
   final Event event;
   final List<Member> unpaidMembers;
-  final String defaultPaypayUrl;
 
   const LineMessageBottomSheet.lineMessageBottomSheet({
     super.key,
     required this.event,
     required this.unpaidMembers,
-    this.defaultPaypayUrl = "https://paypay.link/XXXXXX",
   });
 
   @override
@@ -29,7 +27,6 @@ class _UnpaidMessageBottomSheetState
     extends ConsumerState<LineMessageBottomSheet> {
   late TextEditingController _controller;
   bool _includePaypayLink = false;
-  String? _paypayUrl;
 
   @override
   void initState() {
@@ -67,8 +64,7 @@ class _UnpaidMessageBottomSheetState
     }
     setState(() {
       _includePaypayLink = value;
-      _paypayUrl = paypayUrl ?? widget.defaultPaypayUrl;
-      final paypayLine = '\nPayPayリンク：$_paypayUrl';
+      final paypayLine = '\nPayPayリンク：$paypayUrl';
       var currentText = _controller.text;
 
       if (_includePaypayLink) {
