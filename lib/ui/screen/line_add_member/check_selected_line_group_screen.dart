@@ -192,17 +192,18 @@ class CheckSelectedLineGroupScreenState
               ),
             ),
           ),
-          const SizedBox(height: 16),
-          Text(
-            S.of(context)?.selectLineGroupNote ??
-                "*Member information obtained from the LINE group will be deleted after 24 hours.\nPlease reacquire before 24 hours have passed.\nPayment statuses will be retained when reacquiring.",
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w500,
-                  color: const Color(0xFF6A6A6A),
-                ),
-            textAlign: TextAlign.left,
-          ),
+          // TODO: 以下、規約対応
+          // const SizedBox(height: 16),
+          // Text(
+          //   S.of(context)?.selectLineGroupNote ??
+          //       "*Member information obtained from the LINE group will be deleted after 24 hours.\nPlease reacquire before 24 hours have passed.\nPayment statuses will be retained when reacquiring.",
+          //   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+          //         fontSize: 10,
+          //         fontWeight: FontWeight.w500,
+          //         color: const Color(0xFF6A6A6A),
+          //       ),
+          //   textAlign: TextAlign.left,
+          // ),
         ],
       ),
     );

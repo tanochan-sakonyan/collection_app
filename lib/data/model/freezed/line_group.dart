@@ -10,7 +10,7 @@ class LineGroup with _$LineGroup {
   const factory LineGroup({
     required String groupId,
     required String groupName,
-    required DateTime fetchedAt,
+    // required DateTime fetchedAt, // TOD: 規約対応
     required List<LineGroupMember> members,
   }) = _LineGroup;
 

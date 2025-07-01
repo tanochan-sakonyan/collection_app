@@ -9,13 +9,13 @@ part of 'line_group_member.dart';
 _$LineGroupMemberImpl _$$LineGroupMemberImplFromJson(
         Map<String, dynamic> json) =>
     _$LineGroupMemberImpl(
-      memberId: json['member_id'] as String,
-      memberName: json['member_name'] as String,
+      memberId: json['user_id'] as String,
+      memberName: json['display_name'] as String,
     );
 
 Map<String, dynamic> _$$LineGroupMemberImplToJson(
         _$LineGroupMemberImpl instance) =>
     <String, dynamic>{
-      'member_id': instance.memberId,
-      'member_name': instance.memberName,
+      'user_id': instance.memberId,
+      'display_name': instance.memberName,
     };

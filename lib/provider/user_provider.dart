@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/constants/base_url.dart';
+import 'package:mr_collection/data/model/freezed/line_group_member.dart';
 import 'package:mr_collection/data/model/freezed/user.dart';
 import 'package:mr_collection/data/repository/event_repository.dart';
 import 'package:mr_collection/data/repository/member_repository.dart';
@@ -207,7 +208,7 @@ class UserNotifier extends StateNotifier<User?> {
       if (event.eventId == eventId) {
         return event.copyWith(
           members: updatedMembers,
-          lineMembersFetchedAt: updatedLineGroup.fetchedAt,
+          // lineMembersFetchedAt: updatedLineGroup.fetchedAt, // TODO: 規約対応
         );
       }
       return event;
