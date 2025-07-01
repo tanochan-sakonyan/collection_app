@@ -9,6 +9,7 @@ import 'package:mr_collection/ui/components/dialog/paypay_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/questionnaire_dialog.dart';
 import 'package:mr_collection/ui/screen/privacy_policy_screen.dart';
 import 'package:mr_collection/ui/screen/terms_of_service_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/s.dart';
 
 class TanochanDrawer extends StatelessWidget {
@@ -84,6 +85,44 @@ class TanochanDrawer extends StatelessWidget {
                 showDialog(
                     context: context,
                     builder: (context) => const LogoutDialog());
+              },
+            ),
+            const SizedBox(height: 20),
+            _buildMenuItem(
+              context,
+              text: S.of(context)?.xLink ?? "X Link",
+              icon: SvgPicture.asset("assets/icons/drawer_x.svg"),
+              onTap: () async {
+                const url = "https://x.com/shukinkun";
+                if (await canLaunchUrl(Uri.parse(url))) {
+                  await launchUrl(Uri.parse(url),
+                      mode: LaunchMode.externalApplication);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content: Text(S.of(context)?.officialSite ??
+                            "Could not open the page")),
+                  );
+                }
+              },
+            ),
+            const SizedBox(height: 20),
+            _buildMenuItem(
+              context,
+              text: S.of(context)?.officialSite ?? "Official Website",
+              icon: SvgPicture.asset("assets/icons/drawer_monitor.svg"),
+              onTap: () async {
+                const url = "https://tanochan.studio.site/";
+                if (await canLaunchUrl(Uri.parse(url))) {
+                  await launchUrl(Uri.parse(url),
+                      mode: LaunchMode.externalApplication);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content: Text(S.of(context)?.officialSite ??
+                            "Could not open the page")),
+                  );
+                }
               },
             ),
             const SizedBox(height: 20),

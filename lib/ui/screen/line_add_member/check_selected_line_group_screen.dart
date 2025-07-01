@@ -2,22 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
+import 'package:mr_collection/data/model/freezed/lineGroup.dart';
 import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:mr_collection/data/model/freezed/member.dart';
+import 'package:mr_collection/data/model/payment_status.dart';
 
-class CheckSelectedEventScreen extends ConsumerStatefulWidget {
-  final Event selectedEvent;
-  const CheckSelectedEventScreen({super.key, required this.selectedEvent});
+class CheckSelectedLineGroupScreen extends ConsumerStatefulWidget {
+  final LineGroup lineGroup;
+  const CheckSelectedLineGroupScreen({Key? key, required this.lineGroup}) : super(key: key);
   @override
-  ConsumerState<CheckSelectedEventScreen> createState() =>
-      CheckSelectedEventScreenState();
+  ConsumerState<CheckSelectedLineGroupScreen> createState() =>
+      CheckSelectedLineGroupScreenState();
 }
 
-class CheckSelectedEventScreenState
-    extends ConsumerState<CheckSelectedEventScreen> {
+class CheckSelectedLineGroupScreenState
+    extends ConsumerState<CheckSelectedLineGroupScreen> {
+
   @override
   Widget build(BuildContext context) {
-    final event = widget.selectedEvent;
-    final eventName = event.eventName;
+    final lineGroup = widget.lineGroup;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -50,31 +53,32 @@ class CheckSelectedEventScreenState
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            S.of(context)?.transferMembers ?? "Transfer Members",
+            S.of(context)?.selectLineGroupTitle ?? "Add members from LINE group",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                  color: const Color(0xFF8E8E93),
-                ),
-          ),
-          const SizedBox(height: 32),
-          Text(
-            S.of(context)?.confirmTransferFromEvent ??
-                "Do you want to transfer members from this event?",
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black,
-                ),
+              fontSize: 24,
+              fontWeight: FontWeight.w700,
+              color: const Color(0xFF06C755),
+              height: 1.1,
+            ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 36),
+          Text(
+            S.of(context)?.selectLineGroupDesc ?? "Would you like to create an event with these members?",
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: Colors.black,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 36),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white,
-                border: Border.all(color: Colors.black),
+                border: Border.all(color: const Color(0xFF06C755)),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: SizedBox(
@@ -84,28 +88,29 @@ class CheckSelectedEventScreenState
                     children: [
                       Container(
                         decoration: const BoxDecoration(
-                          color: Color(0xFFE8E8E8),
+                          color: Color(0xFF06C755),
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(12),
                             topRight: Radius.circular(12),
                           ),
                           border: Border(
-                            bottom: BorderSide(color: Colors.black),
+                            bottom: BorderSide(color: Color(0xFF06C755)),
                           ),
                         ),
                         height: 32,
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const SizedBox(width: 24),
                             Text(
-                              S.of(context)?.member ?? "Member",
+                              lineGroup.groupName,
                               style: Theme.of(context)
                                   .textTheme
                                   .bodySmall
                                   ?.copyWith(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white),
+                              textAlign: TextAlign.center,
                             ),
                           ],
                         ),
@@ -117,9 +122,9 @@ class CheckSelectedEventScreenState
                         ),
                         child: ListView.builder(
                           shrinkWrap: true,
-                          itemCount: event.members.length,
+                          itemCount: lineGroup.members.length,
                           itemBuilder: (context, index) {
-                            final member = event.members[index];
+                            final member = lineGroup.members[index];
                             return Column(
                               children: [
                                 Padding(
@@ -135,10 +140,10 @@ class CheckSelectedEventScreenState
                                             .textTheme
                                             .bodyMedium
                                             ?.copyWith(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.black,
-                                            ),
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.black,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -165,7 +170,7 @@ class CheckSelectedEventScreenState
             height: 40,
             child: ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pop(event);
+                Navigator.of(context).pop();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF76DCC6),
@@ -175,14 +180,24 @@ class CheckSelectedEventScreenState
                 ),
               ),
               child: Text(
-                S.of(context)?.transferThisMember ?? "Transfer this member",
+                S.of(context)?.selectLineGroupButton ?? "Create event with these members",
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
               ),
             ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            S.of(context)?.selectLineGroupNote ?? "*Member information obtained from the LINE group will be deleted after 24 hours.\nPlease reacquire before 24 hours have passed.\nPayment statuses will be retained when reacquiring.",
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              fontSize: 10,
+              fontWeight: FontWeight.w500,
+              color: const Color(0xFF6A6A6A),
+            ),
+            textAlign: TextAlign.left,
           ),
         ],
       ),

@@ -54,7 +54,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
     );
 
     return MaterialApp(
-      // locale: _locale, //デバッグ時のみ 本番環境ではこの行を消す
+      // locale: _locale, //デバッグ時のみ 本番環境ではこの行をコメントアウト
       title: '集金くん',
       theme: ThemeData(
         useMaterial3: true,

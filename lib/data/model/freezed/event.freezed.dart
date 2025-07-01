@@ -23,7 +23,9 @@ mixin _$Event {
   String get eventId => throw _privateConstructorUsedError;
   String get eventName => throw _privateConstructorUsedError;
   String? get lineGroupId => throw _privateConstructorUsedError;
+  DateTime? get lineMembersFetchedAt => throw _privateConstructorUsedError;
   List<Member> get members => throw _privateConstructorUsedError;
+  String? get memo => throw _privateConstructorUsedError;
   int? get totalMoney => throw _privateConstructorUsedError;
 
   /// Serializes this Event to a JSON map.
@@ -44,7 +46,9 @@ abstract class $EventCopyWith<$Res> {
       {String eventId,
       String eventName,
       String? lineGroupId,
+      DateTime? lineMembersFetchedAt,
       List<Member> members,
+      String? memo,
       int? totalMoney});
 }
 
@@ -66,7 +70,9 @@ class _$EventCopyWithImpl<$Res, $Val extends Event>
     Object? eventId = null,
     Object? eventName = null,
     Object? lineGroupId = freezed,
+    Object? lineMembersFetchedAt = freezed,
     Object? members = null,
+    Object? memo = freezed,
     Object? totalMoney = freezed,
   }) {
     return _then(_value.copyWith(
@@ -82,10 +88,18 @@ class _$EventCopyWithImpl<$Res, $Val extends Event>
           ? _value.lineGroupId
           : lineGroupId // ignore: cast_nullable_to_non_nullable
               as String?,
+      lineMembersFetchedAt: freezed == lineMembersFetchedAt
+          ? _value.lineMembersFetchedAt
+          : lineMembersFetchedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       members: null == members
           ? _value.members
           : members // ignore: cast_nullable_to_non_nullable
               as List<Member>,
+      memo: freezed == memo
+          ? _value.memo
+          : memo // ignore: cast_nullable_to_non_nullable
+              as String?,
       totalMoney: freezed == totalMoney
           ? _value.totalMoney
           : totalMoney // ignore: cast_nullable_to_non_nullable
@@ -105,7 +119,9 @@ abstract class _$$EventImplCopyWith<$Res> implements $EventCopyWith<$Res> {
       {String eventId,
       String eventName,
       String? lineGroupId,
+      DateTime? lineMembersFetchedAt,
       List<Member> members,
+      String? memo,
       int? totalMoney});
 }
 
@@ -125,7 +141,9 @@ class __$$EventImplCopyWithImpl<$Res>
     Object? eventId = null,
     Object? eventName = null,
     Object? lineGroupId = freezed,
+    Object? lineMembersFetchedAt = freezed,
     Object? members = null,
+    Object? memo = freezed,
     Object? totalMoney = freezed,
   }) {
     return _then(_$EventImpl(
@@ -141,10 +159,18 @@ class __$$EventImplCopyWithImpl<$Res>
           ? _value.lineGroupId
           : lineGroupId // ignore: cast_nullable_to_non_nullable
               as String?,
+      lineMembersFetchedAt: freezed == lineMembersFetchedAt
+          ? _value.lineMembersFetchedAt
+          : lineMembersFetchedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       members: null == members
           ? _value._members
           : members // ignore: cast_nullable_to_non_nullable
               as List<Member>,
+      memo: freezed == memo
+          ? _value.memo
+          : memo // ignore: cast_nullable_to_non_nullable
+              as String?,
       totalMoney: freezed == totalMoney
           ? _value.totalMoney
           : totalMoney // ignore: cast_nullable_to_non_nullable
@@ -161,7 +187,9 @@ class _$EventImpl implements _Event {
       {required this.eventId,
       required this.eventName,
       required this.lineGroupId,
+      required this.lineMembersFetchedAt,
       required final List<Member> members,
+      required this.memo,
       this.totalMoney})
       : _members = members;
 
@@ -174,6 +202,8 @@ class _$EventImpl implements _Event {
   final String eventName;
   @override
   final String? lineGroupId;
+  @override
+  final DateTime? lineMembersFetchedAt;
   final List<Member> _members;
   @override
   List<Member> get members {
@@ -183,11 +213,13 @@ class _$EventImpl implements _Event {
   }
 
   @override
+  final String? memo;
+  @override
   final int? totalMoney;
 
   @override
   String toString() {
-    return 'Event(eventId: $eventId, eventName: $eventName, lineGroupId: $lineGroupId, members: $members, totalMoney: $totalMoney)';
+    return 'Event(eventId: $eventId, eventName: $eventName, lineGroupId: $lineGroupId, lineMembersFetchedAt: $lineMembersFetchedAt, members: $members, memo: $memo, totalMoney: $totalMoney)';
   }
 
   @override
@@ -200,15 +232,25 @@ class _$EventImpl implements _Event {
                 other.eventName == eventName) &&
             (identical(other.lineGroupId, lineGroupId) ||
                 other.lineGroupId == lineGroupId) &&
+            (identical(other.lineMembersFetchedAt, lineMembersFetchedAt) ||
+                other.lineMembersFetchedAt == lineMembersFetchedAt) &&
             const DeepCollectionEquality().equals(other._members, _members) &&
+            (identical(other.memo, memo) || other.memo == memo) &&
             (identical(other.totalMoney, totalMoney) ||
                 other.totalMoney == totalMoney));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, eventId, eventName, lineGroupId,
-      const DeepCollectionEquality().hash(_members), totalMoney);
+  int get hashCode => Object.hash(
+      runtimeType,
+      eventId,
+      eventName,
+      lineGroupId,
+      lineMembersFetchedAt,
+      const DeepCollectionEquality().hash(_members),
+      memo,
+      totalMoney);
 
   /// Create a copy of Event
   /// with the given fields replaced by the non-null parameter values.
@@ -231,7 +273,9 @@ abstract class _Event implements Event {
       {required final String eventId,
       required final String eventName,
       required final String? lineGroupId,
+      required final DateTime? lineMembersFetchedAt,
       required final List<Member> members,
+      required final String? memo,
       final int? totalMoney}) = _$EventImpl;
 
   factory _Event.fromJson(Map<String, dynamic> json) = _$EventImpl.fromJson;
@@ -243,7 +287,11 @@ abstract class _Event implements Event {
   @override
   String? get lineGroupId;
   @override
+  DateTime? get lineMembersFetchedAt;
+  @override
   List<Member> get members;
+  @override
+  String? get memo;
   @override
   int? get totalMoney;
 
