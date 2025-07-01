@@ -70,13 +70,14 @@ class EventRepository {
   }
 
   //LINEからメンバー取得した際に使うイベント作成API
-  Future<Event> createEventAndGetMembersFromLine(
-      String groupId, String eventName, List<LineGroupMember> members,String userId) async {
+  Future<Event> createEventAndGetMembersFromLine(String groupId,
+      String eventName, List<LineGroupMember> members, String userId) async {
     final url = Uri.parse('$baseUrl/users/$userId/line-groups');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'groupId': groupId, 'eventName': eventName, 'members': members}),
+      body: jsonEncode(
+          {'groupId': groupId, 'eventName': eventName, 'members': members}),
     );
 
     final data = jsonDecode(response.body) as Map<String, dynamic>;
@@ -133,6 +134,25 @@ class EventRepository {
     }
   }
 
+  Future<bool> sendMessage(
+      String userId, String eventId, String message) async {
+    final url = Uri.parse('$baseUrl/users/$userId/events/$eventId/message');
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'message': message}),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final data = jsonDecode(response.body) as Map<String, dynamic>;
+      return data['isSuccessful'] as bool? ?? false;
+    } else {
+      debugPrint('メッセージ送信に失敗しました: ${response.statusCode}');
+      throw Exception('メッセージ送信に失敗しました');
+    }
+  }
+
   Future<Event> addNote(String userId, String eventId, String memo) async {
     final url = Uri.parse('$baseUrl/users/$userId/events/$eventId/memo');
     final response = await http.put(
@@ -151,5 +171,4 @@ class EventRepository {
       throw Exception('イベントの作成に失敗しました');
     }
   }
-
 }

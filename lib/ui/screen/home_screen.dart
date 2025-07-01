@@ -13,7 +13,7 @@ import 'package:mr_collection/ui/components/dialog/event/delete_event_dialog.dar
 import 'package:mr_collection/ui/components/dialog/event/edit_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/line_group_update_countdown_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_and_suggest_official_line_dialog.dart';
-import 'package:mr_collection/ui/components/member_list.dart';
+import 'package:mr_collection/ui/screen/member_list.dart';
 import 'package:mr_collection/ui/components/tanochan_drawer.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/user.dart';
@@ -318,13 +318,15 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
     final tabTitles = ref.watch(tabTitlesProvider);
-    final String currentEventId = tabTitles.isNotEmpty && _currentTabIndex < tabTitles.length
-      ? tabTitles[_currentTabIndex]
-        : "";
-    final Event? currentEvent = user?.events.firstWhere(
-      (e) => e.eventId == currentEventId
-    );
-    final bool isLineConnected = currentEvent != null && currentEvent.lineGroupId != null && currentEvent.lineGroupId!.isNotEmpty;
+    final String currentEventId =
+        tabTitles.isNotEmpty && _currentTabIndex < tabTitles.length
+            ? tabTitles[_currentTabIndex]
+            : "";
+    final Event? currentEvent =
+        user?.events.firstWhere((e) => e.eventId == currentEventId);
+    final bool isLineConnected = currentEvent != null &&
+        currentEvent.lineGroupId != null &&
+        currentEvent.lineGroupId!.isNotEmpty;
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -416,13 +418,14 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                             final event = user!.events.firstWhere(
                               (e) => e.eventId == eventId,
                               orElse: () => const Event(
-                                  eventId: "",
-                                  eventName: '',
-                                  members: [],
-                                  memo: '',
-                                  totalMoney: 0,
-                                  lineGroupId: null,
-                                  lineMembersFetchedAt: null,
+                                eventId: "",
+                                eventName: "",
+                                lineGroupId: "",
+                                members: [],
+                                memo: "",
+                                totalMoney: 0,
+                                lineGroupId: null,
+                                lineMembersFetchedAt: null,
                               ),
                             );
                             final bool isFullyPaid = event.members.isNotEmpty &&
@@ -535,29 +538,37 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                 final updatedGroup = await showDialog<LineGroup>(
                   context: context,
                   builder: (BuildContext context) {
-                    return LineGroupUpdateCountdownDialog(currentEvent: currentEvent);
+                    return LineGroupUpdateCountdownDialog(
+                        currentEvent: currentEvent);
                   },
                 );
-                if(updatedGroup != null){
-                  ref.read(userProvider.notifier).updateMemberDifference(currentEventId, updatedGroup);
+                if (updatedGroup != null) {
+                  ref
+                      .read(userProvider.notifier)
+                      .updateMemberDifference(currentEventId, updatedGroup);
                 }
               },
-              child:
-              Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                      S.of(context)?.autoDeleteMemberCountdown ?? "Auto member deletion in",
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: Colors.black
-                    )
-                  ),
+                      S.of(context)?.autoDeleteMemberCountdown ??
+                          "Auto member deletion in",
+                      style: Theme.of(context)
+                          .textTheme
+                          .labelSmall
+                          ?.copyWith(color: Colors.black)),
                   CountdownTimer(
-                    expiretime: currentEvent.lineMembersFetchedAt!.add(const Duration(hours: 24)),
+                    expiretime: currentEvent.lineMembersFetchedAt!
+                        .add(const Duration(hours: 24)),
                     textStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: Colors.black,
-                    ),
-                    onExpired: () {ref.read(userProvider.notifier).clearMembersOfEvent(currentEventId);},
+                          color: Colors.black,
+                        ),
+                    onExpired: () {
+                      ref
+                          .read(userProvider.notifier)
+                          .clearMembersOfEvent(currentEventId);
+                    },
                   ),
                   const SizedBox(width: 8),
                   SvgPicture.asset(
@@ -580,13 +591,13 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                       final event = user!.events.firstWhere(
                         (e) => e.eventId == eventId,
                         orElse: () => const Event(
-                            eventId: "",
-                            eventName: '',
-                            lineGroupId: null,
-                            lineMembersFetchedAt: null,
-                            members: [],
-                            memo: '',
-                            totalMoney: 0,
+                          eventId: "",
+                          eventName: "",
+                          lineGroupId: null,
+                          lineMembersFetchedAt: null,
+                          members: [],
+                          memo: "",
+                          totalMoney: 0,
                         ),
                       );
                       return Stack(

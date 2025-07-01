@@ -134,16 +134,16 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
-  Future<void> createEventAndGetMembersFromLine(
-      String groupId, String eventName, List<LineGroupMember> members, String userId) async {
-    try{
+  Future<void> createEventAndGetMembersFromLine(String groupId,
+      String eventName, List<LineGroupMember> members, String userId) async {
+    try {
       final newEvent = await eventRepository.createEventAndGetMembersFromLine(
           groupId, eventName, members, userId);
       final updatedUser = state?.copyWith(
         events: [...state!.events, newEvent],
       );
       state = updatedUser;
-    }catch (e){
+    } catch (e) {
       debugPrint('イベントの作成中にエラーが発生しました: $e');
     }
   }
@@ -151,36 +151,40 @@ class UserNotifier extends StateNotifier<User?> {
   Future<LineGroup> refreshLineGroupMember(
       String groupId, String userId) async {
     try {
-      final updatedGroup = await ref.read(userRepositoryProvider).refreshLineGroupMember(userId, groupId);
+      final updatedGroup = await ref
+          .read(userRepositoryProvider)
+          .refreshLineGroupMember(userId, groupId);
       return updatedGroup;
-    }catch (e){
+    } catch (e) {
       debugPrint('LINEメンバーの再取得にエラーが発生しました: $e');
       rethrow;
     }
   }
 
   Future<void> updateMemberDifference(
-      String eventId, LineGroup updatedLineGroup ) async {
+      String eventId, LineGroup updatedLineGroup) async {
     final oldEvent = state!.events.firstWhere((e) => e.eventId == eventId);
     final oldMembers = oldEvent.members;
 
     final oldMemberIds = oldMembers.map((m) => m.memberId).toSet();
-    final newMemberIds = updatedLineGroup.members.map((m) => m.memberId).toSet();
+    final newMemberIds =
+        updatedLineGroup.members.map((m) => m.memberId).toSet();
 
     final additionalMembers = updatedLineGroup.members
         .where((m) => !oldMemberIds.contains(m.memberId))
         .map((lgm) => Member(
-      memberId: lgm.memberId,
-      memberName: lgm.memberName,
-      status: PaymentStatus.unpaid,
-      // amount: 0,
-    )).toList();
+              memberId: lgm.memberId,
+              memberName: lgm.memberName,
+              status: PaymentStatus.unpaid,
+              // amount: 0,
+            ))
+        .toList();
     final deletedMembers = oldMemberIds.difference(newMemberIds);
 
-    final keptMembers = oldMembers.where((m) => !deletedMembers.contains(m.memberId)).toList();
+    final keptMembers =
+        oldMembers.where((m) => !deletedMembers.contains(m.memberId)).toList();
 
     final updatedMembers = [...keptMembers, ...additionalMembers];
-
 
     final updatedEvents = state!.events.map((event) {
       if (event.eventId == eventId) {
@@ -339,14 +343,11 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
-  Future<void> clearMembersOfEvent(
-      String eventId) async {
+  Future<void> clearMembersOfEvent(String eventId) async {
     state = state!.copyWith(
-      events: state!.events.map((e) =>
-      e.eventId == eventId
-          ? e.copyWith(members: [])
-          : e
-      ).toList(),
+      events: state!.events
+          .map((e) => e.eventId == eventId ? e.copyWith(members: []) : e)
+          .toList(),
     );
   }
 
@@ -399,6 +400,18 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
+  Future<bool> sendMessage(
+      String userId, String eventId, String message) async {
+    try {
+      final result =
+          await eventRepository.sendMessage(userId, eventId, message);
+      return result;
+    } catch (e) {
+      debugPrint('メッセージ送信中にエラーが発生しました: $e');
+      return false;
+    }
+  }
+
   Future<List<LineGroup>> getLineGroups(String userId) async {
     try {
       final lineGroups = await userService.getLineGroups(userId);
@@ -409,11 +422,9 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
-  Future<void> addNote(
-      String userId, String eventId, String memo) async {
+  Future<void> addNote(String userId, String eventId, String memo) async {
     try {
-      final updateEvent =
-      await eventRepository.addNote(userId, eventId, memo);
+      final updateEvent = await eventRepository.addNote(userId, eventId, memo);
       final updatedUser = state?.copyWith(
         events: state!.events.map((event) {
           if (event.eventId == eventId) {
