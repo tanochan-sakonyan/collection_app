@@ -13,6 +13,7 @@ import 'package:mr_collection/ui/components/dialog/event/delete_event_dialog.dar
 import 'package:mr_collection/ui/components/dialog/event/edit_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/line_group_update_countdown_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_and_suggest_official_line_dialog.dart';
+import 'package:mr_collection/ui/screen/line_message_bottom_sheet.dart';
 import 'package:mr_collection/ui/screen/member_list.dart';
 import 'package:mr_collection/ui/components/tanochan_drawer.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
@@ -420,7 +421,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                               orElse: () => const Event(
                                 eventId: "",
                                 eventName: "",
-                                lineGroupId: "",
                                 members: [],
                                 memo: "",
                                 totalMoney: 0,
@@ -684,33 +684,27 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(48),
                                 ),
-                                onPressed: () {
-                                  showDialog(
+                                onPressed: () async {
+                                  final unpaidMembers = event.members
+                                      .where((m) =>
+                                          m.status == PaymentStatus.unpaid)
+                                      .toList();
+
+                                  final result = await showModalBottomSheet(
                                     context: context,
-                                    builder: (context) => AlertDialog(
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                        vertical: 56.0,
-                                        horizontal: 24.0,
-                                      ),
-                                      content: Text(
-                                        '${S.of(context)?.update_1}\n ${S.of(context)?.update_2}',
-                                        textAlign: TextAlign.center,
-                                        style: Theme.of(
-                                          context,
-                                        ).textTheme.bodyLarge?.copyWith(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.black,
-                                            ),
-                                      ),
+                                    isScrollControlled: true,
+                                    backgroundColor: Colors.white,
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(16)),
+                                    ),
+                                    builder: (context) => LineMessageBottomSheet
+                                        .lineMessageBottomSheet(
+                                      event: event,
+                                      unpaidMembers: unpaidMembers,
                                     ),
                                   );
-                                  //TODO LINE認証申請が通ったらこちらに戻す
-                                  /*showDialog(
-                context: context,
-                builder: (context) => const ConfirmationDialog(),
-              );*/
+                                  // resultは送信されたメッセージ内容
                                 },
                                 child: Center(
                                   child: Stack(
