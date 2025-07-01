@@ -1,4 +1,4 @@
-import 'package:mr_collection/data/model/freezed/lineGroup.dart';
+import 'package:mr_collection/data/model/freezed/line_group.dart';
 import 'package:mr_collection/data/model/freezed/user.dart';
 import 'package:mr_collection/data/repository/user_repository.dart';
 

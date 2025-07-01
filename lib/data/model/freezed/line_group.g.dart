@@ -1,24 +1,10 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'lineGroup.dart';
+part of 'line_group.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
-
-_$LineGroupMemberImpl _$$LineGroupMemberImplFromJson(
-        Map<String, dynamic> json) =>
-    _$LineGroupMemberImpl(
-      memberId: json['member_id'] as String,
-      memberName: json['member_name'] as String,
-    );
-
-Map<String, dynamic> _$$LineGroupMemberImplToJson(
-        _$LineGroupMemberImpl instance) =>
-    <String, dynamic>{
-      'member_id': instance.memberId,
-      'member_name': instance.memberName,
-    };
 
 _$LineGroupImpl _$$LineGroupImplFromJson(Map<String, dynamic> json) =>
     _$LineGroupImpl(
