@@ -5,7 +5,6 @@ import 'package:mr_collection/data/model/freezed/user.dart';
 import 'package:mr_collection/data/repository/event_repository.dart';
 import 'package:mr_collection/data/repository/member_repository.dart';
 import 'package:mr_collection/data/repository/user_repository.dart';
-import 'package:mr_collection/provider/access_token_provider.dart';
 import 'package:mr_collection/provider/event_repository_provider.dart';
 import 'package:mr_collection/provider/member_repository_provider.dart';
 import 'package:mr_collection/services/user_service.dart';
@@ -37,16 +36,7 @@ class UserNotifier extends StateNotifier<User?> {
 
   UserNotifier(
       this.eventRepository, this.memberRepository, this.userService, this.ref)
-      : super(null) {
-    // アクセストークンが変更された際にユーザー情報を取得
-    ref.listen<String?>(accessTokenProvider, (previous, next) {
-      if (next != null) {
-        registerUser(next);
-      } else {
-        state = null;
-      }
-    });
-  }
+      : super(null);
 
   // TODO: 現在はAppleログインで使用しているが、後々registerAppleUserを作成して移行する
   Future<User?> registerUser(String accessToken) async {
@@ -80,6 +70,18 @@ class UserNotifier extends StateNotifier<User?> {
   Future<User?> fetchUserById(String userId) async {
     try {
       final user = await userService.fetchUserById(userId);
+      state = user;
+      return user;
+    } catch (e) {
+      debugPrint('ユーザー情報の取得の際にエラーが発生しました。: $e');
+      state = null;
+      return null;
+    }
+  }
+
+  Future<User?> fetchLineUserById(String userId, String lineAccessToken) async {
+    try {
+      final user = await userService.fetchLineUserById(userId, lineAccessToken);
       state = user;
       return user;
     } catch (e) {

@@ -119,6 +119,41 @@ class UserRepository {
     }
   }
 
+  Future<User?> fetchLineUserById(String userId, String lineAccessToken) async {
+    debugPrint('fetchLineUserById関数が呼ばれました。');
+    final url = Uri.parse('$baseUrl/users/$userId?lineToken=$lineAccessToken');
+
+    final response = await http.get(
+      url,
+    );
+
+    debugPrint('Response status: ${response.statusCode}');
+    debugPrint('Response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      try {
+        final data = jsonDecode(response.body);
+
+        final user = User.fromJson(data);
+        return user;
+      } catch (e, stackTrace) {
+        debugPrint('JSONデコード中にエラー: $e');
+        debugPrint('スタックトレース: $stackTrace');
+        rethrow;
+      }
+    } else {
+      try {
+        final errorData = jsonDecode(response.body);
+        final errorMessage = errorData['message'] ?? 'ユーザー情報の取得に失敗しました';
+        throw Exception(
+            'エラー: $errorMessage (ステータスコード: ${response.statusCode})');
+      } catch (e) {
+        throw Exception(
+            'その他のエラー：ユーザー情報の取得に失敗しました (ステータスコード: ${response.statusCode})');
+      }
+    }
+  }
+
   Future<User?> deleteUser(String userId) async {
     debugPrint('deleteUser関数が呼ばれました。ユーザーID: $userId : user_repository.dart');
     final url = Uri.parse('$baseUrl/users/$userId');

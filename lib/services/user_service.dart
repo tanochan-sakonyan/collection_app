@@ -19,6 +19,10 @@ class UserService {
     return userRepository.fetchUserById(userId);
   }
 
+  Future<User?> fetchLineUserById(String userId, String lineAccessToken) {
+    return userRepository.fetchLineUserById(userId, lineAccessToken);
+  }
+
   Future<List<LineGroup>> getLineGroups(String userId) {
     return userRepository.getLineGroups(userId);
   }
