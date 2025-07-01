@@ -11,6 +11,10 @@ class UserService {
     return userRepository.registerUser(accessToken);
   }
 
+  Future<User?> registerLineUser(String accessToken) async {
+    return userRepository.registerLineUser(accessToken);
+  }
+
   Future<User?> fetchUserById(String userId) {
     return userRepository.fetchUserById(userId);
   }
@@ -19,7 +23,7 @@ class UserService {
     return userRepository.getLineGroups(userId);
   }
 
-  Future<LineGroup> refreshLineGroupMember(String userId, String groupId){
+  Future<LineGroup> refreshLineGroupMember(String userId, String groupId) {
     return userRepository.refreshLineGroupMember(userId, groupId);
   }
 }

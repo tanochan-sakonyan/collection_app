@@ -22,7 +22,7 @@ User _$UserFromJson(Map<String, dynamic> json) {
 mixin _$User {
   String get userId => throw _privateConstructorUsedError;
   String? get appleId => throw _privateConstructorUsedError;
-  String? get lineUserId => throw _privateConstructorUsedError;
+  String? get lineId => throw _privateConstructorUsedError;
   String? get paypayUrl => throw _privateConstructorUsedError;
   List<String>? get belongingLineGroupIds => throw _privateConstructorUsedError;
   List<Event> get events => throw _privateConstructorUsedError;
@@ -44,7 +44,7 @@ abstract class $UserCopyWith<$Res> {
   $Res call(
       {String userId,
       String? appleId,
-      String? lineUserId,
+      String? lineId,
       String? paypayUrl,
       List<String>? belongingLineGroupIds,
       List<Event> events});
@@ -67,7 +67,7 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
   $Res call({
     Object? userId = null,
     Object? appleId = freezed,
-    Object? lineUserId = freezed,
+    Object? lineId = freezed,
     Object? paypayUrl = freezed,
     Object? belongingLineGroupIds = freezed,
     Object? events = null,
@@ -81,9 +81,9 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
           ? _value.appleId
           : appleId // ignore: cast_nullable_to_non_nullable
               as String?,
-      lineUserId: freezed == lineUserId
-          ? _value.lineUserId
-          : lineUserId // ignore: cast_nullable_to_non_nullable
+      lineId: freezed == lineId
+          ? _value.lineId
+          : lineId // ignore: cast_nullable_to_non_nullable
               as String?,
       paypayUrl: freezed == paypayUrl
           ? _value.paypayUrl
@@ -111,7 +111,7 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
   $Res call(
       {String userId,
       String? appleId,
-      String? lineUserId,
+      String? lineId,
       String? paypayUrl,
       List<String>? belongingLineGroupIds,
       List<Event> events});
@@ -131,7 +131,7 @@ class __$$UserImplCopyWithImpl<$Res>
   $Res call({
     Object? userId = null,
     Object? appleId = freezed,
-    Object? lineUserId = freezed,
+    Object? lineId = freezed,
     Object? paypayUrl = freezed,
     Object? belongingLineGroupIds = freezed,
     Object? events = null,
@@ -145,9 +145,9 @@ class __$$UserImplCopyWithImpl<$Res>
           ? _value.appleId
           : appleId // ignore: cast_nullable_to_non_nullable
               as String?,
-      lineUserId: freezed == lineUserId
-          ? _value.lineUserId
-          : lineUserId // ignore: cast_nullable_to_non_nullable
+      lineId: freezed == lineId
+          ? _value.lineId
+          : lineId // ignore: cast_nullable_to_non_nullable
               as String?,
       paypayUrl: freezed == paypayUrl
           ? _value.paypayUrl
@@ -172,7 +172,7 @@ class _$UserImpl implements _User {
   const _$UserImpl(
       {required this.userId,
       required this.appleId,
-      required this.lineUserId,
+      required this.lineId,
       required this.paypayUrl,
       required final List<String>? belongingLineGroupIds,
       required final List<Event> events})
@@ -187,7 +187,7 @@ class _$UserImpl implements _User {
   @override
   final String? appleId;
   @override
-  final String? lineUserId;
+  final String? lineId;
   @override
   final String? paypayUrl;
   final List<String>? _belongingLineGroupIds;
@@ -211,7 +211,7 @@ class _$UserImpl implements _User {
 
   @override
   String toString() {
-    return 'User(userId: $userId, appleId: $appleId, lineUserId: $lineUserId, paypayUrl: $paypayUrl, belongingLineGroupIds: $belongingLineGroupIds, events: $events)';
+    return 'User(userId: $userId, appleId: $appleId, lineId: $lineId, paypayUrl: $paypayUrl, belongingLineGroupIds: $belongingLineGroupIds, events: $events)';
   }
 
   @override
@@ -221,8 +221,7 @@ class _$UserImpl implements _User {
             other is _$UserImpl &&
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.appleId, appleId) || other.appleId == appleId) &&
-            (identical(other.lineUserId, lineUserId) ||
-                other.lineUserId == lineUserId) &&
+            (identical(other.lineId, lineId) || other.lineId == lineId) &&
             (identical(other.paypayUrl, paypayUrl) ||
                 other.paypayUrl == paypayUrl) &&
             const DeepCollectionEquality()
@@ -236,7 +235,7 @@ class _$UserImpl implements _User {
       runtimeType,
       userId,
       appleId,
-      lineUserId,
+      lineId,
       paypayUrl,
       const DeepCollectionEquality().hash(_belongingLineGroupIds),
       const DeepCollectionEquality().hash(_events));
@@ -261,7 +260,7 @@ abstract class _User implements User {
   const factory _User(
       {required final String userId,
       required final String? appleId,
-      required final String? lineUserId,
+      required final String? lineId,
       required final String? paypayUrl,
       required final List<String>? belongingLineGroupIds,
       required final List<Event> events}) = _$UserImpl;
@@ -273,7 +272,7 @@ abstract class _User implements User {
   @override
   String? get appleId;
   @override
-  String? get lineUserId;
+  String? get lineId;
   @override
   String? get paypayUrl;
   @override

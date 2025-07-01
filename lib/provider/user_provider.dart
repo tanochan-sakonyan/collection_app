@@ -48,11 +48,26 @@ class UserNotifier extends StateNotifier<User?> {
     });
   }
 
+  // TODO: 現在はAppleログインで使用しているが、後々registerAppleUserを作成して移行する
   Future<User?> registerUser(String accessToken) async {
     try {
       final user = await userService.registerUser(accessToken);
       debugPrint('accessToken: $accessToken');
-      debugPrint('取得したユーザー情報: $user');
+      debugPrint('取得したユーザー情報(テスト): $user');
+      state = user;
+      debugPrint('state: $state');
+      return user;
+    } catch (e) {
+      debugPrint('ユーザー登録の際にエラーが発生しました。: $e');
+      state = null;
+    }
+  }
+
+  Future<User?> registerLineUser(String accessToken) async {
+    try {
+      final user = await userService.registerLineUser(accessToken);
+      debugPrint('accessToken: $accessToken');
+      debugPrint('取得したLINEユーザー情報: $user');
       state = user;
       debugPrint('state: $state');
       return user;

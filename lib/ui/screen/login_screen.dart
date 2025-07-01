@@ -104,7 +104,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                         final user = await ref
                             .read(userProvider.notifier)
-                            .registerUser(accessToken);
+                            .registerLineUser(accessToken);
 
                         if (user != null) {
                           prefs.setString('lineUserId', user.userId);
@@ -291,28 +291,28 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         _isAppleButtonEnabled = true;
                       });
                     }
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const SizedBox(width: 8),
-                    SvgPicture.asset(
-                      'assets/icons/apple_logo.svg',
-                      width: 28,
-                      height: 28,
-                    ),
-                    const SizedBox(width: 50),
-                    Text(
-                      S.of(context)?.signInWithApple ?? "Sign in with Apple",
-                      style: GoogleFonts.notoSansJp(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const SizedBox(width: 8),
+                      SvgPicture.asset(
+                        'assets/icons/apple_logo.svg',
+                        width: 28,
+                        height: 28,
+                      ),
+                      const SizedBox(width: 50),
+                      Text(
+                        S.of(context)?.signInWithApple ?? "Sign in with Apple",
+                        style: GoogleFonts.notoSansJp(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-                ),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
