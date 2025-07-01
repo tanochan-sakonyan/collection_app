@@ -152,11 +152,11 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
-  Future<void> createEventAndGetMembersFromLine(String groupId,
-      String eventName, List<LineGroupMember> members, String userId) async {
+  Future<void> createEventAndGetMembersFromLine(String userId, String groupId,
+      String eventName, List<LineGroupMember> members) async {
     try {
       final newEvent = await eventRepository.createEventAndGetMembersFromLine(
-          groupId, eventName, members, userId);
+          userId, groupId, eventName, members);
       final updatedUser = state?.copyWith(
         events: [...state!.events, newEvent],
       );

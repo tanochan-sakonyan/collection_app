@@ -69,8 +69,9 @@ class EventRepository {
   }
 
   //LINEからメンバー取得した際に使うイベント作成API
-  Future<Event> createEventAndGetMembersFromLine(String groupId,
-      String eventName, List<LineGroupMember> members, String userId) async {
+  Future<Event> createEventAndGetMembersFromLine(String userId, String groupId,
+      String eventName, List<LineGroupMember> members) async {
+    debugPrint("LINEグループからメンバーを自動追加する関数が呼ばれました。");
     final url = Uri.parse('$baseUrl/users/$userId/line-groups');
     final response = await http.post(
       url,
@@ -80,15 +81,17 @@ class EventRepository {
     );
 
     final data = jsonDecode(response.body) as Map<String, dynamic>;
+    debugPrint("レスポンスボディ: $data");
 
     if (response.statusCode != 200 && response.statusCode != 201) {
       final msg = data['message'] as String? ?? 'Unknown error';
-      throw Exception('イベント作成に失敗しました (HTTP ${response.statusCode}): $msg');
+      throw Exception(
+          'LINEグループからのメンバー自動追加に失敗しました (HTTP ${response.statusCode}): $msg');
     }
 
     if (data['isSuccessful'] != true) {
       final msg = data['message'] as String? ?? 'Unknown error';
-      throw Exception('イベント作成に失敗しました: $msg');
+      throw Exception('LINEグループからのメンバー自動追加に失敗しました: $msg');
     }
 
     return Event.fromJson(data);

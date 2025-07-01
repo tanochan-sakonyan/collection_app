@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/line_group.dart';
 import 'package:flutter_gen/gen_l10n/s.dart';
-import 'package:mr_collection/data/model/freezed/member.dart';
-import 'package:mr_collection/data/model/payment_status.dart';
+import 'package:mr_collection/data/model/freezed/line_group_member.dart';
+import 'package:mr_collection/provider/user_provider.dart';
+import 'package:mr_collection/ui/screen/home_screen.dart';
 
 class CheckSelectedLineGroupScreen extends ConsumerStatefulWidget {
   final LineGroup lineGroup;
@@ -21,6 +21,15 @@ class CheckSelectedLineGroupScreenState
   @override
   Widget build(BuildContext context) {
     final lineGroup = widget.lineGroup;
+    final userId = ref.read(userProvider)!.userId;
+    final groupId = lineGroup.groupId;
+    final eventName = lineGroup.groupName;
+    final members = lineGroup.members.map((member) {
+      return LineGroupMember(
+        memberId: member.memberId,
+        memberName: member.memberName,
+      );
+    }).toList();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -171,8 +180,16 @@ class CheckSelectedLineGroupScreenState
             width: 240,
             height: 40,
             child: ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
+              onPressed: () async {
+                await ref
+                    .read(userProvider.notifier)
+                    .createEventAndGetMembersFromLine(
+                        userId, groupId, eventName, members);
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const HomeScreen(),
+                  ),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF76DCC6),

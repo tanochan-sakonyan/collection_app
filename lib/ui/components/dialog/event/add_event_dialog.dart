@@ -87,7 +87,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
             _selectedEvent!.eventId, eventName, userId);
       } else if (lineGroup != null) {
         await ref.read(userProvider.notifier).createEventAndGetMembersFromLine(
-            lineGroup!.groupId, eventName, lineGroup!.members, userId);
+            userId, lineGroup!.groupId, eventName, lineGroup!.members);
       } else {
         await ref.read(userProvider.notifier).createEvent(eventName, userId);
       }

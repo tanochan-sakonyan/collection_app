@@ -551,32 +551,41 @@ class HomeScreenState extends ConsumerState<HomeScreen>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(
-                      S.of(context)?.autoDeleteMemberCountdown ??
-                          "Auto member deletion in",
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelSmall
-                          ?.copyWith(color: Colors.black)),
-                  CountdownTimer(
-                    expiretime: currentEvent.lineMembersFetchedAt!
-                        .add(const Duration(hours: 24)),
-                    textStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: Colors.black,
-                        ),
-                    onExpired: () {
-                      ref
-                          .read(userProvider.notifier)
-                          .clearMembersOfEvent(currentEventId);
-                    },
-                  ),
-                  const SizedBox(width: 8),
-                  SvgPicture.asset(
-                    'assets/icons/ic_update.svg',
-                    width: 20,
-                    height: 20,
-                  ),
-                  const SizedBox(width: 36),
+                  ...(currentEvent.lineMembersFetchedAt != null)
+                      ? [
+                          Text(
+                              S.of(context)?.autoDeleteMemberCountdown ??
+                                  "Auto member deletion in",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelSmall
+                                  ?.copyWith(color: Colors.black)),
+                          CountdownTimer(
+                            expireTime: currentEvent.lineMembersFetchedAt!
+                                .add(const Duration(hours: 24)),
+                            textStyle: Theme.of(context)
+                                .textTheme
+                                .labelSmall
+                                ?.copyWith(
+                                  color: Colors.black,
+                                ),
+                            onExpired: () {
+                              ref
+                                  .read(userProvider.notifier)
+                                  .clearMembersOfEvent(currentEventId);
+                            },
+                          ),
+                          const SizedBox(width: 8),
+                          SvgPicture.asset(
+                            'assets/icons/ic_update.svg',
+                            width: 20,
+                            height: 20,
+                          ),
+                          const SizedBox(width: 36),
+                        ]
+                      : [
+                          const SizedBox(height: 4),
+                        ],
                 ],
               ),
             ),
