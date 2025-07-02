@@ -51,7 +51,7 @@ class SJa extends S {
   String get setting => '設定';
 
   @override
-  String get paypay => 'PayPay連携';
+  String get paypay => 'PayPayリンクを登録';
 
   @override
   String get questionnaire => '目安箱';
@@ -167,7 +167,7 @@ class SJa extends S {
   String get tapToAddEvent => 'こちらをタップでイベントを\n追加できます';
 
   @override
-  String get longPressToDeleteEvent => '長押しでイベントを削除\nできます';
+  String get longPressToDeleteEvent => 'タップでイベントを編集\n長押しでイベントを削除\nできます';
 
   @override
   String get tapToAddMember => 'こちらをタップでメンバーを\n追加できます';
@@ -179,8 +179,7 @@ class SJa extends S {
   String get tapToSortByPayment => 'こちらをタップで支払い状況順に\n並び変えることができます';
 
   @override
-  String get tapToSendReminder =>
-      'こちらをタップで催促メッセージを\n送信できます\n(現在機能実装中ですのでアップデートを\nお待ちください)';
+  String get tapToSendReminder => 'こちらをタップで催促メッセージを\n送信できます';
 
   @override
   String get skip => 'スキップ';
@@ -193,6 +192,9 @@ class SJa extends S {
 
   @override
   String get editMemberName => 'メンバー名編集';
+
+  @override
+  String get editEventName => 'イベント名編集';
 
   @override
   String get confirmDeleteMember => 'このメンバーを削除しますか？';
@@ -316,4 +318,16 @@ class SJa extends S {
 
   @override
   String get refresh => '再取得';
+
+  @override
+  String get note => 'memo';
+
+  @override
+  String get editNote => 'メモの編集';
+
+  @override
+  String get memoPlaceholder => 'メモを入力できます';
+
+  @override
+  String get save => '保存';
 }

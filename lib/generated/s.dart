@@ -184,7 +184,7 @@ abstract class S {
   /// No description provided for @paypay.
   ///
   /// In ja, this message translates to:
-  /// **'PayPay連携'**
+  /// **'PayPayリンクを登録'**
   String get paypay;
 
   /// No description provided for @questionnaire.
@@ -412,7 +412,7 @@ abstract class S {
   /// No description provided for @longPressToDeleteEvent.
   ///
   /// In ja, this message translates to:
-  /// **'長押しでイベントを削除\nできます'**
+  /// **'タップでイベントを編集\n長押しでイベントを削除\nできます'**
   String get longPressToDeleteEvent;
 
   /// No description provided for @tapToAddMember.
@@ -436,7 +436,7 @@ abstract class S {
   /// No description provided for @tapToSendReminder.
   ///
   /// In ja, this message translates to:
-  /// **'こちらをタップで催促メッセージを\n送信できます\n(現在機能実装中ですのでアップデートを\nお待ちください)'**
+  /// **'こちらをタップで催促メッセージを\n送信できます'**
   String get tapToSendReminder;
 
   /// No description provided for @skip.
@@ -462,6 +462,12 @@ abstract class S {
   /// In ja, this message translates to:
   /// **'メンバー名編集'**
   String get editMemberName;
+
+  /// No description provided for @editEventName.
+  ///
+  /// In ja, this message translates to:
+  /// **'イベント名編集'**
+  String get editEventName;
 
   /// No description provided for @confirmDeleteMember.
   ///
@@ -702,6 +708,30 @@ abstract class S {
   /// In ja, this message translates to:
   /// **'再取得'**
   String get refresh;
+
+  /// No description provided for @note.
+  ///
+  /// In ja, this message translates to:
+  /// **'memo'**
+  String get note;
+
+  /// No description provided for @editNote.
+  ///
+  /// In ja, this message translates to:
+  /// **'メモの編集'**
+  String get editNote;
+
+  /// No description provided for @memoPlaceholder.
+  ///
+  /// In ja, this message translates to:
+  /// **'メモを入力できます'**
+  String get memoPlaceholder;
+
+  /// No description provided for @save.
+  ///
+  /// In ja, this message translates to:
+  /// **'保存'**
+  String get save;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

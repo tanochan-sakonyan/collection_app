@@ -420,7 +420,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                               orElse: () => const Event(
                                 eventId: "",
                                 eventName: "",
-                                lineGroupId: "",
                                 members: [],
                                 memo: "",
                                 totalMoney: 0,

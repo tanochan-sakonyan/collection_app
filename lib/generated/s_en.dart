@@ -51,7 +51,7 @@ class SEn extends S {
   String get setting => 'Settings';
 
   @override
-  String get paypay => 'PayPay Connection';
+  String get paypay => 'Register your PayPay link';
 
   @override
   String get questionnaire => 'Feedback Form';
@@ -172,7 +172,8 @@ class SEn extends S {
   String get tapToAddEvent => 'Tap here to add an event.';
 
   @override
-  String get longPressToDeleteEvent => 'Long press to delete an event.';
+  String get longPressToDeleteEvent =>
+      'Tap to edit an event.\nLong press to delete an event.';
 
   @override
   String get tapToAddMember => 'Tap here to add a member.';
@@ -198,6 +199,9 @@ class SEn extends S {
 
   @override
   String get editMemberName => 'Edit Member Name';
+
+  @override
+  String get editEventName => 'Edit Event Name';
 
   @override
   String get confirmDeleteMember => 'Do you want to delete this member?';
@@ -327,4 +331,16 @@ class SEn extends S {
 
   @override
   String get refresh => 'Refresh';
+
+  @override
+  String get note => 'Note';
+
+  @override
+  String get editNote => 'Edit Note';
+
+  @override
+  String get memoPlaceholder => 'You can enter a note';
+
+  @override
+  String get save => 'Save';
 }
