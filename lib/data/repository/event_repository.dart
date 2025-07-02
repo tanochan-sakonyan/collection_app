@@ -71,14 +71,26 @@ class EventRepository {
   //LINEからメンバー取得した際に使うイベント作成API
   Future<Event> createEventAndGetMembersFromLine(String userId, String groupId,
       String eventName, List<LineGroupMember> members) async {
-    debugPrint("LINEグループからメンバーを自動追加する関数が呼ばれました。");
+    final List<Map<String, dynamic>> membersJson = members
+        .map((m) => {
+              'memberId': m.memberId,
+              'memberName': m.memberName,
+            })
+        .toList();
+
     final url = Uri.parse('$baseUrl/users/$userId/line-groups');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(
-          {'groupId': groupId, 'eventName': eventName, 'members': members}),
+      body: jsonEncode({
+        'groupId': groupId,
+        'eventName': eventName,
+        'members': membersJson,
+      }),
     );
+
+    debugPrint("LINEグループからメンバーを自動追加する関数が呼ばれました。\n"
+        "userId: $userId, groupId: $groupId, eventName: $eventName, members: $membersJson");
 
     final data = jsonDecode(response.body) as Map<String, dynamic>;
     debugPrint("レスポンスボディ: $data");

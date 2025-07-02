@@ -52,14 +52,14 @@ class _UnpaidMessageBottomSheetState
 
   Future<void> _onCheckChanged(BuildContext context, bool value) async {
     final user = ref.read(userProvider);
-    String? paypayUrl = user?.paypayUrl;
+    String? paypayUrl = user!.paypayUrl;
 
     if (value && (paypayUrl == null || paypayUrl.isEmpty)) {
       await showDialog(
         context: context,
         builder: (context) => const PayPayDialog(),
       );
-      paypayUrl = ref.read(userProvider)?.paypayUrl;
+      paypayUrl = user.paypayUrl;
       if (paypayUrl == null || paypayUrl.isEmpty) return;
     }
     setState(() {

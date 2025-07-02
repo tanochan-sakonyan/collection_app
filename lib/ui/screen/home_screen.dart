@@ -12,6 +12,7 @@ import 'package:mr_collection/ui/components/dialog/event/add_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/event/delete_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/event/edit_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/line_group_update_countdown_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/suggest_send_message_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_and_suggest_official_line_dialog.dart';
 import 'package:mr_collection/ui/screen/line_message_bottom_sheet.dart';
 import 'package:mr_collection/ui/screen/member_list.dart';
@@ -680,7 +681,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                   borderRadius: BorderRadius.circular(48),
                                 ),
                                 onPressed: () async {
-                                  if (!isLineConnected) {
+                                  if (isLineConnected) {
                                     final unpaidMembers = event.members
                                         .where((m) =>
                                             m.status == PaymentStatus.unpaid)
@@ -701,35 +702,11 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                       ),
                                     );
                                   } else {
-                                    await showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title: Text(
-                                            S
-                                                    .of(context)
-                                                    ?.lineNotConnectedMessage1 ??
-                                                "LINE not connected",
-                                          ),
-                                          content: Text(
-                                            S
-                                                    .of(context)
-                                                    ?.lineNotConnectedMessage2 ??
-                                                "Please connect to LINE to send messages.",
-                                          ),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              child: Text(
-                                                S.of(context)?.ok ?? "OK",
-                                              ),
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return const SuggestSendMessageDialog();
+                                        });
                                   }
                                 },
                                 child: Center(

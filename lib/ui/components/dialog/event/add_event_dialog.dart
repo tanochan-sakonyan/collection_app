@@ -126,16 +126,17 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
             // 集金くんアカウントを含むLINEグループがないとき
             builder: (_) => const InviteOfficialAccountToLineGroupScreen()),
       );
-    }
-    final pickedLineGroup = await Navigator.of(context).push<LineGroup>(
-      MaterialPageRoute(
-          // 集金くんアカウントを含むLINEグループがあるとき
-          builder: (_) => SelectLineGroupScreen(lineGroups: lineGroups)),
-    );
-    if (pickedLineGroup != null) {
-      setState(() {
-        lineGroup = pickedLineGroup;
-      });
+    } else {
+      final pickedLineGroup = await Navigator.of(context).push<LineGroup>(
+        MaterialPageRoute(
+            // 集金くんアカウントを含むLINEグループがあるとき
+            builder: (_) => SelectLineGroupScreen(lineGroups: lineGroups)),
+      );
+      if (pickedLineGroup != null) {
+        setState(() {
+          lineGroup = pickedLineGroup;
+        });
+      }
     }
   }
 

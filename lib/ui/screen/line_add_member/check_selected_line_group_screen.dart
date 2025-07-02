@@ -74,7 +74,7 @@ class CheckSelectedLineGroupScreenState
           ),
           const SizedBox(height: 36),
           Text(
-            S.of(context)?.selectLineGroupDesc ??
+            S.of(context)?.selectLineGroupDesc2 ??
                 "Would you like to create an event with these members?",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 16,

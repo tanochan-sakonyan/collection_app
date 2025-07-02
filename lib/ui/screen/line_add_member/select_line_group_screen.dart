@@ -99,7 +99,7 @@ class SelectLineGroupScreen extends StatelessWidget {
           ),
           const SizedBox(height: 32),
           Text(
-            S.of(context)?.selectLineGroupDesc ??
+            S.of(context)?.selectLineGroupDesc1 ??
                 "Select the LINE group where you want to add members.",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 16,
