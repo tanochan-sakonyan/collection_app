@@ -12,7 +12,7 @@ class SuggestSendMessageDialog extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: SizedBox(
-        height: 400,
+        height: 368,
         width: 320,
         child: Padding(
             padding:
@@ -51,8 +51,7 @@ class SuggestSendMessageDialog extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                 ),
-              ),
-              const SizedBox(height: 28)
+              )
             ])),
       ),
     );
