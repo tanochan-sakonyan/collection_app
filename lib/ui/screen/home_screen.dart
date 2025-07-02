@@ -687,35 +687,42 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(48),
                                 ),
-                                onPressed: () async {
-                                  if (isLineConnected) {
-                                    final unpaidMembers = event.members
-                                        .where((m) =>
-                                            m.status == PaymentStatus.unpaid)
-                                        .toList();
-                                    await showModalBottomSheet(
-                                      context: context,
-                                      isScrollControlled: true,
-                                      backgroundColor: Colors.white,
-                                      shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.vertical(
-                                            top: Radius.circular(16)),
-                                      ),
-                                      builder: (context) =>
-                                          LineMessageBottomSheet
-                                              .lineMessageBottomSheet(
-                                        event: event,
-                                        unpaidMembers: unpaidMembers,
-                                      ),
-                                    );
-                                  } else {
-                                    showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return const SuggestSendMessageDialog();
-                                        });
-                                  }
-                                },
+                                onPressed: _tabController.indexIsChanging
+                                    ? null
+                                    : () async {
+                                        final bool isEventConnected =
+                                            event.lineGroupId != null &&
+                                                event.lineGroupId!.isNotEmpty;
+                                        if (isEventConnected) {
+                                          final unpaidMembers = event.members
+                                              .where((m) =>
+                                                  m.status ==
+                                                  PaymentStatus.unpaid)
+                                              .toList();
+                                          await showModalBottomSheet(
+                                            context: context,
+                                            isScrollControlled: true,
+                                            backgroundColor: Colors.white,
+                                            shape: const RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.vertical(
+                                                      top: Radius.circular(16)),
+                                            ),
+                                            builder: (context) =>
+                                                LineMessageBottomSheet
+                                                    .lineMessageBottomSheet(
+                                              event: event,
+                                              unpaidMembers: unpaidMembers,
+                                            ),
+                                          );
+                                        } else {
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return const SuggestSendMessageDialog();
+                                              });
+                                        }
+                                      },
                                 child: Center(
                                   child: Stack(
                                     alignment: Alignment.center,
