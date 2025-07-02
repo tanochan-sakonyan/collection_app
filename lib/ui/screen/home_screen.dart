@@ -46,7 +46,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   final GlobalKey memberAddKey = GlobalKey();
   final GlobalKey slidableKey = GlobalKey();
   final GlobalKey sortKey = GlobalKey();
-  final GlobalKey fabKey = GlobalKey();
+  late List<GlobalKey> _fabKeys;
 
   late TutorialCoachMark tutorialCoachMark;
   List<TargetFocus> targets = [];
@@ -54,6 +54,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   @override
   void initState() {
     super.initState();
+    _initKeys();
     _tabTitles = ref.read(tabTitlesProvider);
     _tabController = TabController(length: _tabTitles.length, vsync: this);
 
@@ -87,6 +88,11 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         },
       ),
     )..load();
+  }
+
+  void _initKeys() {
+    final len = ref.read(tabTitlesProvider).length;
+    _fabKeys = List.generate(len, (_) => GlobalKey());
   }
 
   bool _updateDialogChecked = false;
@@ -124,7 +130,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       memberAddKey: memberAddKey,
       slidableKey: slidableKey,
       sortKey: sortKey,
-      fabKey: fabKey,
+      fabKey: _fabKeys[_currentTabIndex],
     );
     tutorialCoachMark = TutorialCoachMark(
       targets: targets,
@@ -167,6 +173,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   void _updateTabController(int newLength) {
     _tabController.dispose();
     _tabController = TabController(length: newLength, vsync: this);
+    _initKeys();
     _tabController.addListener(() {
       if (_tabController.index != _currentTabIndex &&
           !_tabController.indexIsChanging) {
@@ -675,7 +682,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                               height: 60,
                               width: 60,
                               child: FloatingActionButton(
-                                key: fabKey,
+                                key: _fabKeys[index],
                                 backgroundColor: const Color(0xFFBABABA),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(48),
