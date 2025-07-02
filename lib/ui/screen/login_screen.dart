@@ -5,6 +5,7 @@ import 'package:flutter_line_sdk/flutter_line_sdk.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mr_collection/provider/access_token_provider.dart';
+import 'package:mr_collection/provider/login_loading_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/auth/login_error_dialog.dart';
 import 'package:mr_collection/ui/components/linearProgressIndicator.dart';
@@ -34,6 +35,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     bool isChecked = ref.watch(checkboxProvider);
+    final isProcessLoading = ref.watch(loginLoadingProvider);
 
     Future<void> _updateCurrentLoginMedia(String media) async {
       final prefs = await SharedPreferences.getInstance();
@@ -81,6 +83,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       final userId = prefs.getString('lineUserId');
 
                       if (isLineLoggedIn && userId != null) {
+                        ref.read(loginLoadingProvider.notifier).state = true;
                         try {
                           await ref
                               .read(userProvider.notifier)
@@ -100,6 +103,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           }
                         } catch (e) {
                           debugPrint('ユーザー情報の取得に失敗しました。: $e');
+                        }finally {
+                          ref.read(loginLoadingProvider.notifier).state = false;
                         }
                       } else {
                         try {
