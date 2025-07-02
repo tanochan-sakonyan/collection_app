@@ -8,7 +8,7 @@ import 'package:mr_collection/provider/access_token_provider.dart';
 import 'package:mr_collection/provider/login_loading_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/auth/login_error_dialog.dart';
-import 'package:mr_collection/ui/components/linearProgressIndicator.dart';
+import 'package:mr_collection/ui/components/linear_progress_indicator.dart';
 import 'package:mr_collection/ui/screen/home_screen.dart';
 import 'package:mr_collection/ui/screen/privacy_policy_screen.dart';
 import 'package:mr_collection/ui/screen/terms_of_service_screen.dart';
