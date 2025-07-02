@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 final loadingProvider = StateProvider<bool>((ref) => false);
 
@@ -16,11 +16,14 @@ class CircleIndicator extends ConsumerWidget {
       children: [
         child,
         if (isLoading)
-          const ColoredBox(
-            color: Colors.black54,
-            child: Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          Positioned.fill(
+            child: Container(
+              color: Colors.white.withOpacity(0.85),
+              child: const Center(
+                child: SpinKitFadingCircle(
+                  color: Colors.grey,
+                  size: 60.0,
+                ),
               ),
             ),
           ),

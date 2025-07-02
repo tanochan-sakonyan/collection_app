@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/ui/components/loading_indicator.dart';
 
 class AddMemberDialog extends ConsumerStatefulWidget {
   final String userId;
@@ -71,6 +72,8 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
       _errorMessage = null;
     });
 
+    ref.read(loadingProvider.notifier).state = true;
+
     try {
       await ref
           .read(userProvider.notifier)
@@ -86,12 +89,14 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
           _isButtonEnabled = true;
         });
       }
+      ref.read(loadingProvider.notifier).state = false;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
+    return CircleIndicator(
+        child: Dialog(
       backgroundColor: const Color(0xFFFFFFFF),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30),
@@ -199,6 +204,7 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
           ),
         ),
       ),
+    ),
     );
   }
 }

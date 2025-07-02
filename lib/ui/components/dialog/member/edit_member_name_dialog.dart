@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/ui/components/loading_indicator.dart';
 
 class EditMemberNameDialog extends ConsumerStatefulWidget {
   final String userId;
@@ -77,6 +78,8 @@ class EditMemberNameDialogState extends ConsumerState<EditMemberNameDialog> {
       return;
     }
 
+    ref.read(loadingProvider.notifier).state = true;
+
     try {
       await ref.read(userProvider.notifier).editMemberName(widget.userId,
           widget.eventId, widget.memberId, _controller.text.trim());
@@ -89,13 +92,17 @@ class EditMemberNameDialogState extends ConsumerState<EditMemberNameDialog> {
     } catch (e) {
       setState(() {
         _errorMessage = 'メンバー名の更新に失敗しました : edit_member_name_dialog.dart';
+        _isButtonEnabled = true;
       });
+    }finally {
+      ref.read(loadingProvider.notifier).state = false;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
+    return CircleIndicator(
+        child: Dialog(
       backgroundColor: const Color(0xFFFFFFFF),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30),
@@ -186,6 +193,7 @@ class EditMemberNameDialogState extends ConsumerState<EditMemberNameDialog> {
           ),
         ),
       ),
+    ),
     );
   }
 }

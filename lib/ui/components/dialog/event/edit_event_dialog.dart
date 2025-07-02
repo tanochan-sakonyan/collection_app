@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/ui/components/loading_indicator.dart';
 
 class EditEventDialog extends ConsumerStatefulWidget {
   final String userId;
@@ -74,6 +75,8 @@ class EditEventDialogState extends ConsumerState<EditEventDialog> {
       return;
     }
 
+    ref.read(loadingProvider.notifier).state = true;
+
     try {
       await ref.read(userProvider.notifier).editEventName(
           widget.userId, widget.eventId, _controller.text.trim());
@@ -87,12 +90,15 @@ class EditEventDialogState extends ConsumerState<EditEventDialog> {
           _isButtonEnabled = true;
         });
       }
+    }finally {
+      ref.read(loadingProvider.notifier).state = false;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
+    return CircleIndicator(
+      child: Dialog(
       backgroundColor: const Color(0xFFFFFFFF),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30),
@@ -183,6 +189,7 @@ class EditEventDialogState extends ConsumerState<EditEventDialog> {
           ),
         ),
       ),
+    ),
     );
   }
 }
