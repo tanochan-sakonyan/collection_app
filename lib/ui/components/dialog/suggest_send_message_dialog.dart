@@ -6,21 +6,36 @@ class SuggestSendMessageDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text(
-        S.of(context)!.lineNotConnectedMessage1,
+    return Dialog(
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
       ),
-      content: Text(
-        S.of(context)!.lineNotConnectedMessage2,
+      child: SizedBox(
+        height: 400,
+        width: 320,
+        child: Padding(
+            padding:
+                const EdgeInsets.only(top: 20, left: 28, right: 28, bottom: 40),
+            child: Column(children: [
+              Text(
+                S.of(context)!.lineNotConnectedMessage1,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 12),
+              Text(
+                S.of(context)!.lineNotConnectedMessage2,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: Colors.grey,
+                    ),
+              ),
+              Image.asset(
+                'assets/images/img_add_from_line.png',
+                width: 200,
+                height: 200,
+              ),
+            ])),
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: Text(
-            S.of(context)!.ok,
-          ),
-        ),
-      ],
     );
   }
 }

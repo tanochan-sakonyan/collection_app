@@ -107,6 +107,6 @@
   "editNote": "Edit Note",
   "memoPlaceholder": "You can enter a note",
   "save": "Save",
-  "lineNotConnectedMessage1": "The event isn’t linked to the LINE group.",
-  "lineNotConnectedMessage2": "Please create a new event using ‘Add members from LINE group’"
+  "lineNotConnectedMessage1": "Let’s link the event with a LINE group and\n automatically send reminder messages!",
+  "lineNotConnectedMessage2": "By using ‘Add from LINE Group,’\n you can link the event with a LINE group!"
 }
