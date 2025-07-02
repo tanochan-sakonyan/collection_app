@@ -115,7 +115,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               .read(accessTokenProvider.notifier)
                               .state =
                               accessToken;
-
+                          ref.read(loginLoadingProvider.notifier).state = true;
                           final user = await ref
                               .read(userProvider.notifier)
                               .registerUser(accessToken);
@@ -145,6 +145,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 context: context,
                                 builder: (context) => const LoginErrorDialog());
                           }
+                        }finally {
+                          ref.read(loginLoadingProvider.notifier).state = false;
                         }
                       }
                   }
@@ -199,6 +201,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         final userId = prefs.getString('appleUserId');
 
                         if (isAppleLoggedIn && userId != null) {
+                          ref.read(loginLoadingProvider.notifier).state = true;
                           try {
                             await ref
                                 .read(userProvider.notifier)
@@ -215,6 +218,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             }
                           } catch (e) {
                             debugPrint('ユーザー情報の取得に失敗しました。: $e');
+                          }finally {
+                            ref.read(loginLoadingProvider.notifier).state = false;
                           }
                         } else {
                           try {
@@ -245,6 +250,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               url,
                               headers: {'Content-Type': 'application/json'},
                             );
+
+                            ref.read(loginLoadingProvider.notifier).state = true;
 
                             if (response.statusCode == 200 ||
                                 response.statusCode == 201) {
@@ -299,6 +306,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   builder: (context) =>
                                       const LoginErrorDialog());
                             }
+                          }finally {
+                            ref.read(loginLoadingProvider.notifier).state = false;
                           }
                         }
                       }
@@ -394,7 +403,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         ),
       ),
     ),
-        if (isLoading) const LinearMeterLoadingOverlay(),
+        if (isProcessLoading) const LinearMeterLoadingOverlay(),
       ],
     );
   }
