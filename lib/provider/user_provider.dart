@@ -316,7 +316,7 @@ class UserNotifier extends StateNotifier<User?> {
     } catch (e) {
       debugPrint('メンバーの金額入力中にエラーが発生しました: $e');
     }finally {
-      ref.read(amountLoadingProvider(eventId).notifier).state = false; // ←OFF
+      ref.read(amountLoadingProvider(eventId).notifier).state = false;
     }
   }
 
