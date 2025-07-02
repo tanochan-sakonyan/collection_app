@@ -284,9 +284,12 @@ class MemberList extends ConsumerWidget {
                                                       )
                                                     : null,
                                                 subtitle: isAmountLoading
-                                                    ?  Align(
-                                                    alignment: Alignment.centerLeft,
-                                                    child: const SpinKitThreeBounce(color: Colors.black, size: 20))
+                                                    ?  const Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    SpinKitThreeBounce(color: Colors.black, size: 15),
+                                                  ],
+                                                )
                                                   : (member.memberMoney !=
                                                         null)
                                                     ? Text(
