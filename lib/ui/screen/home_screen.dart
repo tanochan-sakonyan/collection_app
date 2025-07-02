@@ -20,7 +20,8 @@ import 'package:mr_collection/data/model/freezed/user.dart';
 import 'package:mr_collection/ui/tutorial/tutorial_targets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
-import 'package:mr_collection/ui/components/event_zero_components.dart';import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:mr_collection/ui/components/event_zero_components.dart';
+import 'package:flutter_gen/gen_l10n/s.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key, this.user});

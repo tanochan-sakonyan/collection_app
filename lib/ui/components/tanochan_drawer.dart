@@ -9,7 +9,8 @@ import 'package:mr_collection/ui/components/dialog/paypay_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/questionnaire_dialog.dart';
 import 'package:mr_collection/ui/screen/privacy_policy_screen.dart';
 import 'package:mr_collection/ui/screen/terms_of_service_screen.dart';
-import 'package:url_launcher/url_launcher.dart';import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_gen/gen_l10n/s.dart';
 
 class TanochanDrawer extends StatelessWidget {
   const TanochanDrawer({super.key});

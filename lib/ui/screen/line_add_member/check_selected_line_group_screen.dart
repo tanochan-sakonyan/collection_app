@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
-import 'package:mr_collection/data/model/freezed/lineGroup.dart';import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:mr_collection/data/model/freezed/lineGroup.dart';
+import 'package:flutter_gen/gen_l10n/s.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 
