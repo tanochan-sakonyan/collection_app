@@ -58,11 +58,6 @@ class _LinearMeterLoadingOverlayState extends State<LinearMeterLoadingOverlay>
                     ),
                   ),
                   const SizedBox(height: 16),
-                  // Text(
-                  //   "${(progress * 100).toInt()}%",
-                  //   style: const TextStyle(
-                  //       fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
-                  // ),
                 ],
               );
             },
