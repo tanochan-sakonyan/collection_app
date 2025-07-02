@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
-import 'package:mr_collection/generated/s.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';import 'package:flutter_gen/gen_l10n/s.dart';
 
 class TutorialTargets {
   static List<TargetFocus> createTargets({

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mr_collection/provider/user_provider.dart';
-import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/provider/user_provider.dart';import 'package:flutter_gen/gen_l10n/s.dart';
 import 'package:mr_collection/ui/components/loading_indicator.dart';
 
 class DeleteMemberDialog extends ConsumerStatefulWidget {

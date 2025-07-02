@@ -1,7 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:mr_collection/generated/s.dart';
+import 'package:url_launcher/url_launcher.dart';import 'package:flutter_gen/gen_l10n/s.dart';
 
 class TermsOfServiceScreen extends StatelessWidget {
   const TermsOfServiceScreen({super.key});

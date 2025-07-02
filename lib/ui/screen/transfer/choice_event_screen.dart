@@ -3,8 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
-import 'package:mr_collection/ui/screen/transfer/check_selected_event_screen.dart';
-import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/ui/screen/transfer/check_selected_event_screen.dart';import 'package:flutter_gen/gen_l10n/s.dart';
 
 class ChoiceEventScreen extends ConsumerStatefulWidget {
   const ChoiceEventScreen({super.key});

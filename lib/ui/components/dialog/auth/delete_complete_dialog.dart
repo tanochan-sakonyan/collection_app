@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mr_collection/ui/screen/login_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:mr_collection/generated/s.dart';
+import 'package:google_fonts/google_fonts.dart';import 'package:flutter_gen/gen_l10n/s.dart';
 
 class DeleteCompleteDialog extends StatelessWidget {
   const DeleteCompleteDialog({super.key});
