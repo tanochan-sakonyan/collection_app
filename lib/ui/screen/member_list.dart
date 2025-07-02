@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
+import 'package:mr_collection/provider/amount_loading_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/member/add_member_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/member/delete_member_dialog.dart';
@@ -59,6 +61,7 @@ class MemberList extends ConsumerWidget {
     final int? unpaidCount = members
         ?.where((member) => member.status == PaymentStatus.unpaid)
         .length;
+    final isAmountLoading = ref.watch(amountLoadingProvider(eventId));
 
     const double iconSize = 30.0;
 
@@ -280,7 +283,11 @@ class MemberList extends ConsumerWidget {
                                                             ),
                                                       )
                                                     : null,
-                                                subtitle: (member.memberMoney !=
+                                                subtitle: isAmountLoading
+                                                    ?  Align(
+                                                    alignment: Alignment.centerLeft,
+                                                    child: const SpinKitThreeBounce(color: Colors.black, size: 20))
+                                                  : (member.memberMoney !=
                                                         null)
                                                     ? Text(
                                                         "${member.memberMoney} ${S.of(context)?.currencyUnit ?? "USD"}",

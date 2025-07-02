@@ -204,6 +204,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
             userId,
             eventId,
             membersMoneyList,
+            ref
           );
     } catch (e) {
       debugPrint('金額入力中にエラーが発生しました: $e');
