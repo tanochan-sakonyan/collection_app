@@ -20,7 +20,9 @@ class SuggestSendMessageDialog extends StatelessWidget {
             child: Column(children: [
               Text(
                 S.of(context)!.lineNotConnectedMessage1,
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
               const SizedBox(height: 12),
               Text(
@@ -29,11 +31,28 @@ class SuggestSendMessageDialog extends StatelessWidget {
                       color: Colors.grey,
                     ),
               ),
-              Image.asset(
-                'assets/images/img_add_from_line.png',
-                width: 200,
-                height: 200,
+              const SizedBox(height: 20),
+              Container(
+                decoration: const BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey,
+                      blurRadius: 2,
+                      spreadRadius: 0,
+                      offset: Offset(1, 2),
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  child: Image.asset(
+                    'assets/images/img_add_from_line.png',
+                    width: 200,
+                    height: 200,
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
+              const SizedBox(height: 28)
             ])),
       ),
     );
