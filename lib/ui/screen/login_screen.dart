@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mr_collection/provider/access_token_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/auth/login_error_dialog.dart';
+import 'package:mr_collection/ui/components/linearProgressIndicator.dart';
 import 'package:mr_collection/ui/screen/home_screen.dart';
 import 'package:mr_collection/ui/screen/privacy_policy_screen.dart';
 import 'package:mr_collection/ui/screen/terms_of_service_screen.dart';
@@ -28,6 +29,8 @@ class LoginScreen extends ConsumerStatefulWidget {
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _isAppleButtonEnabled = true;
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     bool isChecked = ref.watch(checkboxProvider);
@@ -40,7 +43,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     debugPrint('isChecked: $isChecked');
 
-    return Scaffold(
+    return Stack(
+      children: [
+        Scaffold(
       backgroundColor: Colors.white,
       body: Center(
         child: Column(
@@ -69,69 +74,74 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 onPressed: () async {
                   if (isChecked) {
-                    final prefs = await SharedPreferences.getInstance();
-                    final isLineLoggedIn =
-                        prefs.getBool('isLineLoggedIn') ?? false;
-                    debugPrint('isLineLoggedIn: $isLineLoggedIn');
-                    final userId = prefs.getString('lineUserId');
+                      final prefs = await SharedPreferences.getInstance();
+                      final isLineLoggedIn =
+                          prefs.getBool('isLineLoggedIn') ?? false;
+                      debugPrint('isLineLoggedIn: $isLineLoggedIn');
+                      final userId = prefs.getString('lineUserId');
 
-                    if (isLineLoggedIn && userId != null) {
-                      try {
-                        await ref
-                            .read(userProvider.notifier)
-                            .fetchUserById(userId);
+                      if (isLineLoggedIn && userId != null) {
+                        try {
+                          await ref
+                              .read(userProvider.notifier)
+                              .fetchUserById(userId);
 
-                        final user = ref.read(userProvider);
-                        if (mounted && user != null) {
-                          debugPrint('既存LINEユーザーでHomeScreenに遷移します。user: $user');
-                          _updateCurrentLoginMedia('line');
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (context) => HomeScreen(user: user),
-                            ),
-                          );
+                          final user = ref.read(userProvider);
+                          if (mounted && user != null) {
+                            debugPrint(
+                                '既存LINEユーザーでHomeScreenに遷移します。user: $user');
+                            _updateCurrentLoginMedia('line');
+                            setState(() => isLoading = true);
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) => HomeScreen(user: user),
+                              ),
+                            );
+                          }
+                        } catch (e) {
+                          debugPrint('ユーザー情報の取得に失敗しました。: $e');
                         }
-                      } catch (e) {
-                        debugPrint('ユーザー情報の取得に失敗しました。: $e');
+                      } else {
+                        try {
+                          final result = await LineSDK.instance
+                              .login(option: LoginOption(false, 'aggressive'));
+                          final accessToken = result.accessToken.value;
+                          ref
+                              .read(accessTokenProvider.notifier)
+                              .state =
+                              accessToken;
+
+                          final user = await ref
+                              .read(userProvider.notifier)
+                              .registerUser(accessToken);
+
+                          if (user != null) {
+                            prefs.setString('lineUserId', user.userId);
+                            prefs.setBool('isLineLoggedIn', true);
+                          } else {
+                            debugPrint('ユーザー情報がnullです');
+                          }
+
+                          if (mounted && user != null) {
+                            debugPrint(
+                                'LoginScreenからHomeScreenに遷移します。user: $user');
+                            _updateCurrentLoginMedia('line');
+                            setState(() => isLoading = true);
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) => HomeScreen(user: user),
+                              ),
+                            );
+                          }
+                        } on PlatformException catch (e) {
+                          if (mounted) {
+                            debugPrint("エラーが発生: $e");
+                            showDialog(
+                                context: context,
+                                builder: (context) => const LoginErrorDialog());
+                          }
+                        }
                       }
-                    } else {
-                      try {
-                        final result = await LineSDK.instance
-                            .login(option: LoginOption(false, 'aggressive'));
-                        final accessToken = result.accessToken.value;
-                        ref.read(accessTokenProvider.notifier).state =
-                            accessToken;
-
-                        final user = await ref
-                            .read(userProvider.notifier)
-                            .registerUser(accessToken);
-
-                        if (user != null) {
-                          prefs.setString('lineUserId', user.userId);
-                          prefs.setBool('isLineLoggedIn', true);
-                        } else {
-                          debugPrint('ユーザー情報がnullです');
-                        }
-
-                        if (mounted && user != null) {
-                          debugPrint(
-                              'LoginScreenからHomeScreenに遷移します。user: $user');
-                          _updateCurrentLoginMedia('line');
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (context) => HomeScreen(user: user),
-                            ),
-                          );
-                        }
-                      } on PlatformException catch (e) {
-                        if (mounted) {
-                          debugPrint("エラーが発生: $e");
-                          showDialog(
-                              context: context,
-                              builder: (context) => const LoginErrorDialog());
-                        }
-                      }
-                    }
                   }
                 },
                 child: Row(
@@ -191,6 +201,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             final user = ref.read(userProvider);
                             if (mounted && user != null) {
                               _updateCurrentLoginMedia('apple');
+                              setState(() => isLoading = true);
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                   builder: (context) => HomeScreen(user: user),
@@ -246,6 +257,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   debugPrint(
                                       'Appleサインイン成功。HomeScreenへ遷移します。user: $user');
                                   _updateCurrentLoginMedia('apple');
+                                  setState(() => isLoading = true);
                                   Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                       builder: (context) =>
@@ -376,6 +388,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           ],
         ),
       ),
+    ),
+        if (isLoading) const LinearMeterLoadingOverlay(),
+      ],
     );
   }
 }
