@@ -138,6 +138,8 @@ class EventRepository {
 
   Future<bool> sendMessage(
       String userId, String eventId, String message) async {
+    debugPrint("sendMessage関数が呼ばれました。\n"
+        "userId: $userId, eventId: $eventId, message: $message");
     final url = Uri.parse('$baseUrl/users/$userId/events/$eventId/message');
 
     final response = await http.post(

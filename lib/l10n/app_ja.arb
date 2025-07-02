@@ -106,5 +106,7 @@
   "note": "memo",
   "editNote": "メモの編集",
   "memoPlaceholder": "メモを入力できます",
-  "save": "保存"
+  "save": "保存",
+  "lineNotConnectedMessage1": "イベントがLINEグループと\n連携していません。",
+  "lineNotConnectedMessage2": "『LINEグループから追加』を利用して\n新しくイベントを作成してください。"
 }

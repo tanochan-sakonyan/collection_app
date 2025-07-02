@@ -115,20 +115,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     _updateDialogChecked = true;
   }
 
-  Future<void> _checkTutorialStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-    final isTutorialShown120 = prefs.getBool('isTutorialShown120') ?? false;
-    if (!isTutorialShown120) {
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        await Future.delayed(const Duration(milliseconds: 120));
-        if (mounted) _showTutorial();
-      });
-      debugPrint('Tutorial shown');
-    } else {
-      debugPrint('Tutorial already shown');
-    }
-  }
-
   void _showTutorial() {
     targets = TutorialTargets.createTargets(
       context: context,
@@ -239,7 +225,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
@@ -290,19 +276,19 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                           newNote);
                       Navigator.of(context).pop();
                     },
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 22),
+                      backgroundColor: const Color(0xFF76DCC6),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
                     child: Text(
                       S.of(context)?.save ?? "Save",
                       style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
                           color: Colors.white),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: Size(double.infinity, 22),
-                      backgroundColor: Color(0xFF76DCC6),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
                     ),
                   ),
                 ),
@@ -694,26 +680,57 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                   borderRadius: BorderRadius.circular(48),
                                 ),
                                 onPressed: () async {
-                                  final unpaidMembers = event.members
-                                      .where((m) =>
-                                          m.status == PaymentStatus.unpaid)
-                                      .toList();
-
-                                  final result = await showModalBottomSheet(
-                                    context: context,
-                                    isScrollControlled: true,
-                                    backgroundColor: Colors.white,
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.vertical(
-                                          top: Radius.circular(16)),
-                                    ),
-                                    builder: (context) => LineMessageBottomSheet
-                                        .lineMessageBottomSheet(
-                                      event: event,
-                                      unpaidMembers: unpaidMembers,
-                                    ),
-                                  );
-                                  // resultは送信されたメッセージ内容
+                                  if (!isLineConnected) {
+                                    final unpaidMembers = event.members
+                                        .where((m) =>
+                                            m.status == PaymentStatus.unpaid)
+                                        .toList();
+                                    await showModalBottomSheet(
+                                      context: context,
+                                      isScrollControlled: true,
+                                      backgroundColor: Colors.white,
+                                      shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(16)),
+                                      ),
+                                      builder: (context) =>
+                                          LineMessageBottomSheet
+                                              .lineMessageBottomSheet(
+                                        event: event,
+                                        unpaidMembers: unpaidMembers,
+                                      ),
+                                    );
+                                  } else {
+                                    await showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text(
+                                            S
+                                                    .of(context)
+                                                    ?.lineNotConnectedMessage1 ??
+                                                "LINE not connected",
+                                          ),
+                                          content: Text(
+                                            S
+                                                    .of(context)
+                                                    ?.lineNotConnectedMessage2 ??
+                                                "Please connect to LINE to send messages.",
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text(
+                                                S.of(context)?.ok ?? "OK",
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  }
                                 },
                                 child: Center(
                                   child: Stack(
