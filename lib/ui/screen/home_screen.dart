@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
@@ -336,13 +337,26 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
+
+    if (user == null) {
+      return const Scaffold(
+        backgroundColor: Colors.white,
+        body: CircleIndicator(
+          child: Center(
+            child: Text("Loading..."),
+          ),
+        ),
+      );
+    }
+
     final tabTitles = ref.watch(tabTitlesProvider);
     final String currentEventId =
         tabTitles.isNotEmpty && _currentTabIndex < tabTitles.length
             ? tabTitles[_currentTabIndex]
             : "";
     final Event? currentEvent =
-        user?.events.firstWhere((e) => e.eventId == currentEventId);
+        user?.events.firstWhereOrNull((e) => e.eventId == currentEventId);
+
     final bool isLineConnected = currentEvent != null &&
         currentEvent.lineGroupId != null &&
         currentEvent.lineGroupId!.isNotEmpty;
@@ -355,7 +369,11 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           setState(() {
             _updateTabController(tabTitles.length);
             _tabTitles = tabTitles;
-            _loadSavedTabIndex();
+            if (_currentTabIndex >= tabTitles.length) {
+              _currentTabIndex = tabTitles.isEmpty ? 0 : tabTitles.length - 1;
+            }
+            _tabController.animateTo(_currentTabIndex);
+            _saveTabIndex(_currentTabIndex);
           });
         }
       });
