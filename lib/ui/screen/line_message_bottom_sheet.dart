@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/provider/user_provider.dart';
-import 'package:mr_collection/ui/components/dialog/line-message-confirm-dialog.dart';
+import 'package:mr_collection/ui/components/dialog/line_message_confirm_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/paypay_dialog.dart';
 
 class LineMessageBottomSheet extends ConsumerStatefulWidget {
