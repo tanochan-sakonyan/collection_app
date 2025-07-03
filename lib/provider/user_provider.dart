@@ -6,6 +6,7 @@ import 'package:mr_collection/data/model/freezed/user.dart';
 import 'package:mr_collection/data/repository/event_repository.dart';
 import 'package:mr_collection/data/repository/member_repository.dart';
 import 'package:mr_collection/data/repository/user_repository.dart';
+import 'package:mr_collection/provider/amount_loading_provider.dart';
 import 'package:mr_collection/provider/event_repository_provider.dart';
 import 'package:mr_collection/provider/member_repository_provider.dart';
 import 'package:mr_collection/services/user_service.dart';
@@ -313,7 +314,8 @@ class UserNotifier extends StateNotifier<User?> {
   }
 
   Future<void> inputMembersMoney(String userId, String eventId,
-      List<Map<String, dynamic>> membersMoneyList) async {
+      List<Map<String, dynamic>> membersMoneyList, WidgetRef ref) async {
+    ref.read(amountLoadingProvider(eventId).notifier).state = true;
     try {
       final updatedMembers = await memberRepository.inputMembersMoney(
           userId, eventId, membersMoneyList);
@@ -331,6 +333,8 @@ class UserNotifier extends StateNotifier<User?> {
       debugPrint('メンバーの金額入力に成功しました: $membersMoneyList');
     } catch (e) {
       debugPrint('メンバーの金額入力中にエラーが発生しました: $e');
+    }finally {
+      ref.read(amountLoadingProvider(eventId).notifier).state = false;
     }
   }
 

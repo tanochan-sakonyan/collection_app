@@ -4,8 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_line_sdk/flutter_line_sdk.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mr_collection/provider/login_loading_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/auth/login_error_dialog.dart';
+import 'package:mr_collection/ui/components/linear_progress_indicator.dart';
 import 'package:mr_collection/ui/screen/home_screen.dart';
 import 'package:mr_collection/ui/screen/privacy_policy_screen.dart';
 import 'package:mr_collection/ui/screen/terms_of_service_screen.dart';
@@ -27,9 +29,12 @@ class LoginScreen extends ConsumerStatefulWidget {
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _isAppleButtonEnabled = true;
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     bool isChecked = ref.watch(checkboxProvider);
+    final isProcessLoading = ref.watch(loginLoadingProvider);
 
     Future<void> _updateCurrentLoginMedia(String media) async {
       final prefs = await SharedPreferences.getInstance();
@@ -39,7 +44,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     debugPrint('isChecked: $isChecked');
 
-    return Scaffold(
+    return Stack(
+      children: [
+        Scaffold(
       backgroundColor: Colors.white,
       body: Center(
         child: Column(
@@ -68,70 +75,78 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 onPressed: () async {
                   if (isChecked) {
-                    final prefs = await SharedPreferences.getInstance();
-                    final isLineLoggedIn =
-                        prefs.getBool('isLineLoggedIn') ?? false;
-                    debugPrint('isLineLoggedIn: $isLineLoggedIn');
-                    final userId = prefs.getString('lineUserId');
+                      final prefs = await SharedPreferences.getInstance();
+                      final isLineLoggedIn =
+                          prefs.getBool('isLineLoggedIn') ?? false;
+                      debugPrint('isLineLoggedIn: $isLineLoggedIn');
+                      final userId = prefs.getString('lineUserId');
 
-                    if (isLineLoggedIn && userId != null) {
-                      // LINEで集金くんのユーザー作成はしている。ログアウトして、2回目以降のログインを想定。
-                      try {
-                        final result = await LineSDK.instance.login();
-                        final lineAccessToken = result.accessToken.value;
-                        await ref
-                            .read(userProvider.notifier)
-                            .fetchLineUserById(userId, lineAccessToken);
+                      if (isLineLoggedIn && userId != null) {
+                        // LINEで集金くんのユーザー作成はしている。ログアウトして、2回目以降のログインを想定。
+                        ref.read(loginLoadingProvider.notifier).state = true;
+                        try {
+                          final result = await LineSDK.instance.login();
+                          final lineAccessToken = result.accessToken.value;
+                          await ref
+                              .read(userProvider.notifier)
+                              .fetchLineUserById(userId, lineAccessToken);
 
-                        final user = ref.read(userProvider);
-                        if (mounted && user != null) {
-                          debugPrint('既存LINEユーザーでHomeScreenに遷移します。user: $user');
-                          _updateCurrentLoginMedia('line');
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (context) => HomeScreen(user: user),
-                            ),
-                          );
+                          final user = ref.read(userProvider);
+                          if (mounted && user != null) {
+                            debugPrint(
+                                '既存LINEユーザーでHomeScreenに遷移します。user: $user');
+                            _updateCurrentLoginMedia('line');
+                            setState(() => isLoading = true);
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) => HomeScreen(user: user),
+                              ),
+                            );
+                          }
+                        } catch (e) {
+                          debugPrint('ユーザー情報の取得に失敗しました。: $e');
+                        }finally {
+                          ref.read(loginLoadingProvider.notifier).state = false;
                         }
-                      } catch (e) {
-                        debugPrint('ユーザー情報の取得に失敗しました。: $e');
+                      } else {
+                        try {
+                          final result = await LineSDK.instance
+                              .login(option: LoginOption(false, 'aggressive'));
+                          final lineAccessToken = result.accessToken.value;
+                          ref.read(loginLoadingProvider.notifier).state = true;
+                          final user = await ref
+                              .read(userProvider.notifier)
+                              .registerLineUser(lineAccessToken);
+
+                          if (user != null) {
+                            prefs.setString('lineUserId', user.userId);
+                            prefs.setBool('isLineLoggedIn', true);
+                          } else {
+                            debugPrint('ユーザー情報がnullです');
+                          }
+
+                          if (mounted && user != null) {
+                            debugPrint(
+                                'LoginScreenからHomeScreenに遷移します。user: $user');
+                            _updateCurrentLoginMedia('line');
+                            setState(() => isLoading = true);
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) => HomeScreen(user: user),
+                              ),
+                            );
+                          }
+                        } on PlatformException catch (e) {
+                          if (mounted) {
+                            debugPrint("エラーが発生: $e");
+                            showDialog(
+                                context: context,
+                                builder: (context) => const LoginErrorDialog());
+                          }
+                        }finally {
+                          ref.read(loginLoadingProvider.notifier).state = false;
+                        }
                       }
-                    } else {
-                      try {
-                        final result = await LineSDK.instance
-                            .login(option: LoginOption(false, 'aggressive'));
-                        final lineAccessToken = result.accessToken.value;
-
-                        final user = await ref
-                            .read(userProvider.notifier)
-                            .registerLineUser(lineAccessToken);
-
-                        if (user != null) {
-                          prefs.setString('lineUserId', user.userId);
-                          prefs.setBool('isLineLoggedIn', true);
-                        } else {
-                          debugPrint('ユーザー情報がnullです');
-                        }
-
-                        if (mounted && user != null) {
-                          debugPrint(
-                              'LoginScreenからHomeScreenに遷移します。user: $user');
-                          _updateCurrentLoginMedia('line');
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (context) => HomeScreen(user: user),
-                            ),
-                          );
-                        }
-                      } on PlatformException catch (e) {
-                        if (mounted) {
-                          debugPrint("エラーが発生: $e");
-                          showDialog(
-                              context: context,
-                              builder: (context) => const LoginErrorDialog());
-                        }
-                      }
-                    }
                   }
                 },
                 child: Row(
@@ -184,6 +199,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         final userId = prefs.getString('appleUserId');
 
                         if (isAppleLoggedIn && userId != null) {
+                          ref.read(loginLoadingProvider.notifier).state = true;
                           try {
                             await ref
                                 .read(userProvider.notifier)
@@ -191,6 +207,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             final user = ref.read(userProvider);
                             if (mounted && user != null) {
                               _updateCurrentLoginMedia('apple');
+                              setState(() => isLoading = true);
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                   builder: (context) => HomeScreen(user: user),
@@ -199,6 +216,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             }
                           } catch (e) {
                             debugPrint('ユーザー情報の取得に失敗しました。: $e');
+                          }finally {
+                            ref.read(loginLoadingProvider.notifier).state = false;
                           }
                         } else {
                           try {
@@ -230,6 +249,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               headers: {'Content-Type': 'application/json'},
                             );
 
+                            ref.read(loginLoadingProvider.notifier).state = true;
+
                             if (response.statusCode == 200 ||
                                 response.statusCode == 201) {
                               final user = await ref
@@ -246,6 +267,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   debugPrint(
                                       'Appleサインイン成功。HomeScreenへ遷移します。user: $user');
                                   _updateCurrentLoginMedia('apple');
+                                  setState(() => isLoading = true);
                                   Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                       builder: (context) =>
@@ -282,6 +304,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   builder: (context) =>
                                       const LoginErrorDialog());
                             }
+                          }finally {
+                            ref.read(loginLoadingProvider.notifier).state = false;
                           }
                         }
                       }
@@ -291,28 +315,28 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         _isAppleButtonEnabled = true;
                       });
                     }
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      const SizedBox(width: 8),
-                      SvgPicture.asset(
-                        'assets/icons/apple_logo.svg',
-                        width: 28,
-                        height: 28,
-                      ),
-                      const SizedBox(width: 50),
-                      Text(
-                        S.of(context)?.signInWithApple ?? "Sign in with Apple",
-                        style: GoogleFonts.notoSansJp(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(width: 8),
+                    SvgPicture.asset(
+                      'assets/icons/apple_logo.svg',
+                      width: 28,
+                      height: 28,
+                    ),
+                    const SizedBox(width: 50),
+                    Text(
+                      S.of(context)?.signInWithApple ?? "Sign in with Apple",
+                      style: GoogleFonts.notoSansJp(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
               ),
+                ),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -376,6 +400,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           ],
         ),
       ),
+    ),
+        if (isProcessLoading) const LinearMeterLoadingOverlay(),
+      ],
     );
   }
 }

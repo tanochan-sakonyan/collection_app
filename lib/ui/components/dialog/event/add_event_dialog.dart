@@ -6,6 +6,7 @@ import 'package:mr_collection/constants/base_url.dart';
 import 'package:mr_collection/data/model/freezed/line_group.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/data/repository/event_repository.dart';
+import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
 import 'package:mr_collection/ui/screen/transfer/choice_event_screen.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:flutter_gen/gen_l10n/s.dart';
@@ -81,6 +82,8 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
       return;
     }
 
+    ref.read(loadingProvider.notifier).state = true;
+
     try {
       if (_isTransferMode) {
         await ref.read(userProvider.notifier).createEventAndTransferMembers(
@@ -95,6 +98,8 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
       Navigator.of(context).pop();
     } catch (error) {
       debugPrint('イベントの追加に失敗しました: $error');
+    } finally {
+      ref.read(loadingProvider.notifier).state = false;
     }
   }
 
@@ -142,7 +147,8 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
+    return CircleIndicator(
+      child: Dialog(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
@@ -349,7 +355,8 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                 ),
               ),
               const SizedBox(height: 20),
-            ],
+              ],
+            ),
           ),
         ),
       ),
