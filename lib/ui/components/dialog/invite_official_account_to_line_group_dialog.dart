@@ -3,7 +3,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/s.dart';
 
-//公式LINEが認証された後のダイアログ
 class InviteOfficialAccountToLineGroupDialog extends StatelessWidget {
   const InviteOfficialAccountToLineGroupDialog({super.key});
 
@@ -21,14 +20,13 @@ class InviteOfficialAccountToLineGroupDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return
-      Dialog(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-        ),
-        child: Padding(
+    return Dialog(
+      backgroundColor: Colors.white,
+      surfaceTintColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
         padding: const EdgeInsets.only(
           top: 16,
         ),
@@ -38,22 +36,24 @@ class InviteOfficialAccountToLineGroupDialog extends StatelessWidget {
           children: [
             const SizedBox(height: 12),
             Text(
-              S.of(context)?.inviteOfficialAccountTitle ?? "Invite the official LINE account to the group",
+              S.of(context)?.inviteOfficialAccountTitle ??
+                  "Invite the official LINE account to the group",
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-                fontSize: 15,
-              ),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                  ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 12),
             Text(
-              S.of(context)?.inviteOfficialAccountDesc1 ?? "You can only get members from LINE groups where 'Shuukin-kun' is invited.",
+              S.of(context)?.inviteOfficialAccountDesc1 ??
+                  "You can only get members from LINE groups where 'Shuukin-kun' is invited.",
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: const Color(0xFF6A6A6A),
-                fontSize: 11,
-                fontWeight: FontWeight.w500,
-              ),
+                    color: const Color(0xFF6A6A6A),
+                    fontSize: 11,
+                    fontWeight: FontWeight.w500,
+                  ),
             ),
             const SizedBox(height: 36),
             IconButton(
@@ -74,33 +74,31 @@ class InviteOfficialAccountToLineGroupDialog extends StatelessWidget {
                 Column(
                   children: [
                     ClipOval(
-                     child: Image.asset(
-                       'assets/icons/icon.png',
-                       width: 48,
-                       height: 48,
-                       fit: BoxFit.cover,
-                     ),
+                      child: Image.asset(
+                        'assets/icons/icon.png',
+                        width: 48,
+                        height: 48,
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                    Row(
-                      children: [
-                        Image.asset(
-                          'assets/icons/line_official_badge.png',
-                          width: 12,
-                          height: 12,
-                          fit: BoxFit.cover,
-                        ),
-                        const SizedBox(width: 2),
-                        Text(
-                          S.of(context)?.shukinkun ?? "Shukinkun",
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color: Colors.black,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ]
-                    ),
+                    Row(children: [
+                      Image.asset(
+                        'assets/icons/line_official_badge.png',
+                        width: 12,
+                        height: 12,
+                        fit: BoxFit.cover,
+                      ),
+                      const SizedBox(width: 2),
+                      Text(
+                        S.of(context)?.shukinkun ?? "Shukinkun",
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                            ),
+                      ),
+                    ]),
                   ],
                 ),
                 const SizedBox(width: 18),
@@ -121,10 +119,9 @@ class InviteOfficialAccountToLineGroupDialog extends StatelessWidget {
                       S.of(context)?.group ?? "Group",
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: Colors.black,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700
-                      ),
+                          color: Colors.black,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700),
                     ),
                   ],
                 ),

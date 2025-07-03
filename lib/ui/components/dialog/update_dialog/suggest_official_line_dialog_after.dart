@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-//公式LINEが認証された後のダイアログ
 class SuggestOfficialLineDialogAfter extends StatelessWidget {
   const SuggestOfficialLineDialogAfter({super.key});
 
