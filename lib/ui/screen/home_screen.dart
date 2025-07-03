@@ -230,6 +230,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   void _showEditNoteBottomSheet(BuildContext context, Event event) {
+    final TextEditingController controller =
+        TextEditingController(text: event.memo ?? "");
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -237,8 +239,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
-        final TextEditingController controller =
-            TextEditingController(text: event.memo ?? "");
         return Padding(
           padding:
               EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
