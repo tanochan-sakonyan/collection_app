@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:flutter_gen/gen_l10n/s.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -14,7 +13,6 @@ class InviteOfficialAccountToLineGroupScreen extends ConsumerStatefulWidget {
 
 class CheckSelectedLineGroupScreenState
     extends ConsumerState<InviteOfficialAccountToLineGroupScreen> {
-
   Future<void> _launchLine() async {
     final uri = Uri.parse('https://lin.ee/cLwUgQtP');
     if (await canLaunchUrl(uri)) {
@@ -60,45 +58,45 @@ class CheckSelectedLineGroupScreenState
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            S.of(context)?.inviteOfficialAccountTitle ?? "Invite the official LINE account to the group",
+            S.of(context)?.inviteOfficialAccountTitle ??
+                "Invite the official LINE account to the group",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
-              color: const Color(0xFF06C755),
-            ),
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  color: const Color(0xFF06C755),
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 18),
           Text(
-            S.of(context)?.inviteOfficialAccountDesc1 ?? "You can only get members from LINE groups where 'Shuukin-kun' is invited.",
+            S.of(context)?.inviteOfficialAccountDesc1 ??
+                "You can only get members from LINE groups where 'Shuukin-kun' is invited.",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              fontSize: 11,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xFF6A6A6A),
-            ),
+                  fontSize: 11,
+                  fontWeight: FontWeight.w500,
+                  color: const Color(0xFF6A6A6A),
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SvgPicture.asset(
-                'assets/icons/ic_number_one.svg',
-                width: 40,
-                height: 40,
-              ),
-              const SizedBox(width: 12),
-              Text(
-                S.of(context)?.inviteOfficialAccountStep1 ?? "Add the official LINE account",
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black,
-                ),
-                textAlign: TextAlign.left,
-              )
-            ]
-          ),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            SvgPicture.asset(
+              'assets/icons/ic_number_one.svg',
+              width: 40,
+              height: 40,
+            ),
+            const SizedBox(width: 12),
+            Text(
+              S.of(context)?.inviteOfficialAccountStep1 ??
+                  "Add the official LINE account",
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
+                  ),
+              textAlign: TextAlign.left,
+            )
+          ]),
           const SizedBox(height: 20),
           IconButton(
               onPressed: () {
@@ -112,34 +110,33 @@ class CheckSelectedLineGroupScreenState
                 height: 56,
               )),
           const SizedBox(height: 36),
-          Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SvgPicture.asset(
-                  'assets/icons/ic_number_two.svg',
-                  width: 40,
-                  height: 40,
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  S.of(context)?.inviteOfficialAccountStep2 ?? "Invite the official LINE account\nto the group for collection",
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            SvgPicture.asset(
+              'assets/icons/ic_number_two.svg',
+              width: 40,
+              height: 40,
+            ),
+            const SizedBox(width: 12),
+            Text(
+              S.of(context)?.inviteOfficialAccountStep2 ??
+                  "Invite the official LINE account\nto the group for collection",
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
                     color: Colors.black,
                   ),
-                  textAlign: TextAlign.left,
-                )
-              ]
-          ),
+              textAlign: TextAlign.left,
+            )
+          ]),
           const SizedBox(height: 24),
           Text(
-            S.of(context)?.inviteOfficialAccountNote ?? "‘Shuukin-kun’ will not send\npromotional messages in the group.",
+            S.of(context)?.inviteOfficialAccountNote ??
+                "‘Shuukin-kun’ will not send\npromotional messages in the group.",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              fontSize: 11,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xFF6A6A6A),
-            ),
+                  fontSize: 11,
+                  fontWeight: FontWeight.w500,
+                  color: const Color(0xFF6A6A6A),
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
@@ -156,26 +153,23 @@ class CheckSelectedLineGroupScreenState
                       fit: BoxFit.cover,
                     ),
                   ),
-                  Row(
-                    children: [
-                      Image.asset(
-                        'assets/icons/line_official_badge.png',
-                        width: 12,
-                        height: 12,
-                        fit: BoxFit.cover,
-                      ),
-                      const SizedBox(width: 2),
-                      Text(
-                        S.of(context)?.shukinkun ?? "Shukinkun",
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  Row(children: [
+                    Image.asset(
+                      'assets/icons/line_official_badge.png',
+                      width: 12,
+                      height: 12,
+                      fit: BoxFit.cover,
+                    ),
+                    const SizedBox(width: 2),
+                    Text(
+                      S.of(context)?.shukinkun ?? "Shukinkun",
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
                           color: Colors.black,
                           fontSize: 14,
-                          fontWeight: FontWeight.w700
-                        ),
-                      ),
-                    ]
-                  ),
+                          fontWeight: FontWeight.w700),
+                    ),
+                  ]),
                 ],
               ),
               const SizedBox(width: 18),
@@ -196,10 +190,9 @@ class CheckSelectedLineGroupScreenState
                     S.of(context)?.group ?? "Group",
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: Colors.black,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700
-                    ),
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700),
                   ),
                 ],
               ),

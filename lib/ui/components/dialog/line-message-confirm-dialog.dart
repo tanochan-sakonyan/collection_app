@@ -8,7 +8,6 @@ import 'package:mr_collection/ui/components/dialog/line_message_failed_dialog.da
 import 'package:mr_collection/ui/screen/home_screen.dart';
 
 class LineMessageConfirmDialog extends ConsumerWidget {
-  // TODO: merge前に確認。BEに渡すのはeventIdだけで良い？
   final Event event;
   final String message;
   const LineMessageConfirmDialog(

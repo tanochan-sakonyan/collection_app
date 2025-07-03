@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_line_sdk/flutter_line_sdk.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mr_collection/provider/access_token_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/auth/login_error_dialog.dart';
 import 'package:mr_collection/ui/screen/home_screen.dart';
@@ -76,10 +75,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     final userId = prefs.getString('lineUserId');
 
                     if (isLineLoggedIn && userId != null) {
+                      // LINEで集金くんのユーザー作成はしている。ログアウトして、2回目以降のログインを想定。
                       try {
+                        final result = await LineSDK.instance.login();
+                        final lineAccessToken = result.accessToken.value;
                         await ref
                             .read(userProvider.notifier)
-                            .fetchUserById(userId);
+                            .fetchLineUserById(userId, lineAccessToken);
 
                         final user = ref.read(userProvider);
                         if (mounted && user != null) {
@@ -98,13 +100,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       try {
                         final result = await LineSDK.instance
                             .login(option: LoginOption(false, 'aggressive'));
-                        final accessToken = result.accessToken.value;
-                        ref.read(accessTokenProvider.notifier).state =
-                            accessToken;
+                        final lineAccessToken = result.accessToken.value;
 
                         final user = await ref
                             .read(userProvider.notifier)
-                            .registerUser(accessToken);
+                            .registerLineUser(lineAccessToken);
 
                         if (user != null) {
                           prefs.setString('lineUserId', user.userId);
@@ -291,28 +291,28 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         _isAppleButtonEnabled = true;
                       });
                     }
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const SizedBox(width: 8),
-                    SvgPicture.asset(
-                      'assets/icons/apple_logo.svg',
-                      width: 28,
-                      height: 28,
-                    ),
-                    const SizedBox(width: 50),
-                    Text(
-                      S.of(context)?.signInWithApple ?? "Sign in with Apple",
-                      style: GoogleFonts.notoSansJp(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const SizedBox(width: 8),
+                      SvgPicture.asset(
+                        'assets/icons/apple_logo.svg',
+                        width: 28,
+                        height: 28,
+                      ),
+                      const SizedBox(width: 50),
+                      Text(
+                        S.of(context)?.signInWithApple ?? "Sign in with Apple",
+                        style: GoogleFonts.notoSansJp(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-                ),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

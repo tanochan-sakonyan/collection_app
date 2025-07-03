@@ -12,7 +12,7 @@ class _LineMessageCompleteDialogState extends State<LineMessageCompleteDialog> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 20), () {
       if (mounted) Navigator.of(context).pop();
     });
   }
@@ -29,9 +29,9 @@ class _LineMessageCompleteDialogState extends State<LineMessageCompleteDialog> {
         width: 320,
         height: 240,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const SizedBox(height: 14),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -46,9 +46,9 @@ class _LineMessageCompleteDialogState extends State<LineMessageCompleteDialog> {
                 const Text('✨', style: TextStyle(fontSize: 22)),
               ],
             ),
-            const SizedBox(height: 26),
+            const SizedBox(height: 16),
             SizedBox(
-              width: 120,
+              width: 140,
               height: 120,
               child: Stack(
                 alignment: Alignment.center,
@@ -62,16 +62,16 @@ class _LineMessageCompleteDialogState extends State<LineMessageCompleteDialog> {
                     ),
                   ),
                   const Positioned(
-                    left: 0,
-                    bottom: 0,
+                    left: 4,
+                    bottom: 8,
                     child: Text(
                       '✨',
                       style: TextStyle(fontSize: 20),
                     ),
                   ),
                   const Positioned(
-                    right: 0,
-                    top: 0,
+                    right: 4,
+                    top: 8,
                     child: Text(
                       '✨',
                       style: TextStyle(fontSize: 20),
@@ -80,6 +80,7 @@ class _LineMessageCompleteDialogState extends State<LineMessageCompleteDialog> {
                 ],
               ),
             ),
+            const SizedBox(height: 28)
           ],
         ),
       ),

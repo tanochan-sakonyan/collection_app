@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/auth/delete_account_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/auth/logout_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/line_message_complete_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/paypay_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/questionnaire_dialog.dart';
 import 'package:mr_collection/ui/screen/privacy_policy_screen.dart';
@@ -85,6 +86,16 @@ class TanochanDrawer extends StatelessWidget {
                 showDialog(
                     context: context,
                     builder: (context) => const LogoutDialog());
+              },
+            ),
+            _buildMenuItem(
+              context,
+              text: S.of(context)?.logout ?? "デバッグ",
+              icon: SvgPicture.asset("assets/icons/drawer_key.svg"),
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (context) => const LineMessageCompleteDialog());
               },
             ),
             const SizedBox(height: 20),

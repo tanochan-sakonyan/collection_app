@@ -31,32 +31,35 @@ class LineGroupUpdateCountdownDialog extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              S.of(context)?.lineGroupExpireTitle ?? "Member info will expire soon",
+              S.of(context)?.lineGroupExpireTitle ??
+                  "Member info will expire soon",
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                fontWeight: FontWeight.w700,
-                fontSize: 16,
-                color: Colors.black,
-              ),
+                    fontWeight: FontWeight.w700,
+                    fontSize: 16,
+                    color: Colors.black,
+                  ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 12),
             Text(
-              S.of(context)?.lineGroupExpireDesc ?? "According to LINE's terms of use, after the member info expires,\nmember and payment status information will be deleted.\nPlease reacquire to reset the expiration date.",
+              S.of(context)?.lineGroupExpireDesc ??
+                  "According to LINE's terms of use, after the member info expires,\nmember and payment status information will be deleted.\nPlease reacquire to reset the expiration date.",
               textAlign: TextAlign.start,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                fontWeight: FontWeight.w500,
-                fontSize: 11,
-                color: const Color(0xFF6A6A6A),
-              ),
+                    fontWeight: FontWeight.w500,
+                    fontSize: 11,
+                    color: const Color(0xFF6A6A6A),
+                  ),
             ),
             const SizedBox(height: 20),
             CountdownTimer(
-              expiretime: currentEvent.lineMembersFetchedAt!.add(const Duration(hours: 24)),
+              expireTime: currentEvent.lineMembersFetchedAt!
+                  .add(const Duration(hours: 24)),
               textStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: Colors.black,
-                fontSize: 15,
-                fontWeight: FontWeight.w700,
-              ),
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                  ),
             ),
             const SizedBox(height: 20),
             Row(
@@ -93,7 +96,10 @@ class LineGroupUpdateCountdownDialog extends ConsumerWidget {
                   width: 120,
                   child: ElevatedButton(
                     onPressed: () async {
-                      final updatedGroup = await ref.read(userProvider.notifier).refreshLineGroupMember(currentEvent.lineGroupId!, userId!);
+                      final updatedGroup = await ref
+                          .read(userProvider.notifier)
+                          .refreshLineGroupMember(
+                              currentEvent.lineGroupId!, userId!);
                       Navigator.of(context).pop(updatedGroup);
                     },
                     style: ElevatedButton.styleFrom(

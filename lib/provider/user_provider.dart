@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/constants/base_url.dart';
+import 'package:mr_collection/data/model/freezed/line_group_member.dart';
 import 'package:mr_collection/data/model/freezed/user.dart';
 import 'package:mr_collection/data/repository/event_repository.dart';
 import 'package:mr_collection/data/repository/member_repository.dart';
 import 'package:mr_collection/data/repository/user_repository.dart';
-import 'package:mr_collection/provider/access_token_provider.dart';
 import 'package:mr_collection/provider/event_repository_provider.dart';
 import 'package:mr_collection/provider/member_repository_provider.dart';
 import 'package:mr_collection/services/user_service.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
-import 'package:mr_collection/data/model/freezed/lineGroup.dart';
+import 'package:mr_collection/data/model/freezed/line_group.dart';
 
 final userProvider = StateNotifierProvider<UserNotifier, User?>((ref) {
   final userService = ref.read(userServiceProvider);
@@ -37,22 +37,28 @@ class UserNotifier extends StateNotifier<User?> {
 
   UserNotifier(
       this.eventRepository, this.memberRepository, this.userService, this.ref)
-      : super(null) {
-    // アクセストークンが変更された際にユーザー情報を取得
-    ref.listen<String?>(accessTokenProvider, (previous, next) {
-      if (next != null) {
-        registerUser(next);
-      } else {
-        state = null;
-      }
-    });
-  }
+      : super(null);
 
+  // TODO: 現在はAppleログインで使用しているが、後々registerAppleUserを作成して移行する
   Future<User?> registerUser(String accessToken) async {
     try {
       final user = await userService.registerUser(accessToken);
       debugPrint('accessToken: $accessToken');
-      debugPrint('取得したユーザー情報: $user');
+      debugPrint('取得したユーザー情報(テスト): $user');
+      state = user;
+      debugPrint('state: $state');
+      return user;
+    } catch (e) {
+      debugPrint('ユーザー登録の際にエラーが発生しました。: $e');
+      state = null;
+    }
+  }
+
+  Future<User?> registerLineUser(String accessToken) async {
+    try {
+      final user = await userService.registerLineUser(accessToken);
+      debugPrint('accessToken: $accessToken');
+      debugPrint('取得したLINEユーザー情報: $user');
       state = user;
       debugPrint('state: $state');
       return user;
@@ -65,6 +71,18 @@ class UserNotifier extends StateNotifier<User?> {
   Future<User?> fetchUserById(String userId) async {
     try {
       final user = await userService.fetchUserById(userId);
+      state = user;
+      return user;
+    } catch (e) {
+      debugPrint('ユーザー情報の取得の際にエラーが発生しました。: $e');
+      state = null;
+      return null;
+    }
+  }
+
+  Future<User?> fetchLineUserById(String userId, String lineAccessToken) async {
+    try {
+      final user = await userService.fetchLineUserById(userId, lineAccessToken);
       state = user;
       return user;
     } catch (e) {
@@ -134,11 +152,11 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
-  Future<void> createEventAndGetMembersFromLine(String groupId,
-      String eventName, List<LineGroupMember> members, String userId) async {
+  Future<void> createEventAndGetMembersFromLine(String userId, String groupId,
+      String eventName, List<LineGroupMember> members) async {
     try {
       final newEvent = await eventRepository.createEventAndGetMembersFromLine(
-          groupId, eventName, members, userId);
+          userId, groupId, eventName, members);
       final updatedUser = state?.copyWith(
         events: [...state!.events, newEvent],
       );
@@ -190,7 +208,7 @@ class UserNotifier extends StateNotifier<User?> {
       if (event.eventId == eventId) {
         return event.copyWith(
           members: updatedMembers,
-          lineMembersFetchedAt: updatedLineGroup.fetchedAt,
+          // lineMembersFetchedAt: updatedLineGroup.fetchedAt, // TODO: 規約対応
         );
       }
       return event;
