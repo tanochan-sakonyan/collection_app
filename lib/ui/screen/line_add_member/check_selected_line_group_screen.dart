@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mr_collection/data/model/freezed/event.dart';
-import 'package:mr_collection/data/model/freezed/lineGroup.dart';
+import 'package:mr_collection/data/model/freezed/line_group.dart';
 import 'package:flutter_gen/gen_l10n/s.dart';
-import 'package:mr_collection/data/model/freezed/member.dart';
-import 'package:mr_collection/data/model/payment_status.dart';
+import 'package:mr_collection/data/model/freezed/line_group_member.dart';
+import 'package:mr_collection/provider/user_provider.dart';
+import 'package:mr_collection/ui/screen/home_screen.dart';
 
 class CheckSelectedLineGroupScreen extends ConsumerStatefulWidget {
   final LineGroup lineGroup;
-  const CheckSelectedLineGroupScreen({Key? key, required this.lineGroup}) : super(key: key);
+  const CheckSelectedLineGroupScreen({Key? key, required this.lineGroup})
+      : super(key: key);
   @override
   ConsumerState<CheckSelectedLineGroupScreen> createState() =>
       CheckSelectedLineGroupScreenState();
@@ -17,10 +18,18 @@ class CheckSelectedLineGroupScreen extends ConsumerStatefulWidget {
 
 class CheckSelectedLineGroupScreenState
     extends ConsumerState<CheckSelectedLineGroupScreen> {
-
   @override
   Widget build(BuildContext context) {
     final lineGroup = widget.lineGroup;
+    final userId = ref.read(userProvider)!.userId;
+    final groupId = lineGroup.groupId;
+    final eventName = lineGroup.groupName;
+    final members = lineGroup.members.map((member) {
+      return LineGroupMember(
+        memberId: member.memberId,
+        memberName: member.memberName,
+      );
+    }).toList();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -53,23 +62,25 @@ class CheckSelectedLineGroupScreenState
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            S.of(context)?.selectLineGroupTitle ?? "Add members from LINE group",
+            S.of(context)?.selectLineGroupTitle ??
+                "Add members from LINE group",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              fontSize: 24,
-              fontWeight: FontWeight.w700,
-              color: const Color(0xFF06C755),
-              height: 1.1,
-            ),
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                  color: const Color(0xFF06C755),
+                  height: 1.1,
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 36),
           Text(
-            S.of(context)?.selectLineGroupDesc ?? "Would you like to create an event with these members?",
+            S.of(context)?.selectLineGroupDesc2 ??
+                "Would you like to create an event with these members?",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: Colors.black,
-            ),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black,
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 36),
@@ -107,9 +118,9 @@ class CheckSelectedLineGroupScreenState
                                   .textTheme
                                   .bodySmall
                                   ?.copyWith(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white),
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white),
                               textAlign: TextAlign.center,
                             ),
                           ],
@@ -140,10 +151,10 @@ class CheckSelectedLineGroupScreenState
                                             .textTheme
                                             .bodyMedium
                                             ?.copyWith(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black,
-                                        ),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.black,
+                                            ),
                                       ),
                                     ),
                                   ),
@@ -169,8 +180,16 @@ class CheckSelectedLineGroupScreenState
             width: 240,
             height: 40,
             child: ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
+              onPressed: () async {
+                await ref
+                    .read(userProvider.notifier)
+                    .createEventAndGetMembersFromLine(
+                        userId, groupId, eventName, members);
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const HomeScreen(),
+                  ),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF76DCC6),
@@ -180,25 +199,28 @@ class CheckSelectedLineGroupScreenState
                 ),
               ),
               child: Text(
-                S.of(context)?.selectLineGroupButton ?? "Create event with these members",
+                S.of(context)?.selectLineGroupButton ??
+                    "Create event with these members",
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
               ),
             ),
           ),
-          const SizedBox(height: 16),
-          Text(
-            S.of(context)?.selectLineGroupNote ?? "*Member information obtained from the LINE group will be deleted after 24 hours.\nPlease reacquire before 24 hours have passed.\nPayment statuses will be retained when reacquiring.",
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              fontSize: 10,
-              fontWeight: FontWeight.w500,
-              color: const Color(0xFF6A6A6A),
-            ),
-            textAlign: TextAlign.left,
-          ),
+          // TODO: 以下、規約対応
+          // const SizedBox(height: 16),
+          // Text(
+          //   S.of(context)?.selectLineGroupNote ??
+          //       "*Member information obtained from the LINE group will be deleted after 24 hours.\nPlease reacquire before 24 hours have passed.\nPayment statuses will be retained when reacquiring.",
+          //   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+          //         fontSize: 10,
+          //         fontWeight: FontWeight.w500,
+          //         color: const Color(0xFF6A6A6A),
+          //       ),
+          //   textAlign: TextAlign.left,
+          // ),
         ],
       ),
     );

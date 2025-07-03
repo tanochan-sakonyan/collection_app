@@ -11,13 +11,11 @@ import 'package:mr_collection/ui/components/dialog/paypay_dialog.dart';
 class LineMessageBottomSheet extends ConsumerStatefulWidget {
   final Event event;
   final List<Member> unpaidMembers;
-  final String defaultPaypayUrl;
 
   const LineMessageBottomSheet.lineMessageBottomSheet({
     super.key,
     required this.event,
     required this.unpaidMembers,
-    this.defaultPaypayUrl = "https://paypay.link/XXXXXX",
   });
 
   @override
@@ -29,7 +27,6 @@ class _UnpaidMessageBottomSheetState
     extends ConsumerState<LineMessageBottomSheet> {
   late TextEditingController _controller;
   bool _includePaypayLink = false;
-  String? _paypayUrl;
 
   @override
   void initState() {
@@ -55,20 +52,19 @@ class _UnpaidMessageBottomSheetState
 
   Future<void> _onCheckChanged(BuildContext context, bool value) async {
     final user = ref.read(userProvider);
-    String? paypayUrl = user?.paypayUrl;
+    String? paypayUrl = user!.paypayUrl;
 
     if (value && (paypayUrl == null || paypayUrl.isEmpty)) {
       await showDialog(
         context: context,
         builder: (context) => const PayPayDialog(),
       );
-      paypayUrl = ref.read(userProvider)?.paypayUrl;
+      paypayUrl = user.paypayUrl;
       if (paypayUrl == null || paypayUrl.isEmpty) return;
     }
     setState(() {
       _includePaypayLink = value;
-      _paypayUrl = paypayUrl ?? widget.defaultPaypayUrl;
-      final paypayLine = '\nPayPayリンク：$_paypayUrl';
+      final paypayLine = '\nPayPayリンク：$paypayUrl';
       var currentText = _controller.text;
 
       if (_includePaypayLink) {
@@ -92,8 +88,8 @@ class _UnpaidMessageBottomSheetState
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
 
-    return FractionallySizedBox(
-      heightFactor: 0.85,
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.87,
       child: Padding(
         padding: EdgeInsets.only(
           left: 24,
@@ -103,17 +99,22 @@ class _UnpaidMessageBottomSheetState
         ),
         child: Column(
           children: [
-            Text("催促メッセージの送信",
-                style: GoogleFonts.notoSansJp(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey)),
+            Text(
+              "催促メッセージの送信",
+              style: GoogleFonts.notoSansJp(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey),
+            ),
             const SizedBox(height: 16),
-            Expanded(
+            SizedBox(
+              height: 200,
               child: Container(
                 decoration: BoxDecoration(
-                  border:
-                      Border.all(color: const Color(0xFF179394), width: 1.5),
+                  border: Border.all(
+                    color: const Color(0xFF179394),
+                    width: 1.5,
+                  ),
                   borderRadius: BorderRadius.circular(8),
                   color: Colors.grey[100],
                 ),
@@ -148,11 +149,13 @@ class _UnpaidMessageBottomSheetState
                   ),
                 ),
                 const SizedBox(width: 4),
-                Text("PayPayリンクの送付",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(fontWeight: FontWeight.bold)),
+                Text(
+                  "PayPayリンクの送付",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.copyWith(fontWeight: FontWeight.bold),
+                ),
               ],
             ),
             const SizedBox(height: 8),
@@ -161,27 +164,32 @@ class _UnpaidMessageBottomSheetState
               height: 40,
               child: ElevatedButton(
                 onPressed: () async {
-                  if (_controller.text.trim().isEmpty) {
-                    return;
-                  }
+                  if (_controller.text.trim().isEmpty) return;
                   await showDialog(
                     context: context,
                     builder: (context) => LineMessageConfirmDialog(
-                        event: widget.event, message: _controller.text),
+                      event: widget.event,
+                      message: _controller.text,
+                    ),
                   );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF75DCC6),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8)),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
-                child: Text("次へ",
-                    style: GoogleFonts.inter(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white)),
+                child: Text(
+                  "次へ",
+                  style: GoogleFonts.inter(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ),
+            const SizedBox(height: 20),
           ],
         ),
       ),

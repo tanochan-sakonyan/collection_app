@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_line_sdk/flutter_line_sdk.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/data/model/freezed/user.dart';
@@ -44,6 +45,19 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('currentLoginMedia', media);
     debugPrint('currentLoginMedia: $media');
+  }
+
+  Future<User?> _loadUser(WidgetRef ref, String userId) async {
+    final stored = await LineSDK.instance.currentAccessToken;
+    final lineAccessToken = stored?.value;
+
+    if (lineAccessToken != null) {
+      return ref
+          .read(userProvider.notifier)
+          .fetchLineUserById(userId, lineAccessToken);
+    } else {
+      debugPrint("20250701エラー：アクセストークンがnullです。");
+    }
   }
 
   @override
@@ -115,9 +129,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                     debugPrint('userId: $userId');
                     if (userId != null) {
                       return FutureBuilder<User?>(
-                        future: ref
-                            .read(userProvider.notifier)
-                            .fetchUserById(userId),
+                        future: _loadUser(ref, userId),
                         builder: (context, userSnapshot) {
                           if (userSnapshot.connectionState ==
                               ConnectionState.waiting) {

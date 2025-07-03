@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:mr_collection/ads/ad_helper.dart';
-import 'package:mr_collection/data/model/freezed/lineGroup.dart';
+import 'package:mr_collection/data/model/freezed/line_group.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/provider/tab_titles_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
@@ -12,7 +12,9 @@ import 'package:mr_collection/ui/components/dialog/event/add_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/event/delete_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/event/edit_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/line_group_update_countdown_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/suggest_send_message_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_and_suggest_official_line_dialog.dart';
+import 'package:mr_collection/ui/screen/line_message_bottom_sheet.dart';
 import 'package:mr_collection/ui/screen/member_list.dart';
 import 'package:mr_collection/ui/components/tanochan_drawer.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
@@ -44,7 +46,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   final GlobalKey memberAddKey = GlobalKey();
   final GlobalKey slidableKey = GlobalKey();
   final GlobalKey sortKey = GlobalKey();
-  final GlobalKey fabKey = GlobalKey();
+  late List<GlobalKey> _fabKeys;
 
   late TutorialCoachMark tutorialCoachMark;
   List<TargetFocus> targets = [];
@@ -52,6 +54,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   @override
   void initState() {
     super.initState();
+    _initKeys();
     _tabTitles = ref.read(tabTitlesProvider);
     _tabController = TabController(length: _tabTitles.length, vsync: this);
 
@@ -87,6 +90,11 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     )..load();
   }
 
+  void _initKeys() {
+    final len = ref.read(tabTitlesProvider).length;
+    _fabKeys = List.generate(len, (_) => GlobalKey());
+  }
+
   bool _updateDialogChecked = false;
 
   @override
@@ -114,20 +122,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     _updateDialogChecked = true;
   }
 
-  Future<void> _checkTutorialStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-    final isTutorialShown120 = prefs.getBool('isTutorialShown120') ?? false;
-    if (!isTutorialShown120) {
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        await Future.delayed(const Duration(milliseconds: 120));
-        if (mounted) _showTutorial();
-      });
-      debugPrint('Tutorial shown');
-    } else {
-      debugPrint('Tutorial already shown');
-    }
-  }
-
   void _showTutorial() {
     targets = TutorialTargets.createTargets(
       context: context,
@@ -136,7 +130,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       memberAddKey: memberAddKey,
       slidableKey: slidableKey,
       sortKey: sortKey,
-      fabKey: fabKey,
+      fabKey: _fabKeys[_currentTabIndex],
     );
     tutorialCoachMark = TutorialCoachMark(
       targets: targets,
@@ -179,6 +173,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   void _updateTabController(int newLength) {
     _tabController.dispose();
     _tabController = TabController(length: newLength, vsync: this);
+    _initKeys();
     _tabController.addListener(() {
       if (_tabController.index != _currentTabIndex &&
           !_tabController.indexIsChanging) {
@@ -238,7 +233,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
@@ -289,19 +284,19 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                           newNote);
                       Navigator.of(context).pop();
                     },
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 22),
+                      backgroundColor: const Color(0xFF76DCC6),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
                     child: Text(
                       S.of(context)?.save ?? "Save",
                       style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
                           color: Colors.white),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: Size(double.infinity, 22),
-                      backgroundColor: Color(0xFF76DCC6),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
                     ),
                   ),
                 ),
@@ -550,32 +545,41 @@ class HomeScreenState extends ConsumerState<HomeScreen>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(
-                      S.of(context)?.autoDeleteMemberCountdown ??
-                          "Auto member deletion in",
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelSmall
-                          ?.copyWith(color: Colors.black)),
-                  CountdownTimer(
-                    expiretime: currentEvent.lineMembersFetchedAt!
-                        .add(const Duration(hours: 24)),
-                    textStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: Colors.black,
-                        ),
-                    onExpired: () {
-                      ref
-                          .read(userProvider.notifier)
-                          .clearMembersOfEvent(currentEventId);
-                    },
-                  ),
-                  const SizedBox(width: 8),
-                  SvgPicture.asset(
-                    'assets/icons/ic_update.svg',
-                    width: 20,
-                    height: 20,
-                  ),
-                  const SizedBox(width: 36),
+                  ...(currentEvent.lineMembersFetchedAt != null)
+                      ? [
+                          Text(
+                              S.of(context)?.autoDeleteMemberCountdown ??
+                                  "Auto member deletion in",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelSmall
+                                  ?.copyWith(color: Colors.black)),
+                          CountdownTimer(
+                            expireTime: currentEvent.lineMembersFetchedAt!
+                                .add(const Duration(hours: 24)),
+                            textStyle: Theme.of(context)
+                                .textTheme
+                                .labelSmall
+                                ?.copyWith(
+                                  color: Colors.black,
+                                ),
+                            onExpired: () {
+                              ref
+                                  .read(userProvider.notifier)
+                                  .clearMembersOfEvent(currentEventId);
+                            },
+                          ),
+                          const SizedBox(width: 8),
+                          SvgPicture.asset(
+                            'assets/icons/ic_update.svg',
+                            width: 20,
+                            height: 20,
+                          ),
+                          const SizedBox(width: 36),
+                        ]
+                      : [
+                          const SizedBox(height: 4),
+                        ],
                 ],
               ),
             ),
@@ -678,39 +682,47 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                               height: 60,
                               width: 60,
                               child: FloatingActionButton(
-                                key: fabKey,
+                                key: _fabKeys[index],
                                 backgroundColor: const Color(0xFFBABABA),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(48),
                                 ),
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                        vertical: 56.0,
-                                        horizontal: 24.0,
-                                      ),
-                                      content: Text(
-                                        '${S.of(context)?.update_1}\n ${S.of(context)?.update_2}',
-                                        textAlign: TextAlign.center,
-                                        style: Theme.of(
-                                          context,
-                                        ).textTheme.bodyLarge?.copyWith(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.black,
+                                onPressed: _tabController.indexIsChanging
+                                    ? null
+                                    : () async {
+                                        final bool isEventConnected =
+                                            event.lineGroupId != null &&
+                                                event.lineGroupId!.isNotEmpty;
+                                        if (isEventConnected) {
+                                          final unpaidMembers = event.members
+                                              .where((m) =>
+                                                  m.status ==
+                                                  PaymentStatus.unpaid)
+                                              .toList();
+                                          await showModalBottomSheet(
+                                            context: context,
+                                            isScrollControlled: true,
+                                            backgroundColor: Colors.white,
+                                            shape: const RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.vertical(
+                                                      top: Radius.circular(16)),
                                             ),
-                                      ),
-                                    ),
-                                  );
-                                  //TODO LINE認証申請が通ったらこちらに戻す
-                                  /*showDialog(
-                context: context,
-                builder: (context) => const ConfirmationDialog(),
-              );*/
-                                },
+                                            builder: (context) =>
+                                                LineMessageBottomSheet
+                                                    .lineMessageBottomSheet(
+                                              event: event,
+                                              unpaidMembers: unpaidMembers,
+                                            ),
+                                          );
+                                        } else {
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return const SuggestSendMessageDialog();
+                                              });
+                                        }
+                                      },
                                 child: Center(
                                   child: Stack(
                                     alignment: Alignment.center,
