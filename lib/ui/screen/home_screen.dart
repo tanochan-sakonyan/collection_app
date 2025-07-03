@@ -45,9 +45,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
 
   final GlobalKey eventAddKey = GlobalKey();
   final GlobalKey leftTabKey = GlobalKey();
-  final GlobalKey memberAddKey = GlobalKey();
-  final GlobalKey slidableKey = GlobalKey();
-  final GlobalKey sortKey = GlobalKey();
+  late List<GlobalKey> _memberAddKeys;
+  late List<GlobalKey> _slidableKeys;
+  late List<GlobalKey> _sortKeys;
   late List<GlobalKey> _fabKeys;
 
   late TutorialCoachMark tutorialCoachMark;
@@ -94,6 +94,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
 
   void _initKeys() {
     final len = ref.read(tabTitlesProvider).length;
+    _memberAddKeys = List.generate(len, (_) => GlobalKey());
+    _slidableKeys = List.generate(len, (_) => GlobalKey());
+    _sortKeys = List.generate(len, (_) => GlobalKey());
     _fabKeys = List.generate(len, (_) => GlobalKey());
   }
 
@@ -129,9 +132,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       context: context,
       eventAddKey: eventAddKey,
       leftTabKey: leftTabKey,
-      memberAddKey: memberAddKey,
-      slidableKey: slidableKey,
-      sortKey: sortKey,
+      memberAddKey: _memberAddKeys[_currentTabIndex],
+      slidableKey: _slidableKeys[_currentTabIndex],
+      sortKey: _sortKeys[_currentTabIndex],
       fabKey: _fabKeys[_currentTabIndex],
     );
     tutorialCoachMark = TutorialCoachMark(
@@ -657,13 +660,13 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                     event.eventId != "" ? event.eventId : "",
                                 eventName: event.eventName,
                                 memberAddKey: (_currentTabIndex == index)
-                                    ? memberAddKey
+                                    ? _memberAddKeys[index]
                                     : null,
                                 slidableKey: (_currentTabIndex == index)
-                                    ? slidableKey
+                                    ? _slidableKeys[index]
                                     : null,
                                 sortKey: (_currentTabIndex == index)
-                                    ? sortKey
+                                    ? _sortKeys[index]
                                     : null,
                               ),
                               Expanded(
