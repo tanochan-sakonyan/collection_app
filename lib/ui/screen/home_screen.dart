@@ -16,7 +16,7 @@ import 'package:mr_collection/ui/components/dialog/event/edit_event_dialog.dart'
 import 'package:mr_collection/ui/components/dialog/line_group_update_countdown_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/suggest_send_message_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_and_suggest_official_line_dialog.dart';
-import 'package:mr_collection/ui/screen/line_message_bottom_sheet.dart';
+import 'package:mr_collection/ui/screen/send_line_message_bottom_sheet.dart';
 import 'package:mr_collection/ui/screen/member_list.dart';
 import 'package:mr_collection/ui/components/tanochan_drawer.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';

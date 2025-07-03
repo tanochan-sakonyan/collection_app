@@ -14,7 +14,7 @@ import 'package:mr_collection/ui/components/dialog/member/status_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:mr_collection/ui/screen/amount_screen/input_amount_screen.dart';
-import 'package:mr_collection/ui/screen/line_message_bottom_sheet.dart';
+import 'package:mr_collection/ui/screen/send_line_message_bottom_sheet.dart';
 import '../components/dialog/member/edit_member_name_dialog.dart';
 import 'package:flutter_gen/gen_l10n/s.dart';
 
@@ -129,233 +129,218 @@ class MemberList extends ConsumerWidget {
                     ),
                     ClipRect(
                       child:
-                      // TODO: 規約対応
-                      // (event.lineGroupId != null &&
-                      //         DateTime.now().isAfter(event.lineMembersFetchedAt!
-                      //             .add(const Duration(hours: 24))) &&
-                      //         (members == null || members!.isEmpty))
-                      //     ? Center(
-                      //         child: Text(
-                      //           S.of(context)?.memberDeletedAfter24h ??
-                      //               "Member information has been deleted after 24 hours.",
-                      //           style: Theme.of(context)
-                      //               .textTheme
-                      //               .bodyMedium
-                      //               ?.copyWith(
-                      //                 fontSize: 14,
-                      //                 color: Colors.grey,
-                      //               ),
-                      //           textAlign: TextAlign.center,
-                      //         ),
-                      //       )
-                      //    :
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.35,
-                              child: SlidableAutoCloseBehavior(
-                                child: ListView.builder(
-                                  itemCount: members?.length,
-                                  itemBuilder: (context, index) {
-                                    final member = members?[index];
-                                    return Padding(
-                                      padding: const EdgeInsets.only(
-                                        left: 16,
-                                        right: 16,
-                                      ),
-                                      child: Column(
+                          // TODO: 規約対応
+                          // (event.lineGroupId != null &&
+                          //         DateTime.now().isAfter(event.lineMembersFetchedAt!
+                          //             .add(const Duration(hours: 24))) &&
+                          //         (members == null || members!.isEmpty))
+                          //     ? Center(
+                          //         child: Text(
+                          //           S.of(context)?.memberDeletedAfter24h ??
+                          //               "Member information has been deleted after 24 hours.",
+                          //           style: Theme.of(context)
+                          //               .textTheme
+                          //               .bodyMedium
+                          //               ?.copyWith(
+                          //                 fontSize: 14,
+                          //                 color: Colors.grey,
+                          //               ),
+                          //           textAlign: TextAlign.center,
+                          //         ),
+                          //       )
+                          //    :
+                          SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.35,
+                        child: SlidableAutoCloseBehavior(
+                          child: ListView.builder(
+                            itemCount: members?.length,
+                            itemBuilder: (context, index) {
+                              final member = members?[index];
+                              return Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 16,
+                                  right: 16,
+                                ),
+                                child: Column(
+                                  children: [
+                                    Slidable(
+                                      key: ValueKey(member!.memberId),
+                                      endActionPane: ActionPane(
+                                        motion: const ScrollMotion(),
+                                        extentRatio: 0.60,
                                         children: [
-                                          Slidable(
-                                            key: ValueKey(member!.memberId),
-                                            endActionPane: ActionPane(
-                                              motion: const ScrollMotion(),
-                                              extentRatio: 0.60,
-                                              children: [
-                                                CustomSlidableAction(
-                                                  onPressed: (context) {
-                                                    showDialog(
-                                                      context: context,
-                                                      builder: (
-                                                        context,
-                                                      ) =>
-                                                          EditMemberNameDialog(
-                                                        userId: ref
-                                                            .read(
-                                                              userProvider,
-                                                            )!
-                                                            .userId,
-                                                        eventId: eventId,
-                                                        memberId:
-                                                            member.memberId,
-                                                        currentName:
-                                                            member.memberName,
-                                                      ),
-                                                    );
-                                                  },
-                                                  backgroundColor: Colors.grey,
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      const SizedBox(height: 4),
-                                                      AutoSizeText(
-                                                        S.of(context)?.edit ??
-                                                            "Edit",
-                                                        maxLines: 1,
-                                                        style:
-                                                            GoogleFonts.inter(
-                                                          fontSize: 14,
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          color: Colors.white,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
+                                          CustomSlidableAction(
+                                            onPressed: (context) {
+                                              showDialog(
+                                                context: context,
+                                                builder: (
+                                                  context,
+                                                ) =>
+                                                    EditMemberNameDialog(
+                                                  userId: ref
+                                                      .read(
+                                                        userProvider,
+                                                      )!
+                                                      .userId,
+                                                  eventId: eventId,
+                                                  memberId: member.memberId,
+                                                  currentName:
+                                                      member.memberName,
                                                 ),
-                                                CustomSlidableAction(
-                                                  onPressed: (context) {
-                                                    showDialog(
-                                                      context: context,
-                                                      builder: (
-                                                        context,
-                                                      ) =>
-                                                          DeleteMemberDialog(
-                                                        userId: ref
-                                                            .read(
-                                                              userProvider,
-                                                            )!
-                                                            .userId,
-                                                        eventId: eventId,
-                                                        memberId:
-                                                            member.memberId,
-                                                      ),
-                                                    );
-                                                  },
-                                                  backgroundColor: Colors.red,
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      const SizedBox(height: 4),
-                                                      AutoSizeText(
-                                                        S.of(context)?.delete ??
-                                                            "Delete",
-                                                        maxLines: 1,
-                                                        style:
-                                                            GoogleFonts.inter(
-                                                          fontSize: 14,
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          color: Colors.white,
-                                                        ),
-                                                      ),
-                                                    ],
+                                              );
+                                            },
+                                            backgroundColor: Colors.grey,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                const SizedBox(height: 4),
+                                                AutoSizeText(
+                                                  S.of(context)?.edit ?? "Edit",
+                                                  maxLines: 1,
+                                                  style: GoogleFonts.inter(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Colors.white,
                                                   ),
                                                 ),
                                               ],
                                             ),
-                                            child: Container(
-                                              key: (index == 0)
-                                                  ? slidableKey
-                                                  : null,
-                                              child: ListTile(
-                                                minTileHeight: 44,
-                                                title: (member.memberName !=
-                                                        null)
-                                                    ? Text(
-                                                        member.memberName,
-                                                        maxLines: 1,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        style: Theme.of(
-                                                          context,
-                                                        )
-                                                            .textTheme
-                                                            .bodyMedium
-                                                            ?.copyWith(
-                                                              fontSize: 14,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                              color: member
-                                                                          .status ==
-                                                                      PaymentStatus
-                                                                          .absence
-                                                                  ? Colors.grey
-                                                                  : Colors
-                                                                      .black,
-                                                            ),
-                                                      )
-                                                    : null,
-                                                subtitle: isAmountLoading
-                                                    ?  const Row(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    SpinKitThreeBounce(color: Colors.black, size: 15),
-                                                  ],
-                                                )
-                                                  : (member.memberMoney !=
-                                                        null)
-                                                    ? Text(
-                                                        "${member.memberMoney} ${S.of(context)?.currencyUnit ?? "USD"}",
-                                                        style: TextStyle(
-                                                          color: member
-                                                                      .status ==
-                                                                  PaymentStatus
-                                                                      .absence
-                                                              ? Colors.grey
-                                                              : Colors.black,
-                                                        ),
-                                                      )
-                                                    : null,
-                                                trailing: _buildStatusIcon(
-                                                  member.status,
-                                                ),
-                                                onTap: () {
-                                                  showDialog(
-                                                    context: context,
-                                                    builder: (context) =>
-                                                        StatusDialog(
-                                                      userId: ref
-                                                          .read(userProvider)!
-                                                          .userId,
-                                                      eventId:
-                                                          eventId.toString(),
-                                                      memberId: member.memberId,
-                                                      member: member.memberName,
-                                                      onStatusChange: (
-                                                        String userId,
-                                                        String eventId,
-                                                        String memberId,
-                                                        int status,
-                                                      ) {
-                                                        _updateMemberStatus(
-                                                          ref,
-                                                          userId,
-                                                          eventId,
-                                                          memberId,
-                                                          status,
-                                                        );
-                                                      },
-                                                    ),
-                                                  );
-                                                },
-                                              ),
-                                            ),
                                           ),
-                                          const Divider(
-                                            thickness: 1,
-                                            height: 1,
-                                            color: Color(0xFFE8E8E8),
+                                          CustomSlidableAction(
+                                            onPressed: (context) {
+                                              showDialog(
+                                                context: context,
+                                                builder: (
+                                                  context,
+                                                ) =>
+                                                    DeleteMemberDialog(
+                                                  userId: ref
+                                                      .read(
+                                                        userProvider,
+                                                      )!
+                                                      .userId,
+                                                  eventId: eventId,
+                                                  memberId: member.memberId,
+                                                ),
+                                              );
+                                            },
+                                            backgroundColor: Colors.red,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                const SizedBox(height: 4),
+                                                AutoSizeText(
+                                                  S.of(context)?.delete ??
+                                                      "Delete",
+                                                  maxLines: 1,
+                                                  style: GoogleFonts.inter(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ],
                                       ),
-                                    );
-                                  },
+                                      child: Container(
+                                        key: (index == 0) ? slidableKey : null,
+                                        child: ListTile(
+                                          minTileHeight: 44,
+                                          title: (member.memberName != null)
+                                              ? Text(
+                                                  member.memberName,
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: Theme.of(
+                                                    context,
+                                                  )
+                                                      .textTheme
+                                                      .bodyMedium
+                                                      ?.copyWith(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: member.status ==
+                                                                PaymentStatus
+                                                                    .absence
+                                                            ? Colors.grey
+                                                            : Colors.black,
+                                                      ),
+                                                )
+                                              : null,
+                                          subtitle: isAmountLoading
+                                              ? const Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    SpinKitThreeBounce(
+                                                        color: Colors.black,
+                                                        size: 15),
+                                                  ],
+                                                )
+                                              : (member.memberMoney != null)
+                                                  ? Text(
+                                                      "${member.memberMoney} ${S.of(context)?.currencyUnit ?? "USD"}",
+                                                      style: TextStyle(
+                                                        color: member.status ==
+                                                                PaymentStatus
+                                                                    .absence
+                                                            ? Colors.grey
+                                                            : Colors.black,
+                                                      ),
+                                                    )
+                                                  : null,
+                                          trailing: _buildStatusIcon(
+                                            member.status,
+                                          ),
+                                          onTap: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  StatusDialog(
+                                                userId: ref
+                                                    .read(userProvider)!
+                                                    .userId,
+                                                eventId: eventId.toString(),
+                                                memberId: member.memberId,
+                                                member: member.memberName,
+                                                onStatusChange: (
+                                                  String userId,
+                                                  String eventId,
+                                                  String memberId,
+                                                  int status,
+                                                ) {
+                                                  _updateMemberStatus(
+                                                    ref,
+                                                    userId,
+                                                    eventId,
+                                                    memberId,
+                                                    status,
+                                                  );
+                                                },
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    const Divider(
+                                      thickness: 1,
+                                      height: 1,
+                                      color: Color(0xFFE8E8E8),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
                     ),
                     const Divider(color: Colors.black, thickness: 1, height: 1),
                     SizedBox(
