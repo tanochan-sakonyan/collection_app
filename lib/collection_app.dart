@@ -56,7 +56,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
           .read(userProvider.notifier)
           .fetchLineUserById(userId, lineAccessToken);
     } else {
-      debugPrint("20250701エラー：アクセストークンがnullです。");
+      debugPrint("エラー：アクセストークンがnullです。");
     }
   }
 
