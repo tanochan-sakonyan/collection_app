@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
 
 class PayPayDialog extends ConsumerStatefulWidget {
   const PayPayDialog({super.key});
@@ -23,6 +24,7 @@ class PayPayDialogState extends ConsumerState<PayPayDialog> {
       return;
     }
 
+    ref.read(loadingProvider.notifier).state = true;
     try {
       final userRepository = ref.read(userRepositoryProvider);
       final user = ref.read(userProvider);
@@ -39,12 +41,16 @@ class PayPayDialogState extends ConsumerState<PayPayDialog> {
         const SnackBar(content: Text('PayPayリンクを送信しました。')),
       );
       debugPrint("PayPayリンクの送信に失敗しました");
+    } finally {
+      ref.read(loadingProvider.notifier).state = false;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
+    final isLoading = ref.watch(loadingProvider);
+    return CircleIndicator(
+        child: Dialog(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(23),
@@ -115,9 +121,7 @@ class PayPayDialogState extends ConsumerState<PayPayDialog> {
                 height: 40,
                 width: 272,
                 child: ElevatedButton(
-                  onPressed: () {
-                    _sendPaypayLink(context);
-                  },
+                  onPressed: isLoading ? null : () => _sendPaypayLink(context),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFF2F2F2),
                     elevation: 2,
@@ -139,6 +143,6 @@ class PayPayDialogState extends ConsumerState<PayPayDialog> {
           ),
         ),
       ),
-    );
+    ));
   }
 }
