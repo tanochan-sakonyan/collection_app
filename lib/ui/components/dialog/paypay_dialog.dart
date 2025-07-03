@@ -38,7 +38,7 @@ class PayPayDialogState extends ConsumerState<PayPayDialog> {
       debugPrint("PayPayリンクを送信しました");
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('PayPayリンクを送信しました。')),
+        const SnackBar(content: Text('PayPayリンクの送信に失敗しました。')),
       );
       debugPrint("PayPayリンクの送信に失敗しました");
     } finally {
