@@ -7,6 +7,7 @@ import 'package:mr_collection/data/model/freezed/line_group.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/provider/tab_titles_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
+import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
 import 'package:mr_collection/ui/components/countdown_timer.dart';
 import 'package:mr_collection/ui/components/dialog/event/add_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/event/delete_event_dialog.dart';
@@ -239,71 +240,94 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
-        return Padding(
-          padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SizedBox(height: 24),
-              Text(
-                S.of(context)?.editNote ?? "Edit Note",
-                style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.grey),
-              ),
-              const SizedBox(height: 12),
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: TextField(
-                  controller: controller,
-                  maxLines: 8,
-                  minLines: 8,
-                  decoration: InputDecoration(
-                    hintText: S.of(context)?.memoPlaceholder ??
-                        "You can enter a note",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: SizedBox(
-                  width: 108,
-                  height: 44,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      final newNote = controller.text.trim();
-                      await ref.read(userProvider.notifier).addNote(
-                          ref.read(userProvider)!.userId,
-                          event.eventId,
-                          newNote);
-                      Navigator.of(context).pop();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(double.infinity, 22),
-                      backgroundColor: const Color(0xFF76DCC6),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+        return Consumer(
+          builder: (context, ref, _) {
+            final isSaving = ref.watch(loadingProvider);
+            return WillPopScope(
+              onWillPop: () async => !isSaving,
+              child: CircleIndicator(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(height: 24),
+                      Text(
+                        S.of(context)?.editNote ?? "Edit Note",
+                        style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.grey),
                       ),
-                    ),
-                    child: Text(
-                      S.of(context)?.save ?? "Save",
-                      style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white),
-                    ),
+                      const SizedBox(height: 12),
+                      Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: TextField(
+                          controller: controller,
+                          maxLines: 8,
+                          minLines: 8,
+                          decoration: InputDecoration(
+                            hintText: S.of(context)?.memoPlaceholder ??
+                                "You can enter a note",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        child: SizedBox(
+                          width: 108,
+                          height: 44,
+                          child: ElevatedButton(
+                            onPressed: isSaving
+                                ? null
+                                : () async {
+                                    final newNote = controller.text.trim();
+                                    ref.read(loadingProvider.notifier).state =
+                                        true;
+                                    try {
+                                      await ref
+                                          .read(userProvider.notifier)
+                                          .addNote(
+                                              ref.read(userProvider)!.userId,
+                                              event.eventId,
+                                              newNote);
+                                      Navigator.of(context).pop();
+                                    } catch (e) {
+                                      debugPrint('メモ保存に失敗: $e');
+                                    } finally {
+                                      ref.read(loadingProvider.notifier).state =
+                                          false;
+                                    }
+                                  },
+                            style: ElevatedButton.styleFrom(
+                              minimumSize: const Size(double.infinity, 22),
+                              backgroundColor: const Color(0xFF76DCC6),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: Text(
+                              S.of(context)?.save ?? "Save",
+                              style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
-            ],
-          ),
+            );
+          },
         );
       },
     );
