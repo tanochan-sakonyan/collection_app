@@ -136,13 +136,11 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
     if (lineGroups.isEmpty) {
       Navigator.of(context).push(
         MaterialPageRoute(
-            // 集金くんアカウントを含むLINEグループがないとき
             builder: (_) => const InviteOfficialAccountToLineGroupScreen()),
       );
     } else {
       final pickedLineGroup = await Navigator.of(context).push<LineGroup>(
         MaterialPageRoute(
-            // 集金くんアカウントを含むLINEグループがあるとき
             builder: (_) => SelectLineGroupScreen(lineGroups: lineGroups)),
       );
       if (pickedLineGroup != null) {
