@@ -6,7 +6,6 @@ import 'package:mr_collection/data/model/freezed/user.dart';
 import 'package:mr_collection/data/repository/event_repository.dart';
 import 'package:mr_collection/data/repository/member_repository.dart';
 import 'package:mr_collection/data/repository/user_repository.dart';
-import 'package:mr_collection/provider/access_token_provider.dart';
 import 'package:mr_collection/provider/amount_loading_provider.dart';
 import 'package:mr_collection/provider/event_repository_provider.dart';
 import 'package:mr_collection/provider/member_repository_provider.dart';
