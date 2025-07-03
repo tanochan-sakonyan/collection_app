@@ -22,7 +22,7 @@ LineGroup _$LineGroupFromJson(Map<String, dynamic> json) {
 mixin _$LineGroup {
   String get groupId => throw _privateConstructorUsedError;
   String get groupName =>
-      throw _privateConstructorUsedError; // required DateTime fetchedAt, // TOD: 規約対応
+      throw _privateConstructorUsedError; // required DateTime fetchedAt, // TODO: 規約対応
   List<LineGroupMember> get members => throw _privateConstructorUsedError;
 
   /// Serializes this LineGroup to a JSON map.
@@ -141,9 +141,9 @@ class _$LineGroupImpl implements _LineGroup {
   final String groupId;
   @override
   final String groupName;
-// required DateTime fetchedAt, // TOD: 規約対応
+// required DateTime fetchedAt, // TODO: 規約対応
   final List<LineGroupMember> _members;
-// required DateTime fetchedAt, // TOD: 規約対応
+// required DateTime fetchedAt, // TODO: 規約対応
   @override
   List<LineGroupMember> get members {
     if (_members is EqualUnmodifiableListView) return _members;
@@ -200,7 +200,7 @@ abstract class _LineGroup implements LineGroup {
   @override
   String get groupId;
   @override
-  String get groupName; // required DateTime fetchedAt, // TOD: 規約対応
+  String get groupName; // required DateTime fetchedAt, // TODO: 規約対応
   @override
   List<LineGroupMember> get members;
 
