@@ -41,6 +41,7 @@ class UserNotifier extends StateNotifier<User?> {
       this.eventRepository, this.memberRepository, this.userService, this.ref)
       : super(null);
 
+  // TODO: 現在はAppleログインで使用しているが、後々registerAppleUserを作成して移行する
   Future<User?> registerUser(String accessToken) async {
     try {
       final user = await userService.registerUser(accessToken);

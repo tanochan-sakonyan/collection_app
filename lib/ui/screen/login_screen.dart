@@ -83,11 +83,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       final userId = prefs.getString('lineUserId');
 
                       if (isLineLoggedIn && userId != null) {
+                        // LINEで集金くんのユーザー作成はしている。ログアウトして、2回目以降のログインを想定。
                         ref.read(loginLoadingProvider.notifier).state = true;
                         try {
+                          final result = await LineSDK.instance.login();
+                          final lineAccessToken = result.accessToken.value;
                           await ref
                               .read(userProvider.notifier)
-                              .fetchUserById(userId);
+                              .fetchLineUserById(userId, lineAccessToken);
 
                           final user = ref.read(userProvider);
                           if (mounted && user != null) {
@@ -110,15 +113,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         try {
                           final result = await LineSDK.instance
                               .login(option: LoginOption(false, 'aggressive'));
-                          final accessToken = result.accessToken.value;
-                          ref
-                              .read(accessTokenProvider.notifier)
-                              .state =
-                              accessToken;
+                          final lineAccessToken = result.accessToken.value;
                           ref.read(loginLoadingProvider.notifier).state = true;
                           final user = await ref
                               .read(userProvider.notifier)
-                              .registerUser(accessToken);
+                              .registerLineUser(lineAccessToken);
 
                           if (user != null) {
                             prefs.setString('lineUserId', user.userId);
