@@ -198,15 +198,15 @@ class CheckSelectedLineGroupScreenState
               ),
             ],
           ),
-          const SizedBox(height: 24),
-          Text(
-            "Appleを利用してログインしている場合は、\n一度ログアウトした後に、LINEログインを利用してください",
-            style: Theme.of(context)
-                .textTheme
-                .labelSmall
-                ?.copyWith(color: const Color(0xFF6A6A6A)),
-            textAlign: TextAlign.center,
-          )
+          // const SizedBox(height: 24),
+          // Text(
+          //   "Appleを利用してログインしている場合は、\n一度ログアウトした後に、LINEログインを利用してください",
+          //   style: Theme.of(context)
+          //       .textTheme
+          //       .labelSmall
+          //       ?.copyWith(color: const Color(0xFF6A6A6A)),
+          //   textAlign: TextAlign.center,
+          // )
         ],
       ),
     );
