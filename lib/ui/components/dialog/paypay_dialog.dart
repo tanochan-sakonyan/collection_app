@@ -102,7 +102,15 @@ class PayPayDialogState extends ConsumerState<PayPayDialog> {
                   ),
                 ),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 12),
+              Text(
+                "反映まで3~5分ほどかかる場合があります。",
+                style: Theme.of(context)
+                    .textTheme
+                    .labelSmall
+                    ?.copyWith(color: Colors.grey),
+              ),
+              const SizedBox(height: 12),
               SizedBox(
                 height: 40,
                 width: 272,
