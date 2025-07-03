@@ -56,14 +56,16 @@ class MemberList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final int? attendanceCount =
-        members?.where((member) => member.status == PaymentStatus.paid).length;
-    final int? unpaidCount = members
-        ?.where((member) => member.status == PaymentStatus.unpaid)
-        .length;
-    final isAmountLoading = ref.watch(amountLoadingProvider(eventId));
+    // TODO: 未払い、支払い済は、一旦コメントアウト
+    // final int? attendanceCount =
+    //     members?.where((member) => member.status == PaymentStatus.paid).length;
+    // final int? unpaidCount = members
+    //     ?.where((member) => member.status == PaymentStatus.unpaid)
+    //     .length;
+    //
+    // const double iconSize = 30.0;
 
-    const double iconSize = 30.0;
+    final isAmountLoading = ref.watch(amountLoadingProvider(eventId));
 
     return Padding(
       padding: const EdgeInsets.only(top: 8, left: 29, right: 29),
@@ -126,25 +128,28 @@ class MemberList extends ConsumerWidget {
                       ),
                     ),
                     ClipRect(
-                      child: (event.lineGroupId != null &&
-                              DateTime.now().isAfter(event.lineMembersFetchedAt!
-                                  .add(const Duration(hours: 24))) &&
-                              (members == null || members!.isEmpty))
-                          ? Center(
-                              child: Text(
-                                S.of(context)?.memberDeletedAfter24h ??
-                                    "Member information has been deleted after 24 hours.",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium
-                                    ?.copyWith(
-                                      fontSize: 14,
-                                      color: Colors.grey,
-                                    ),
-                                textAlign: TextAlign.center,
-                              ),
-                            )
-                          : SizedBox(
+                      child:
+                      // TODO: 規約対応
+                      // (event.lineGroupId != null &&
+                      //         DateTime.now().isAfter(event.lineMembersFetchedAt!
+                      //             .add(const Duration(hours: 24))) &&
+                      //         (members == null || members!.isEmpty))
+                      //     ? Center(
+                      //         child: Text(
+                      //           S.of(context)?.memberDeletedAfter24h ??
+                      //               "Member information has been deleted after 24 hours.",
+                      //           style: Theme.of(context)
+                      //               .textTheme
+                      //               .bodyMedium
+                      //               ?.copyWith(
+                      //                 fontSize: 14,
+                      //                 color: Colors.grey,
+                      //               ),
+                      //           textAlign: TextAlign.center,
+                      //         ),
+                      //       )
+                      //    :
+                            SizedBox(
                               height: MediaQuery.of(context).size.height * 0.35,
                               child: SlidableAutoCloseBehavior(
                                 child: ListView.builder(
