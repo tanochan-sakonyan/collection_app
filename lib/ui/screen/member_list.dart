@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
+import 'package:mr_collection/provider/amount_loading_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/member/add_member_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/member/delete_member_dialog.dart';
@@ -12,7 +14,8 @@ import 'package:mr_collection/ui/components/dialog/member/status_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:mr_collection/ui/screen/amount_screen/input_amount_screen.dart';
-import 'dialog/member/edit_member_name_dialog.dart';
+import 'package:mr_collection/ui/screen/send_line_message_bottom_sheet.dart';
+import '../components/dialog/member/edit_member_name_dialog.dart';
 import 'package:flutter_gen/gen_l10n/s.dart';
 
 class MemberList extends ConsumerWidget {
@@ -24,7 +27,6 @@ class MemberList extends ConsumerWidget {
   final GlobalKey? memberAddKey;
   final GlobalKey? slidableKey;
   final GlobalKey? sortKey;
-  final GlobalKey? fabKey;
 
   const MemberList({
     super.key,
@@ -35,7 +37,6 @@ class MemberList extends ConsumerWidget {
     this.memberAddKey,
     this.slidableKey,
     this.sortKey,
-    this.fabKey,
   });
   Future<void> _updateMemberStatus(
     WidgetRef ref,
@@ -55,16 +56,19 @@ class MemberList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final int? attendanceCount =
-        members?.where((member) => member.status == PaymentStatus.paid).length;
-    final int? unpaidCount = members
-        ?.where((member) => member.status == PaymentStatus.unpaid)
-        .length;
+    // TODO: 未払い、支払い済は、一旦コメントアウト
+    // final int? attendanceCount =
+    //     members?.where((member) => member.status == PaymentStatus.paid).length;
+    // final int? unpaidCount = members
+    //     ?.where((member) => member.status == PaymentStatus.unpaid)
+    //     .length;
+    //
+    // const double iconSize = 30.0;
 
-    const double iconSize = 30.0;
+    final isAmountLoading = ref.watch(amountLoadingProvider(eventId));
 
     return Padding(
-      padding: const EdgeInsets.only(top: 16, left: 29, right: 29),
+      padding: const EdgeInsets.only(top: 8, left: 29, right: 29),
       child: Stack(
         children: [
           Column(
@@ -124,7 +128,28 @@ class MemberList extends ConsumerWidget {
                       ),
                     ),
                     ClipRect(
-                      child: SizedBox(
+                      child:
+                          // TODO: 規約対応
+                          // (event.lineGroupId != null &&
+                          //         DateTime.now().isAfter(event.lineMembersFetchedAt!
+                          //             .add(const Duration(hours: 24))) &&
+                          //         (members == null || members!.isEmpty))
+                          //     ? Center(
+                          //         child: Text(
+                          //           S.of(context)?.memberDeletedAfter24h ??
+                          //               "Member information has been deleted after 24 hours.",
+                          //           style: Theme.of(context)
+                          //               .textTheme
+                          //               .bodyMedium
+                          //               ?.copyWith(
+                          //                 fontSize: 14,
+                          //                 color: Colors.grey,
+                          //               ),
+                          //           textAlign: TextAlign.center,
+                          //         ),
+                          //       )
+                          //    :
+                          SizedBox(
                         height: MediaQuery.of(context).size.height * 0.35,
                         child: SlidableAutoCloseBehavior(
                           child: ListView.builder(
@@ -248,18 +273,28 @@ class MemberList extends ConsumerWidget {
                                                       ),
                                                 )
                                               : null,
-                                          subtitle: (member.memberMoney != null)
-                                              ? Text(
-                                                  "${member.memberMoney} ${S.of(context)?.currencyUnit ?? "USD"}",
-                                                  style: TextStyle(
-                                                    color: member.status ==
-                                                            PaymentStatus
-                                                                .absence
-                                                        ? Colors.grey
-                                                        : Colors.black,
-                                                  ),
+                                          subtitle: isAmountLoading
+                                              ? const Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    SpinKitThreeBounce(
+                                                        color: Colors.black,
+                                                        size: 15),
+                                                  ],
                                                 )
-                                              : null,
+                                              : (member.memberMoney != null)
+                                                  ? Text(
+                                                      "${member.memberMoney} ${S.of(context)?.currencyUnit ?? "USD"}",
+                                                      style: TextStyle(
+                                                        color: member.status ==
+                                                                PaymentStatus
+                                                                    .absence
+                                                            ? Colors.grey
+                                                            : Colors.black,
+                                                      ),
+                                                    )
+                                                  : null,
                                           trailing: _buildStatusIcon(
                                             member.status,
                                           ),
@@ -443,192 +478,124 @@ class MemberList extends ConsumerWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 12),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 64,
-                      child: Text(
-                        S.of(context)?.unpaid ?? "",
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-                            ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.25,
-                      height: iconSize,
-                      child: Stack(
-                        children: unpaidCount != null
-                            ? List.generate(unpaidCount, (index) {
-                                double containerWidth =
-                                    MediaQuery.of(context).size.width * 0.25;
-                                double spacing = (unpaidCount > 1)
-                                    ? (containerWidth - iconSize) /
-                                        (unpaidCount - 1)
-                                    : 0;
-                                double left = (unpaidCount > 1)
-                                    ? index * spacing
-                                    : (containerWidth - iconSize) / 2;
-                                return Positioned(
-                                  left: left,
-                                  child: SvgPicture.asset(
-                                    'assets/icons/sad_face.svg',
-                                    width: iconSize,
-                                    height: iconSize,
-                                  ),
-                                );
-                              })
-                            : const <Widget>[],
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                    const Text("・・・・・"),
-                    const SizedBox(width: 20),
-                    Text(
-                      "$unpaidCount${S.of(context)?.person ?? ""}",
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 60,
-                      child: Text(
-                        S.of(context)?.paid ?? "",
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-                            ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.25,
-                      height: iconSize,
-                      child: Stack(
-                        children: attendanceCount != null
-                            ? List.generate(attendanceCount, (index) {
-                                double containerWidth =
-                                    MediaQuery.of(context).size.width * 0.25;
-                                double spacing = (attendanceCount > 1)
-                                    ? (containerWidth - iconSize) /
-                                        (attendanceCount - 1)
-                                    : 0;
-                                double left = (attendanceCount > 1)
-                                    ? index * spacing
-                                    : (containerWidth - iconSize) / 2;
-                                return Positioned(
-                                  left: left,
-                                  child: SvgPicture.asset(
-                                    'assets/icons/flag.svg',
-                                    width: iconSize,
-                                    height: iconSize,
-                                  ),
-                                );
-                              })
-                            : const <Widget>[],
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                    const Text("・・・・・"),
-                    const SizedBox(width: 20),
-                    Text(
-                      "$attendanceCount${S.of(context)?.person ?? ""}",
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                    ),
-                  ],
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: [
+              //       SizedBox(
+              //         width: 64,
+              //         child: Text(
+              //           S.of(context)?.unpaid ?? "",
+              //           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              //                 fontSize: 16,
+              //                 fontWeight: FontWeight.w500,
+              //                 color: Colors.black,
+              //               ),
+              //           textAlign: TextAlign.center,
+              //         ),
+              //       ),
+              //       SizedBox(
+              //         width: MediaQuery.of(context).size.width * 0.25,
+              //         height: iconSize,
+              //         child: Stack(
+              //           children: unpaidCount != null
+              //               ? List.generate(unpaidCount, (index) {
+              //                   double containerWidth =
+              //                       MediaQuery.of(context).size.width * 0.25;
+              //                   double spacing = (unpaidCount > 1)
+              //                       ? (containerWidth - iconSize) /
+              //                           (unpaidCount - 1)
+              //                       : 0;
+              //                   double left = (unpaidCount > 1)
+              //                       ? index * spacing
+              //                       : (containerWidth - iconSize) / 2;
+              //                   return Positioned(
+              //                     left: left,
+              //                     child: SvgPicture.asset(
+              //                       'assets/icons/sad_face.svg',
+              //                       width: iconSize,
+              //                       height: iconSize,
+              //                     ),
+              //                   );
+              //                 })
+              //               : const <Widget>[],
+              //         ),
+              //       ),
+              //       const SizedBox(width: 4),
+              //       const Text("・・・・・"),
+              //       const SizedBox(width: 20),
+              //       Text(
+              //         "$unpaidCount${S.of(context)?.person ?? ""}",
+              //         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              //               fontSize: 14,
+              //               fontWeight: FontWeight.w500,
+              //               color: Colors.black,
+              //             ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              // const SizedBox(height: 20),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: [
+              //       SizedBox(
+              //         width: 60,
+              //         child: Text(
+              //           S.of(context)?.paid ?? "",
+              //           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              //                 fontSize: 16,
+              //                 fontWeight: FontWeight.w500,
+              //                 color: Colors.black,
+              //               ),
+              //           textAlign: TextAlign.center,
+              //         ),
+              //       ),
+              //       SizedBox(
+              //         width: MediaQuery.of(context).size.width * 0.25,
+              //         height: iconSize,
+              //         child: Stack(
+              //           children: attendanceCount != null
+              //               ? List.generate(attendanceCount, (index) {
+              //                   double containerWidth =
+              //                       MediaQuery.of(context).size.width * 0.25;
+              //                   double spacing = (attendanceCount > 1)
+              //                       ? (containerWidth - iconSize) /
+              //                           (attendanceCount - 1)
+              //                       : 0;
+              //                   double left = (attendanceCount > 1)
+              //                       ? index * spacing
+              //                       : (containerWidth - iconSize) / 2;
+              //                   return Positioned(
+              //                     left: left,
+              //                     child: SvgPicture.asset(
+              //                       'assets/icons/flag.svg',
+              //                       width: iconSize,
+              //                       height: iconSize,
+              //                     ),
+              //                   );
+              //                 })
+              //               : const <Widget>[],
+              //         ),
+              //       ),
+              //       const SizedBox(width: 4),
+              //       const Text("・・・・・"),
+              //       const SizedBox(width: 20),
+              //       Text(
+              //         "$attendanceCount${S.of(context)?.person ?? ""}",
+              //         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              //               fontSize: 14,
+              //               fontWeight: FontWeight.w500,
+              //               color: Colors.black,
+              //             ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
             ],
-          ),
-          Positioned(
-            right: 4,
-            bottom: 100,
-            child: SizedBox(
-              height: 60,
-              width: 60,
-              child: FloatingActionButton(
-                key: fabKey,
-                backgroundColor: const Color(0xFFBABABA),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(48),
-                ),
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      contentPadding: const EdgeInsets.symmetric(
-                        vertical: 56.0,
-                        horizontal: 24.0,
-                      ),
-                      content: Text(
-                        '${S.of(context)?.update_1}\n ${S.of(context)?.update_2}',
-                        textAlign: TextAlign.center,
-                        style: Theme.of(
-                          context,
-                        ).textTheme.bodyLarge?.copyWith(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-                            ),
-                      ),
-                    ),
-                  );
-                  //TODO LINE認証申請が通ったらこちらに戻す
-                  /*showDialog(
-                context: context,
-                builder: (context) => const ConfirmationDialog(),
-              );*/
-                },
-                child: Center(
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        'assets/icons/chat_bubble.svg',
-                        width: 28,
-                        height: 28,
-                        colorFilter: const ColorFilter.mode(
-                          Colors.white,
-                          BlendMode.srcIn,
-                        ),
-                      ),
-                      SvgPicture.asset(
-                        'assets/icons/yen.svg',
-                        width: 16,
-                        height: 16,
-                        colorFilter: const ColorFilter.mode(
-                          Color(0xFFBABABA),
-                          BlendMode.srcIn,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
           ),
         ],
       ),

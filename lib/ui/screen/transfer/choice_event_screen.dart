@@ -43,7 +43,7 @@ class ChoiceEventScreenState extends ConsumerState<ChoiceEventScreen> {
                 height: 44,
               ),
               Text(
-                '戻る',
+                S.of(context)?.back ?? "Back",
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: const Color(0xFF76DCC6),
                     fontSize: 15,

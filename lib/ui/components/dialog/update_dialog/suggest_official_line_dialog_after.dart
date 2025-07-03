@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-//公式LINEが認証された後のダイアログ
 class SuggestOfficialLineDialogAfter extends StatelessWidget {
   const SuggestOfficialLineDialogAfter({super.key});
 
@@ -36,7 +35,7 @@ class SuggestOfficialLineDialogAfter extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'おかげさまで、LINE公式アカウントが認証されました！\nLINEと連携した機能を7月に実装予定です！',
+            'おかげさまで、LINE公式アカウントが認証され、\nLINEと連携した超便利機能が使えるようになりました！',
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   color: const Color(0xFF6A6A6A),
@@ -56,7 +55,7 @@ class SuggestOfficialLineDialogAfter extends StatelessWidget {
               )),
           const SizedBox(height: 24),
           Text(
-            "次回アップデート(2.0.0)からできること",
+            "公式LINEをグループに追加すると...",
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -95,7 +94,7 @@ class SuggestOfficialLineDialogAfter extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    'グループ内に自動メッセージ送信',
+                    'グループにメッセージを自動送信',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),

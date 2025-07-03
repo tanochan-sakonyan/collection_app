@@ -32,6 +32,9 @@ dependencies:
     sdk: flutter
   flutter_line_sdk:
     path: packages/flutter_line_sdk
+  google_mobile_ads: ^6.0.0
+  flutter_spinkit: ^5.2.0
+  collection: ^1.19.1
 
 dev_dependencies:
   flutter_test:
@@ -51,7 +54,7 @@ flutter_icons:
   image_path: "assets/icons/icon.png"
 
 flutter:
-  generate: true 
+  generate: true
   assets:
     - assets/icons/reverse_icon.svg
     - assets/icons/filter.svg
@@ -74,6 +77,7 @@ flutter:
     - assets/icons/suggest_official_line.svg
     - assets/icons/ic_check_badge_green.svg
     - assets/icons/ic_check_circle_teal.svg
+    - assets/icons/ic_check_circle_off.svg
     - assets/icons/ic_amount.svg
     - assets/icons/ic_lock_open.svg
     - assets/icons/ic_lock_close.svg
@@ -85,6 +89,16 @@ flutter:
     - assets/icons/drawer_envelope.svg
     - assets/icons/drawer_delete_account.svg
     - assets/icons/ic_next.svg
+    - assets/icons/ic_arrow_right.svg
+    - assets/icons/ic_default_group.svg
+    - assets/icons/icon.png
+    - assets/icons/ic_number_one.svg
+    - assets/icons/ic_number_two.svg
+    - assets/icons/ic_update.svg
+    - assets/icons/line_official_badge.png
+    - assets/icons/drawer_x.svg
+    - assets/icons/drawer_monitor.svg
+    - assets/images/img_add_from_line.png
 
   fonts:
     - family: Montserrat

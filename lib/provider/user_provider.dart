@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/constants/base_url.dart';
+import 'package:mr_collection/data/model/freezed/line_group_member.dart';
 import 'package:mr_collection/data/model/freezed/user.dart';
 import 'package:mr_collection/data/repository/event_repository.dart';
 import 'package:mr_collection/data/repository/member_repository.dart';
 import 'package:mr_collection/data/repository/user_repository.dart';
-import 'package:mr_collection/provider/access_token_provider.dart';
+import 'package:mr_collection/provider/amount_loading_provider.dart';
 import 'package:mr_collection/provider/event_repository_provider.dart';
 import 'package:mr_collection/provider/member_repository_provider.dart';
 import 'package:mr_collection/services/user_service.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
+import 'package:mr_collection/data/model/freezed/line_group.dart';
 
 final userProvider = StateNotifierProvider<UserNotifier, User?>((ref) {
   final userService = ref.read(userServiceProvider);
@@ -36,22 +38,28 @@ class UserNotifier extends StateNotifier<User?> {
 
   UserNotifier(
       this.eventRepository, this.memberRepository, this.userService, this.ref)
-      : super(null) {
-    // アクセストークンが変更された際にユーザー情報を取得
-    ref.listen<String?>(accessTokenProvider, (previous, next) {
-      if (next != null) {
-        registerUser(next);
-      } else {
-        state = null;
-      }
-    });
-  }
+      : super(null);
 
+  // TODO: 現在はAppleログインで使用しているが、後々registerAppleUserを作成して移行する
   Future<User?> registerUser(String accessToken) async {
     try {
       final user = await userService.registerUser(accessToken);
       debugPrint('accessToken: $accessToken');
-      debugPrint('取得したユーザー情報: $user');
+      debugPrint('取得したユーザー情報(テスト): $user');
+      state = user;
+      debugPrint('state: $state');
+      return user;
+    } catch (e) {
+      debugPrint('ユーザー登録の際にエラーが発生しました。: $e');
+      state = null;
+    }
+  }
+
+  Future<User?> registerLineUser(String accessToken) async {
+    try {
+      final user = await userService.registerLineUser(accessToken);
+      debugPrint('accessToken: $accessToken');
+      debugPrint('取得したLINEユーザー情報: $user');
       state = user;
       debugPrint('state: $state');
       return user;
@@ -64,6 +72,18 @@ class UserNotifier extends StateNotifier<User?> {
   Future<User?> fetchUserById(String userId) async {
     try {
       final user = await userService.fetchUserById(userId);
+      state = user;
+      return user;
+    } catch (e) {
+      debugPrint('ユーザー情報の取得の際にエラーが発生しました。: $e');
+      state = null;
+      return null;
+    }
+  }
+
+  Future<User?> fetchLineUserById(String userId, String lineAccessToken) async {
+    try {
+      final user = await userService.fetchLineUserById(userId, lineAccessToken);
       state = user;
       return user;
     } catch (e) {
@@ -99,6 +119,26 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
+  Future<void> editEventName(
+      String userId, String eventId, String newEventName) async {
+    try {
+      final updateEvent =
+          await eventRepository.editEventName(userId, eventId, newEventName);
+      final updatedUser = state?.copyWith(
+        events: state!.events.map((event) {
+          if (event.eventId == eventId) {
+            return updateEvent;
+          }
+          return event;
+        }).toList(),
+      );
+      state = updatedUser;
+      debugPrint("イベント名を更新しました: $newEventName");
+    } catch (e) {
+      debugPrint("イベント名編集中にエラーが発生しました: $e");
+    }
+  }
+
   Future<void> createEventAndTransferMembers(
       String eventId, String eventName, String userId) async {
     try {
@@ -111,6 +151,71 @@ class UserNotifier extends StateNotifier<User?> {
     } catch (e) {
       debugPrint('イベントの作成中にエラーが発生しました: $e');
     }
+  }
+
+  Future<void> createEventAndGetMembersFromLine(String userId, String groupId,
+      String eventName, List<LineGroupMember> members) async {
+    try {
+      final newEvent = await eventRepository.createEventAndGetMembersFromLine(
+          userId, groupId, eventName, members);
+      final updatedUser = state?.copyWith(
+        events: [...state!.events, newEvent],
+      );
+      state = updatedUser;
+    } catch (e) {
+      debugPrint('イベントの作成中にエラーが発生しました: $e');
+    }
+  }
+
+  Future<LineGroup> refreshLineGroupMember(
+      String groupId, String userId) async {
+    try {
+      final updatedGroup = await ref
+          .read(userRepositoryProvider)
+          .refreshLineGroupMember(userId, groupId);
+      return updatedGroup;
+    } catch (e) {
+      debugPrint('LINEメンバーの再取得にエラーが発生しました: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> updateMemberDifference(
+      String eventId, LineGroup updatedLineGroup) async {
+    final oldEvent = state!.events.firstWhere((e) => e.eventId == eventId);
+    final oldMembers = oldEvent.members;
+
+    final oldMemberIds = oldMembers.map((m) => m.memberId).toSet();
+    final newMemberIds =
+        updatedLineGroup.members.map((m) => m.memberId).toSet();
+
+    final additionalMembers = updatedLineGroup.members
+        .where((m) => !oldMemberIds.contains(m.memberId))
+        .map((lgm) => Member(
+              memberId: lgm.memberId,
+              memberName: lgm.memberName,
+              status: PaymentStatus.unpaid,
+              // amount: 0,
+            ))
+        .toList();
+    final deletedMembers = oldMemberIds.difference(newMemberIds);
+
+    final keptMembers =
+        oldMembers.where((m) => !deletedMembers.contains(m.memberId)).toList();
+
+    final updatedMembers = [...keptMembers, ...additionalMembers];
+
+    final updatedEvents = state!.events.map((event) {
+      if (event.eventId == eventId) {
+        return event.copyWith(
+          members: updatedMembers,
+          // lineMembersFetchedAt: updatedLineGroup.fetchedAt, // TODO: 規約対応
+        );
+      }
+      return event;
+    }).toList();
+
+    state = state!.copyWith(events: updatedEvents);
   }
 
   Future<void> inputTotalMoney(
@@ -209,7 +314,8 @@ class UserNotifier extends StateNotifier<User?> {
   }
 
   Future<void> inputMembersMoney(String userId, String eventId,
-      List<Map<String, dynamic>> membersMoneyList) async {
+      List<Map<String, dynamic>> membersMoneyList, WidgetRef ref) async {
+    ref.read(amountLoadingProvider(eventId).notifier).state = true;
     try {
       final updatedMembers = await memberRepository.inputMembersMoney(
           userId, eventId, membersMoneyList);
@@ -227,6 +333,8 @@ class UserNotifier extends StateNotifier<User?> {
       debugPrint('メンバーの金額入力に成功しました: $membersMoneyList');
     } catch (e) {
       debugPrint('メンバーの金額入力中にエラーが発生しました: $e');
+    }finally {
+      ref.read(amountLoadingProvider(eventId).notifier).state = false;
     }
   }
 
@@ -255,6 +363,14 @@ class UserNotifier extends StateNotifier<User?> {
     } catch (e) {
       debugPrint('メンバーの削除中にエラーが発生しました: $e');
     }
+  }
+
+  Future<void> clearMembersOfEvent(String eventId) async {
+    state = state!.copyWith(
+      events: state!.events
+          .map((e) => e.eventId == eventId ? e.copyWith(members: []) : e)
+          .toList(),
+    );
   }
 
   int getStatusRank(PaymentStatus status) {
@@ -303,6 +419,46 @@ class UserNotifier extends StateNotifier<User?> {
       state = state?.copyWith(events: updatedEvents ?? []);
     } catch (e) {
       debugPrint('メンバーの作成中にエラーが発生しました: $e : user_provider.dart');
+    }
+  }
+
+  Future<bool> sendMessage(
+      String userId, String eventId, String message) async {
+    try {
+      final result =
+          await eventRepository.sendMessage(userId, eventId, message);
+      return result;
+    } catch (e) {
+      debugPrint('メッセージ送信中にエラーが発生しました: $e');
+      return false;
+    }
+  }
+
+  Future<List<LineGroup>> getLineGroups(String userId) async {
+    try {
+      final lineGroups = await userService.getLineGroups(userId);
+      return lineGroups;
+    } catch (e) {
+      debugPrint('ユーザー情報の取得の際にエラーが発生しました。: $e');
+      return [];
+    }
+  }
+
+  Future<void> addNote(String userId, String eventId, String memo) async {
+    try {
+      final updateEvent = await eventRepository.addNote(userId, eventId, memo);
+      final updatedUser = state?.copyWith(
+        events: state!.events.map((event) {
+          if (event.eventId == eventId) {
+            return updateEvent;
+          }
+          return event;
+        }).toList(),
+      );
+      state = updatedUser;
+      debugPrint("メモを更新しました: $memo : user_provider");
+    } catch (e) {
+      debugPrint("メモ編集中にエラーが発生しました: $e : user_provider");
     }
   }
 }

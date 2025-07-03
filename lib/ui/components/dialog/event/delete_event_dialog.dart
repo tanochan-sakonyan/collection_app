@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
 
 class DeleteEventDialog extends ConsumerStatefulWidget {
   final String userId;
@@ -26,17 +27,26 @@ class _DeleteEventDialogState extends ConsumerState<DeleteEventDialog> {
     setState(() {
       _isButtonEnabled = false;
     });
+
+    ref.read(loadingProvider.notifier).state = true;
+
     try {
       await ref.read(userProvider.notifier).deleteEvent(userId, eventId);
       Navigator.of(ref).pop();
     } catch (error) {
       debugPrint('イベントの削除に失敗しました: $error');
+      setState(() {
+        _isButtonEnabled = true;
+      });
+    }finally {
+      ref.read(loadingProvider.notifier).state = false;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
+    return CircleIndicator(
+        child: Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Container(
         width: 320,
@@ -117,6 +127,7 @@ class _DeleteEventDialogState extends ConsumerState<DeleteEventDialog> {
           ],
         ),
       ),
+    ),
     );
   }
 }

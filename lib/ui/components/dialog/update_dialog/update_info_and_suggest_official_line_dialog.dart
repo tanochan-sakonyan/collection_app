@@ -41,10 +41,10 @@ class _UpdateInfoAndSuggestOfficialLineDialogState
                 onPageChanged: widget.onPageChanged,
                 children: const [
                   UpdateInfoDialog(
-                    version: "1.3.0",
-                    first: "まとめてメンバー追加&引き継ぎ",
-                    second: "金額設定機能(割り勘&傾斜)",
-                    third: "多言語対応(日本語&英語)",
+                    version: "2.0.0",
+                    first: "LINEグループから一括メンバー追加",
+                    second: "グループにメッセージを自動送信",
+                    third: "メモ機能・イベント名編集機能",
                   ),
                   SuggestOfficialLineDialogAfter(),
                 ],

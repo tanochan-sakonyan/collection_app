@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_line_sdk/flutter_line_sdk.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/data/model/freezed/user.dart';
@@ -46,6 +47,19 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
     debugPrint('currentLoginMedia: $media');
   }
 
+  Future<User?> _loadUser(WidgetRef ref, String userId) async {
+    final stored = await LineSDK.instance.currentAccessToken;
+    final lineAccessToken = stored?.value;
+
+    if (lineAccessToken != null) {
+      return ref
+          .read(userProvider.notifier)
+          .fetchLineUserById(userId, lineAccessToken);
+    } else {
+      debugPrint("エラー：アクセストークンがnullです。");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme.apply(
@@ -54,7 +68,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
     );
 
     return MaterialApp(
-      // locale: _locale, //デバッグ時のみ 本番環境ではこの行を消す
+      // locale: _locale, //デバッグ時のみ 本番環境ではこの行をコメントアウト
       title: '集金くん',
       theme: ThemeData(
         useMaterial3: true,
@@ -115,9 +129,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                     debugPrint('userId: $userId');
                     if (userId != null) {
                       return FutureBuilder<User?>(
-                        future: ref
-                            .read(userProvider.notifier)
-                            .fetchUserById(userId),
+                        future: _loadUser(ref, userId),
                         builder: (context, userSnapshot) {
                           if (userSnapshot.connectionState ==
                               ConnectionState.waiting) {

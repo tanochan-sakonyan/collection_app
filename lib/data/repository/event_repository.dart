@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mr_collection/data/model/freezed/event.dart';
+import 'package:mr_collection/data/model/freezed/line_group_member.dart';
 
 class EventRepository {
   final String baseUrl;
@@ -25,6 +26,24 @@ class EventRepository {
     }
   }
 
+  Future<Event> editEventName(
+      String userId, String eventId, String newEventName) async {
+    final url = Uri.parse('$baseUrl/users/$userId/events/$eventId');
+    final response = await http.put(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'newEventName': newEventName}),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      debugPrint('イベント名の更新に成功しました。');
+      final data = jsonDecode(response.body);
+      return Event.fromJson(data);
+    } else {
+      throw Exception('イベント名の更新に失敗しました');
+    }
+  }
+
   Future<Event> createEventAndTransferMembers(
       String eventId, String eventName, String userId) async {
     final url = Uri.parse('$baseUrl/users/$userId/events/clone');
@@ -44,6 +63,42 @@ class EventRepository {
     if (data['isSuccessful'] != true) {
       final msg = data['message'] as String? ?? 'Unknown error';
       throw Exception('イベント作成に失敗しました: $msg');
+    }
+
+    return Event.fromJson(data);
+  }
+
+  //LINEからメンバー取得した際に使うイベント作成API
+  Future<Event> createEventAndGetMembersFromLine(String userId, String groupId,
+      String eventName, List<LineGroupMember> members) async {
+    final List<Map<String, dynamic>> membersJson = members
+        .map((m) => {
+              'memberId': m.memberId,
+              'memberName': m.memberName,
+            })
+        .toList();
+
+    final url = Uri.parse('$baseUrl/users/$userId/line-groups');
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'groupId': groupId,
+        'eventName': eventName,
+        'members': membersJson,
+      }),
+    );
+
+    final data = jsonDecode(response.body) as Map<String, dynamic>;
+    if (response.statusCode != 200 && response.statusCode != 201) {
+      final msg = data['message'] as String? ?? 'Unknown error';
+      throw Exception(
+          'LINEグループからのメンバー自動追加に失敗しました (HTTP ${response.statusCode}): $msg');
+    }
+
+    if (data['isSuccessful'] != true) {
+      final msg = data['message'] as String? ?? 'Unknown error';
+      throw Exception('LINEグループからのメンバー自動追加に失敗しました: $msg');
     }
 
     return Event.fromJson(data);
@@ -85,6 +140,42 @@ class EventRepository {
       return Map<String, bool>.from(data);
     } else {
       throw Exception('イベントの削除に失敗しました');
+    }
+  }
+
+  Future<bool> sendMessage(
+      String userId, String eventId, String message) async {
+    final url = Uri.parse('$baseUrl/users/$userId/events/$eventId/message');
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'message': message}),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final data = jsonDecode(response.body) as Map<String, dynamic>;
+      return data['isSuccessful'] as bool? ?? false;
+    } else {
+      debugPrint('メッセージ送信に失敗しました: ${response.statusCode}');
+      throw Exception('メッセージ送信に失敗しました');
+    }
+  }
+
+  Future<Event> addNote(String userId, String eventId, String memo) async {
+    final url = Uri.parse('$baseUrl/users/$userId/events/$eventId/memo');
+    final response = await http.put(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'memo': memo}),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      debugPrint('noteの追加に成功しました。 : event_repository');
+      final data = jsonDecode(response.body);
+      return Event.fromJson(data);
+    } else {
+      throw Exception('noteの追加に失敗しました');
     }
   }
 }

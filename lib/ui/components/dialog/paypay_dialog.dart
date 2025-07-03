@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
 
 class PayPayDialog extends ConsumerStatefulWidget {
-  PayPayDialog({super.key});
+  const PayPayDialog({super.key});
   @override
-  _PayPayDialogState createState() => _PayPayDialogState();
+  PayPayDialogState createState() => PayPayDialogState();
 }
 
-class _PayPayDialogState extends ConsumerState<PayPayDialog> {
+class PayPayDialogState extends ConsumerState<PayPayDialog> {
   final TextEditingController controller = TextEditingController();
   String? _errorMessage;
 
@@ -23,6 +24,7 @@ class _PayPayDialogState extends ConsumerState<PayPayDialog> {
       return;
     }
 
+    ref.read(loadingProvider.notifier).state = true;
     try {
       final userRepository = ref.read(userRepositoryProvider);
       final user = ref.read(userProvider);
@@ -33,16 +35,23 @@ class _PayPayDialogState extends ConsumerState<PayPayDialog> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('PayPayリンクを送信しました。')),
       );
+      debugPrint("PayPayリンクを送信しました");
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('PayPayリンクの送信に失敗しました')),
+        const SnackBar(content: Text('PayPayリンクの送信に失敗しました。')),
       );
+      debugPrint("PayPayリンクの送信に失敗しました");
+    } finally {
+      ref.read(loadingProvider.notifier).state = false;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
+    final isLoading = ref.watch(loadingProvider);
+    return CircleIndicator(
+        child: Dialog(
+      backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(23),
       ),
@@ -54,29 +63,29 @@ class _PayPayDialogState extends ConsumerState<PayPayDialog> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
               Text(
                 'PayPayリンクを入力してください',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black,
-                ),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black,
+                    ),
               ),
               const SizedBox(height: 14),
               SizedBox(
                 width: 247,
                 child: TextField(
                   controller: controller,
-                  cursorColor: Color(0xFFA3A3A3),
+                  cursorColor: const Color(0xFFA3A3A3),
                   decoration: InputDecoration(
                     hintText: '受け取りリンクを入力',
                     hintStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey,
-                    ),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey,
+                        ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: const BorderSide(color: Color(0xFFE8E8E8)),
@@ -90,22 +99,29 @@ class _PayPayDialogState extends ConsumerState<PayPayDialog> {
                       borderSide: const BorderSide(color: Color(0xFFE8E8E8)),
                     ),
                     errorText: _errorMessage,
-                    errorStyle:Theme.of(context).textTheme.labelSmall?.copyWith(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w300,
-                      color: Colors.red,
-                    ),
+                    errorStyle:
+                        Theme.of(context).textTheme.labelSmall?.copyWith(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.red,
+                            ),
                   ),
                 ),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 12),
+              Text(
+                "反映まで3~5分ほどかかる場合があります。",
+                style: Theme.of(context)
+                    .textTheme
+                    .labelSmall
+                    ?.copyWith(color: Colors.grey),
+              ),
+              const SizedBox(height: 12),
               SizedBox(
                 height: 40,
                 width: 272,
                 child: ElevatedButton(
-                  onPressed: () {
-                    _sendPaypayLink(context);
-                  },
+                  onPressed: isLoading ? null : () => _sendPaypayLink(context),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFF2F2F2),
                     elevation: 2,
@@ -127,6 +143,6 @@ class _PayPayDialogState extends ConsumerState<PayPayDialog> {
           ),
         ),
       ),
-    );
+    ));
   }
 }

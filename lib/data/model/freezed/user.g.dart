@@ -9,7 +9,7 @@ part of 'user.dart';
 _$UserImpl _$$UserImplFromJson(Map<String, dynamic> json) => _$UserImpl(
       userId: json['user_id'] as String,
       appleId: json['apple_id'] as String?,
-      lineUserId: json['line_user_id'] as String?,
+      lineId: json['line_id'] as String?,
       paypayUrl: json['paypay_url'] as String?,
       belongingLineGroupIds:
           (json['belonging_line_group_ids'] as List<dynamic>?)
@@ -24,7 +24,7 @@ Map<String, dynamic> _$$UserImplToJson(_$UserImpl instance) =>
     <String, dynamic>{
       'user_id': instance.userId,
       'apple_id': instance.appleId,
-      'line_user_id': instance.lineUserId,
+      'line_id': instance.lineId,
       'paypay_url': instance.paypayUrl,
       'belonging_line_group_ids': instance.belongingLineGroupIds,
       'events': instance.events.map((e) => e.toJson()).toList(),

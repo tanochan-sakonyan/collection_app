@@ -38,7 +38,7 @@ class UpdateInfoDialog extends StatelessWidget {
                   ?.copyWith(color: Colors.grey, fontWeight: FontWeight.bold)),
           const SizedBox(height: 4),
           SizedBox(
-            width: 120,
+            width: 140,
             height: 120,
             child: Stack(
               alignment: Alignment.center,
@@ -52,16 +52,16 @@ class UpdateInfoDialog extends StatelessWidget {
                   ),
                 ),
                 const Positioned(
-                  left: 0,
-                  bottom: 0,
+                  left: 4,
+                  bottom: 8,
                   child: Text(
                     '✨',
                     style: TextStyle(fontSize: 20),
                   ),
                 ),
                 const Positioned(
-                  right: 0,
-                  top: 0,
+                  right: 4,
+                  top: 8,
                   child: Text(
                     '✨',
                     style: TextStyle(fontSize: 20),
@@ -77,7 +77,7 @@ class UpdateInfoDialog extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const SizedBox(width: 20),
+                  const SizedBox(width: 10),
                   SvgPicture.asset(
                     'assets/icons/ic_check_circle_teal.svg',
                     width: 24,
@@ -97,7 +97,7 @@ class UpdateInfoDialog extends StatelessWidget {
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        const SizedBox(width: 20),
+                        const SizedBox(width: 10),
                         SvgPicture.asset(
                           'assets/icons/ic_check_circle_teal.svg',
                           width: 24,
@@ -119,7 +119,7 @@ class UpdateInfoDialog extends StatelessWidget {
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        const SizedBox(width: 20),
+                        const SizedBox(width: 10),
                         SvgPicture.asset(
                           'assets/icons/ic_check_circle_teal.svg',
                           width: 24,

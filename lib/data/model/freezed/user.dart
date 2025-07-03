@@ -10,7 +10,7 @@ class User with _$User {
   const factory User({
     required String userId,
     required String? appleId,
-    required String? lineUserId,
+    required String? lineId,
     required String? paypayUrl,
     required List<String>? belongingLineGroupIds,
     required List<Event> events,
