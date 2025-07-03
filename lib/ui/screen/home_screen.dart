@@ -79,7 +79,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     _loadSavedTabIndex();
 
     _banner = BannerAd(
-      adUnitId: AdHelper.bannerTestId(), // ad_helperを呼び出す
+      adUnitId: AdHelper.bannerProdId(), // ad_helperを呼び出す
       request: const AdRequest(),
       size: AdSize.banner,
       listener: BannerAdListener(
