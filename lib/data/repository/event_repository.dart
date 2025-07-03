@@ -89,12 +89,7 @@ class EventRepository {
       }),
     );
 
-    debugPrint("LINEグループからメンバーを自動追加する関数が呼ばれました。\n"
-        "userId: $userId, groupId: $groupId, eventName: $eventName, members: $membersJson");
-
     final data = jsonDecode(response.body) as Map<String, dynamic>;
-    debugPrint("レスポンスボディ: $data");
-
     if (response.statusCode != 200 && response.statusCode != 201) {
       final msg = data['message'] as String? ?? 'Unknown error';
       throw Exception(
@@ -150,8 +145,6 @@ class EventRepository {
 
   Future<bool> sendMessage(
       String userId, String eventId, String message) async {
-    debugPrint("sendMessage関数が呼ばれました。\n"
-        "userId: $userId, eventId: $eventId, message: $message");
     final url = Uri.parse('$baseUrl/users/$userId/events/$eventId/message');
 
     final response = await http.post(
@@ -177,14 +170,12 @@ class EventRepository {
       body: jsonEncode({'memo': memo}),
     );
 
-    debugPrint("APIから返ってきたbody: ${response.body}");
-
     if (response.statusCode == 200 || response.statusCode == 201) {
       debugPrint('noteの追加に成功しました。 : event_repository');
       final data = jsonDecode(response.body);
       return Event.fromJson(data);
     } else {
-      throw Exception('イベントの作成に失敗しました');
+      throw Exception('noteの追加に失敗しました');
     }
   }
 }
