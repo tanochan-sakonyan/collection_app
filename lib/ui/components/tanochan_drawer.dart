@@ -88,16 +88,6 @@ class TanochanDrawer extends StatelessWidget {
                     builder: (context) => const LogoutDialog());
               },
             ),
-            _buildMenuItem(
-              context,
-              text: S.of(context)?.logout ?? "デバッグ",
-              icon: SvgPicture.asset("assets/icons/drawer_key.svg"),
-              onTap: () {
-                showDialog(
-                    context: context,
-                    builder: (context) => const LineMessageCompleteDialog());
-              },
-            ),
             const SizedBox(height: 20),
             _buildMenuItem(
               context,
