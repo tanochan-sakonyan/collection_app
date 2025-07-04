@@ -1,3 +1,4 @@
 import 'interstitial_service.dart';
 
-final InterstitialService interstitial = InterstitialService(useProd: false);
+final InterstitialService interstitial =
+    InterstitialService(useProd: true); // 本番環境ではここをtrueにする！
