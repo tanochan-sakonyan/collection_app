@@ -7,6 +7,7 @@ import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
 import 'package:mr_collection/ui/components/dialog/line_message_complete_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/line_message_failed_dialog.dart';
 import 'package:mr_collection/ui/screen/home_screen.dart';
+import 'package:flutter_gen/gen_l10n/s.dart';
 
 class LineMessageConfirmDialog extends ConsumerWidget {
   final Event event;
@@ -33,7 +34,7 @@ class LineMessageConfirmDialog extends ConsumerWidget {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                Text("送信確認",
+                Text(S.of(context)!.sendConfirmation,
                     style: Theme.of(context)
                         .textTheme
                         .bodyLarge
@@ -78,7 +79,7 @@ class LineMessageConfirmDialog extends ConsumerWidget {
                           padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
                         child: Text(
-                          "戻る",
+                          S.of(context)!.back,
                           style: GoogleFonts.notoSansJp(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -133,7 +134,7 @@ class LineMessageConfirmDialog extends ConsumerWidget {
                           padding: const EdgeInsets.symmetric(vertical: 12),
                         ),
                         child: Text(
-                          "送信",
+                          S.of(context)!.send,
                           style: GoogleFonts.notoSansJp(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,

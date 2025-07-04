@@ -130,7 +130,7 @@ class CheckSelectedLineGroupScreenState
           ]),
           const SizedBox(height: 24),
           Text(
-            S.of(context)?.inviteOfficialAccountNote ??
+            S.of(context)?.inviteOfficialAccountNote1 ??
                 "‘Shuukin-kun’ will not send\npromotional messages in the group.",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 11,
@@ -200,7 +200,7 @@ class CheckSelectedLineGroupScreenState
           ),
           const SizedBox(height: 24),
           Text(
-            "Appleを利用してログインしている場合は、\n一度ログアウトした後に、LINEログインを利用してください",
+            S.of(context)!.inviteOfficialAccountNote2,
             style: Theme.of(context)
                 .textTheme
                 .labelSmall

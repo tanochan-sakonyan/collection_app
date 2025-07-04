@@ -47,7 +47,7 @@ class InviteOfficialAccountToLineGroupDialog extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               S.of(context)?.inviteOfficialAccountDesc1 ??
-                  "You can only get members from LINE groups where 'Shuukin-kun' is invited.",
+                  "You can only get members from LINE groups where 'Shukin-kun' is invited.",
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
                     color: const Color(0xFF6A6A6A),

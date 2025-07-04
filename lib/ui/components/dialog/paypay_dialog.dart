@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
+import 'package:flutter_gen/gen_l10n/s.dart';
 
 class PayPayDialog extends ConsumerStatefulWidget {
   const PayPayDialog({super.key});
@@ -19,7 +20,7 @@ class PayPayDialogState extends ConsumerState<PayPayDialog> {
 
     if (paypayLink.isEmpty) {
       setState(() {
-        _errorMessage = 'PayPayリンクを入力してください';
+        _errorMessage = S.of(context)!.paypayDialogMessage1;
       });
       return;
     }
@@ -33,12 +34,12 @@ class PayPayDialogState extends ConsumerState<PayPayDialog> {
       await userRepository.sendPaypayLink(userId, paypayLink);
       Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('PayPayリンクを送信しました。')),
+        SnackBar(content: Text(S.of(context)!.paypayDialogSuccessMessage)),
       );
       debugPrint("PayPayリンクを送信しました");
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('PayPayリンクの送信に失敗しました。')),
+        SnackBar(content: Text(S.of(context)!.paypayDialogFailMessage)),
       );
       debugPrint("PayPayリンクの送信に失敗しました");
     } finally {
@@ -65,7 +66,7 @@ class PayPayDialogState extends ConsumerState<PayPayDialog> {
             children: [
               const SizedBox(height: 4),
               Text(
-                'PayPayリンクを入力してください',
+                S.of(context)!.paypayDialogMessage1,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontSize: 16,
@@ -80,7 +81,7 @@ class PayPayDialogState extends ConsumerState<PayPayDialog> {
                   controller: controller,
                   cursorColor: const Color(0xFFA3A3A3),
                   decoration: InputDecoration(
-                    hintText: '受け取りリンクを入力',
+                    hintText: S.of(context)!.paypayDialogMessage2,
                     hintStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
@@ -110,7 +111,7 @@ class PayPayDialogState extends ConsumerState<PayPayDialog> {
               ),
               const SizedBox(height: 12),
               Text(
-                "反映まで3~5分ほどかかる場合があります。",
+                S.of(context)!.paypayDialogMessage3,
                 style: Theme.of(context)
                     .textTheme
                     .labelSmall
