@@ -1,4 +1,5 @@
 // lib/ads/interstitial_service.dart
+import 'dart:async';
 import 'dart:developer';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'ad_helper.dart';
@@ -50,5 +51,29 @@ class InterstitialService {
     );
     _ad!.show();
     _ad = null;
+  }
+
+  Future<void> showAndWait() async {
+    if (_ad == null) return;
+
+    final completer = Completer<void>();
+    _ad!.fullScreenContentCallback = FullScreenContentCallback(
+      onAdDismissedFullScreenContent: (ad) {
+        ad.dispose();
+        _ad = null;
+        load();
+        completer.complete();
+      },
+      onAdFailedToShowFullScreenContent: (ad, err) {
+        ad.dispose();
+        _ad = null;
+        load();
+        completer.complete();
+      },
+    );
+    _ad!.show();
+    _ad = null;
+
+    return completer.future;
   }
 }
