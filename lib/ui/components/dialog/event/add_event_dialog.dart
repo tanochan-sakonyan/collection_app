@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mr_collection/ads/interstitial_service.dart';
+import 'package:mr_collection/ads/interstitial_singleton.dart';
 import 'package:mr_collection/constants/base_url.dart';
 import 'package:mr_collection/data/model/freezed/line_group.dart';
 import 'package:mr_collection/provider/user_provider.dart';
@@ -30,15 +30,12 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
   Event? _selectedEvent;
   bool get _isTransferMode => _selectedEvent != null;
   LineGroup? lineGroup;
-  late final InterstitialService _interstitial;
 
   final EventRepository eventRepository = EventRepository(baseUrl: baseUrl);
 
   @override
   void initState() {
     super.initState();
-    _interstitial = InterstitialService(useProd: false)..load();
-    _interstitial.load();
     _controller.addListener(() {
       final text = _controller.text.trim();
       if (text.length > 8) {
@@ -128,7 +125,11 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
     ref.read(loadingProvider.notifier).state = true;
 
     // インターステイシャル広告を表示
-    _interstitial.show();
+    if (interstitial.isReady) {
+      await interstitial.show();
+    } else {
+      debugPrint('Interstitial not ready → skip');
+    }
 
     List<LineGroup> lineGroups = [];
     try {
@@ -137,7 +138,6 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
       debugPrint('LINE グループ取得失敗: $e');
     } finally {
       ref.read(loadingProvider.notifier).state = false;
-      _interstitial.load();
     }
     debugPrint('取得したLINEグループ : $lineGroups');
 

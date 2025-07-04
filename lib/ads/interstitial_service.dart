@@ -1,14 +1,15 @@
 // lib/ads/interstitial_service.dart
-import 'package:flutter/foundation.dart';
+import 'dart:developer';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'ad_helper.dart';
 
 class InterstitialService {
-  InterstitialAd? _interstitial;
-
+  InterstitialAd? _ad;
   final bool useProd;
 
-  InterstitialService({this.useProd = false});
+  InterstitialService({required this.useProd});
+
+  bool get isReady => _ad != null;
 
   Future<void> load() async {
     await InterstitialAd.load(
@@ -17,30 +18,37 @@ class InterstitialService {
           : AdHelper.interstitialTestId(),
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
-        onAdLoaded: (ad) => _interstitial = ad,
+        onAdLoaded: (ad) {
+          log('Interstitial loaded');
+          _ad = ad;
+        },
         onAdFailedToLoad: (err) {
-          debugPrint('Interstitial failed: $err');
-          _interstitial = null;
+          log('Interstitial load failed: $err');
+          _ad = null;
         },
       ),
     );
   }
 
-  void show() {
-    if (_interstitial == null) return;
-
-    _interstitial!.fullScreenContentCallback = FullScreenContentCallback(
+  Future<void> show() async {
+    if (!isReady) {
+      log('Interstitial not ready');
+      return;
+    }
+    _ad!.fullScreenContentCallback = FullScreenContentCallback(
       onAdDismissedFullScreenContent: (ad) {
         ad.dispose();
+        _ad = null;
         load();
       },
       onAdFailedToShowFullScreenContent: (ad, err) {
+        log('Show failed: $err');
         ad.dispose();
+        _ad = null;
         load();
       },
     );
-
-    _interstitial!.show();
-    _interstitial = null;
+    _ad!.show();
+    _ad = null;
   }
 }
