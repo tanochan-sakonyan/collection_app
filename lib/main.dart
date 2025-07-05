@@ -16,7 +16,7 @@ void main() async {
 
   await MobileAds.instance.initialize();
 
-  interstitial.load();
+  await interstitial.load();
 
   runApp(
     const ProviderScope(child: CollectionApp()),
