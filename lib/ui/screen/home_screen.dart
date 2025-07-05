@@ -8,15 +8,15 @@ import 'package:mr_collection/data/model/freezed/line_group.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/provider/tab_titles_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
+import 'package:mr_collection/ui/components/button/floating_action_button_off.dart';
+import 'package:mr_collection/ui/components/button/floating_action_button_on.dart';
 import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
 import 'package:mr_collection/ui/components/countdown_timer.dart';
 import 'package:mr_collection/ui/components/dialog/event/add_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/event/delete_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/event/edit_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/line_group_update_countdown_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/suggest_send_message_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_and_suggest_official_line_dialog.dart';
-import 'package:mr_collection/ui/screen/send_line_message_bottom_sheet.dart';
 import 'package:mr_collection/ui/screen/member_list.dart';
 import 'package:mr_collection/ui/components/tanochan_drawer.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
@@ -36,7 +36,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class HomeScreenState extends ConsumerState<HomeScreen>
     with TickerProviderStateMixin {
-  late TabController _tabController;
+  late TabController tabController;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<String> _tabTitles = [];
   int _currentTabIndex = 0;
@@ -48,7 +48,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   late List<GlobalKey> _memberAddKeys;
   late List<GlobalKey> _slidableKeys;
   late List<GlobalKey> _sortKeys;
-  late List<GlobalKey> _fabKeys;
+  late List<GlobalKey> fabKeys;
 
   late TutorialCoachMark tutorialCoachMark;
   List<TargetFocus> targets = [];
@@ -58,20 +58,20 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     super.initState();
     _initKeys();
     _tabTitles = ref.read(tabTitlesProvider);
-    _tabController = TabController(length: _tabTitles.length, vsync: this);
+    tabController = TabController(length: _tabTitles.length, vsync: this);
 
-    _tabController.addListener(() {
-      if (_tabController.index != _currentTabIndex &&
-          !_tabController.indexIsChanging) {
-        _currentTabIndex = _tabController.index;
+    tabController.addListener(() {
+      if (tabController.index != _currentTabIndex &&
+          !tabController.indexIsChanging) {
+        _currentTabIndex = tabController.index;
         _saveTabIndex(_currentTabIndex);
       }
     });
 
-    _tabController.animation?.addStatusListener((status) {
+    tabController.animation?.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        if (_tabController.index != _currentTabIndex) {
-          _currentTabIndex = _tabController.index;
+        if (tabController.index != _currentTabIndex) {
+          _currentTabIndex = tabController.index;
           _saveTabIndex(_currentTabIndex);
         }
       }
@@ -97,7 +97,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     _memberAddKeys = List.generate(len, (_) => GlobalKey());
     _slidableKeys = List.generate(len, (_) => GlobalKey());
     _sortKeys = List.generate(len, (_) => GlobalKey());
-    _fabKeys = List.generate(len, (_) => GlobalKey());
+    fabKeys = List.generate(len, (_) => GlobalKey());
   }
 
   bool _updateDialogChecked = false;
@@ -135,7 +135,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       memberAddKey: _memberAddKeys[_currentTabIndex],
       slidableKey: _slidableKeys[_currentTabIndex],
       sortKey: _sortKeys[_currentTabIndex],
-      fabKey: _fabKeys[_currentTabIndex],
+      fabKey: fabKeys[_currentTabIndex],
     );
     tutorialCoachMark = TutorialCoachMark(
       targets: targets,
@@ -170,26 +170,26 @@ class HomeScreenState extends ConsumerState<HomeScreen>
 
   @override
   void dispose() {
-    _tabController.dispose();
+    tabController.dispose();
     _banner.dispose();
     super.dispose();
   }
 
   void _updateTabController(int newLength) {
-    _tabController.dispose();
-    _tabController = TabController(length: newLength, vsync: this);
+    tabController.dispose();
+    tabController = TabController(length: newLength, vsync: this);
     _initKeys();
-    _tabController.addListener(() {
-      if (_tabController.index != _currentTabIndex &&
-          !_tabController.indexIsChanging) {
-        _currentTabIndex = _tabController.index;
+    tabController.addListener(() {
+      if (tabController.index != _currentTabIndex &&
+          !tabController.indexIsChanging) {
+        _currentTabIndex = tabController.index;
         _saveTabIndex(_currentTabIndex);
       }
     });
-    _tabController.animation?.addStatusListener((status) {
+    tabController.animation?.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        if (_tabController.index != _currentTabIndex) {
-          _currentTabIndex = _tabController.index;
+        if (tabController.index != _currentTabIndex) {
+          _currentTabIndex = tabController.index;
           _saveTabIndex(_currentTabIndex);
         }
       }
@@ -204,9 +204,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   Future<void> _loadSavedTabIndex() async {
     final prefs = await SharedPreferences.getInstance();
     final savedIndex = prefs.getInt('lastTabIndex') ?? 0;
-    if (mounted && savedIndex < _tabController.length) {
+    if (mounted && savedIndex < tabController.length) {
       _currentTabIndex = savedIndex;
-      _tabController.animateTo(savedIndex);
+      tabController.animateTo(savedIndex);
     }
   }
 
@@ -367,7 +367,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    if (tabTitles.length != _tabController.length) {
+    if (tabTitles.length != tabController.length) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
           setState(() {
@@ -376,7 +376,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
             if (_currentTabIndex >= tabTitles.length) {
               _currentTabIndex = tabTitles.isEmpty ? 0 : tabTitles.length - 1;
             }
-            _tabController.animateTo(_currentTabIndex);
+            tabController.animateTo(_currentTabIndex);
             _saveTabIndex(_currentTabIndex);
           });
         }
@@ -386,7 +386,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     }
 
     return Scaffold(
-      key: _scaffoldKey,
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -452,7 +451,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                         alignment: Alignment.centerLeft,
                         child: TabBar(
                           isScrollable: true,
-                          controller: _tabController,
+                          controller: tabController,
                           tabs: _tabTitles.asMap().entries.map((entry) {
                             final index = entry.key;
                             final eventId = entry.value;
@@ -496,7 +495,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                             currentEventName: event.eventName);
                                       });
                                 } else {
-                                  _tabController.animateTo(index);
+                                  tabController.animateTo(index);
                                 }
                               },
                               onLongPress: () => showDialog(
@@ -633,7 +632,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
             child: tabTitles.isEmpty
                 ? const EventZeroComponents()
                 : TabBarView(
-                    controller: _tabController,
+                    controller: tabController,
                     children: _tabTitles.asMap().entries.map((entry) {
                       final index = entry.key;
                       final eventId = entry.value;
@@ -649,6 +648,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                           totalMoney: 0,
                         ),
                       );
+                      final bool isEventConnected = event.lineGroupId != null &&
+                          event.lineGroupId!.isNotEmpty;
                       return Stack(
                         children: [
                           Column(
@@ -725,77 +726,21 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                             right: 28,
                             bottom: 120,
                             child: SizedBox(
-                              height: 60,
-                              width: 60,
-                              child: FloatingActionButton(
-                                key: _fabKeys[index],
-                                backgroundColor: const Color(0xFFBABABA),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(48),
-                                ),
-                                onPressed: _tabController.indexIsChanging
-                                    ? null
-                                    : () async {
-                                        final bool isEventConnected =
-                                            event.lineGroupId != null &&
-                                                event.lineGroupId!.isNotEmpty;
-                                        if (isEventConnected) {
-                                          final unpaidMembers = event.members
-                                              .where((m) =>
-                                                  m.status ==
-                                                  PaymentStatus.unpaid)
-                                              .toList();
-                                          await showModalBottomSheet(
-                                            context: context,
-                                            isScrollControlled: true,
-                                            backgroundColor: Colors.white,
-                                            shape: const RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.vertical(
-                                                      top: Radius.circular(16)),
-                                            ),
-                                            builder: (context) =>
-                                                LineMessageBottomSheet
-                                                    .lineMessageBottomSheet(
-                                              event: event,
-                                              unpaidMembers: unpaidMembers,
-                                            ),
-                                          );
-                                        } else {
-                                          showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return const SuggestSendMessageDialog();
-                                              });
-                                        }
-                                      },
-                                child: Center(
-                                  child: Stack(
-                                    alignment: Alignment.center,
-                                    children: [
-                                      SvgPicture.asset(
-                                        'assets/icons/chat_bubble.svg',
-                                        width: 28,
-                                        height: 28,
-                                        colorFilter: const ColorFilter.mode(
-                                          Colors.white,
-                                          BlendMode.srcIn,
-                                        ),
-                                      ),
-                                      SvgPicture.asset(
-                                        'assets/icons/yen.svg',
-                                        width: 16,
-                                        height: 16,
-                                        colorFilter: const ColorFilter.mode(
-                                          Color(0xFFBABABA),
-                                          BlendMode.srcIn,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
+                                height: 60,
+                                width: 60,
+                                child: (isEventConnected)
+                                    ? FloatingActionButtonOn(
+                                        index: index,
+                                        fabKeys: fabKeys,
+                                        tabController: tabController,
+                                        event: event,
+                                      )
+                                    : FloatingActionButtonOff(
+                                        index: index,
+                                        fabKeys: fabKeys,
+                                        tabController: tabController,
+                                        event: event,
+                                      )),
                           ),
                         ],
                       );
