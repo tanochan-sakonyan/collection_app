@@ -54,6 +54,21 @@ class SJa extends S {
   String get paypay => 'PayPayリンクを登録';
 
   @override
+  String get paypayDialogMessage1 => 'PayPayリンクを入力してください。';
+
+  @override
+  String get paypayDialogMessage2 => '受け取りリンクを入力';
+
+  @override
+  String get paypayDialogMessage3 => '反映まで3~5ほどかかる場合があります。';
+
+  @override
+  String get paypayDialogSuccessMessage => 'PayPayリンクを送信しました。';
+
+  @override
+  String get paypayDialogFailMessage => 'PayPayリンクの送信に失敗しました。';
+
+  @override
   String get questionnaire => '目安箱';
 
   @override
@@ -266,10 +281,13 @@ class SJa extends S {
   String get openFailed => 'ページを開けませんでした';
 
   @override
+  String get updateInformation => 'アップデート情報';
+
+  @override
   String get selectLineGroupTitle => 'LINEグループから\nメンバー追加';
 
   @override
-  String get selectLineGroupDesc => 'このメンバーでイベントを作成しますか？';
+  String get selectLineGroupDesc1 => '追加したいメンバーの\nLINEグループを選択してください';
 
   @override
   String get notDisplayedQuestion => 'LINEグループが表示されない？';
@@ -279,7 +297,7 @@ class SJa extends S {
 
   @override
   String get inviteOfficialAccountDesc1 =>
-      '「集金くん」が参加しているLINEグループのみ、\nメンバーを取得することができます。LINEグループが表示されない場合には、\n一度「集金くん公式LINE」を退出させたのちに\n再度同じグループに追加してください。';
+      '「集金くん」が参加しているLINEグループのみ、\nメンバーを取得することができます。\nLINEグループが表示されない場合には、\n一度「集金くん公式LINE」を退出させたのちに\n再度同じグループに追加してください。';
 
   @override
   String get inviteOfficialAccountStep1 => 'LINE公式アカウントを追加';
@@ -288,10 +306,18 @@ class SJa extends S {
   String get inviteOfficialAccountStep2 => 'LINE公式アカウントを\n集金対象のグループに招待';
 
   @override
-  String get inviteOfficialAccountNote => '「集金くん」がグループ内で\n宣伝メッセージ等を送ることはありません。';
+  String get inviteOfficialAccountNote1 =>
+      '「集金くん」がグループ内で\n宣伝メッセージ等を送ることはありません。';
+
+  @override
+  String get inviteOfficialAccountNote2 =>
+      'Appleを利用してログインしている場合は、\n一度ログアウトした後に、LINEログインを利用してください';
 
   @override
   String get group => 'グループ';
+
+  @override
+  String get selectLineGroupDesc2 => 'このメンバーでイベントを作成しますか？';
 
   @override
   String get selectLineGroupButton => 'このメンバーでイベント作成';
@@ -314,7 +340,7 @@ class SJa extends S {
       'LINEの利用規約に則り、メンバー情報有効期限を過ぎる\nと、メンバーと支払い状況の情報が削除されます。\n再取得をし、有効期限をリセットしてください。';
 
   @override
-  String get dontRefresh => '取得しない';
+  String get doNotRefresh => '取得しない';
 
   @override
   String get refresh => '再取得';
@@ -330,4 +356,26 @@ class SJa extends S {
 
   @override
   String get save => '保存';
+
+  @override
+  String get lineNotConnectedMessage1 => 'イベントとLINEグループを連携し、\n催促メッセージを自動送信しよう！';
+
+  @override
+  String get lineNotConnectedMessage2 =>
+      '『LINEグループから追加』を使用すると、\nイベントとLINEグループを連携できます！';
+
+  @override
+  String get sendMessage => '催促メッセージの送信';
+
+  @override
+  String get sendPayPayLink => 'PayPayリンクの送付';
+
+  @override
+  String get send => '送信';
+
+  @override
+  String get sendConfirmation => '送信確認';
+
+  @override
+  String get completeSending => '送信完了';
 }

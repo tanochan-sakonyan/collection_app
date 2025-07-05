@@ -187,6 +187,36 @@ abstract class S {
   /// **'PayPayリンクを登録'**
   String get paypay;
 
+  /// No description provided for @paypayDialogMessage1.
+  ///
+  /// In ja, this message translates to:
+  /// **'PayPayリンクを入力してください。'**
+  String get paypayDialogMessage1;
+
+  /// No description provided for @paypayDialogMessage2.
+  ///
+  /// In ja, this message translates to:
+  /// **'受け取りリンクを入力'**
+  String get paypayDialogMessage2;
+
+  /// No description provided for @paypayDialogMessage3.
+  ///
+  /// In ja, this message translates to:
+  /// **'反映まで3~5ほどかかる場合があります。'**
+  String get paypayDialogMessage3;
+
+  /// No description provided for @paypayDialogSuccessMessage.
+  ///
+  /// In ja, this message translates to:
+  /// **'PayPayリンクを送信しました。'**
+  String get paypayDialogSuccessMessage;
+
+  /// No description provided for @paypayDialogFailMessage.
+  ///
+  /// In ja, this message translates to:
+  /// **'PayPayリンクの送信に失敗しました。'**
+  String get paypayDialogFailMessage;
+
   /// No description provided for @questionnaire.
   ///
   /// In ja, this message translates to:
@@ -607,17 +637,23 @@ abstract class S {
   /// **'ページを開けませんでした'**
   String get openFailed;
 
+  /// No description provided for @updateInformation.
+  ///
+  /// In ja, this message translates to:
+  /// **'アップデート情報'**
+  String get updateInformation;
+
   /// No description provided for @selectLineGroupTitle.
   ///
   /// In ja, this message translates to:
   /// **'LINEグループから\nメンバー追加'**
   String get selectLineGroupTitle;
 
-  /// No description provided for @selectLineGroupDesc.
+  /// No description provided for @selectLineGroupDesc1.
   ///
   /// In ja, this message translates to:
-  /// **'このメンバーでイベントを作成しますか？'**
-  String get selectLineGroupDesc;
+  /// **'追加したいメンバーの\nLINEグループを選択してください'**
+  String get selectLineGroupDesc1;
 
   /// No description provided for @notDisplayedQuestion.
   ///
@@ -634,7 +670,7 @@ abstract class S {
   /// No description provided for @inviteOfficialAccountDesc1.
   ///
   /// In ja, this message translates to:
-  /// **'「集金くん」が参加しているLINEグループのみ、\nメンバーを取得することができます。LINEグループが表示されない場合には、\n一度「集金くん公式LINE」を退出させたのちに\n再度同じグループに追加してください。'**
+  /// **'「集金くん」が参加しているLINEグループのみ、\nメンバーを取得することができます。\nLINEグループが表示されない場合には、\n一度「集金くん公式LINE」を退出させたのちに\n再度同じグループに追加してください。'**
   String get inviteOfficialAccountDesc1;
 
   /// No description provided for @inviteOfficialAccountStep1.
@@ -649,17 +685,29 @@ abstract class S {
   /// **'LINE公式アカウントを\n集金対象のグループに招待'**
   String get inviteOfficialAccountStep2;
 
-  /// No description provided for @inviteOfficialAccountNote.
+  /// No description provided for @inviteOfficialAccountNote1.
   ///
   /// In ja, this message translates to:
   /// **'「集金くん」がグループ内で\n宣伝メッセージ等を送ることはありません。'**
-  String get inviteOfficialAccountNote;
+  String get inviteOfficialAccountNote1;
+
+  /// No description provided for @inviteOfficialAccountNote2.
+  ///
+  /// In ja, this message translates to:
+  /// **'Appleを利用してログインしている場合は、\n一度ログアウトした後に、LINEログインを利用してください'**
+  String get inviteOfficialAccountNote2;
 
   /// No description provided for @group.
   ///
   /// In ja, this message translates to:
   /// **'グループ'**
   String get group;
+
+  /// No description provided for @selectLineGroupDesc2.
+  ///
+  /// In ja, this message translates to:
+  /// **'このメンバーでイベントを作成しますか？'**
+  String get selectLineGroupDesc2;
 
   /// No description provided for @selectLineGroupButton.
   ///
@@ -697,11 +745,11 @@ abstract class S {
   /// **'LINEの利用規約に則り、メンバー情報有効期限を過ぎる\nと、メンバーと支払い状況の情報が削除されます。\n再取得をし、有効期限をリセットしてください。'**
   String get lineGroupExpireDesc;
 
-  /// No description provided for @dontRefresh.
+  /// No description provided for @doNotRefresh.
   ///
   /// In ja, this message translates to:
   /// **'取得しない'**
-  String get dontRefresh;
+  String get doNotRefresh;
 
   /// No description provided for @refresh.
   ///
@@ -732,6 +780,48 @@ abstract class S {
   /// In ja, this message translates to:
   /// **'保存'**
   String get save;
+
+  /// No description provided for @lineNotConnectedMessage1.
+  ///
+  /// In ja, this message translates to:
+  /// **'イベントとLINEグループを連携し、\n催促メッセージを自動送信しよう！'**
+  String get lineNotConnectedMessage1;
+
+  /// No description provided for @lineNotConnectedMessage2.
+  ///
+  /// In ja, this message translates to:
+  /// **'『LINEグループから追加』を使用すると、\nイベントとLINEグループを連携できます！'**
+  String get lineNotConnectedMessage2;
+
+  /// No description provided for @sendMessage.
+  ///
+  /// In ja, this message translates to:
+  /// **'催促メッセージの送信'**
+  String get sendMessage;
+
+  /// No description provided for @sendPayPayLink.
+  ///
+  /// In ja, this message translates to:
+  /// **'PayPayリンクの送付'**
+  String get sendPayPayLink;
+
+  /// No description provided for @send.
+  ///
+  /// In ja, this message translates to:
+  /// **'送信'**
+  String get send;
+
+  /// No description provided for @sendConfirmation.
+  ///
+  /// In ja, this message translates to:
+  /// **'送信確認'**
+  String get sendConfirmation;
+
+  /// No description provided for @completeSending.
+  ///
+  /// In ja, this message translates to:
+  /// **'送信完了'**
+  String get completeSending;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

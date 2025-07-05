@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/ads/interstitial_singleton.dart';
 
 class LineMessageCompleteDialog extends StatefulWidget {

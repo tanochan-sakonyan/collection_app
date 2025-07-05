@@ -11,7 +11,7 @@ import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_and
 import 'package:mr_collection/ui/screen/privacy_policy_screen.dart';
 import 'package:mr_collection/ui/screen/terms_of_service_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:mr_collection/generated/s.dart';
 
 class TanochanDrawer extends StatefulWidget {
   const TanochanDrawer({super.key});

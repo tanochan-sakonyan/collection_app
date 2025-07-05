@@ -7,7 +7,7 @@ import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/line_message_confirm_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/paypay_dialog.dart';
-import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:mr_collection/generated/s.dart';
 
 class LineMessageBottomSheet extends ConsumerStatefulWidget {
   final Event event;
