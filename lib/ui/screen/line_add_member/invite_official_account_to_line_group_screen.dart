@@ -42,7 +42,7 @@ class CheckSelectedLineGroupScreenState
                 height: 44,
               ),
               Text(
-                S.of(context)?.back ?? "Back",
+                S.of(context)!.back ?? "Back",
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: const Color(0xFF76DCC6),
                     fontSize: 15,
@@ -58,7 +58,7 @@ class CheckSelectedLineGroupScreenState
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            S.of(context)?.inviteOfficialAccountTitle ??
+            S.of(context)!.inviteOfficialAccountTitle ??
                 "Invite the official LINE account to the group",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 20,
@@ -69,7 +69,7 @@ class CheckSelectedLineGroupScreenState
           ),
           const SizedBox(height: 18),
           Text(
-            S.of(context)?.inviteOfficialAccountDesc1 ??
+            S.of(context)!.inviteOfficialAccountDesc1 ??
                 "You can only get members from LINE groups where 'Shuukin-kun' is invited.",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 11,
@@ -87,7 +87,7 @@ class CheckSelectedLineGroupScreenState
             ),
             const SizedBox(width: 12),
             Text(
-              S.of(context)?.inviteOfficialAccountStep1 ??
+              S.of(context)!.inviteOfficialAccountStep1 ??
                   "Add the official LINE account",
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontSize: 16,
@@ -118,7 +118,7 @@ class CheckSelectedLineGroupScreenState
             ),
             const SizedBox(width: 12),
             Text(
-              S.of(context)?.inviteOfficialAccountStep2 ??
+              S.of(context)!.inviteOfficialAccountStep2 ??
                   "Invite the official LINE account\nto the group for collection",
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontSize: 16,
@@ -130,7 +130,7 @@ class CheckSelectedLineGroupScreenState
           ]),
           const SizedBox(height: 24),
           Text(
-            S.of(context)?.inviteOfficialAccountNote1 ??
+            S.of(context)!.inviteOfficialAccountNote1 ??
                 "‘Shuukin-kun’ will not send\npromotional messages in the group.",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 11,
@@ -162,7 +162,7 @@ class CheckSelectedLineGroupScreenState
                     ),
                     const SizedBox(width: 2),
                     Text(
-                      S.of(context)?.shukinkun ?? "Shukinkun",
+                      S.of(context)!.shukinkun ?? "Shukinkun",
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
                           color: Colors.black,
@@ -187,7 +187,7 @@ class CheckSelectedLineGroupScreenState
                     height: 44,
                   ),
                   Text(
-                    S.of(context)?.group ?? "Group",
+                    S.of(context)!.group ?? "Group",
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                         color: Colors.black,

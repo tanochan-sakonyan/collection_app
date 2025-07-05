@@ -46,7 +46,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
       final text = _controller.text.trim();
       if (text.length > 8) {
         setState(() {
-          _errorMessage = S.of(context)?.maxCharacterMessage_8 ??
+          _errorMessage = S.of(context)!.maxCharacterMessage_8 ??
               "You can enter up to 8 characters.";
         });
       } else {
@@ -93,9 +93,9 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
 
     if (eventName.isEmpty) {
       _errorMessage =
-          S.of(context)?.enterEventName ?? "Please enter an event name.";
+          S.of(context)!.enterEventName ?? "Please enter an event name.";
     } else if (eventName.length > 8) {
-      _errorMessage = S.of(context)?.maxCharacterMessage_8 ??
+      _errorMessage = S.of(context)!.maxCharacterMessage_8 ??
           "You can enter up to 8 characters.";
     } else {
       _errorMessage = null;
@@ -208,7 +208,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                   children: [
                     Center(
                       child: Text(
-                        S.of(context)?.addEvent ?? "Add Event",
+                        S.of(context)!.addEvent ?? "Add Event",
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                               fontSize: 16.0,
                               fontWeight: FontWeight.w700,
@@ -278,7 +278,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                             child: ListTile(
                               contentPadding: EdgeInsets.zero,
                               title: Text(
-                                S.of(context)?.transferMembers ??
+                                S.of(context)!.transferMembers ??
                                     "Transfer Members",
                                 style: Theme.of(context)
                                     .textTheme
@@ -305,7 +305,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                                   ),
                                   child: Text(
                                     _selectedEvent?.eventName ??
-                                        S.of(context)?.selectEvent ??
+                                        S.of(context)!.selectEvent ??
                                         "Select an Event",
                                     maxLines: 1,
                                     style: Theme.of(context)
@@ -330,7 +330,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                               contentPadding: EdgeInsets.zero,
                               dense: true,
                               title: Text(
-                                S.of(context)?.addFromLine ??
+                                S.of(context)!.addFromLine ??
                                     "Add From LINE Group",
                                 style: Theme.of(context)
                                     .textTheme
@@ -398,7 +398,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                           shape: const StadiumBorder(),
                         ),
                         child: Text(
-                          S.of(context)?.confirm ?? "Confirm",
+                          S.of(context)!.confirm ?? "Confirm",
                           style: GoogleFonts.notoSansJp(
                               color: Colors.black,
                               fontSize: 14.0,

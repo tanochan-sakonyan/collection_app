@@ -33,7 +33,7 @@ class TutorialTargets {
                   horizontal: 8,
                 ),
                 child: Text(
-                  S.of(context)?.tapToAddEvent ?? "Tap here to add an event.",
+                  S.of(context)!.tapToAddEvent ?? "Tap here to add an event.",
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ),
@@ -61,7 +61,7 @@ class TutorialTargets {
                   horizontal: 8,
                 ),
                 child: Text(
-                  S.of(context)?.longPressToDeleteEvent ??
+                  S.of(context)!.longPressToDeleteEvent ??
                       "Long press to delete an event.",
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
@@ -90,7 +90,7 @@ class TutorialTargets {
                   horizontal: 8,
                 ),
                 child: Text(
-                  S.of(context)?.tapToAddMember ?? "Tap here to add a member.",
+                  S.of(context)!.tapToAddMember ?? "Tap here to add a member.",
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ),
@@ -118,7 +118,7 @@ class TutorialTargets {
                   horizontal: 8,
                 ),
                 child: Text(
-                  S.of(context)?.swipeToEditOrDeleteMember ??
+                  S.of(context)!.swipeToEditOrDeleteMember ??
                       "Swipe to delete or edit a member.",
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
@@ -147,7 +147,7 @@ class TutorialTargets {
                   horizontal: 8,
                 ),
                 child: Text(
-                  S.of(context)?.tapToSortByPayment ??
+                  S.of(context)!.tapToSortByPayment ??
                       "Tap here to sort by payment status.",
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
@@ -176,7 +176,7 @@ class TutorialTargets {
                   horizontal: 8,
                 ),
                 child: Text(
-                  S.of(context)?.tapToSendReminder ??
+                  S.of(context)!.tapToSendReminder ??
                       "Tap here to send a reminder message.\n(This feature is under development. Please wait for a future update.)",
                   style: Theme.of(context).textTheme.bodySmall,
                 ),

@@ -25,7 +25,7 @@ class _SuggestionWebViewState extends State<SuggestionWebView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text(S.of(context)?.suggestFeature ?? "Suggest features")),
+          title: Text(S.of(context)!.suggestFeature ?? "Suggest features")),
       body: WebViewWidget(controller: _controller),
     );
   }

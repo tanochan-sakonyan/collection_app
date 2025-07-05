@@ -90,6 +90,7 @@
   "xLink": "X Link",
   "officialSite": "Official Website",
   "openFailed": "Could not open the page",
+  "updateInformation": "Update Information",
   "selectLineGroupTitle": "Add members from LINE group",
   "selectLineGroupDesc1": "Select the LINE group where you want to add members.",
   "notDisplayedQuestion": "LINE group not displayed?",

@@ -141,7 +141,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       targets: targets,
       useSafeArea: true,
       colorShadow: const Color(0xFFE0E0E0),
-      textSkip: S.of(context)?.skip ?? "Skip",
+      textSkip: S.of(context)!.skip ?? "Skip",
       textStyleSkip: const TextStyle(
         color: Colors.black,
         fontSize: 16,
@@ -259,7 +259,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                     children: [
                       const SizedBox(height: 24),
                       Text(
-                        S.of(context)?.editNote ?? "Edit Note",
+                        S.of(context)!.editNote ?? "Edit Note",
                         style: const TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.w700,
@@ -273,7 +273,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                           maxLines: 8,
                           minLines: 8,
                           decoration: InputDecoration(
-                            hintText: S.of(context)?.memoPlaceholder ??
+                            hintText: S.of(context)!.memoPlaceholder ??
                                 "You can enter a note",
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
@@ -317,7 +317,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                               ),
                             ),
                             child: Text(
-                              S.of(context)?.save ?? "Save",
+                              S.of(context)!.save ?? "Save",
                               style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
@@ -593,7 +593,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                   ...(currentEvent.lineMembersFetchedAt != null)
                       ? [
                           Text(
-                              S.of(context)?.autoDeleteMemberCountdown ??
+                              S.of(context)!.autoDeleteMemberCountdown ??
                                   "Auto member deletion in",
                               style: Theme.of(context)
                                   .textTheme
@@ -686,7 +686,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          S.of(context)?.note ?? "note",
+                                          S.of(context)!.note ?? "note",
                                           style: const TextStyle(
                                               fontSize: 16,
                                               color: Colors.black87),

@@ -164,7 +164,7 @@ class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
             decoration: InputDecoration(
               border: InputBorder.none,
               isCollapsed: true,
-              suffixText: S.of(context)?.currencyUnit ?? "USD",
+              suffixText: S.of(context)!.currencyUnit ?? "USD",
               suffixStyle: yenStyle,
               contentPadding: EdgeInsets.zero,
             ),
@@ -185,7 +185,7 @@ class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
               color: Colors.black),
           children: [
             TextSpan(
-                text: S.of(context)?.currencyUnit ?? "USD",
+                text: S.of(context)!.currencyUnit ?? "USD",
                 style: const TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 36,
@@ -212,7 +212,7 @@ class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
                 height: 44,
               ),
               Text(
-                S.of(context)?.back ?? "Back",
+                S.of(context)!.back ?? "Back",
                 style: GoogleFonts.notoSansJp(
                     color: const Color(0xFF76DCC6),
                     fontSize: 15,
@@ -238,7 +238,7 @@ class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
             ),
             const SizedBox(height: 32),
             Text(
-              S.of(context)?.enterTotalAmount ?? "Enter total amount",
+              S.of(context)!.enterTotalAmount ?? "Enter total amount",
               style: GoogleFonts.notoSansJp(
                   fontSize: 24, fontWeight: FontWeight.w700),
             ),
@@ -292,7 +292,7 @@ class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      S.of(context)?.next ?? "Next",
+                      S.of(context)!.next ?? "Next",
                       style: const TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 20,

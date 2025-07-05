@@ -4,6 +4,7 @@ import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_dia
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 // 44行目のversion,first,second,thirdを変えて、どのバージョンでも実装可能
+// アップデート情報と、公式LINE追加のサジェストの2ページを持つ
 class UpdateInfoAndSuggestOfficialLineDialog extends StatefulWidget {
   final TickerProvider vsync;
   final void Function(int) onPageChanged;

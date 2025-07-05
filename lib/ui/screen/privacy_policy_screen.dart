@@ -19,7 +19,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            title: Text(S.of(context)?.privacyPolicy ?? "Privacy Policy")),
+            title: Text(S.of(context)!.privacyPolicy ?? "Privacy Policy")),
         body: SingleChildScrollView(
           child: Center(
             child: Padding(

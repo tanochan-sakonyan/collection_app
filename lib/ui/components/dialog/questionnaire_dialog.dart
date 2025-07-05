@@ -18,7 +18,7 @@ class QuestionnaireDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              S.of(context)?.questionnaire ?? "Feedback Form",
+              S.of(context)!.questionnaire ?? "Feedback Form",
               style: Theme.of(context)
                   .textTheme
                   .bodyLarge
@@ -26,7 +26,7 @@ class QuestionnaireDialog extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              S.of(context)?.questionnaireDescription ??
+              S.of(context)!.questionnaireDescription ??
                   "If there's a feature you'd like to see in Shukinkun, we'd love to hear your thoughts.",
               textAlign: TextAlign.center,
               style: Theme.of(context)
@@ -36,7 +36,7 @@ class QuestionnaireDialog extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              S.of(context)?.feedbackThanks ??
+              S.of(context)!.feedbackThanks ??
                   "Your input will help us improve future versions.",
               textAlign: TextAlign.center,
               style: Theme.of(context)
@@ -65,7 +65,7 @@ class QuestionnaireDialog extends StatelessWidget {
                   );
                 },
                 child: Text(
-                  S.of(context)?.suggest ?? "Suggest",
+                  S.of(context)!.suggest ?? "Suggest",
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: const Color(0xFF76DCC6),

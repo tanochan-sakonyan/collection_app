@@ -38,7 +38,7 @@ class _DeleteEventDialogState extends ConsumerState<DeleteEventDialog> {
       setState(() {
         _isButtonEnabled = true;
       });
-    }finally {
+    } finally {
       ref.read(loadingProvider.notifier).state = false;
     }
   }
@@ -46,88 +46,89 @@ class _DeleteEventDialogState extends ConsumerState<DeleteEventDialog> {
   @override
   Widget build(BuildContext context) {
     return CircleIndicator(
-        child: Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      child: Container(
-        width: 320,
-        height: 179,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(23),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              S.of(context)?.confirmDeleteEvent ??
-                  "Delete this event?", //TODO：イベント名を取得して表示
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16,
-                    color: Colors.black,
-                  ),
-            ),
-            const SizedBox(height: 40),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                const Spacer(flex: 2),
-                SizedBox(
-                  height: 36,
-                  width: 107,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFD7D7D7),
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
+      child: Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Container(
+          width: 320,
+          height: 179,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(23),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                S.of(context)!.confirmDeleteEvent ??
+                    "Delete this event?", //TODO：イベント名を取得して表示
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16,
+                      color: Colors.black,
                     ),
-                    child: Text(
-                      S.of(context)?.no ?? "No",
-                      style: GoogleFonts.notoSansJp(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black,
+              ),
+              const SizedBox(height: 40),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  const Spacer(flex: 2),
+                  SizedBox(
+                    height: 36,
+                    width: 107,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFD7D7D7),
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-                const Spacer(),
-                SizedBox(
-                  height: 36,
-                  width: 107,
-                  child: ElevatedButton(
-                    onPressed: _isButtonEnabled
-                        ? () => _deleteEvent(ref, widget.userId, widget.eventId)
-                        : null,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFF2F2F2),
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                    child: Text(
-                      S.of(context)?.yes ?? "Yes",
-                      style: GoogleFonts.notoSansJp(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black,
+                      child: Text(
+                        S.of(context)!.no ?? "No",
+                        style: GoogleFonts.notoSansJp(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const Spacer(flex: 2),
-              ],
-            ),
-          ],
+                  const Spacer(),
+                  SizedBox(
+                    height: 36,
+                    width: 107,
+                    child: ElevatedButton(
+                      onPressed: _isButtonEnabled
+                          ? () =>
+                              _deleteEvent(ref, widget.userId, widget.eventId)
+                          : null,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFF2F2F2),
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      child: Text(
+                        S.of(context)!.yes ?? "Yes",
+                        style: GoogleFonts.notoSansJp(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const Spacer(flex: 2),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
-    ),
     );
   }
 }
