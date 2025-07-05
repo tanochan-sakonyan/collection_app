@@ -141,7 +141,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       targets: targets,
       useSafeArea: true,
       colorShadow: const Color(0xFFE0E0E0),
-      textSkip: S.of(context)!.skip ?? "Skip",
+      textSkip: S.of(context)!.skip,
       textStyleSkip: const TextStyle(
         color: Colors.black,
         fontSize: 16,
@@ -386,6 +386,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     }
 
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
