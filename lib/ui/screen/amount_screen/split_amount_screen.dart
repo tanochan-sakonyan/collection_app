@@ -344,7 +344,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                 height: 44,
               ),
               Text(
-                S.of(context)!.back ?? "Back",
+                S.of(context)!.back,
                 style: GoogleFonts.notoSansJp(
                     color: const Color(0xFF76DCC6),
                     fontSize: 15,
@@ -395,9 +395,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                 text: _numFmt.format(widget.amount),
                 style: _numberStyle,
                 children: [
-                  TextSpan(
-                      text: S.of(context)!.currencyUnit ?? "USD",
-                      style: _yenStyle),
+                  TextSpan(text: S.of(context)!.currencyUnit, style: _yenStyle),
                 ],
               ),
               textAlign: TextAlign.center,
@@ -408,7 +406,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
               child: Row(
                 children: [
                   _TabPill(
-                    label: S.of(context)!.splitEqually ?? "Split Equally",
+                    label: S.of(context)!.splitEqually,
                     selected: _currentTab == 0,
                     onTap: () {
                       if (_currentTab == 0) return;
@@ -418,7 +416,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                   ),
                   const SizedBox(width: 12),
                   _TabPill(
-                    label: S.of(context)!.adjustAmounts ?? "Adjust Amounts",
+                    label: S.of(context)!.adjustAmounts,
                     selected: _currentTab == 1,
                     onTap: () {
                       if (_currentTab == 1) return;
@@ -668,7 +666,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                     MaterialPageRoute(
                         builder: (context) => const HomeScreen()));
               },
-              child: Text(S.of(context)!.confirm ?? "Confirm",
+              child: Text(S.of(context)!.confirm,
                   style: GoogleFonts.inter(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,

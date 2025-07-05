@@ -95,7 +95,7 @@ class _DeleteMemberDialogState extends ConsumerState<DeleteMemberDialog> {
                         ),
                       ),
                       child: Text(
-                        S.of(context)!.no ?? "No",
+                        S.of(context)!.no,
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ),
@@ -114,7 +114,7 @@ class _DeleteMemberDialogState extends ConsumerState<DeleteMemberDialog> {
                         ),
                       ),
                       child: Text(
-                        S.of(context)!.yes ?? "Yes",
+                        S.of(context)!.yes,
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ),

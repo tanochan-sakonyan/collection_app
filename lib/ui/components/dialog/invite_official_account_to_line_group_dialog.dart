@@ -90,7 +90,7 @@ class InviteOfficialAccountToLineGroupDialog extends StatelessWidget {
                       ),
                       const SizedBox(width: 2),
                       Text(
-                        S.of(context)!.shukinkun ?? "Shukinkun",
+                        S.of(context)!.shukinkun,
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
                               color: Colors.black,
@@ -116,7 +116,7 @@ class InviteOfficialAccountToLineGroupDialog extends StatelessWidget {
                       height: 44,
                     ),
                     Text(
-                      S.of(context)!.group ?? "Group",
+                      S.of(context)!.group,
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
                           color: Colors.black,

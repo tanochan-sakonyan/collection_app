@@ -81,7 +81,7 @@ class LineGroupUpdateCountdownDialog extends ConsumerWidget {
                       ),
                     ),
                     child: Text(
-                      S.of(context)!.doNotRefresh ?? "Don't refresh",
+                      S.of(context)!.doNotRefresh,
                       style: GoogleFonts.notoSansJp(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -110,7 +110,7 @@ class LineGroupUpdateCountdownDialog extends ConsumerWidget {
                       ),
                     ),
                     child: Text(
-                      S.of(context)!.refresh ?? "Refresh",
+                      S.of(context)!.refresh,
                       style: GoogleFonts.notoSansJp(
                         fontSize: 14,
                         fontWeight: FontWeight.w900,

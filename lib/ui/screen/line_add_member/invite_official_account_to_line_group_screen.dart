@@ -42,7 +42,7 @@ class CheckSelectedLineGroupScreenState
                 height: 44,
               ),
               Text(
-                S.of(context)!.back ?? "Back",
+                S.of(context)!.back,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: const Color(0xFF76DCC6),
                     fontSize: 15,
@@ -162,7 +162,7 @@ class CheckSelectedLineGroupScreenState
                     ),
                     const SizedBox(width: 2),
                     Text(
-                      S.of(context)!.shukinkun ?? "Shukinkun",
+                      S.of(context)!.shukinkun,
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
                           color: Colors.black,
@@ -187,7 +187,7 @@ class CheckSelectedLineGroupScreenState
                     height: 44,
                   ),
                   Text(
-                    S.of(context)!.group ?? "Group",
+                    S.of(context)!.group,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                         color: Colors.black,

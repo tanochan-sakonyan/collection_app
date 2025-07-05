@@ -54,7 +54,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               children: [
                 const SizedBox(height: 100),
                 Text(
-                  S.of(context)!.shukinkun ?? "Shukinkun",
+                  S.of(context)!.shukinkun,
                   style: GoogleFonts.roboto(
                       fontSize: 32, fontWeight: FontWeight.bold),
                 ),
@@ -163,7 +163,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                         const SizedBox(width: 40),
                         Text(
-                          S.of(context)!.loginWithLine ?? "Log in with LINE",
+                          S.of(context)!.loginWithLine,
                           style: GoogleFonts.notoSansJp(
                               color: Colors.white,
                               fontSize: 16,
@@ -382,7 +382,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               ),
                             ),
                           ),
-                          TextSpan(text: S.of(context)!.and ?? "and"),
+                          TextSpan(text: S.of(context)!.and),
                           WidgetSpan(
                             alignment: PlaceholderAlignment.baseline,
                             baseline: TextBaseline.alphabetic,
@@ -401,9 +401,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               ),
                             ),
                           ),
-                          TextSpan(
-                              text:
-                                  S.of(context)!.termsAndPrivacySuffix ?? "."),
+                          TextSpan(text: S.of(context)!.termsAndPrivacySuffix),
                         ],
                       ),
                     )

@@ -56,8 +56,7 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
         .toList();
 
     if (memberNames.isEmpty) {
-      setState(() => _errorMessage =
-          S.of(context)!.enterMemberPrompt ?? "Please enter a member name.");
+      setState(() => _errorMessage = S.of(context)!.enterMemberPrompt);
       return;
     } else if (memberNames.any((n) => n.length > 9)) {
       setState(() => _errorMessage = S.of(context)!.maxCharacterMessage_9 ??
@@ -111,7 +110,7 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
               children: [
                 const SizedBox(height: 8),
                 Text(
-                  S.of(context)!.addMembers ?? "Add Members",
+                  S.of(context)!.addMembers,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
@@ -193,7 +192,7 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
                       shape: const StadiumBorder(),
                     ),
                     child: Text(
-                      S.of(context)!.confirm ?? "Confirm",
+                      S.of(context)!.confirm,
                       style: const TextStyle(
                         color: Colors.black,
                         fontSize: 14.0,

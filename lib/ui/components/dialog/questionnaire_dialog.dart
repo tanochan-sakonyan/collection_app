@@ -18,7 +18,7 @@ class QuestionnaireDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              S.of(context)!.questionnaire ?? "Feedback Form",
+              S.of(context)!.questionnaire,
               style: Theme.of(context)
                   .textTheme
                   .bodyLarge
@@ -65,7 +65,7 @@ class QuestionnaireDialog extends StatelessWidget {
                   );
                 },
                 child: Text(
-                  S.of(context)!.suggest ?? "Suggest",
+                  S.of(context)!.suggest,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: const Color(0xFF76DCC6),

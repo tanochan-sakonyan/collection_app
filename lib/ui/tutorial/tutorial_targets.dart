@@ -33,7 +33,7 @@ class TutorialTargets {
                   horizontal: 8,
                 ),
                 child: Text(
-                  S.of(context)!.tapToAddEvent ?? "Tap here to add an event.",
+                  S.of(context)!.tapToAddEvent,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ),
@@ -90,7 +90,7 @@ class TutorialTargets {
                   horizontal: 8,
                 ),
                 child: Text(
-                  S.of(context)!.tapToAddMember ?? "Tap here to add a member.",
+                  S.of(context)!.tapToAddMember,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ),

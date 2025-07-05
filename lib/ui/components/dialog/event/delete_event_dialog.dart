@@ -87,7 +87,7 @@ class _DeleteEventDialogState extends ConsumerState<DeleteEventDialog> {
                         ),
                       ),
                       child: Text(
-                        S.of(context)!.no ?? "No",
+                        S.of(context)!.no,
                         style: GoogleFonts.notoSansJp(
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
@@ -113,7 +113,7 @@ class _DeleteEventDialogState extends ConsumerState<DeleteEventDialog> {
                         ),
                       ),
                       child: Text(
-                        S.of(context)!.yes ?? "Yes",
+                        S.of(context)!.yes,
                         style: GoogleFonts.notoSansJp(
                           fontSize: 14,
                           fontWeight: FontWeight.w400,

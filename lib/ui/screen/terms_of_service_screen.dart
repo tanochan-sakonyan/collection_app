@@ -20,7 +20,7 @@ class TermsOfServiceScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
           title: Text(
-        S.of(context)!.termsOfService ?? "Terms of Service",
+        S.of(context)!.termsOfService,
       )),
       body: SingleChildScrollView(
         child: Center(

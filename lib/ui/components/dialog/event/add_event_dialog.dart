@@ -92,8 +92,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
     });
 
     if (eventName.isEmpty) {
-      _errorMessage =
-          S.of(context)!.enterEventName ?? "Please enter an event name.";
+      _errorMessage = S.of(context)!.enterEventName;
     } else if (eventName.length > 8) {
       _errorMessage = S.of(context)!.maxCharacterMessage_8 ??
           "You can enter up to 8 characters.";
@@ -208,7 +207,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                   children: [
                     Center(
                       child: Text(
-                        S.of(context)!.addEvent ?? "Add Event",
+                        S.of(context)!.addEvent,
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                               fontSize: 16.0,
                               fontWeight: FontWeight.w700,
@@ -398,7 +397,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                           shape: const StadiumBorder(),
                         ),
                         child: Text(
-                          S.of(context)!.confirm ?? "Confirm",
+                          S.of(context)!.confirm,
                           style: GoogleFonts.notoSansJp(
                               color: Colors.black,
                               fontSize: 14.0,

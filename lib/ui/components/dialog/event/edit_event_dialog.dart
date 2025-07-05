@@ -58,8 +58,7 @@ class EditEventDialogState extends ConsumerState<EditEventDialog> {
     setState(() {
       _isButtonEnabled = false;
       if (memberName.isEmpty) {
-        _errorMessage =
-            S.of(context)!.enterEventName ?? "Please enter an event name.";
+        _errorMessage = S.of(context)!.enterEventName;
       } else if (memberName.length > 9) {
         _errorMessage = S.of(context)!.maxCharacterMessage_8 ??
             "You can enter up to 8 characters.";
@@ -113,7 +112,7 @@ class EditEventDialogState extends ConsumerState<EditEventDialog> {
               children: [
                 const SizedBox(height: 12),
                 Text(
-                  S.of(context)!.editEventName ?? "Edit Event Name",
+                  S.of(context)!.editEventName,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
@@ -178,7 +177,7 @@ class EditEventDialogState extends ConsumerState<EditEventDialog> {
                       shape: const StadiumBorder(),
                     ),
                     child: Text(
-                      S.of(context)!.confirm ?? "Confirm",
+                      S.of(context)!.confirm,
                       style: GoogleFonts.notoSansJp(
                         color: Colors.black,
                         fontSize: 14.0,

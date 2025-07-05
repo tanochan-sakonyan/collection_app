@@ -38,7 +38,7 @@ class SelectLineGroupScreen extends StatelessWidget {
                 height: 44,
               ),
               Text(
-                S.of(context)!.back ?? "Back",
+                S.of(context)!.back,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: const Color(0xFF76DCC6),
                     fontSize: 15,

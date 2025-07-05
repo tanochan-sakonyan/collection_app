@@ -259,7 +259,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                     children: [
                       const SizedBox(height: 24),
                       Text(
-                        S.of(context)!.editNote ?? "Edit Note",
+                        S.of(context)!.editNote,
                         style: const TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.w700,
@@ -317,7 +317,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                               ),
                             ),
                             child: Text(
-                              S.of(context)!.save ?? "Save",
+                              S.of(context)!.save,
                               style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
@@ -687,7 +687,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          S.of(context)!.note ?? "note",
+                                          S.of(context)!.note,
                                           style: const TextStyle(
                                               fontSize: 16,
                                               color: Colors.black87),
