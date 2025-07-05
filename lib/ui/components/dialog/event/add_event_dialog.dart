@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mr_collection/ads/interstitial_singleton.dart';
 import 'package:mr_collection/constants/base_url.dart';
 import 'package:mr_collection/data/model/freezed/line_group.dart';
 import 'package:mr_collection/provider/user_provider.dart';
@@ -122,6 +123,13 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
 
     debugPrint('LINE取得APIを実行しました。');
     ref.read(loadingProvider.notifier).state = true;
+
+    // インターステイシャル広告を表示
+    if (interstitial.isReady) {
+      await interstitial.show();
+    } else {
+      debugPrint('Interstitial not ready → skip');
+    }
 
     List<LineGroup> lineGroups = [];
     try {
