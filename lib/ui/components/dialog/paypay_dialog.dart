@@ -54,7 +54,7 @@ class PayPayDialogState extends ConsumerState<PayPayDialog> {
         child: Dialog(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(23),
+        borderRadius: BorderRadius.circular(14),
       ),
       child: Padding(
         padding: const EdgeInsets.all(24),
