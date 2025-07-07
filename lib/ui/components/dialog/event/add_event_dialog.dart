@@ -408,7 +408,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
           ),
         ),
         Positioned(
-          bottom: 270,
+          bottom: MediaQuery.of(context).size.height * 0.35,
           child: Visibility(
             visible: isLoading && _showSlowLoadingMessage,
             child: Material(
