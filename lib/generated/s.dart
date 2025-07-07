@@ -822,6 +822,12 @@ abstract class S {
   /// In ja, this message translates to:
   /// **'送信完了'**
   String get completeSending;
+
+  /// No description provided for @loadingApologizeMessage.
+  ///
+  /// In ja, this message translates to:
+  /// **'読み込みに10~20秒ほどかかる場合があります。\n次回アップデートで改善予定です。'**
+  String get loadingApologizeMessage;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

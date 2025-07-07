@@ -120,5 +120,6 @@
   "sendPayPayLink": "Send a PayPay link",
   "send": "Send",
   "sendConfirmation": "Confirm sending",
-  "completeSending": "Sending complete"
+  "completeSending": "Sending complete",
+  "loadingApologizeMessage": "Loading may take around 10–20 seconds. \n We plan to improve this in the next update."
 }

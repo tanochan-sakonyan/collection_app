@@ -120,5 +120,6 @@
   "sendPayPayLink": "PayPayリンクの送付",
   "send": "送信",
   "sendConfirmation": "送信確認",
-  "completeSending": "送信完了"
+  "completeSending": "送信完了",
+  "loadingApologizeMessage": "読み込みに10~20秒ほどかかる場合があります。\n次回アップデートで改善予定です。"
 }

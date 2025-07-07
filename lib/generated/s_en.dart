@@ -392,4 +392,8 @@ class SEn extends S {
 
   @override
   String get completeSending => 'Sending complete';
+
+  @override
+  String get loadingApologizeMessage =>
+      'Loading may take around 10–20 seconds. \n We plan to improve this in the next update.';
 }

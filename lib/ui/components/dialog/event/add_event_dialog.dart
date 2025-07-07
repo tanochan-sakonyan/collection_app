@@ -46,8 +46,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
       final text = _controller.text.trim();
       if (text.length > 8) {
         setState(() {
-          _errorMessage = S.of(context)!.maxCharacterMessage_8 ??
-              "You can enter up to 8 characters.";
+          _errorMessage = S.of(context)!.maxCharacterMessage_8;
         });
       } else {
         setState(() {
@@ -61,7 +60,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
       (prev, next) {
         if (next) {
           _slowLoadingTimer?.cancel();
-          _slowLoadingTimer = Timer(const Duration(seconds: 8), () {
+          _slowLoadingTimer = Timer(const Duration(seconds: 3), () {
             if (mounted && ref.read(loadingProvider)) {
               setState(() => _showSlowLoadingMessage = true);
             }
@@ -413,17 +412,18 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
           ),
         ),
         Positioned(
-          top: 275,
+          bottom: 270,
           child: Visibility(
             visible: isLoading && _showSlowLoadingMessage,
             child: Material(
               color: Colors.transparent,
               child: Text(
-                '読み込みに10~20秒ほどかかる場合があります。\n次回アップデートで改善予定です。',
+                S.of(context)!.loadingApologizeMessage,
                 style: Theme.of(context)
                     .textTheme
                     .bodySmall
                     ?.copyWith(color: Colors.grey),
+                textAlign: TextAlign.center,
               ),
             ),
           ),

@@ -378,4 +378,8 @@ class SJa extends S {
 
   @override
   String get completeSending => '送信完了';
+
+  @override
+  String get loadingApologizeMessage =>
+      '読み込みに10~20秒ほどかかる場合があります。\n次回アップデートで改善予定です。';
 }
