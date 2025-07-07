@@ -93,8 +93,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
     if (eventName.isEmpty) {
       _errorMessage = S.of(context)!.enterEventName;
     } else if (eventName.length > 8) {
-      _errorMessage = S.of(context)!.maxCharacterMessage_8 ??
-          "You can enter up to 8 characters.";
+      _errorMessage = S.of(context)!.maxCharacterMessage_8;
     } else {
       _errorMessage = null;
     }
@@ -192,7 +191,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
           child: Dialog(
             backgroundColor: Colors.white,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(14),
             ),
             child: Padding(
               padding: const EdgeInsets.only(top: 8, left: 24, right: 24),
@@ -276,8 +275,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                             child: ListTile(
                               contentPadding: EdgeInsets.zero,
                               title: Text(
-                                S.of(context)!.transferMembers ??
-                                    "Transfer Members",
+                                S.of(context)!.transferMembers,
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyMedium
@@ -303,8 +301,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                                   ),
                                   child: Text(
                                     _selectedEvent?.eventName ??
-                                        S.of(context)!.selectEvent ??
-                                        "Select an Event",
+                                        S.of(context)!.selectEvent,
                                     maxLines: 1,
                                     style: Theme.of(context)
                                         .textTheme
@@ -328,8 +325,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                               contentPadding: EdgeInsets.zero,
                               dense: true,
                               title: Text(
-                                S.of(context)!.addFromLine ??
-                                    "Add From LINE Group",
+                                S.of(context)!.addFromLine,
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyMedium
