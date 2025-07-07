@@ -98,7 +98,7 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
       child: Dialog(
         backgroundColor: const Color(0xFFFFFFFF),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(14),
         ),
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -149,8 +149,7 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
                       maxLines: 10,
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: S.of(context)!.multiMemberHint ??
-                            "You can add multiple members by separating them with line breaks.",
+                        hintText: S.of(context)!.multiMemberHint,
                         hintStyle: Theme.of(context)
                             .textTheme
                             .bodySmall
