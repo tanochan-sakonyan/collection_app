@@ -269,7 +269,7 @@ class SJa extends S {
   String get selectLineGroupTitle => 'LINEグループから\nメンバー追加';
 
   @override
-  String get selectLineGroupDesc => 'このメンバーでイベントを作成しますか？';
+  String get selectLineGroupDesc1 => '追加したいメンバーの\nLINEグループを選択してください';
 
   @override
   String get notDisplayedQuestion => 'LINEグループが表示されない？';
@@ -279,7 +279,7 @@ class SJa extends S {
 
   @override
   String get inviteOfficialAccountDesc1 =>
-      '「集金くん」が参加しているLINEグループのみ、\nメンバーを取得することができます。LINEグループが表示されない場合には、\n一度「集金くん公式LINE」を退出させたのちに\n再度同じグループに追加してください。';
+      '「集金くん」が参加しているLINEグループのみ、\nメンバーを取得することができます。\nLINEグループが表示されない場合には、\n一度「集金くん公式LINE」を退出させたのちに\n再度同じグループに追加してください。';
 
   @override
   String get inviteOfficialAccountStep1 => 'LINE公式アカウントを追加';
@@ -292,6 +292,9 @@ class SJa extends S {
 
   @override
   String get group => 'グループ';
+
+  @override
+  String get selectLineGroupDesc2 => 'このメンバーでイベントを作成しますか？';
 
   @override
   String get selectLineGroupButton => 'このメンバーでイベント作成';
@@ -330,4 +333,11 @@ class SJa extends S {
 
   @override
   String get save => '保存';
+
+  @override
+  String get lineNotConnectedMessage1 => 'イベントとLINEグループを連携し、\n催促メッセージを自動送信しよう！';
+
+  @override
+  String get lineNotConnectedMessage2 =>
+      '『LINEグループから追加』を使用すると、\nイベントとLINEグループを連携できます！';
 }

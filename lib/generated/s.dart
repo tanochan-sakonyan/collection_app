@@ -613,11 +613,11 @@ abstract class S {
   /// **'LINEグループから\nメンバー追加'**
   String get selectLineGroupTitle;
 
-  /// No description provided for @selectLineGroupDesc.
+  /// No description provided for @selectLineGroupDesc1.
   ///
   /// In ja, this message translates to:
-  /// **'このメンバーでイベントを作成しますか？'**
-  String get selectLineGroupDesc;
+  /// **'追加したいメンバーの\nLINEグループを選択してください'**
+  String get selectLineGroupDesc1;
 
   /// No description provided for @notDisplayedQuestion.
   ///
@@ -634,7 +634,7 @@ abstract class S {
   /// No description provided for @inviteOfficialAccountDesc1.
   ///
   /// In ja, this message translates to:
-  /// **'「集金くん」が参加しているLINEグループのみ、\nメンバーを取得することができます。LINEグループが表示されない場合には、\n一度「集金くん公式LINE」を退出させたのちに\n再度同じグループに追加してください。'**
+  /// **'「集金くん」が参加しているLINEグループのみ、\nメンバーを取得することができます。\nLINEグループが表示されない場合には、\n一度「集金くん公式LINE」を退出させたのちに\n再度同じグループに追加してください。'**
   String get inviteOfficialAccountDesc1;
 
   /// No description provided for @inviteOfficialAccountStep1.
@@ -660,6 +660,12 @@ abstract class S {
   /// In ja, this message translates to:
   /// **'グループ'**
   String get group;
+
+  /// No description provided for @selectLineGroupDesc2.
+  ///
+  /// In ja, this message translates to:
+  /// **'このメンバーでイベントを作成しますか？'**
+  String get selectLineGroupDesc2;
 
   /// No description provided for @selectLineGroupButton.
   ///
@@ -732,6 +738,18 @@ abstract class S {
   /// In ja, this message translates to:
   /// **'保存'**
   String get save;
+
+  /// No description provided for @lineNotConnectedMessage1.
+  ///
+  /// In ja, this message translates to:
+  /// **'イベントとLINEグループを連携し、\n催促メッセージを自動送信しよう！'**
+  String get lineNotConnectedMessage1;
+
+  /// No description provided for @lineNotConnectedMessage2.
+  ///
+  /// In ja, this message translates to:
+  /// **'『LINEグループから追加』を使用すると、\nイベントとLINEグループを連携できます！'**
+  String get lineNotConnectedMessage2;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

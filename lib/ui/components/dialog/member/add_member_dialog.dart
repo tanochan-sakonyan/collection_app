@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/provider/user_provider.dart';
-import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
 
 class AddMemberDialog extends ConsumerStatefulWidget {
@@ -96,115 +96,116 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
   @override
   Widget build(BuildContext context) {
     return CircleIndicator(
-        child: Dialog(
-      backgroundColor: const Color(0xFFFFFFFF),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Container(
-          color: const Color(0xFFFFFFFF),
-          height: 355,
-          width: 320,
-          child: Column(
-            children: [
-              const SizedBox(height: 8),
-              Text(
-                S.of(context)?.addMembers ?? "Add Members",
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                    ),
-              ),
-              const SizedBox(height: 12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Text(
-                      "Name",
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w700,
-                          ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 4),
-              SizedBox(
-                width: 272,
-                height: 220,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: const Color(0xFFE8E8E8)),
-                  ),
-                  child: TextField(
-                    controller: _controller,
-                    keyboardType: TextInputType.multiline,
-                    maxLines: 10,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: S.of(context)?.multiMemberHint ??
-                          "You can add multiple members by separating them with line breaks.",
-                      hintStyle: Theme.of(context)
-                          .textTheme
-                          .bodySmall
-                          ?.copyWith(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w300,
-                              color: const Color(0xFF999999)),
-                    ),
-                  ),
+      child: Dialog(
+        backgroundColor: const Color(0xFFFFFFFF),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Container(
+            color: const Color(0xFFFFFFFF),
+            height: 355,
+            width: 320,
+            child: Column(
+              children: [
+                const SizedBox(height: 8),
+                Text(
+                  S.of(context)?.addMembers ?? "Add Members",
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                      ),
                 ),
-              ),
-              const SizedBox(height: 4),
-              Container(
-                height: 20,
-                width: double.infinity,
-                color: Colors.white,
-                alignment: Alignment.centerRight,
-                child: _errorMessage != null
-                    ? Text(
-                        _errorMessage!,
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                const SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text(
+                        "Name",
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               fontSize: 10,
-                              fontWeight: FontWeight.w300,
-                              color: Colors.red,
+                              fontWeight: FontWeight.w700,
                             ),
-                      )
-                    : null,
-              ),
-              const SizedBox(height: 10),
-              SizedBox(
-                width: 272,
-                height: 40,
-                child: ElevatedButton(
-                  onPressed: _isButtonEnabled ? () => _createMember() : null,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFF2F2F2),
-                    elevation: 2,
-                    shape: const StadiumBorder(),
-                  ),
-                  child: Text(
-                    S.of(context)?.confirm ?? "Confirm",
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 14.0,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                SizedBox(
+                  width: 272,
+                  height: 220,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: const Color(0xFFE8E8E8)),
+                    ),
+                    child: TextField(
+                      controller: _controller,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: 10,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: S.of(context)?.multiMemberHint ??
+                            "You can add multiple members by separating them with line breaks.",
+                        hintStyle: Theme.of(context)
+                            .textTheme
+                            .bodySmall
+                            ?.copyWith(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w300,
+                                color: const Color(0xFF999999)),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 4),
+                Container(
+                  height: 20,
+                  width: double.infinity,
+                  color: Colors.white,
+                  alignment: Alignment.centerRight,
+                  child: _errorMessage != null
+                      ? Text(
+                          _errorMessage!,
+                          style:
+                              Theme.of(context).textTheme.labelSmall?.copyWith(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w300,
+                                    color: Colors.red,
+                                  ),
+                        )
+                      : null,
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: 272,
+                  height: 40,
+                  child: ElevatedButton(
+                    onPressed: _isButtonEnabled ? () => _createMember() : null,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFF2F2F2),
+                      elevation: 2,
+                      shape: const StadiumBorder(),
+                    ),
+                    child: Text(
+                      S.of(context)?.confirm ?? "Confirm",
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 14.0,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
-    ),
     );
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mr_collection/ui/components/dialog/questionnaire_dialog.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:mr_collection/generated/s.dart';
 
 class SuggestionWebView extends StatefulWidget {
   const SuggestionWebView({super.key});

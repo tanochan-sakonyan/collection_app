@@ -277,8 +277,8 @@ class SEn extends S {
   String get selectLineGroupTitle => 'Add members from LINE group';
 
   @override
-  String get selectLineGroupDesc =>
-      'Would you like to create an event with these members?';
+  String get selectLineGroupDesc1 =>
+      'Select the LINE group where you want to add members.';
 
   @override
   String get notDisplayedQuestion => 'LINE group not displayed?';
@@ -304,6 +304,10 @@ class SEn extends S {
 
   @override
   String get group => 'Group';
+
+  @override
+  String get selectLineGroupDesc2 =>
+      'Would you like to create an event with these members?';
 
   @override
   String get selectLineGroupButton => 'Create event with these members';
@@ -343,4 +347,12 @@ class SEn extends S {
 
   @override
   String get save => 'Save';
+
+  @override
+  String get lineNotConnectedMessage1 =>
+      'Let’s link the event with a LINE group and\n automatically send reminder messages!';
+
+  @override
+  String get lineNotConnectedMessage2 =>
+      'By using ‘Add from LINE Group,’\n you can link the event with a LINE group!';
 }

@@ -7,7 +7,7 @@ import 'dart:ui' show FontFeature;
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/screen/amount_screen/split_amount_screen.dart';
-import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:mr_collection/generated/s.dart';
 
 class InputAmountScreen extends ConsumerStatefulWidget {
   final String eventId;
