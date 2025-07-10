@@ -132,7 +132,7 @@ class _TanochanDrawerState extends State<TanochanDrawer>
             _buildMenuItem(
               context,
               text: S.of(context)!.updateInformation,
-              icon: SvgPicture.asset("assets/icons/drawer_star.svg"),
+              icon: SvgPicture.asset("assets/icons/drawer_megaphone.svg"),
               onTap: () {
                 showDialog(
                   context: context,

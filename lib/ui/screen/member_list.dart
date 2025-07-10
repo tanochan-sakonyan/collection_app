@@ -231,8 +231,7 @@ class MemberList extends ConsumerWidget {
                                               children: [
                                                 const SizedBox(height: 4),
                                                 AutoSizeText(
-                                                  S.of(context)!.delete ??
-                                                      "Delete",
+                                                  S.of(context)!.delete,
                                                   maxLines: 1,
                                                   style: GoogleFonts.inter(
                                                     fontSize: 14,
@@ -261,7 +260,7 @@ class MemberList extends ConsumerWidget {
                                                       .textTheme
                                                       .bodyMedium
                                                       ?.copyWith(
-                                                        fontSize: 14,
+                                                        fontSize: 16,
                                                         fontWeight:
                                                             FontWeight.w500,
                                                         color: member.status ==
@@ -293,7 +292,17 @@ class MemberList extends ConsumerWidget {
                                                             : Colors.black,
                                                       ),
                                                     )
-                                                  : null,
+                                                  : Text(
+                                                      "--- ${S.of(context)!.currencyUnit}",
+                                                      style: TextStyle(
+                                                        color: member.status ==
+                                                                PaymentStatus
+                                                                    .absence
+                                                            ? Colors.grey
+                                                            : Colors.black,
+                                                        fontSize: 12,
+                                                      ),
+                                                    ),
                                           trailing: _buildStatusIcon(
                                             member.status,
                                           ),
