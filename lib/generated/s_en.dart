@@ -39,7 +39,7 @@ class SEn extends S {
   String get person => '';
 
   @override
-  String get settlePayment => 'Settle Payment';
+  String get settlePayment => 'Total amount: --- USD';
 
   @override
   String get update_1 => 'We\'re currently developing LINE integration.';

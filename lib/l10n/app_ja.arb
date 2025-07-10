@@ -10,7 +10,7 @@
   "status_unpaid": "未払い",
   "status_absence": "欠席",
   "person": "人",
-  "settlePayment": "精 算",
+  "settlePayment": "合計 ーーー円",
   "update_1": "LINEとの連携機能を現在開発中です。",
   "update_2": "アップデートをお待ちください。",
   "setting": "設定",

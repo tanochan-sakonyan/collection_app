@@ -10,12 +10,11 @@ import 'package:mr_collection/provider/amount_loading_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/member/add_member_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/member/delete_member_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/member/edit_member_name_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/member/status_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:mr_collection/ui/screen/amount_screen/input_amount_screen.dart';
-import 'package:mr_collection/ui/screen/send_line_message_bottom_sheet.dart';
-import '../components/dialog/member/edit_member_name_dialog.dart';
 import 'package:mr_collection/generated/s.dart';
 
 class MemberList extends ConsumerWidget {
@@ -441,41 +440,25 @@ class MemberList extends ConsumerWidget {
                       ),
                     );
                   },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        'assets/icons/ic_amount.svg',
-                        width: 35,
-                        height: 35,
-                      ),
-                      const SizedBox(width: 6),
-                      (event.totalMoney != null)
-                          ? Text(
-                              "合計 ${event.totalMoney.toString()} ${S.of(context)!.currencyUnit}",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.copyWith(
+                  child: (event.totalMoney != null)
+                      ? Text(
+                          "合計 ${event.totalMoney.toString()} ${S.of(context)!.currencyUnit}",
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w700,
                                     color: Colors.white,
                                   ),
-                            )
-                          : Text(
-                              S.of(context)!.settlePayment,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.copyWith(
+                        )
+                      : Text(
+                          S.of(context)!.settlePayment,
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w700,
                                     color: Colors.white,
                                   ),
-                            ),
-                      const SizedBox(width: 12),
-                    ],
-                  ),
+                        ),
                 ),
               ),
               // Padding(

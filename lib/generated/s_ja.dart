@@ -39,7 +39,7 @@ class SJa extends S {
   String get person => '人';
 
   @override
-  String get settlePayment => '精 算';
+  String get settlePayment => '合計 ーーー円';
 
   @override
   String get update_1 => 'LINEとの連携機能を現在開発中です。';

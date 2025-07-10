@@ -160,7 +160,7 @@ abstract class S {
   /// No description provided for @settlePayment.
   ///
   /// In ja, this message translates to:
-  /// **'精 算'**
+  /// **'合計 ーーー円'**
   String get settlePayment;
 
   /// No description provided for @update_1.
