@@ -141,6 +141,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       targets: targets,
       useSafeArea: true,
       colorShadow: const Color(0xFFE0E0E0),
+      alignSkip: Alignment.topRight,
       textSkip: S.of(context)!.skip,
       textStyleSkip: const TextStyle(
         color: Colors.black,
