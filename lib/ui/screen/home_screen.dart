@@ -274,8 +274,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                           maxLines: 8,
                           minLines: 8,
                           decoration: InputDecoration(
-                            hintText: S.of(context)!.memoPlaceholder ??
-                                "You can enter a note",
+                            hintText: S.of(context)!.memoPlaceholder,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -396,19 +395,21 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           title: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              IconButton(
-                onPressed: () {
-                  _resetTutorial();
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    _showTutorial();
-                  });
-                },
-                icon: SvgPicture.asset(
-                  'assets/icons/question_circle.svg',
-                  width: 24,
-                  height: 24,
-                ),
-              ),
+              tabTitles.isEmpty
+                  ? const SizedBox(width: 24)
+                  : IconButton(
+                      onPressed: () {
+                        _resetTutorial();
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          _showTutorial();
+                        });
+                      },
+                      icon: SvgPicture.asset(
+                        'assets/icons/question_circle.svg',
+                        width: 24,
+                        height: 24,
+                      ),
+                    ),
             ],
           ),
           automaticallyImplyLeading: false,
@@ -599,9 +600,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                   children: [
                     ...(currentEvent.lineMembersFetchedAt != null)
                         ? [
-                            Text(
-                                S.of(context)!.autoDeleteMemberCountdown ??
-                                    "Auto member deletion in",
+                            Text(S.of(context)!.autoDeleteMemberCountdown,
                                 style: Theme.of(context)
                                     .textTheme
                                     .labelSmall
