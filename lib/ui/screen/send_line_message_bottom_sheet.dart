@@ -7,7 +7,7 @@ import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/line_message_confirm_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/paypay_dialog.dart';
-import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:mr_collection/generated/s.dart';
 
 class LineMessageBottomSheet extends ConsumerStatefulWidget {
   final Event event;
@@ -43,7 +43,7 @@ class _UnpaidMessageBottomSheetState
     final namesAndMoney = widget.unpaidMembers.map((m) {
       final spaceCount = maxNameLength - m.memberName.length + 2;
       final spaces = ' ' * spaceCount;
-      return '@${m.memberName}$spaces${m.memberMoney ?? ""}円';
+      return '@${m.memberName}$spaces${m.memberMoney}円';
     }).join('\n');
 
     return '下記の方は、まだ${widget.event.eventName}の支払いが完了していません。\n'

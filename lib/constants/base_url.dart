@@ -1,1 +1,2 @@
-const baseUrl = 'https://shukinkun-49fb12fd2191.herokuapp.com/';
+const baseUrl =
+    'https://shukinkun-grdsgngxf7hdg9fz.japaneast-01.azurewebsites.net/';

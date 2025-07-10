@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:mr_collection/generated/s.dart';
 
 class InviteOfficialAccountToLineGroupDialog extends StatelessWidget {
   const InviteOfficialAccountToLineGroupDialog({super.key});
@@ -36,7 +36,7 @@ class InviteOfficialAccountToLineGroupDialog extends StatelessWidget {
           children: [
             const SizedBox(height: 12),
             Text(
-              S.of(context)?.inviteOfficialAccountTitle ??
+              S.of(context)!.inviteOfficialAccountTitle ??
                   "Invite the official LINE account to the group",
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.bold,
@@ -46,7 +46,7 @@ class InviteOfficialAccountToLineGroupDialog extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              S.of(context)?.inviteOfficialAccountDesc1 ??
+              S.of(context)!.inviteOfficialAccountDesc1 ??
                   "You can only get members from LINE groups where 'Shukin-kun' is invited.",
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -90,7 +90,7 @@ class InviteOfficialAccountToLineGroupDialog extends StatelessWidget {
                       ),
                       const SizedBox(width: 2),
                       Text(
-                        S.of(context)?.shukinkun ?? "Shukinkun",
+                        S.of(context)!.shukinkun,
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
                               color: Colors.black,
@@ -116,7 +116,7 @@ class InviteOfficialAccountToLineGroupDialog extends StatelessWidget {
                       height: 44,
                     ),
                     Text(
-                      S.of(context)?.group ?? "Group",
+                      S.of(context)!.group,
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
                           color: Colors.black,

@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/countdown_timer.dart';
-import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:mr_collection/generated/s.dart';
 
 class LineGroupUpdateCountdownDialog extends ConsumerWidget {
   final Event currentEvent;
@@ -31,7 +31,7 @@ class LineGroupUpdateCountdownDialog extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              S.of(context)?.lineGroupExpireTitle ??
+              S.of(context)!.lineGroupExpireTitle ??
                   "Member info will expire soon",
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.w700,
@@ -42,7 +42,7 @@ class LineGroupUpdateCountdownDialog extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              S.of(context)?.lineGroupExpireDesc ??
+              S.of(context)!.lineGroupExpireDesc ??
                   "According to LINE's terms of use, after the member info expires,\nmember and payment status information will be deleted.\nPlease reacquire to reset the expiration date.",
               textAlign: TextAlign.start,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -81,7 +81,7 @@ class LineGroupUpdateCountdownDialog extends ConsumerWidget {
                       ),
                     ),
                     child: Text(
-                      S.of(context)?.doNotRefresh ?? "Don't refresh",
+                      S.of(context)!.doNotRefresh,
                       style: GoogleFonts.notoSansJp(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -110,7 +110,7 @@ class LineGroupUpdateCountdownDialog extends ConsumerWidget {
                       ),
                     ),
                     child: Text(
-                      S.of(context)?.refresh ?? "Refresh",
+                      S.of(context)!.refresh,
                       style: GoogleFonts.notoSansJp(
                         fontSize: 14,
                         fontWeight: FontWeight.w900,

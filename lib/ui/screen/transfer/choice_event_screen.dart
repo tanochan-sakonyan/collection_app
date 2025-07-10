@@ -4,7 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/ui/screen/transfer/check_selected_event_screen.dart';
-import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:mr_collection/generated/s.dart';
 
 class ChoiceEventScreen extends ConsumerStatefulWidget {
   const ChoiceEventScreen({super.key});
@@ -43,7 +43,7 @@ class ChoiceEventScreenState extends ConsumerState<ChoiceEventScreen> {
                 height: 44,
               ),
               Text(
-                S.of(context)?.back ?? "Back",
+                S.of(context)!.back,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: const Color(0xFF76DCC6),
                     fontSize: 15,
@@ -59,7 +59,7 @@ class ChoiceEventScreenState extends ConsumerState<ChoiceEventScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
           Text(
-            S.of(context)?.transferMembers ?? "Transfer Members",
+            S.of(context)!.transferMembers,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
@@ -68,7 +68,7 @@ class ChoiceEventScreenState extends ConsumerState<ChoiceEventScreen> {
           ),
           const SizedBox(height: 32),
           Text(
-            S.of(context)?.selectEventToTransfer ??
+            S.of(context)!.selectEventToTransfer ??
                 "Please select the event from which you want to transfer members.",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 16,

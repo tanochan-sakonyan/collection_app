@@ -10,7 +10,7 @@
   "status_unpaid": "Unpaid",
   "status_absence": "Absence",
   "person": "",
-  "settlePayment": "Settle Payment",
+  "settlePayment": "Total amount: --- USD",
   "update_1": "We're currently developing LINE integration.",
   "update_2": " Please wait for a future update.",
   "setting": "Settings",
@@ -90,6 +90,7 @@
   "xLink": "X Link",
   "officialSite": "Official Website",
   "openFailed": "Could not open the page",
+  "updateInformation": "Update Information",
   "selectLineGroupTitle": "Add members from LINE group",
   "selectLineGroupDesc1": "Select the LINE group where you want to add members.",
   "notDisplayedQuestion": "LINE group not displayed?",
@@ -119,5 +120,6 @@
   "sendPayPayLink": "Send a PayPay link",
   "send": "Send",
   "sendConfirmation": "Confirm sending",
-  "completeSending": "Sending complete"
+  "completeSending": "Sending complete",
+  "loadingApologizeMessage": "Loading may take around 10–20 seconds. \n We plan to improve this in the next update."
 }

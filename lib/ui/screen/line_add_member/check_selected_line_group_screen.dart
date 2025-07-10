@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/data/model/freezed/line_group.dart';
-import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/data/model/freezed/line_group_member.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
@@ -49,7 +49,7 @@ class CheckSelectedLineGroupScreenState
                   height: 44,
                 ),
                 Text(
-                  S.of(context)?.back ?? "Back",
+                  S.of(context)!.back,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: const Color(0xFF76DCC6),
                       fontSize: 15,
@@ -65,7 +65,7 @@ class CheckSelectedLineGroupScreenState
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              S.of(context)?.selectLineGroupTitle ??
+              S.of(context)!.selectLineGroupTitle ??
                   "Add members from LINE group",
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontSize: 24,
@@ -77,7 +77,7 @@ class CheckSelectedLineGroupScreenState
             ),
             const SizedBox(height: 36),
             Text(
-              S.of(context)?.selectLineGroupDesc2 ??
+              S.of(context)!.selectLineGroupDesc2 ??
                   "Would you like to create an event with these members?",
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontSize: 16,
@@ -211,7 +211,7 @@ class CheckSelectedLineGroupScreenState
                   ),
                 ),
                 child: Text(
-                  S.of(context)?.selectLineGroupButton ??
+                  S.of(context)!.selectLineGroupButton ??
                       "Create event with these members",
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         fontSize: 14,
@@ -224,7 +224,7 @@ class CheckSelectedLineGroupScreenState
             // TODO: 以下、規約対応
             // const SizedBox(height: 16),
             // Text(
-            //   S.of(context)?.selectLineGroupNote ??
+            //   S.of(context)!.selectLineGroupNote ??
             //       "*Member information obtained from the LINE group will be deleted after 24 hours.\nPlease reacquire before 24 hours have passed.\nPayment statuses will be retained when reacquiring.",
             //   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
             //         fontSize: 10,

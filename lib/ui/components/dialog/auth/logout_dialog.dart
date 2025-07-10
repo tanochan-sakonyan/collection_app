@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_line_sdk/flutter_line_sdk.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/ui/screen/login_screen.dart';
-import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:mr_collection/generated/s.dart';
 
 class LogoutDialog extends StatelessWidget {
   const LogoutDialog({
@@ -26,7 +26,7 @@ class LogoutDialog extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              S.of(context)?.logoutMessage ?? "Do you want to log out?",
+              S.of(context)!.logoutMessage,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.w500,
                     fontSize: 16,
@@ -51,7 +51,7 @@ class LogoutDialog extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      S.of(context)?.no ?? "No",
+                      S.of(context)!.no,
                       style: GoogleFonts.notoSansJp(
                         fontWeight: FontWeight.w400,
                         fontSize: 14,
@@ -74,7 +74,7 @@ class LogoutDialog extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      S.of(context)?.yes ?? "Yes",
+                      S.of(context)!.yes,
                       style: GoogleFonts.notoSansJp(
                         fontWeight: FontWeight.w400,
                         fontSize: 14,

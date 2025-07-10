@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/provider/user_provider.dart';
-import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
 
 class DeleteMemberDialog extends ConsumerStatefulWidget {
@@ -52,80 +52,80 @@ class _DeleteMemberDialogState extends ConsumerState<DeleteMemberDialog> {
   @override
   Widget build(BuildContext context) {
     return CircleIndicator(
-        child: Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Container(
-        width: 320,
-        height: 179,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(23),
+      child: Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              S.of(context)?.confirmDeleteMember ??
-                  'Do you want to delete this member?',
-              style: GoogleFonts.notoSansJp(
-                fontWeight: FontWeight.w400,
-                fontSize: 13,
-                color: Colors.black,
+        child: Container(
+          width: 320,
+          height: 179,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(23),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                S.of(context)!.confirmDeleteMember ??
+                    'Do you want to delete this member?',
+                style: GoogleFonts.notoSansJp(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 13,
+                  color: Colors.black,
+                ),
               ),
-            ),
-            const SizedBox(height: 40),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                const Spacer(flex: 2),
-                SizedBox(
-                  height: 36,
-                  width: 107,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFD7D7D7),
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+              const SizedBox(height: 40),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  const Spacer(flex: 2),
+                  SizedBox(
+                    height: 36,
+                    width: 107,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFD7D7D7),
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      child: Text(
+                        S.of(context)!.no,
+                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ),
-                    child: Text(
-                      S.of(context)?.no ?? "No",
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
                   ),
-                ),
-                const Spacer(),
-                SizedBox(
-                  height: 36,
-                  width: 107,
-                  child: ElevatedButton(
-                    onPressed: _isButtonEnabled ? _deleteMember : null,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFF2F2F2),
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+                  const Spacer(),
+                  SizedBox(
+                    height: 36,
+                    width: 107,
+                    child: ElevatedButton(
+                      onPressed: _isButtonEnabled ? _deleteMember : null,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFF2F2F2),
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      child: Text(
+                        S.of(context)!.yes,
+                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ),
-                    child: Text(
-                      S.of(context)?.yes ?? "Yes",
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
                   ),
-                ),
-                const Spacer(flex: 2),
-              ],
-            ),
-          ],
+                  const Spacer(flex: 2),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
-    ),
     );
   }
 }
