@@ -128,47 +128,35 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   void _showTutorial() {
-    tabController.animateTo(_currentTabIndex);
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final memberKey = _memberAddKeys[_currentTabIndex];
-      final slidableKey = _slidableKeys[_currentTabIndex];
-      final sortKey = _sortKeys[_currentTabIndex];
-      final fabKey = fabKeys[_currentTabIndex];
-
-      targets = TutorialTargets.createTargets(
-        context: context,
-        eventAddKey: eventAddKey,
-        leftTabKey: leftTabKey,
-        memberAddKey: memberKey,
-        slidableKey: slidableKey,
-        sortKey: sortKey,
-        fabKey: fabKey,
-      );
-
-      tutorialCoachMark = TutorialCoachMark(
-        targets: targets,
-        useSafeArea: true,
-        colorShadow: Colors.black.withOpacity(0.8),
-        alignSkip: Alignment.topRight,
-        textSkip: S.of(context)!.skip,
-        textStyleSkip: const TextStyle(
-          color: Colors.white,
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-        ),
-        paddingFocus: 6,
-        onFinish: () {
-          _setTutorialShown();
-        },
-        onSkip: () {
-          _setTutorialShown();
-          return true;
-        },
-      );
-
-      tutorialCoachMark.show(context: context);
-    });
+    targets = TutorialTargets.createTargets(
+      context: context,
+      eventAddKey: eventAddKey,
+      leftTabKey: leftTabKey,
+      memberAddKey: _memberAddKeys[_currentTabIndex],
+      slidableKey: _slidableKeys[_currentTabIndex],
+      sortKey: _sortKeys[_currentTabIndex],
+      fabKey: fabKeys[_currentTabIndex],
+    );
+    tutorialCoachMark = TutorialCoachMark(
+      targets: targets,
+      useSafeArea: true,
+      colorShadow: const Color(0xFFE0E0E0),
+      alignSkip: Alignment.topRight,
+      textSkip: S.of(context)!.skip,
+      textStyleSkip: const TextStyle(
+        color: Colors.black,
+        fontSize: 16,
+      ),
+      paddingFocus: 6,
+      onFinish: () {
+        _setTutorialShown();
+      },
+      onSkip: () {
+        _setTutorialShown();
+        return true;
+      },
+    );
+    tutorialCoachMark.show(context: context);
   }
 
   void _setTutorialShown() async {
@@ -680,7 +668,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                   eventId:
                                       event.eventId != "" ? event.eventId : "",
                                   eventName: event.eventName,
-                                  memberAddKey: _memberAddKeys[index],
+                                  memberAddKey: (_currentTabIndex == index)
+                                      ? _memberAddKeys[index]
+                                      : null,
                                   slidableKey: (_currentTabIndex == index)
                                       ? _slidableKeys[index]
                                       : null,

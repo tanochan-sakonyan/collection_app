@@ -379,7 +379,6 @@ class MemberList extends ConsumerWidget {
                           // ),
                           // const SizedBox(width: 100),
                           TextButton(
-                            key: memberAddKey,
                             onPressed: () {
                               showDialog(
                                 context: context,
@@ -397,6 +396,7 @@ class MemberList extends ConsumerWidget {
                               ),
                             ),
                             child: Row(
+                              key: memberAddKey,
                               children: [
                                 SizedBox(
                                   height: 24,
