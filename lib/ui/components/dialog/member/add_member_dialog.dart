@@ -192,6 +192,7 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
                     ),
                     child: Text(
                       S.of(context)!.confirm,
+
                       style: const TextStyle(
                         color: Colors.black,
                         fontSize: 14.0,

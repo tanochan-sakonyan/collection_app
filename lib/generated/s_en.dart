@@ -372,7 +372,7 @@ class SEn extends S {
 
   @override
   String get lineNotConnectedMessage1 =>
-      'Let’s link the event with a LINE group and automatically send reminder messages!';
+      'Let’s link the event with a LINE group and\n automatically send reminder messages!';
 
   @override
   String get lineNotConnectedMessage2 =>

@@ -67,8 +67,7 @@ class _DeleteMemberDialogState extends ConsumerState<DeleteMemberDialog> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                S.of(context)!.confirmDeleteMember ??
-                    'Do you want to delete this member?',
+                S.of(context)!.confirmDeleteMember,
                 style: GoogleFonts.notoSansJp(
                   fontWeight: FontWeight.w400,
                   fontSize: 13,

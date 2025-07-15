@@ -15,6 +15,8 @@ import 'package:mr_collection/ui/components/dialog/member/status_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:mr_collection/ui/screen/amount_screen/input_amount_screen.dart';
+import 'package:mr_collection/ui/screen/send_line_message_bottom_sheet.dart';
+import '../components/dialog/member/edit_member_name_dialog.dart';
 import 'package:mr_collection/generated/s.dart';
 
 class MemberList extends ConsumerWidget {
