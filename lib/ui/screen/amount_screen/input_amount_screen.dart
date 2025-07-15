@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:ui' show FontFeature;
 import 'package:mr_collection/data/model/freezed/member.dart';
+import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/screen/amount_screen/split_amount_screen.dart';
 import 'package:mr_collection/generated/s.dart';
@@ -164,7 +165,7 @@ class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
             decoration: InputDecoration(
               border: InputBorder.none,
               isCollapsed: true,
-              suffixText: S.of(context)?.currencyUnit ?? "USD",
+              suffixText: S.of(context)!.currencyUnit,
               suffixStyle: yenStyle,
               contentPadding: EdgeInsets.zero,
             ),
@@ -185,7 +186,7 @@ class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
               color: Colors.black),
           children: [
             TextSpan(
-                text: S.of(context)?.currencyUnit ?? "USD",
+                text: S.of(context)!.currencyUnit,
                 style: const TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 36,
@@ -212,7 +213,7 @@ class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
                 height: 44,
               ),
               Text(
-                S.of(context)?.back ?? "Back",
+                S.of(context)!.back,
                 style: GoogleFonts.notoSansJp(
                     color: const Color(0xFF76DCC6),
                     fontSize: 15,
@@ -238,7 +239,7 @@ class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
             ),
             const SizedBox(height: 32),
             Text(
-              S.of(context)?.enterTotalAmount ?? "Enter total amount",
+              S.of(context)!.enterTotalAmount,
               style: GoogleFonts.notoSansJp(
                   fontSize: 24, fontWeight: FontWeight.w700),
             ),
@@ -292,7 +293,7 @@ class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      S.of(context)?.next ?? "Next",
+                      S.of(context)!.next,
                       style: const TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 20,

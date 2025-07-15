@@ -39,7 +39,7 @@ class SEn extends S {
   String get person => '';
 
   @override
-  String get settlePayment => 'Settle Payment';
+  String get settlePayment => 'Total amount: --- USD';
 
   @override
   String get update_1 => 'We\'re currently developing LINE integration.';
@@ -51,7 +51,23 @@ class SEn extends S {
   String get setting => 'Settings';
 
   @override
-  String get paypay => 'Register your PayPay link';
+  String get paypay => 'Register PayPay link';
+
+  @override
+  String get paypayDialogMessage1 => 'Please enter the PayPay link.';
+
+  @override
+  String get paypayDialogMessage2 => 'Enter the receiving link.';
+
+  @override
+  String get paypayDialogMessage3 =>
+      'It may take about 3 to 5 minutes for it to take effect.';
+
+  @override
+  String get paypayDialogSuccessMessage => 'The PayPay link has been sent.';
+
+  @override
+  String get paypayDialogFailMessage => 'Failed to send the PayPay link.';
 
   @override
   String get questionnaire => 'Feedback Form';
@@ -185,8 +201,7 @@ class SEn extends S {
   String get tapToSortByPayment => 'Tap here to sort by payment status.';
 
   @override
-  String get tapToSendReminder =>
-      'Tap here to send a reminder message.\n(This feature is under development. Please wait for a future update.)';
+  String get tapToSendReminder => 'Tap here to send a reminder message.';
 
   @override
   String get skip => 'Skip';
@@ -274,6 +289,9 @@ class SEn extends S {
   String get openFailed => 'Could not open the page';
 
   @override
+  String get updateInformation => 'Update Information';
+
+  @override
   String get selectLineGroupTitle => 'Add members from LINE group';
 
   @override
@@ -285,11 +303,11 @@ class SEn extends S {
 
   @override
   String get inviteOfficialAccountTitle =>
-      'Invite the official LINE account to the group';
+      'Invite the official LINE account \n to the group';
 
   @override
   String get inviteOfficialAccountDesc1 =>
-      'You can only get members from LINE groups where \'Shukin-kun\' is invited.If the LINE group is not displayed,\nplease remove the \"Shuukin-kun Official LINE\" bot from the group once,\nand then add it to the same group again.';
+      'You can only get members from \nLINE groups where \'Shukin-kun\' is invited.\nIf the LINE group is not displayed,\nplease remove the \"Shukin-kun Official LINE\" \n bot from the group once,\nand then add it to the same group again.';
 
   @override
   String get inviteOfficialAccountStep1 => 'Add the official LINE account';
@@ -299,8 +317,12 @@ class SEn extends S {
       'Invite the official LINE account\nto the group for collection';
 
   @override
-  String get inviteOfficialAccountNote =>
+  String get inviteOfficialAccountNote1 =>
       '‘Shukin-kun’ will not send\npromotional messages in the group.';
+
+  @override
+  String get inviteOfficialAccountNote2 =>
+      'If you’re logged in with Apple, \n please log out once and then log in using LINE.';
 
   @override
   String get group => 'Group';
@@ -331,7 +353,7 @@ class SEn extends S {
       'According to LINE\'s terms of use, after the member info expires,\nmember and payment status information will be deleted.\nPlease reacquire to reset the expiration date.';
 
   @override
-  String get dontRefresh => 'Don\'t refresh';
+  String get doNotRefresh => 'Don\'t refresh';
 
   @override
   String get refresh => 'Refresh';
@@ -355,4 +377,23 @@ class SEn extends S {
   @override
   String get lineNotConnectedMessage2 =>
       'By using ‘Add from LINE Group,’\n you can link the event with a LINE group!';
+
+  @override
+  String get sendMessage => 'Send a remind message';
+
+  @override
+  String get sendPayPayLink => 'Send a PayPay link';
+
+  @override
+  String get send => 'Send';
+
+  @override
+  String get sendConfirmation => 'Confirm sending';
+
+  @override
+  String get completeSending => 'Sending complete';
+
+  @override
+  String get loadingApologizeMessage =>
+      'Loading may take around 10–20 seconds. \n We plan to improve this in the next update.';
 }

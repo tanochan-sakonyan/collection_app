@@ -31,7 +31,7 @@ class LineGroupUpdateCountdownDialog extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              S.of(context)?.lineGroupExpireTitle ??
+              S.of(context)!.lineGroupExpireTitle ??
                   "Member info will expire soon",
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.w700,
@@ -42,7 +42,7 @@ class LineGroupUpdateCountdownDialog extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              S.of(context)?.lineGroupExpireDesc ??
+              S.of(context)!.lineGroupExpireDesc ??
                   "According to LINE's terms of use, after the member info expires,\nmember and payment status information will be deleted.\nPlease reacquire to reset the expiration date.",
               textAlign: TextAlign.start,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -81,7 +81,7 @@ class LineGroupUpdateCountdownDialog extends ConsumerWidget {
                       ),
                     ),
                     child: Text(
-                      S.of(context)?.dontRefresh ?? "Don't refresh",
+                      S.of(context)!.doNotRefresh,
                       style: GoogleFonts.notoSansJp(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -110,7 +110,7 @@ class LineGroupUpdateCountdownDialog extends ConsumerWidget {
                       ),
                     ),
                     child: Text(
-                      S.of(context)?.refresh ?? "Refresh",
+                      S.of(context)!.refresh,
                       style: GoogleFonts.notoSansJp(
                         fontSize: 14,
                         fontWeight: FontWeight.w900,

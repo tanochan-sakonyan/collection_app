@@ -34,7 +34,7 @@ class CheckSelectedEventScreenState
                 height: 44,
               ),
               Text(
-                S.of(context)?.back ?? "Back",
+                S.of(context)!.back,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: const Color(0xFF76DCC6),
                     fontSize: 15,
@@ -50,7 +50,7 @@ class CheckSelectedEventScreenState
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            S.of(context)?.transferMembers ?? "Transfer Members",
+            S.of(context)!.transferMembers,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
@@ -59,7 +59,7 @@ class CheckSelectedEventScreenState
           ),
           const SizedBox(height: 32),
           Text(
-            S.of(context)?.confirmTransferFromEvent ??
+            S.of(context)!.confirmTransferFromEvent ??
                 "Do you want to transfer members from this event?",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 16,
@@ -98,7 +98,7 @@ class CheckSelectedEventScreenState
                           children: [
                             const SizedBox(width: 24),
                             Text(
-                              S.of(context)?.member ?? "Member",
+                              S.of(context)!.member,
                               style: Theme.of(context)
                                   .textTheme
                                   .bodySmall
@@ -175,7 +175,7 @@ class CheckSelectedEventScreenState
                 ),
               ),
               child: Text(
-                S.of(context)?.transferThisMember ?? "Transfer this member",
+                S.of(context)!.transferThisMember,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,

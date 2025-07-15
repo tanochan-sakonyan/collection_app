@@ -5,17 +5,23 @@ import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/auth/delete_account_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/auth/logout_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/line_message_complete_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/paypay_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/questionnaire_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_and_suggest_official_line_dialog.dart';
 import 'package:mr_collection/ui/screen/privacy_policy_screen.dart';
 import 'package:mr_collection/ui/screen/terms_of_service_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:mr_collection/generated/s.dart';
 
-class TanochanDrawer extends StatelessWidget {
+class TanochanDrawer extends StatefulWidget {
   const TanochanDrawer({super.key});
 
+  @override
+  _TanochanDrawerState createState() => _TanochanDrawerState();
+}
+
+class _TanochanDrawerState extends State<TanochanDrawer>
+    with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -28,7 +34,7 @@ class TanochanDrawer extends StatelessWidget {
           children: [
             SizedBox(height: MediaQuery.of(context).size.height * 0.1),
             Text(
-              S.of(context)?.setting ?? "Settings",
+              S.of(context)!.setting,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
@@ -42,7 +48,7 @@ class TanochanDrawer extends StatelessWidget {
             const SizedBox(height: 20),
             _buildMenuItem(
               context,
-              text: S.of(context)?.paypay ?? "Register your PayPay link",
+              text: S.of(context)!.paypay,
               icon: SvgPicture.asset("assets/icons/drawer_yen.svg"),
               onTap: () {
                 showDialog(
@@ -67,7 +73,7 @@ class TanochanDrawer extends StatelessWidget {
             const SizedBox(height: 20),
             _buildMenuItem(
               context,
-              text: S.of(context)?.questionnaire ?? "Feedback Form",
+              text: S.of(context)!.questionnaire,
               icon: SvgPicture.asset("assets/icons/drawer_envelope.svg"),
               onTap: () {
                 showDialog(
@@ -80,7 +86,7 @@ class TanochanDrawer extends StatelessWidget {
             const SizedBox(height: 20),
             _buildMenuItem(
               context,
-              text: S.of(context)?.logout ?? "Logout",
+              text: S.of(context)!.logout,
               icon: SvgPicture.asset("assets/icons/drawer_key.svg"),
               onTap: () {
                 showDialog(
@@ -91,7 +97,7 @@ class TanochanDrawer extends StatelessWidget {
             const SizedBox(height: 20),
             _buildMenuItem(
               context,
-              text: S.of(context)?.xLink ?? "X Link",
+              text: S.of(context)!.xLink,
               icon: SvgPicture.asset("assets/icons/drawer_x.svg"),
               onTap: () async {
                 const url = "https://x.com/shukinkun";
@@ -100,9 +106,7 @@ class TanochanDrawer extends StatelessWidget {
                       mode: LaunchMode.externalApplication);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                        content: Text(S.of(context)?.officialSite ??
-                            "Could not open the page")),
+                    SnackBar(content: Text(S.of(context)!.officialSite)),
                   );
                 }
               },
@@ -110,7 +114,7 @@ class TanochanDrawer extends StatelessWidget {
             const SizedBox(height: 20),
             _buildMenuItem(
               context,
-              text: S.of(context)?.officialSite ?? "Official Website",
+              text: S.of(context)!.officialSite,
               icon: SvgPicture.asset("assets/icons/drawer_monitor.svg"),
               onTap: () async {
                 const url = "https://tanochan.studio.site/";
@@ -119,9 +123,7 @@ class TanochanDrawer extends StatelessWidget {
                       mode: LaunchMode.externalApplication);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                        content: Text(S.of(context)?.officialSite ??
-                            "Could not open the page")),
+                    SnackBar(content: Text(S.of(context)!.officialSite)),
                   );
                 }
               },
@@ -129,7 +131,22 @@ class TanochanDrawer extends StatelessWidget {
             const SizedBox(height: 20),
             _buildMenuItem(
               context,
-              text: S.of(context)?.termsOfService ?? "Terms Of Service",
+              text: S.of(context)!.updateInformation,
+              icon: SvgPicture.asset("assets/icons/drawer_megaphone.svg"),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (_) => UpdateInfoAndSuggestOfficialLineDialog(
+                    vsync: this,
+                    onPageChanged: (i) {},
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 20),
+            _buildMenuItem(
+              context,
+              text: S.of(context)!.termsOfService,
               icon: SvgPicture.asset("assets/icons/drawer_file.svg"),
               onTap: () {
                 Navigator.push(
@@ -142,7 +159,7 @@ class TanochanDrawer extends StatelessWidget {
             const SizedBox(height: 20),
             _buildMenuItem(
               context,
-              text: S.of(context)?.privacyPolicy ?? "Privacy Policy",
+              text: S.of(context)!.privacyPolicy,
               onTap: () {
                 Navigator.push(
                   context,
@@ -157,7 +174,7 @@ class TanochanDrawer extends StatelessWidget {
               final user = ref.watch(userProvider);
               return _buildMenuItem(
                 context,
-                text: S.of(context)?.deleteAccount ?? "Delete Account",
+                text: S.of(context)!.deleteAccount,
                 onTap: () {
                   if (user != null) {
                     showDialog(

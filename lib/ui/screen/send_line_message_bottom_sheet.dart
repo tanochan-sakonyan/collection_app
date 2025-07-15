@@ -7,6 +7,7 @@ import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/line_message_confirm_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/paypay_dialog.dart';
+import 'package:mr_collection/generated/s.dart';
 
 class LineMessageBottomSheet extends ConsumerStatefulWidget {
   final Event event;
@@ -42,7 +43,7 @@ class _UnpaidMessageBottomSheetState
     final namesAndMoney = widget.unpaidMembers.map((m) {
       final spaceCount = maxNameLength - m.memberName.length + 2;
       final spaces = ' ' * spaceCount;
-      return '@${m.memberName}$spaces${m.memberMoney ?? ""}円';
+      return '@${m.memberName}$spaces${m.memberMoney}円';
     }).join('\n');
 
     return '下記の方は、まだ${widget.event.eventName}の支払いが完了していません。\n'
@@ -100,7 +101,7 @@ class _UnpaidMessageBottomSheetState
         child: Column(
           children: [
             Text(
-              "催促メッセージの送信",
+              S.of(context)!.sendMessage,
               style: GoogleFonts.notoSansJp(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -150,7 +151,7 @@ class _UnpaidMessageBottomSheetState
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  "PayPayリンクの送付",
+                  S.of(context)!.sendPayPayLink,
                   style: Theme.of(context)
                       .textTheme
                       .bodyMedium
@@ -180,7 +181,7 @@ class _UnpaidMessageBottomSheetState
                   ),
                 ),
                 child: Text(
-                  "次へ",
+                  S.of(context)!.next,
                   style: GoogleFonts.inter(
                     fontSize: 20,
                     fontWeight: FontWeight.w600,

@@ -49,7 +49,7 @@ class StatusDialog extends StatelessWidget {
               const SizedBox(height: 20),
               _buildStatusButton(
                 context,
-                label: S.of(context)?.status_paid ?? "Paid",
+                label: S.of(context)!.status_paid,
                 icon: Icons.check,
                 iconColor: const Color(0xFF35C759),
                 status: 1,
@@ -62,7 +62,7 @@ class StatusDialog extends StatelessWidget {
               const SizedBox(height: 32),
               _buildStatusButton(
                 context,
-                label: S.of(context)?.status_unpaid ?? "Unpaid",
+                label: S.of(context)!.status_unpaid,
                 icon: Icons.close,
                 iconColor: Colors.red,
                 status: 2,
@@ -75,7 +75,7 @@ class StatusDialog extends StatelessWidget {
               const SizedBox(height: 32),
               _buildStatusButton(
                 context,
-                label: S.of(context)?.status_absence ?? "Absence",
+                label: S.of(context)!.status_absence,
                 icon: Icons.remove,
                 iconColor: const Color(0xFFC0C0C0),
                 status: 3,

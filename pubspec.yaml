@@ -84,6 +84,7 @@ flutter:
     - assets/icons/ic_back.svg
     - assets/icons/drawer_yen.svg
     - assets/icons/drawer_star.svg
+    - assets/icons/drawer_megaphone.svg
     - assets/icons/drawer_key.svg
     - assets/icons/drawer_file.svg
     - assets/icons/drawer_envelope.svg

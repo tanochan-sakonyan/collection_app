@@ -38,7 +38,7 @@ class SelectLineGroupScreen extends StatelessWidget {
                 height: 44,
               ),
               Text(
-                S.of(context)?.back ?? "Back",
+                S.of(context)!.back,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: const Color(0xFF76DCC6),
                     fontSize: 15,
@@ -62,7 +62,7 @@ class SelectLineGroupScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  S.of(context)?.notDisplayedQuestion ??
+                  S.of(context)!.notDisplayedQuestion ??
                       "LINE group not displayed?",
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: const Color(0xFF5C5C5C),
@@ -87,7 +87,7 @@ class SelectLineGroupScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
           Text(
-            S.of(context)?.selectLineGroupTitle ??
+            S.of(context)!.selectLineGroupTitle ??
                 "Add members from LINE group",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 24,
@@ -99,7 +99,7 @@ class SelectLineGroupScreen extends StatelessWidget {
           ),
           const SizedBox(height: 32),
           Text(
-            S.of(context)?.selectLineGroupDesc1 ??
+            S.of(context)!.selectLineGroupDesc1 ??
                 "Select the LINE group where you want to add members.",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 16,

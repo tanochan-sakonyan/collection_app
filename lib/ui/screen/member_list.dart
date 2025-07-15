@@ -10,6 +10,7 @@ import 'package:mr_collection/provider/amount_loading_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/member/add_member_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/member/delete_member_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/member/edit_member_name_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/member/status_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -95,7 +96,7 @@ class MemberList extends ConsumerWidget {
                         children: [
                           const SizedBox(width: 24),
                           Text(
-                            S.of(context)?.member ?? "Member",
+                            S.of(context)!.member,
                             style: Theme.of(
                               context,
                             ).textTheme.bodySmall?.copyWith(
@@ -106,7 +107,7 @@ class MemberList extends ConsumerWidget {
                           ),
                           const Spacer(),
                           Text(
-                            S.of(context)?.paymentStatus ?? "Payment Status",
+                            S.of(context)!.paymentStatus,
                             style: GoogleFonts.notoSansJp(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,
@@ -136,7 +137,7 @@ class MemberList extends ConsumerWidget {
                           //         (members == null || members!.isEmpty))
                           //     ? Center(
                           //         child: Text(
-                          //           S.of(context)?.memberDeletedAfter24h ??
+                          //           S.of(context)!.memberDeletedAfter24h ??
                           //               "Member information has been deleted after 24 hours.",
                           //           style: Theme.of(context)
                           //               .textTheme
@@ -196,7 +197,7 @@ class MemberList extends ConsumerWidget {
                                               children: [
                                                 const SizedBox(height: 4),
                                                 AutoSizeText(
-                                                  S.of(context)?.edit ?? "Edit",
+                                                  S.of(context)!.edit,
                                                   maxLines: 1,
                                                   style: GoogleFonts.inter(
                                                     fontSize: 14,
@@ -232,8 +233,7 @@ class MemberList extends ConsumerWidget {
                                               children: [
                                                 const SizedBox(height: 4),
                                                 AutoSizeText(
-                                                  S.of(context)?.delete ??
-                                                      "Delete",
+                                                  S.of(context)!.delete,
                                                   maxLines: 1,
                                                   style: GoogleFonts.inter(
                                                     fontSize: 14,
@@ -262,7 +262,7 @@ class MemberList extends ConsumerWidget {
                                                       .textTheme
                                                       .bodyMedium
                                                       ?.copyWith(
-                                                        fontSize: 14,
+                                                        fontSize: 16,
                                                         fontWeight:
                                                             FontWeight.w500,
                                                         color: member.status ==
@@ -285,7 +285,7 @@ class MemberList extends ConsumerWidget {
                                                 )
                                               : (member.memberMoney != null)
                                                   ? Text(
-                                                      "${member.memberMoney} ${S.of(context)?.currencyUnit ?? "USD"}",
+                                                      "${member.memberMoney} ${S.of(context)!.currencyUnit}",
                                                       style: TextStyle(
                                                         color: member.status ==
                                                                 PaymentStatus
@@ -294,7 +294,17 @@ class MemberList extends ConsumerWidget {
                                                             : Colors.black,
                                                       ),
                                                     )
-                                                  : null,
+                                                  : Text(
+                                                      "--- ${S.of(context)!.currencyUnit}",
+                                                      style: TextStyle(
+                                                        color: member.status ==
+                                                                PaymentStatus
+                                                                    .absence
+                                                            ? Colors.grey
+                                                            : Colors.black,
+                                                        fontSize: 12,
+                                                      ),
+                                                    ),
                                           trailing: _buildStatusIcon(
                                             member.status,
                                           ),
@@ -399,7 +409,7 @@ class MemberList extends ConsumerWidget {
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
-                                  S.of(context)?.addMembers ?? "Add Members",
+                                  S.of(context)!.addMembers,
                                   style: Theme.of(
                                     context,
                                   ).textTheme.bodySmall?.copyWith(
@@ -441,41 +451,25 @@ class MemberList extends ConsumerWidget {
                       ),
                     );
                   },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        'assets/icons/ic_amount.svg',
-                        width: 35,
-                        height: 35,
-                      ),
-                      const SizedBox(width: 6),
-                      (event.totalMoney != null)
-                          ? Text(
-                              "合計 ${event.totalMoney.toString()} ${S.of(context)?.currencyUnit ?? "USD"}",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.copyWith(
+                  child: (event.totalMoney != null)
+                      ? Text(
+                          "合計 ${event.totalMoney.toString()} ${S.of(context)!.currencyUnit}",
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w700,
                                     color: Colors.white,
                                   ),
-                            )
-                          : Text(
-                              S.of(context)?.settlePayment ?? "Settle Payment",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.copyWith(
+                        )
+                      : Text(
+                          S.of(context)!.settlePayment,
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w700,
                                     color: Colors.white,
                                   ),
-                            ),
-                      const SizedBox(width: 12),
-                    ],
-                  ),
+                        ),
                 ),
               ),
               // Padding(
@@ -486,7 +480,7 @@ class MemberList extends ConsumerWidget {
               //       SizedBox(
               //         width: 64,
               //         child: Text(
-              //           S.of(context)?.unpaid ?? "",
+              //           S.of(context)!.unpaid,
               //           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
               //                 fontSize: 16,
               //                 fontWeight: FontWeight.w500,
@@ -526,7 +520,7 @@ class MemberList extends ConsumerWidget {
               //       const Text("・・・・・"),
               //       const SizedBox(width: 20),
               //       Text(
-              //         "$unpaidCount${S.of(context)?.person ?? ""}",
+              //         "$unpaidCount${S.of(context)!.person}",
               //         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               //               fontSize: 14,
               //               fontWeight: FontWeight.w500,
@@ -545,7 +539,7 @@ class MemberList extends ConsumerWidget {
               //       SizedBox(
               //         width: 60,
               //         child: Text(
-              //           S.of(context)?.paid ?? "",
+              //           S.of(context)!.paid,
               //           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
               //                 fontSize: 16,
               //                 fontWeight: FontWeight.w500,
@@ -585,7 +579,7 @@ class MemberList extends ConsumerWidget {
               //       const Text("・・・・・"),
               //       const SizedBox(width: 20),
               //       Text(
-              //         "$attendanceCount${S.of(context)?.person ?? ""}",
+              //         "$attendanceCount${S.of(context)!.person}",
               //         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               //               fontSize: 14,
               //               fontWeight: FontWeight.w500,

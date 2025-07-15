@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/ads/interstitial_singleton.dart';
 
 class LineMessageCompleteDialog extends StatefulWidget {
   const LineMessageCompleteDialog({super.key});
@@ -12,7 +14,10 @@ class _LineMessageCompleteDialogState extends State<LineMessageCompleteDialog> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 2), () async {
+      if (interstitial.isReady) {
+        await interstitial.showAndWait(); // 広告を閉じるまで待機
+      }
       if (mounted) Navigator.of(context).pop();
     });
   }
@@ -37,7 +42,7 @@ class _LineMessageCompleteDialogState extends State<LineMessageCompleteDialog> {
               children: [
                 const Text('✨', style: TextStyle(fontSize: 22)),
                 const SizedBox(width: 6),
-                Text('送信完了',
+                Text(S.of(context)!.completeSending,
                     style: Theme.of(context)
                         .textTheme
                         .bodyLarge

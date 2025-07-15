@@ -110,7 +110,7 @@ class _SplitModePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(S.of(context)?.splitMode ?? 'Split Mode',
+        Text(S.of(context)!.splitMode,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontWeight: FontWeight.w700,
                 )),
@@ -118,35 +118,29 @@ class _SplitModePage extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _MockPill(
-                label: S.of(context)?.splitEqually ?? "Split Equally",
-                selected: true),
+            _MockPill(label: S.of(context)!.splitEqually, selected: true),
             const SizedBox(width: 12),
-            _MockPill(
-                label: S.of(context)?.adjustAmounts ?? "Adjust Amounts",
-                selected: false),
+            _MockPill(label: S.of(context)!.adjustAmounts, selected: false),
           ],
         ),
         const SizedBox(height: 16),
         _MockRow(
-            name: S.of(context)?.example_1 ?? "James",
+            name: S.of(context)!.example_1,
             amount: '2,000',
             isLockExist: false,
             isLocked: false),
         _MockRow(
-            name: S.of(context)?.example_2 ?? "Michael",
+            name: S.of(context)!.example_2,
             amount: '2,000',
             isLockExist: false,
             isLocked: false),
         _MockRow(
-            name: S.of(context)?.example_3 ?? "Emma",
+            name: S.of(context)!.example_3,
             amount: '2,000',
             isLockExist: false,
             isLocked: false),
         const SizedBox(height: 24),
-        _CheckLine(
-            text: S.of(context)?.sameAmountForAll ??
-                "Everyone pays the same amount."),
+        _CheckLine(text: S.of(context)!.sameAmountForAll),
       ],
     );
   }
@@ -159,7 +153,7 @@ class _AdjustModePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(S.of(context)?.adjustMode ?? "Adjust Mode",
+        Text(S.of(context)!.adjustMode,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontWeight: FontWeight.w700,
                 )),
@@ -167,39 +161,31 @@ class _AdjustModePage extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _MockPill(
-                label: S.of(context)?.splitEqually ?? "Split Equally",
-                selected: false),
+            _MockPill(label: S.of(context)!.splitEqually, selected: false),
             const SizedBox(width: 12),
-            _MockPill(
-                label: S.of(context)?.adjustAmounts ?? "Adjust Amounts",
-                selected: true),
+            _MockPill(label: S.of(context)!.adjustAmounts, selected: true),
           ],
         ),
         const SizedBox(height: 16),
         _MockRow(
-            name: S.of(context)?.example_4 ?? "Manager Tom",
+            name: S.of(context)!.example_4,
             amount: '5,000',
             isLockExist: true,
             isLocked: true,
             isBold: true),
         _MockRow(
-            name: S.of(context)?.example_5 ?? "Olivia",
+            name: S.of(context)!.example_5,
             amount: '1,000',
             isLockExist: true,
             isLocked: false),
         _MockRow(
-            name: S.of(context)?.example_6 ?? "Daniel",
+            name: S.of(context)!.example_6,
             amount: '1,000',
             isLockExist: true,
             isLocked: false),
         const SizedBox(height: 20),
-        _CheckLine(
-            text: S.of(context)?.lockMemberAmount ??
-                "Lock a member’s amount with 🔒 to keep it fixed!"),
-        _CheckLine(
-            text: S.of(context)?.splitRemaining ??
-                "Split the rest among the remaining members!"),
+        _CheckLine(text: S.of(context)!.lockMemberAmount),
+        _CheckLine(text: S.of(context)!.splitRemaining),
       ],
     );
   }
@@ -292,7 +278,7 @@ class _MockRow extends StatelessWidget {
                     : Text(amount,
                         style: Theme.of(context).textTheme.bodyMedium),
                 const SizedBox(width: 4),
-                Text(S.of(context)?.currencyUnit ?? "USD",
+                Text(S.of(context)!.currencyUnit,
                     style: Theme.of(context).textTheme.bodyMedium),
                 if (isLockExist) ...[
                   const SizedBox(width: 8),
