@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
-import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:mr_collection/generated/s.dart';
 
 class PayPayDialog extends ConsumerStatefulWidget {
   const PayPayDialog({super.key});
@@ -54,7 +54,7 @@ class PayPayDialogState extends ConsumerState<PayPayDialog> {
         child: Dialog(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(23),
+        borderRadius: BorderRadius.circular(14),
       ),
       child: Padding(
         padding: const EdgeInsets.all(24),

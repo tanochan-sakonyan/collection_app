@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mr_collection/ui/screen/login_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:mr_collection/generated/s.dart';
 
 class DeleteCompleteDialog extends StatelessWidget {
   const DeleteCompleteDialog({super.key});
@@ -43,7 +43,7 @@ class DeleteCompleteDialog extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              S.of(context)?.deletionComplete ?? "Deletion completed.",
+              S.of(context)!.deletionComplete,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.w700,
@@ -67,7 +67,7 @@ class DeleteCompleteDialog extends StatelessWidget {
                   backgroundColor: const Color(0xFFF2F2F2),
                 ),
                 child: Text(
-                  S.of(context)?.ok ?? "OK",
+                  S.of(context)!.ok,
                   style: GoogleFonts.notoSansJp(
                     fontWeight: FontWeight.w400,
                     fontSize: 14,

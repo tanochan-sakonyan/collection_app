@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
-import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:mr_collection/generated/s.dart';
 
 class TutorialTargets {
   static List<TargetFocus> createTargets({
@@ -33,7 +33,7 @@ class TutorialTargets {
                   horizontal: 8,
                 ),
                 child: Text(
-                  S.of(context)?.tapToAddEvent ?? "Tap here to add an event.",
+                  S.of(context)!.tapToAddEvent,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ),
@@ -61,8 +61,7 @@ class TutorialTargets {
                   horizontal: 8,
                 ),
                 child: Text(
-                  S.of(context)?.longPressToDeleteEvent ??
-                      "Long press to delete an event.",
+                  S.of(context)!.longPressToDeleteEvent,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ),
@@ -90,7 +89,7 @@ class TutorialTargets {
                   horizontal: 8,
                 ),
                 child: Text(
-                  S.of(context)?.tapToAddMember ?? "Tap here to add a member.",
+                  S.of(context)!.tapToAddMember,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ),
@@ -118,8 +117,7 @@ class TutorialTargets {
                   horizontal: 8,
                 ),
                 child: Text(
-                  S.of(context)?.swipeToEditOrDeleteMember ??
-                      "Swipe to delete or edit a member.",
+                  S.of(context)!.swipeToEditOrDeleteMember,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ),
@@ -147,8 +145,7 @@ class TutorialTargets {
                   horizontal: 8,
                 ),
                 child: Text(
-                  S.of(context)?.tapToSortByPayment ??
-                      "Tap here to sort by payment status.",
+                  S.of(context)!.tapToSortByPayment,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ),
@@ -176,8 +173,7 @@ class TutorialTargets {
                   horizontal: 8,
                 ),
                 child: Text(
-                  S.of(context)?.tapToSendReminder ??
-                      "Tap here to send a reminder message.\n(This feature is under development. Please wait for a future update.)",
+                  S.of(context)!.tapToSendReminder,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ),

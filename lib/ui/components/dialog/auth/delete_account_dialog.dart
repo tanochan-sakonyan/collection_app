@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/auth/delete_complete_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:mr_collection/generated/s.dart';
 
 class DeleteAccountDialog extends ConsumerStatefulWidget {
   final String userId;
@@ -46,7 +46,7 @@ class _DeleteAccountDialogState extends ConsumerState<DeleteAccountDialog> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                S.of(context)?.deleteAccount ?? "Delete Account",
+                S.of(context)!.deleteAccount,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.w700,
                       fontSize: 16,
@@ -55,7 +55,7 @@ class _DeleteAccountDialogState extends ConsumerState<DeleteAccountDialog> {
               ),
               const SizedBox(height: 12),
               Text(
-                '※ ${S.of(context)?.caution ?? "Caution"} ※',
+                '※ ${S.of(context)!.caution} ※',
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.w700,
                       fontSize: 16,
@@ -64,7 +64,7 @@ class _DeleteAccountDialogState extends ConsumerState<DeleteAccountDialog> {
               ),
               const SizedBox(height: 8),
               Text(
-                S.of(context)?.deleteAccountMessage ??
+                S.of(context)!.deleteAccountMessage ??
                     "Deleting your account will erase all data permanently. Recovery will not be possible.",
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -75,7 +75,7 @@ class _DeleteAccountDialogState extends ConsumerState<DeleteAccountDialog> {
               ),
               const SizedBox(height: 8),
               Text(
-                S.of(context)?.confirmAction ?? "Are you sure?",
+                S.of(context)!.confirmAction,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w700,
                       fontSize: 14,
@@ -102,7 +102,7 @@ class _DeleteAccountDialogState extends ConsumerState<DeleteAccountDialog> {
                   ),
                   Expanded(
                     child: Text(
-                      S.of(context)?.confirmDeleteAction ??
+                      S.of(context)!.confirmDeleteAction ??
                           "I understand and want to delete my account.",
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             fontWeight: FontWeight.w700,
@@ -130,7 +130,7 @@ class _DeleteAccountDialogState extends ConsumerState<DeleteAccountDialog> {
                             : const Color(0xFF8C8C8C),
                       ),
                       child: Text(
-                        S.of(context)?.no ?? "No",
+                        S.of(context)!.no,
                         style: GoogleFonts.notoSansJp(
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
@@ -155,7 +155,7 @@ class _DeleteAccountDialogState extends ConsumerState<DeleteAccountDialog> {
                             : const Color(0xFF8C8C8C),
                       ),
                       child: Text(
-                        S.of(context)?.yes ?? "Yes",
+                        S.of(context)!.yes,
                         style: GoogleFonts.notoSansJp(
                           fontWeight: FontWeight.w400,
                           fontSize: 14,

@@ -6,7 +6,7 @@ import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/ui/components/dialog/invite_official_account_to_line_group_dialog.dart';
 import 'check_selected_line_group_screen.dart';
-import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:mr_collection/generated/s.dart';
 
 class SelectLineGroupScreen extends StatelessWidget {
   final List<LineGroup> lineGroups;
@@ -38,7 +38,7 @@ class SelectLineGroupScreen extends StatelessWidget {
                 height: 44,
               ),
               Text(
-                S.of(context)?.back ?? "Back",
+                S.of(context)!.back,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: const Color(0xFF76DCC6),
                     fontSize: 15,
@@ -62,7 +62,7 @@ class SelectLineGroupScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  S.of(context)?.notDisplayedQuestion ??
+                  S.of(context)!.notDisplayedQuestion ??
                       "LINE group not displayed?",
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: const Color(0xFF5C5C5C),
@@ -87,7 +87,7 @@ class SelectLineGroupScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
           Text(
-            S.of(context)?.selectLineGroupTitle ??
+            S.of(context)!.selectLineGroupTitle ??
                 "Add members from LINE group",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 24,
@@ -99,7 +99,7 @@ class SelectLineGroupScreen extends StatelessWidget {
           ),
           const SizedBox(height: 32),
           Text(
-            S.of(context)?.selectLineGroupDesc1 ??
+            S.of(context)!.selectLineGroupDesc1 ??
                 "Select the LINE group where you want to add members.",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 16,

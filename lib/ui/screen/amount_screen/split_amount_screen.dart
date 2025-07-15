@@ -9,7 +9,7 @@ import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/amount_guide_dialog.dart';
-import 'package:flutter_gen/gen_l10n/s.dart';
+import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/ui/screen/home_screen.dart';
 
 class _TabPill extends StatelessWidget {
@@ -200,12 +200,9 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
 
     try {
       debugPrint("金額入力をします：$membersMoneyList");
-      await ref.read(userProvider.notifier).inputMembersMoney(
-            userId,
-            eventId,
-            membersMoneyList,
-            ref
-          );
+      await ref
+          .read(userProvider.notifier)
+          .inputMembersMoney(userId, eventId, membersMoneyList, ref);
     } catch (e) {
       debugPrint('金額入力中にエラーが発生しました: $e');
       return;
@@ -347,7 +344,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                 height: 44,
               ),
               Text(
-                S.of(context)?.back ?? "Back",
+                S.of(context)!.back,
                 style: GoogleFonts.notoSansJp(
                     color: const Color(0xFF76DCC6),
                     fontSize: 15,
@@ -376,7 +373,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
               children: [
                 const Spacer(flex: 10),
                 Text(
-                  S.of(context)?.setIndividualAmounts ??
+                  S.of(context)!.setIndividualAmounts ??
                       "Set individual amounts",
                   style: GoogleFonts.notoSansJp(
                       fontSize: 24, fontWeight: FontWeight.bold),
@@ -398,9 +395,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                 text: _numFmt.format(widget.amount),
                 style: _numberStyle,
                 children: [
-                  TextSpan(
-                      text: S.of(context)?.currencyUnit ?? "USD",
-                      style: _yenStyle),
+                  TextSpan(text: S.of(context)!.currencyUnit, style: _yenStyle),
                 ],
               ),
               textAlign: TextAlign.center,
@@ -411,7 +406,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
               child: Row(
                 children: [
                   _TabPill(
-                    label: S.of(context)?.splitEqually ?? "Split Equally",
+                    label: S.of(context)!.splitEqually,
                     selected: _currentTab == 0,
                     onTap: () {
                       if (_currentTab == 0) return;
@@ -421,7 +416,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                   ),
                   const SizedBox(width: 12),
                   _TabPill(
-                    label: S.of(context)?.adjustAmounts ?? "Adjust Amounts",
+                    label: S.of(context)!.adjustAmounts,
                     selected: _currentTab == 1,
                     onTap: () {
                       if (_currentTab == 1) return;
@@ -468,7 +463,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            S.of(context)?.status_absence ??
+                                            S.of(context)!.status_absence ??
                                                 "Absence",
                                             style: Theme.of(context)
                                                 .textTheme
@@ -498,7 +493,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                                           ),
                                           const SizedBox(width: 4),
                                           Text(
-                                            S.of(context)?.currencyUnit ??
+                                            S.of(context)!.currencyUnit ??
                                                 "USD",
                                             style: Theme.of(context)
                                                 .textTheme
@@ -547,7 +542,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            S.of(context)?.status_absence ??
+                                            S.of(context)!.status_absence ??
                                                 "Absence",
                                             style: Theme.of(context)
                                                 .textTheme
@@ -607,7 +602,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                                           ),
                                           const SizedBox(width: 6),
                                           Text(
-                                            S.of(context)?.currencyUnit ??
+                                            S.of(context)!.currencyUnit ??
                                                 "USD",
                                             style: Theme.of(context)
                                                 .textTheme
@@ -671,7 +666,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                     MaterialPageRoute(
                         builder: (context) => const HomeScreen()));
               },
-              child: Text(S.of(context)?.confirm ?? "Confirm",
+              child: Text(S.of(context)!.confirm,
                   style: GoogleFonts.inter(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
