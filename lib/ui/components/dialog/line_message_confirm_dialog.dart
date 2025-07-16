@@ -48,7 +48,10 @@ class LineMessageConfirmDialog extends ConsumerWidget {
                       children: [
                         Text(
                           "送信先：${event.eventName}",
-                          style: Theme.of(context).textTheme.bodySmall,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(color: const Color(0xFF5C5C5C)),
                           textAlign: TextAlign.start,
                         ),
                       ],
@@ -56,7 +59,6 @@ class LineMessageConfirmDialog extends ConsumerWidget {
                     const Divider(color: Colors.grey, thickness: 1),
                   ]),
                 ),
-                const SizedBox(height: 4),
                 Expanded(
                   child: Scrollbar(
                     thumbVisibility: true,
@@ -64,12 +66,12 @@ class LineMessageConfirmDialog extends ConsumerWidget {
                       child: Container(
                         width: double.infinity,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 14),
+                            horizontal: 8, vertical: 1),
                         color: Colors.white,
                         child: Text(
                           message,
                           style: GoogleFonts.notoSansJp(
-                            fontSize: 14,
+                            fontSize: 12,
                             color: const Color(0xFF5C5C5C),
                           ),
                         ),
@@ -82,8 +84,8 @@ class LineMessageConfirmDialog extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(
-                      width: 108,
-                      height: 48,
+                      width: 100,
+                      height: 40,
                       child: OutlinedButton(
                         onPressed: () => Navigator.pop(context, false),
                         style: OutlinedButton.styleFrom(
@@ -91,9 +93,13 @@ class LineMessageConfirmDialog extends ConsumerWidget {
                               color: Color(0xFF75DCC6), width: 1),
                           foregroundColor: const Color(0xFF75DCC6),
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12)),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                           backgroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16), // 水平方向だけ
+                          alignment:
+                              Alignment.center, // 中央揃え（デフォルトだけど明示的に指定もOK）
                         ),
                         child: Text(
                           S.of(context)!.back,
@@ -105,10 +111,10 @@ class LineMessageConfirmDialog extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    const SizedBox(width: 24),
                     SizedBox(
-                      width: 108,
-                      height: 48,
+                      width: 100,
+                      height: 40,
                       child: ElevatedButton(
                         onPressed: isLoading
                             ? null
@@ -148,7 +154,9 @@ class LineMessageConfirmDialog extends ConsumerWidget {
                           backgroundColor: const Color(0xFF75DCC6),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12)),
-                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16), // 水平方向だけ
+                          alignment: Alignment.center,
                         ),
                         child: Text(
                           S.of(context)!.send,
