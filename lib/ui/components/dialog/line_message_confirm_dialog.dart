@@ -25,9 +25,9 @@ class LineMessageConfirmDialog extends ConsumerWidget {
         child: ConstrainedBox(
           constraints: const BoxConstraints(
             maxWidth: 352,
-            maxHeight: 344,
+            maxHeight: 376,
             minWidth: 352,
-            minHeight: 344,
+            minHeight: 376,
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
@@ -39,7 +39,24 @@ class LineMessageConfirmDialog extends ConsumerWidget {
                         .textTheme
                         .bodyLarge
                         ?.copyWith(fontWeight: FontWeight.bold)),
-                const SizedBox(height: 18),
+                const SizedBox(height: 8),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Column(children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          "送信先：${event.eventName}",
+                          style: Theme.of(context).textTheme.bodySmall,
+                          textAlign: TextAlign.start,
+                        ),
+                      ],
+                    ),
+                    const Divider(color: Colors.grey, thickness: 1),
+                  ]),
+                ),
+                const SizedBox(height: 4),
                 Expanded(
                   child: Scrollbar(
                     thumbVisibility: true,

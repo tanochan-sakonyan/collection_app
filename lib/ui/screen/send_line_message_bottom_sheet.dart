@@ -65,16 +65,16 @@ class _UnpaidMessageBottomSheetState
     }
     setState(() {
       _includePaypayLink = value;
-      final paypayLine = '\nPayPayリンク：$paypayUrl';
+      final paypayLine = '\nPayPay：$paypayUrl';
       var currentText = _controller.text;
 
       if (_includePaypayLink) {
-        if (!currentText.contains('PayPayリンク：')) {
+        if (!currentText.contains('PayPay：')) {
           if (!currentText.endsWith('\n')) currentText += '\n';
           currentText += paypayLine.trim();
         }
       } else {
-        final paypayLineReg = RegExp(r'\n?PayPayリンク：.*');
+        final paypayLineReg = RegExp(r'\n?PayPay：.*');
         currentText = currentText.replaceAll(paypayLineReg, '');
         currentText = currentText.replaceFirst(RegExp(r'\n+$'), '\n');
       }
