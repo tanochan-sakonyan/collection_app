@@ -107,6 +107,13 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
+  void updatePaypayLink(String link) {
+    if (state == null) return;
+    state = state!.copyWith(paypayUrl: link);
+  }
+
+  /// 以下、イベント関連
+
   Future<void> createEvent(String eventName, String userId) async {
     try {
       final newEvent = await eventRepository.createEvent(eventName, userId);
@@ -333,7 +340,7 @@ class UserNotifier extends StateNotifier<User?> {
       debugPrint('メンバーの金額入力に成功しました: $membersMoneyList');
     } catch (e) {
       debugPrint('メンバーの金額入力中にエラーが発生しました: $e');
-    }finally {
+    } finally {
       ref.read(amountLoadingProvider(eventId).notifier).state = false;
     }
   }
