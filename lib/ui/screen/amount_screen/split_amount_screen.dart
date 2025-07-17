@@ -400,7 +400,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
             padding: const EdgeInsets.all(16),
             margin: const EdgeInsets.only(bottom: 20),
             decoration: BoxDecoration(
-              color: Colors.grey.shade100,
+              color: Colors.white,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
@@ -426,11 +426,11 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
           ),
           // 役割を入力するボタン
           SizedBox(
-            width: double.infinity,
+            width: 152,
+            height: 48,
             child: OutlinedButton(
               onPressed: _showRoleSetupDialog,
               style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 12),
                 side: const BorderSide(color: Color(0xFF75DCC6)),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -532,11 +532,11 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
             const SizedBox(height: 20),
             // 役割を修正ボタン
             SizedBox(
-              width: double.infinity,
+              width: 152,
+              height: 48,
               child: OutlinedButton(
                 onPressed: _showRoleSetupDialog,
                 style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
                   side: const BorderSide(color: Color(0xFF75DCC6)),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),

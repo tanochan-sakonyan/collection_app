@@ -49,6 +49,10 @@ class _RoleAssignmentDialogState extends State<RoleAssignmentDialog> {
       child: Container(
         width: MediaQuery.of(context).size.width * 0.9,
         padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -75,8 +79,9 @@ class _RoleAssignmentDialogState extends State<RoleAssignmentDialog> {
                   final isAbsent = member.status == PaymentStatus.absence;
                   
                   return Container(
-                    margin: const EdgeInsets.only(bottom: 8),
+                    margin: const EdgeInsets.only(bottom: 4),
                     child: ListTile(
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                       leading: GestureDetector(
                         onTap: isAbsent ? null : () => _toggleMember(member),
                         child: Container(
@@ -123,7 +128,8 @@ class _RoleAssignmentDialogState extends State<RoleAssignmentDialog> {
             const SizedBox(height: 24),
             // 割り当てボタン
             SizedBox(
-              width: double.infinity,
+              width: 108,
+              height: 40,
               child: ElevatedButton(
                 onPressed: () {
                   widget.onAssign(selectedMembers);
@@ -131,7 +137,6 @@ class _RoleAssignmentDialogState extends State<RoleAssignmentDialog> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF75DCC6),
-                  padding: const EdgeInsets.symmetric(vertical: 12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),

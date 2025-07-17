@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:mr_collection/generated/s.dart';
@@ -11,7 +12,7 @@ class RoleSetupDialog extends StatefulWidget {
   final List<Member> members;
   final VoidCallback onConfirm;
   final Function(List<Map<String, dynamic>>) onRoleConfirm;
-  
+
   const RoleSetupDialog({
     super.key,
     required this.members,
@@ -26,32 +27,27 @@ class RoleSetupDialog extends StatefulWidget {
 class _RoleSetupDialogState extends State<RoleSetupDialog> {
   List<Map<String, dynamic>> roles = [];
   final _numFmt = NumberFormat.decimalPattern();
-  
+
   @override
   void initState() {
     super.initState();
     // デフォルトの役割を追加
     roles = [
-      {'role': '4年', 'amount': 2000, 'members': []},
-      {'role': 'サブマネ', 'amount': 2000, 'members': []},
-      {'role': '部長', 'amount': 2000, 'members': []},
+      {'role': '4年生', 'amount': 3000, 'members': []},
+      {'role': '新入生', 'amount': 1000, 'members': []},
     ];
   }
 
   void _addRole(String roleName, int amount) {
     setState(() {
-      roles.add({
-        'role': roleName,
-        'amount': amount,
-        'members': []
-      });
+      roles.add({'role': roleName, 'amount': amount, 'members': []});
     });
   }
 
   void _showRoleInputDialog() {
     final TextEditingController roleController = TextEditingController();
     final TextEditingController amountController = TextEditingController();
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -64,7 +60,16 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
               decoration: InputDecoration(
                 hintText: S.of(context)!.roleNameInput,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(6),
+                  borderSide: const BorderSide(color: Color(0xFFE5E5E5)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(6),
+                  borderSide: const BorderSide(color: Color(0xFFE5E5E5)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(6),
+                  borderSide: const BorderSide(color: Color(0xFF75DCC6)),
                 ),
               ),
             ),
@@ -78,7 +83,16 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
               decoration: InputDecoration(
                 hintText: '金額を入力',
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(6),
+                  borderSide: const BorderSide(color: Color(0xFFE5E5E5)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(6),
+                  borderSide: const BorderSide(color: Color(0xFFE5E5E5)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(6),
+                  borderSide: const BorderSide(color: Color(0xFF75DCC6)),
                 ),
                 suffixText: '円',
               ),
@@ -92,16 +106,23 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
           ),
           TextButton(
             onPressed: () {
-              if (roleController.text.isNotEmpty && amountController.text.isNotEmpty) {
+              if (roleController.text.isNotEmpty &&
+                  amountController.text.isNotEmpty) {
                 _addRole(roleController.text, int.parse(amountController.text));
                 Navigator.pop(context);
               }
             },
-            child: Text(S.of(context)!.confirm),
+            child: Text('確定'),
           ),
         ],
       ),
     );
+  }
+
+  void _deleteRole(int index) {
+    setState(() {
+      roles.removeAt(index);
+    });
   }
 
   void _showRoleAssignmentDialog(int roleIndex) {
@@ -128,6 +149,10 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
       child: Container(
         width: MediaQuery.of(context).size.width * 0.9,
         padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -144,77 +169,86 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
               constraints: BoxConstraints(
                 maxHeight: MediaQuery.of(context).size.height * 0.4,
               ),
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: roles.length,
-                itemBuilder: (context, index) {
-                  final role = roles[index];
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 8),
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey.shade300),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Text(
+              child: SlidableAutoCloseBehavior(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: roles.length,
+                  itemBuilder: (context, index) {
+                    final role = roles[index];
+                    return Slidable(
+                      key: ValueKey(role['role']),
+                      endActionPane: ActionPane(
+                        motion: const ScrollMotion(),
+                        extentRatio: 0.30,
+                        children: [
+                          CustomSlidableAction(
+                            onPressed: (context) {
+                              _deleteRole(index);
+                            },
+                            backgroundColor: Colors.red,
+                            foregroundColor: Colors.white,
+                            child: const Icon(Icons.delete),
+                          ),
+                        ],
+                      ),
+                      child: Container(
+                        margin: const EdgeInsets.only(bottom: 1),
+                        child: ListTile(
+                          title: Text(
                             role['role'],
                             style: GoogleFonts.notoSansJp(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: Row(
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 6),
                                 decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey.shade300),
-                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(
+                                      color: const Color(0xFFE5E5E5)),
+                                  borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: Text(
                                   _numFmt.format(role['amount']),
-                                  style: GoogleFonts.notoSansJp(fontSize: 14),
+                                  style: GoogleFonts.notoSansJp(
+                                    fontSize: 14,
+                                    color: Colors.black,
+                                  ),
                                 ),
                               ),
                               const SizedBox(width: 4),
                               Text(
                                 '円',
-                                style: GoogleFonts.notoSansJp(fontSize: 14),
+                                style: GoogleFonts.notoSansJp(
+                                  fontSize: 14,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              IconButton(
+                                onPressed: () =>
+                                    _showRoleAssignmentDialog(index),
+                                icon: SvgPicture.asset(
+                                  'assets/icons/ic_next.svg',
+                                  width: 16,
+                                  height: 16,
+                                  colorFilter: const ColorFilter.mode(
+                                    Color(0xFF75DCC6),
+                                    BlendMode.srcIn,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        GestureDetector(
-                          onTap: () => _showRoleAssignmentDialog(index),
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF75DCC6),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: SvgPicture.asset(
-                              'assets/icons/ic_arrow_right.svg',
-                              width: 12,
-                              height: 12,
-                              colorFilter: const ColorFilter.mode(
-                                Colors.white,
-                                BlendMode.srcIn,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
             const SizedBox(height: 16),
@@ -256,7 +290,7 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
                   ),
                 ),
                 child: Text(
-                  S.of(context)!.confirm,
+                  '確定',
                   style: GoogleFonts.notoSansJp(
                     color: Colors.white,
                     fontSize: 16,
