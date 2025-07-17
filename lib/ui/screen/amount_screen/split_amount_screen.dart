@@ -304,13 +304,13 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
   void _calculateRoleBasedAmounts(Map<String, int> amountMap) {
     // 役割に基づいて金額を計算
     int totalRoleAmount = 0;
-    
+
     for (final member in widget.members) {
       if (member.status == PaymentStatus.absence) {
         amountMap[member.memberId] = 0;
         continue;
       }
-      
+
       final memberRole = _memberRoles[member.memberId];
       if (memberRole != null) {
         final role = _roles.firstWhere(
@@ -324,14 +324,16 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
         amountMap[member.memberId] = 0;
       }
     }
-    
+
     // 残りの金額を役職なしのメンバーで分割
     final remainingAmount = widget.amount - totalRoleAmount;
-    final noRoleMembers = widget.members.where((m) => 
-        m.status != PaymentStatus.absence && 
-        (_memberRoles[m.memberId] == null || _memberRoles[m.memberId] == '')
-    ).toList();
-    
+    final noRoleMembers = widget.members
+        .where((m) =>
+            m.status != PaymentStatus.absence &&
+            (_memberRoles[m.memberId] == null ||
+                _memberRoles[m.memberId] == ''))
+        .toList();
+
     if (noRoleMembers.isNotEmpty && remainingAmount > 0) {
       final perPersonAmount = (remainingAmount / noRoleMembers.length).ceil();
       for (final member in noRoleMembers) {
@@ -427,22 +429,23 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
             ),
             // 役割を入力するボタン
             SizedBox(
-              width: 152,
+              width: 164,
               height: 48,
-              child: OutlinedButton(
-                onPressed: _showRoleSetupDialog,
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: Color(0xFF75DCC6)),
+              child: ElevatedButton(
+                onPressed: () => _showRoleSetupDialog(),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFF2F2F2),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(36),
                   ),
                 ),
                 child: Text(
                   S.of(context)!.inputRole,
-                  style: GoogleFonts.notoSansJp(
-                    color: const Color(0xFF75DCC6),
-                    fontSize: 16,
-                  ),
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: const Color(0xFF75DCC6),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w900,
+                      ),
                 ),
               ),
             ),
@@ -457,13 +460,14 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                   final member = widget.members[i];
                   final memberRole = _memberRoles[member.memberId];
                   final roleAmount = _getRoleAmount(memberRole);
-                  
+
                   return Column(
                     children: [
                       ListTile(
                         leading: memberRole != null && memberRole.isNotEmpty
                             ? Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
                                   color: const Color(0xFF75DCC6),
                                   borderRadius: BorderRadius.circular(12),
@@ -478,7 +482,8 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                                 ),
                               )
                             : Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
                                   color: Colors.grey.shade400,
                                   borderRadius: BorderRadius.circular(12),
@@ -567,19 +572,21 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
         final roleMembers = List<Member>.from(role['members'] as List);
         totalRoleAmount += (role['amount'] as int) * roleMembers.length;
       }
-      
+
       final remainingAmount = widget.amount - totalRoleAmount;
-      final noRoleMembers = widget.members.where((m) => 
-          m.status != PaymentStatus.absence && 
-          (_memberRoles[m.memberId] == null || _memberRoles[m.memberId] == '')
-      ).toList();
-      
+      final noRoleMembers = widget.members
+          .where((m) =>
+              m.status != PaymentStatus.absence &&
+              (_memberRoles[m.memberId] == null ||
+                  _memberRoles[m.memberId] == ''))
+          .toList();
+
       if (noRoleMembers.isNotEmpty && remainingAmount > 0) {
         return (remainingAmount / noRoleMembers.length).ceil();
       }
       return 0;
     }
-    
+
     final role = _roles.firstWhere(
       (r) => r['role'] == roleKey,
       orElse: () => {'amount': 0},
