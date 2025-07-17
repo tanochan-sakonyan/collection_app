@@ -203,6 +203,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
         .map((entry) => {
               'memberId': entry.key,
               'memberMoney': entry.value,
+              'role': _memberRoles[entry.key] ?? '',
             })
         .toList();
 
@@ -427,27 +428,16 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
       final controller = _controllers[i];
       final amountText = controller.text;
       final amount = int.tryParse(amountText.replaceAll(',', '')) ?? 0;
-      final role = _memberRoles[member.memberId];
+      final role = _memberRoles[member.memberId] ?? '';
       
       memberDataList.add({
         'memberId': member.memberId,
-        'memberName': member.memberName,
         'amount': amount,
         'role': role,
-        'status': member.status.toString(),
       });
     }
     
-    final Map<String, dynamic> jsonData = {
-      'eventId': widget.eventId,
-      'totalAmount': widget.amount,
-      'selectedTab': _currentTab,
-      'members': memberDataList,
-      'roles': _roles,
-      'timestamp': DateTime.now().toIso8601String(),
-    };
-    
-    final jsonString = const JsonEncoder.withIndent('  ').convert(jsonData);
+    final jsonString = const JsonEncoder.withIndent('  ').convert(memberDataList);
     debugPrint('=== Split Amount Data ===');
     debugPrint(jsonString);
     debugPrint('========================');
@@ -628,19 +618,21 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
             SizedBox(
               width: 152,
               height: 48,
-              child: OutlinedButton(
+              child: ElevatedButton(
                 onPressed: _showRoleSetupDialog,
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: Color(0xFF75DCC6)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFF2F2F2),
+                  elevation: 0,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(36),
                   ),
                 ),
                 child: Text(
                   S.of(context)!.modifyRole,
-                  style: GoogleFonts.notoSansJp(
+                  style: GoogleFonts.inter(
                     color: const Color(0xFF75DCC6),
                     fontSize: 16,
+                    fontWeight: FontWeight.w800,
                   ),
                 ),
               ),

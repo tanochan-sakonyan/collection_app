@@ -48,14 +48,14 @@ class _RoleAssignmentDialogState extends State<RoleAssignmentDialog> {
         borderRadius: BorderRadius.circular(16),
       ),
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.9,
+        width: 352,
+        height: 376,
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               '「${widget.roleName}」${S.of(context)!.assignRoleToMembers}',
@@ -66,10 +66,7 @@ class _RoleAssignmentDialogState extends State<RoleAssignmentDialog> {
             ),
             const SizedBox(height: 20),
             // メンバーリスト
-            Container(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * 0.4,
-              ),
+            Expanded(
               child: ListView.builder(
                 shrinkWrap: true,
                 itemCount: widget.members.length,
