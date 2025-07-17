@@ -2,10 +2,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/auth/delete_account_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/auth/logout_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/paypay_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/purchase/buy_me_a_coffee_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/questionnaire_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_and_suggest_official_line_dialog.dart';
 import 'package:mr_collection/ui/screen/privacy_policy_screen.dart';
@@ -140,6 +142,25 @@ class _TanochanDrawerState extends State<TanochanDrawer>
                     vsync: this,
                     onPageChanged: (i) {},
                   ),
+                );
+              },
+            ),
+            const SizedBox(height: 20),
+            _buildMenuItem(
+              context,
+              text: "金くれ",
+              icon: SvgPicture.asset("assets/icons/drawer_coffee.svg",
+                  width: 24, height: 24),
+              onTap: () async {
+                const kProductId = 'coffee_tip_small';
+                final resp = await InAppPurchase.instance
+                    .queryProductDetails({kProductId});
+                // final product = resp.productDetails.first;
+                showDialog(
+                  context: context,
+                  builder: (_) => BuyMeACoffeeDialog(
+                      // product: product
+                      ),
                 );
               },
             ),

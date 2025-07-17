@@ -10,6 +10,9 @@ PODS:
     - Google-Mobile-Ads-SDK (~> 12.2.0)
     - webview_flutter_wkwebview
   - GoogleUserMessagingPlatform (3.0.0)
+  - in_app_purchase_storekit (0.0.1):
+    - Flutter
+    - FlutterMacOS
   - LineSDKSwift (5.11.2):
     - LineSDKSwift/Core (= 5.11.2)
   - LineSDKSwift/Core (5.11.2)
@@ -31,6 +34,7 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_line_sdk (from `.symlinks/plugins/flutter_line_sdk/ios`)
   - google_mobile_ads (from `.symlinks/plugins/google_mobile_ads/ios`)
+  - in_app_purchase_storekit (from `.symlinks/plugins/in_app_purchase_storekit/darwin`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - sign_in_with_apple (from `.symlinks/plugins/sign_in_with_apple/ios`)
@@ -50,6 +54,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_line_sdk/ios"
   google_mobile_ads:
     :path: ".symlinks/plugins/google_mobile_ads/ios"
+  in_app_purchase_storekit:
+    :path: ".symlinks/plugins/in_app_purchase_storekit/darwin"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
   shared_preferences_foundation:
@@ -67,6 +73,7 @@ SPEC CHECKSUMS:
   Google-Mobile-Ads-SDK: 1dfb0c3cb46c7e2b00b0f4de74a1e06d9ea25d67
   google_mobile_ads: cab27248050510554aa646195eacc393ce7406ad
   GoogleUserMessagingPlatform: f8d0cdad3ca835406755d0a69aa634f00e76d576
+  in_app_purchase_storekit: a1ce04056e23eecc666b086040239da7619cd783
   LineSDKSwift: 3ecc2bce45c76a51a158e8d39ab49d5d5b3f1503
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78

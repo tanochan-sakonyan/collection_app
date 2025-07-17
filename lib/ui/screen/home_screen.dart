@@ -16,6 +16,7 @@ import 'package:mr_collection/ui/components/dialog/event/add_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/event/delete_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/event/edit_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/line_group_update_countdown_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/purchase/buy_me_a_coffee_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_and_suggest_official_line_dialog.dart';
 import 'package:mr_collection/ui/screen/member_list.dart';
 import 'package:mr_collection/ui/components/tanochan_drawer.dart';
@@ -385,6 +386,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       _tabTitles = tabTitles;
     }
 
+    const baseBlue = Color(0xFFD0E1F2); // お好みで調整
+    final bg = baseBlue.withOpacity(0.45);
+
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
@@ -395,27 +399,71 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           title: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              tabTitles.isEmpty
-                  ? const SizedBox(width: 24)
-                  : IconButton(
-                      onPressed: () {
-                        _resetTutorial();
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          _showTutorial();
-                        });
-                      },
-                      icon: SvgPicture.asset(
-                        'assets/icons/question_circle.svg',
-                        width: 24,
-                        height: 24,
+              const SizedBox(width: 24),
+              SizedBox(
+                width: 183,
+                height: 34,
+                child: ElevatedButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (_) => const BuyMeACoffeeDialog(
+                          // product: product
+                          ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    elevation: 0, // フラットに
+                    backgroundColor: bg,
+                    foregroundColor: Colors.white, // テキスト色
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      side: BorderSide(
+                        color: Colors.white.withOpacity(0.65), // 外枠（白 65%）
+                        width: 1.2,
                       ),
                     ),
+                    // textStyle: const TextStyle(
+                    //   fontSize: 18,
+                    //   letterSpacing: 1.8,
+                    //   fontWeight: FontWeight.w600,
+                    // ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SvgPicture.asset("assets/icons/drawer_coffee.svg",
+                          width: 20, height: 20),
+                      const SizedBox(width: 12),
+                      Text(
+                        'Buy me a coffee',
+                        style: Theme.of(context).textTheme.labelSmall,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
           automaticallyImplyLeading: false,
           actions: [
             Row(
               children: [
+                tabTitles.isEmpty
+                    ? const SizedBox(width: 24)
+                    : IconButton(
+                        onPressed: () {
+                          _resetTutorial();
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            _showTutorial();
+                          });
+                        },
+                        icon: SvgPicture.asset(
+                          'assets/icons/question_circle.svg',
+                          width: 24,
+                          height: 24,
+                        ),
+                      ),
                 IconButton(
                   icon: SvgPicture.asset(
                     'assets/icons/settings.svg',
