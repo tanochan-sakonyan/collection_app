@@ -9,12 +9,14 @@ class RoleAssignmentDialog extends StatefulWidget {
   final String roleName;
   final List<Member> members;
   final Function(List<Member>) onAssign;
+  final Map<String, String> memberRoles;
 
   const RoleAssignmentDialog({
     super.key,
     required this.roleName,
     required this.members,
     required this.onAssign,
+    required this.memberRoles,
   });
 
   @override
@@ -75,30 +77,49 @@ class _RoleAssignmentDialogState extends State<RoleAssignmentDialog> {
                   final isSelected = selectedMembers.contains(member);
                   final isAbsent = member.status == PaymentStatus.absence;
 
+                  final existingRole = widget.memberRoles[member.memberId];
+                  final hasExistingRole = existingRole != null && existingRole.isNotEmpty && existingRole != widget.roleName;
+                  
                   return Column(
                     children: [
                       ListTile(
                         contentPadding:
                             const EdgeInsets.symmetric(horizontal: 16),
-                        leading: GestureDetector(
-                          onTap: isAbsent ? null : () => _toggleMember(member),
-                          child: SvgPicture.asset(
-                            isSelected && !isAbsent
-                                ? 'assets/icons/ic_check_circle_teal.svg'
-                                : 'assets/icons/ic_check_circle_off.svg',
-                            width: 24,
-                            height: 24,
-                            color: const Color(0xFF75DCC6),
-                          ),
-                        ),
+                        leading: hasExistingRole
+                            ? Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF75DCC6),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  existingRole,
+                                  style: GoogleFonts.notoSansJp(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              )
+                            : GestureDetector(
+                                onTap: isAbsent ? null : () => _toggleMember(member),
+                                child: SvgPicture.asset(
+                                  isSelected && !isAbsent
+                                      ? 'assets/icons/ic_check_circle_teal.svg'
+                                      : 'assets/icons/ic_check_circle_off.svg',
+                                  width: 24,
+                                  height: 24,
+                                  color: const Color(0xFF75DCC6),
+                                ),
+                              ),
                         title: Text(
                           member.memberName,
                           style: GoogleFonts.notoSansJp(
                             fontSize: 16,
-                            color: isAbsent ? Colors.grey : Colors.black,
+                            color: isAbsent || hasExistingRole ? Colors.grey : Colors.black,
                           ),
                         ),
-                        onTap: isAbsent ? null : () => _toggleMember(member),
+                        onTap: isAbsent || hasExistingRole ? null : () => _toggleMember(member),
                       ),
                       const Divider(
                         thickness: 1,

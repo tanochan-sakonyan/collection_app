@@ -12,12 +12,16 @@ class RoleSetupDialog extends StatefulWidget {
   final List<Member> members;
   final VoidCallback onConfirm;
   final Function(List<Map<String, dynamic>>) onRoleConfirm;
+  final Map<String, String> memberRoles;
+  final bool shouldRestoreDefaultRoles;
 
   const RoleSetupDialog({
     super.key,
     required this.members,
     required this.onConfirm,
     required this.onRoleConfirm,
+    required this.memberRoles,
+    this.shouldRestoreDefaultRoles = false,
   });
 
   @override
@@ -35,7 +39,7 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
   }
 
   void _initializeDefaultRoles() {
-    if (roles.isEmpty) {
+    if (roles.isEmpty && widget.shouldRestoreDefaultRoles) {
       roles = [
         {'role': S.of(context)!.seniorStudent, 'amount': 3000, 'members': []},
         {'role': S.of(context)!.freshmanStudent, 'amount': 1000, 'members': []},
@@ -130,14 +134,40 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
     });
   }
 
+  Map<String, String> _getCurrentMemberRoles() {
+    final Map<String, String> currentMemberRoles = {};
+    for (final role in roles) {
+      final roleName = role['role'] as String;
+      final roleMembers = role['members'] as List<dynamic>;
+      for (final member in roleMembers) {
+        if (member is Member) {
+          currentMemberRoles[member.memberId] = roleName;
+        }
+      }
+    }
+    return currentMemberRoles;
+  }
+
   void _showRoleAssignmentDialog(int roleIndex) {
     showDialog(
       context: context,
       builder: (context) => RoleAssignmentDialog(
         roleName: roles[roleIndex]['role'],
         members: widget.members,
+        memberRoles: _getCurrentMemberRoles(),
         onAssign: (selectedMembers) {
           setState(() {
+            // 他の役割から選択されたメンバーを削除
+            for (int i = 0; i < roles.length; i++) {
+              if (i != roleIndex) {
+                final roleMembers = List<Member>.from(roles[i]['members'] as List);
+                roleMembers.removeWhere((member) => 
+                    selectedMembers.any((selected) => selected.memberId == member.memberId)
+                );
+                roles[i]['members'] = roleMembers;
+              }
+            }
+            // 現在の役割にメンバーを設定
             roles[roleIndex]['members'] = selectedMembers;
           });
         },

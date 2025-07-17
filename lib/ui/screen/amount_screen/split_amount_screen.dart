@@ -97,6 +97,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
   late int _currentTab;
   List<Map<String, dynamic>> _roles = [];
   Map<String, String> _memberRoles = {};
+  bool _isFirstTimeShowingRoleDialog = true;
 
   @override
   void initState() {
@@ -366,18 +367,24 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
       context: context,
       builder: (context) => RoleSetupDialog(
         members: widget.members,
+        memberRoles: _memberRoles,
+        shouldRestoreDefaultRoles: _isFirstTimeShowingRoleDialog,
         onConfirm: () {},
         onRoleConfirm: (roles) {
           setState(() {
+            // 新しい役割リストに存在しない役割を削除
+            final newRoleNames = roles.map((role) => role['role'] as String).toSet();
+            _memberRoles.removeWhere((memberId, roleName) => !newRoleNames.contains(roleName));
+            
             _roles = roles;
-            // 役割に基づいてメンバーの役割を設定
-            _memberRoles.clear();
+            // 役割に基づいてメンバーの役割を設定（新しく追加された分のみ）
             for (final role in roles) {
               final roleMembers = List<Member>.from(role['members'] as List);
               for (final member in roleMembers) {
                 _memberRoles[member.memberId] = role['role'];
               }
             }
+            _isFirstTimeShowingRoleDialog = false;
           });
         },
       ),
