@@ -113,21 +113,12 @@ class _MemberRoleEditDialogState extends State<MemberRoleEditDialog> {
               children: [
                 ListTile(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-                  leading: selectedRole == null
-                      ? SvgPicture.asset(
-                          'assets/icons/ic_check_circle_teal.svg',
-                          width: 24,
-                          height: 24,
-                        )
-                      : null,
                   title: Text(
                     '役割なし',
                     style: GoogleFonts.notoSansJp(
                       fontSize: 16,
                       color: Colors.grey,
-                      fontWeight: selectedRole == null
-                          ? FontWeight.bold
-                          : FontWeight.normal,
+                      fontWeight: FontWeight.normal,
                     ),
                   ),
                   trailing: SvgPicture.asset(
