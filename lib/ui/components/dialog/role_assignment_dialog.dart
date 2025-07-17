@@ -88,6 +88,7 @@ class _RoleAssignmentDialogState extends State<RoleAssignmentDialog> {
                                 : 'assets/icons/ic_check_circle_off.svg',
                             width: 24,
                             height: 24,
+                            color: const Color(0xFF75DCC6),
                           ),
                         ),
                         title: Text(
