@@ -148,7 +148,7 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
   @override
   Widget build(BuildContext context) {
     _initializeDefaultRoles();
-    
+
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
@@ -163,15 +163,12 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              S.of(context)!.roleSetup,
-              style: GoogleFonts.notoSansJp(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            Text(S.of(context)!.roleSetup,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge
+                    ?.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 24),
-            // 役割リスト
             Container(
               constraints: BoxConstraints(
                 maxHeight: MediaQuery.of(context).size.height * 0.4,
@@ -182,36 +179,36 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
                     shrinkWrap: true,
                     itemCount: roles.length,
                     itemBuilder: (context, index) {
-                    final role = roles[index];
-                    return Slidable(
-                      key: ValueKey(role['role']),
-                      endActionPane: ActionPane(
-                        motion: const ScrollMotion(),
-                        extentRatio: 0.30,
-                        children: [
-                          CustomSlidableAction(
-                            onPressed: (context) {
-                              _deleteRole(index);
-                            },
-                            backgroundColor: Colors.red,
-                            foregroundColor: Colors.white,
-                            child: const Icon(Icons.delete),
-                          ),
-                        ],
-                      ),
-                      child: Container(
-                        margin: const EdgeInsets.only(bottom: 1),
-                        child: ListTile(
-                          title: Text(
-                            role['role'],
-                            style: GoogleFonts.notoSansJp(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
+                      final role = roles[index];
+                      return Slidable(
+                        key: ValueKey(role['role']),
+                        endActionPane: ActionPane(
+                          motion: const ScrollMotion(),
+                          extentRatio: 0.30,
+                          children: [
+                            CustomSlidableAction(
+                              onPressed: (context) {
+                                _deleteRole(index);
+                              },
+                              backgroundColor: Colors.red,
+                              foregroundColor: Colors.white,
+                              child: const Icon(Icons.delete),
                             ),
-                          ),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
+                          ],
+                        ),
+                        child: Container(
+                          margin: const EdgeInsets.only(bottom: 1),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                          child: Row(
                             children: [
+                              Expanded(
+                                flex: 2,
+                                child: Text(
+                                  role['role'],
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                              ),
                               Container(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 12, vertical: 6),
@@ -253,12 +250,11 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
                             ],
                           ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               ),
-            ),
             ),
             const SizedBox(height: 16),
             // 役割を入力するボタン
@@ -283,9 +279,9 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
               ),
             ),
             const SizedBox(height: 24),
-            // 確定ボタン
             SizedBox(
-              width: double.infinity,
+              width: 108,
+              height: 40,
               child: ElevatedButton(
                 onPressed: () {
                   widget.onRoleConfirm(roles);
@@ -293,14 +289,13 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF75DCC6),
-                  padding: const EdgeInsets.symmetric(vertical: 12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
                 child: Text(
                   S.of(context)!.confirm,
-                  style: GoogleFonts.notoSansJp(
+                  style: GoogleFonts.inter(
                     color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,

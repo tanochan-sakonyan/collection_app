@@ -149,7 +149,7 @@ class SJa extends S {
   String get multiMemberHint => 'メンバーを改行区切りでまとめて登録できます';
 
   @override
-  String get confirm => '確定';
+  String get confirm => '確 定';
 
   @override
   String get addEvent => 'イベント追加';

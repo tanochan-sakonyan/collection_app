@@ -376,7 +376,7 @@ abstract class S {
   /// No description provided for @confirm.
   ///
   /// In ja, this message translates to:
-  /// **'確定'**
+  /// **'確 定'**
   String get confirm;
 
   /// No description provided for @addEvent.

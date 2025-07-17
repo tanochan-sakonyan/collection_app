@@ -352,7 +352,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
             // 役割に基づいてメンバーの役割を設定
             _memberRoles.clear();
             for (final role in roles) {
-              final roleMembers = role['members'] as List<Member>;
+              final roleMembers = List<Member>.from(role['members'] as List);
               for (final member in roleMembers) {
                 _memberRoles[member.memberId] = role['role'];
               }
@@ -564,7 +564,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
       // 役職なしの場合、残りの金額を均等割り
       int totalRoleAmount = 0;
       for (final role in _roles) {
-        final roleMembers = role['members'] as List<Member>;
+        final roleMembers = List<Member>.from(role['members'] as List);
         totalRoleAmount += (role['amount'] as int) * roleMembers.length;
       }
       

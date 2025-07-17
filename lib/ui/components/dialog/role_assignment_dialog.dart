@@ -26,8 +26,8 @@ class _RoleAssignmentDialogState extends State<RoleAssignmentDialog> {
   @override
   void initState() {
     super.initState();
-    // すでに選択されているメンバーがあれば初期化
-    selectedMembers = List<Member>.from(widget.members);
+    // デフォルトでは誰も選択されていない状態
+    selectedMembers = [];
   }
 
   void _toggleMember(Member member) {
