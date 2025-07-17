@@ -369,6 +369,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
         members: widget.members,
         memberRoles: _memberRoles,
         shouldRestoreDefaultRoles: _isFirstTimeShowingRoleDialog,
+        existingRoles: _roles.isNotEmpty ? _roles : null,
         onConfirm: () {},
         onRoleConfirm: (roles) {
           setState(() {

@@ -14,6 +14,7 @@ class RoleSetupDialog extends StatefulWidget {
   final Function(List<Map<String, dynamic>>) onRoleConfirm;
   final Map<String, String> memberRoles;
   final bool shouldRestoreDefaultRoles;
+  final List<Map<String, dynamic>>? existingRoles;
 
   const RoleSetupDialog({
     super.key,
@@ -22,6 +23,7 @@ class RoleSetupDialog extends StatefulWidget {
     required this.onRoleConfirm,
     required this.memberRoles,
     this.shouldRestoreDefaultRoles = false,
+    this.existingRoles,
   });
 
   @override
@@ -35,11 +37,15 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
   @override
   void initState() {
     super.initState();
-    // デフォルトの役割を追加（多言語対応のため、buildメソッドで初期化）
+    // 既存のロールがある場合はそれを使用、ない場合は空のリストから開始
+    if (widget.existingRoles != null) {
+      roles = List<Map<String, dynamic>>.from(widget.existingRoles!);
+    }
   }
 
   void _initializeDefaultRoles() {
-    if (roles.isEmpty && widget.shouldRestoreDefaultRoles) {
+    // 既存ロールがなく、デフォルトロール復元フラグがtrueで、現在ロールが空の場合のみデフォルトロールを追加
+    if (widget.existingRoles == null && roles.isEmpty && widget.shouldRestoreDefaultRoles) {
       roles = [
         {'role': S.of(context)!.seniorStudent, 'amount': 3000, 'members': []},
         {'role': S.of(context)!.freshmanStudent, 'amount': 1000, 'members': []},
@@ -160,10 +166,10 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
             // 他の役割から選択されたメンバーを削除
             for (int i = 0; i < roles.length; i++) {
               if (i != roleIndex) {
-                final roleMembers = List<Member>.from(roles[i]['members'] as List);
-                roleMembers.removeWhere((member) => 
-                    selectedMembers.any((selected) => selected.memberId == member.memberId)
-                );
+                final roleMembers =
+                    List<Member>.from(roles[i]['members'] as List);
+                roleMembers.removeWhere((member) => selectedMembers
+                    .any((selected) => selected.memberId == member.memberId));
                 roles[i]['members'] = roleMembers;
               }
             }
