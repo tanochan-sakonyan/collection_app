@@ -622,7 +622,7 @@ abstract class S {
   /// No description provided for @seniorStudent.
   ///
   /// In ja, this message translates to:
-  /// **'4年生'**
+  /// **'4年'**
   String get seniorStudent;
 
   /// No description provided for @freshmanStudent.

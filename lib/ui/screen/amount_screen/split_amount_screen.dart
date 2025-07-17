@@ -401,39 +401,35 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
           if (_roles.isEmpty) ...[
             Container(
               padding: const EdgeInsets.all(16),
-              margin: const EdgeInsets.only(bottom: 20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-              ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     S.of(context)!.roleBasedAmountSetting,
-                    style: GoogleFonts.notoSansJp(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black,
+                        ),
+                    textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 20),
                   Text(
                     S.of(context)!.roleSetupDescription,
-                    style: GoogleFonts.notoSansJp(
-                      fontSize: 14,
-                      color: Colors.grey.shade700,
-                    ),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Colors.black54,
+                        ),
+                    textAlign: TextAlign.center,
                   ),
                 ],
               ),
             ),
-            // 役割を入力するボタン
+            const SizedBox(height: 80),
             SizedBox(
               width: 164,
               height: 48,
               child: ElevatedButton(
                 onPressed: () => _showRoleSetupDialog(),
                 style: ElevatedButton.styleFrom(
+                  elevation: 0,
                   backgroundColor: const Color(0xFFF2F2F2),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(36),
@@ -444,7 +440,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         color: const Color(0xFF75DCC6),
                         fontSize: 16,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.w800,
                       ),
                 ),
               ),

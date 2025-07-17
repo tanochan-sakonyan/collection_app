@@ -273,7 +273,7 @@ class SJa extends S {
   String get enterAmount => '金額を入力';
 
   @override
-  String get seniorStudent => '4年生';
+  String get seniorStudent => '4年';
 
   @override
   String get freshmanStudent => '新入生';

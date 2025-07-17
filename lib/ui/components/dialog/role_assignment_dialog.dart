@@ -70,18 +70,21 @@ class _RoleAssignmentDialogState extends State<RoleAssignmentDialog> {
               constraints: BoxConstraints(
                 maxHeight: MediaQuery.of(context).size.height * 0.4,
               ),
-              child: ListView.builder(
+              child: ListView.separated(
                 shrinkWrap: true,
                 itemCount: widget.members.length,
+                separatorBuilder: (context, index) => const Divider(
+                  thickness: 1,
+                  color: Colors.grey,
+                  height: 1,
+                ),
                 itemBuilder: (context, index) {
                   final member = widget.members[index];
                   final isSelected = selectedMembers.contains(member);
                   final isAbsent = member.status == PaymentStatus.absence;
                   
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 4),
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  return ListTile(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                       leading: GestureDetector(
                         onTap: isAbsent ? null : () => _toggleMember(member),
                         child: Container(
@@ -120,8 +123,7 @@ class _RoleAssignmentDialogState extends State<RoleAssignmentDialog> {
                         ),
                       ),
                       onTap: isAbsent ? null : () => _toggleMember(member),
-                    ),
-                  );
+                    );
                 },
               ),
             ),
