@@ -9,6 +9,7 @@ import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/amount_guide_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/role_setup_dialog.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/ui/screen/home_screen.dart';
 
@@ -92,6 +93,8 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
   late TabController _tabController;
   final _numFmt = NumberFormat.decimalPattern();
   late int _currentTab;
+  List<Map<String, dynamic>> _roles = [];
+  Map<String, String> _memberRoles = {};
 
   @override
   void initState() {
@@ -121,7 +124,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
     );
     _locked =
         widget.members.map((m) => m.status == PaymentStatus.absence).toList();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
     _currentTab = 0;
     _tabController.addListener(() {
       if (_currentTab != _tabController.index && mounted) {
@@ -188,6 +191,9 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                 ? 0
                 : int.tryParse(_controllers[i].text.replaceAll(',', '')) ?? 0;
       }
+    } else if (_tabController.index == 2) {
+      // 役割タブの場合の処理
+      _calculateRoleBasedAmounts(amountMap);
     }
     debugPrint('送信する金額マップ: $amountMap');
 
@@ -295,6 +301,68 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
     setState(() {});
   }
 
+  void _calculateRoleBasedAmounts(Map<String, int> amountMap) {
+    // 役割に基づいて金額を計算
+    int totalRoleAmount = 0;
+    
+    for (final member in widget.members) {
+      if (member.status == PaymentStatus.absence) {
+        amountMap[member.memberId] = 0;
+        continue;
+      }
+      
+      final memberRole = _memberRoles[member.memberId];
+      if (memberRole != null) {
+        final role = _roles.firstWhere(
+          (r) => r['role'] == memberRole,
+          orElse: () => {'amount': 0},
+        );
+        final roleAmount = role['amount'] ?? 0;
+        amountMap[member.memberId] = roleAmount as int;
+        totalRoleAmount += roleAmount as int;
+      } else {
+        amountMap[member.memberId] = 0;
+      }
+    }
+    
+    // 残りの金額を役職なしのメンバーで分割
+    final remainingAmount = widget.amount - totalRoleAmount;
+    final noRoleMembers = widget.members.where((m) => 
+        m.status != PaymentStatus.absence && 
+        (_memberRoles[m.memberId] == null || _memberRoles[m.memberId] == '')
+    ).toList();
+    
+    if (noRoleMembers.isNotEmpty && remainingAmount > 0) {
+      final perPersonAmount = (remainingAmount / noRoleMembers.length).ceil();
+      for (final member in noRoleMembers) {
+        amountMap[member.memberId] = perPersonAmount;
+      }
+    }
+  }
+
+  void _showRoleSetupDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => RoleSetupDialog(
+        members: widget.members,
+        onConfirm: () {},
+        onRoleConfirm: (roles) {
+          setState(() {
+            _roles = roles;
+            // 役割に基づいてメンバーの役割を設定
+            _memberRoles.clear();
+            for (final role in roles) {
+              final roleMembers = role['members'] as List<Member>;
+              for (final member in roleMembers) {
+                _memberRoles[member.memberId] = role['role'];
+              }
+            }
+          });
+        },
+      ),
+    );
+  }
+
   TextInputFormatter _buildAmountFormatter() {
     return TextInputFormatter.withFunction((oldValue, newValue) {
       String text = newValue.text;
@@ -319,6 +387,202 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
         selection: TextSelection.collapsed(offset: cursor),
       );
     });
+  }
+
+  Widget _buildRoleTab() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 44),
+      child: Column(
+        children: [
+          const SizedBox(height: 20),
+          // 説明文
+          Container(
+            padding: const EdgeInsets.all(16),
+            margin: const EdgeInsets.only(bottom: 20),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade100,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  S.of(context)!.roleBasedAmountSetting,
+                  style: GoogleFonts.notoSansJp(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  S.of(context)!.roleSetupDescription,
+                  style: GoogleFonts.notoSansJp(
+                    fontSize: 14,
+                    color: Colors.grey.shade700,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // 役割を入力するボタン
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton(
+              onPressed: _showRoleSetupDialog,
+              style: OutlinedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                side: const BorderSide(color: Color(0xFF75DCC6)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Text(
+                S.of(context)!.inputRole,
+                style: GoogleFonts.notoSansJp(
+                  color: const Color(0xFF75DCC6),
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          // メンバーリスト（役割が設定された場合のみ表示）
+          if (_roles.isNotEmpty) ...[
+            Expanded(
+              child: ListView.builder(
+                itemCount: widget.members.length,
+                itemBuilder: (context, i) {
+                  final member = widget.members[i];
+                  final memberRole = _memberRoles[member.memberId];
+                  final roleAmount = _getRoleAmount(memberRole);
+                  
+                  return Column(
+                    children: [
+                      ListTile(
+                        leading: memberRole != null && memberRole.isNotEmpty
+                            ? Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF75DCC6),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  memberRole,
+                                  style: GoogleFonts.notoSansJp(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              )
+                            : Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade400,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  S.of(context)!.noRole,
+                                  style: GoogleFonts.notoSansJp(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                        title: Text(
+                          member.memberName,
+                          style: GoogleFonts.notoSansJp(
+                            fontSize: 16,
+                            color: member.status == PaymentStatus.absence
+                                ? const Color(0xFFC0C0C0)
+                                : Colors.black,
+                          ),
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              _numFmt.format(roleAmount),
+                              style: GoogleFonts.notoSansJp(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              S.of(context)!.currencyUnit,
+                              style: GoogleFonts.notoSansJp(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Divider(
+                        height: 1,
+                        color: Color(0xFFE8E8E8),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: 20),
+            // 役割を修正ボタン
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton(
+                onPressed: _showRoleSetupDialog,
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  side: const BorderSide(color: Color(0xFF75DCC6)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: Text(
+                  S.of(context)!.modifyRole,
+                  style: GoogleFonts.notoSansJp(
+                    color: const Color(0xFF75DCC6),
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  int _getRoleAmount(String? roleKey) {
+    if (roleKey == null || roleKey.isEmpty) {
+      // 役職なしの場合、残りの金額を均等割り
+      int totalRoleAmount = 0;
+      for (final role in _roles) {
+        final roleMembers = role['members'] as List<Member>;
+        totalRoleAmount += (role['amount'] as int) * roleMembers.length;
+      }
+      
+      final remainingAmount = widget.amount - totalRoleAmount;
+      final noRoleMembers = widget.members.where((m) => 
+          m.status != PaymentStatus.absence && 
+          (_memberRoles[m.memberId] == null || _memberRoles[m.memberId] == '')
+      ).toList();
+      
+      if (noRoleMembers.isNotEmpty && remainingAmount > 0) {
+        return (remainingAmount / noRoleMembers.length).ceil();
+      }
+      return 0;
+    }
+    
+    final role = _roles.firstWhere(
+      (r) => r['role'] == roleKey,
+      orElse: () => {'amount': 0},
+    );
+    return role['amount'] ?? 0;
   }
 
   @override
@@ -422,6 +686,16 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                       if (_currentTab == 1) return;
                       setState(() => _currentTab = 1);
                       _tabController.animateTo(1);
+                    },
+                  ),
+                  const SizedBox(width: 12),
+                  _TabPill(
+                    label: S.of(context)!.adjustByRole,
+                    selected: _currentTab == 2,
+                    onTap: () {
+                      if (_currentTab == 2) return;
+                      setState(() => _currentTab = 2);
+                      _tabController.animateTo(2);
                     },
                   ),
                 ],
@@ -635,6 +909,8 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                         );
                       },
                     ),
+                    // 役割から調整タブ
+                    _buildRoleTab(),
                   ],
                 ),
               ),
