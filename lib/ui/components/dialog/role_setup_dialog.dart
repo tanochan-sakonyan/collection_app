@@ -31,11 +31,16 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
   @override
   void initState() {
     super.initState();
-    // デフォルトの役割を追加
-    roles = [
-      {'role': '4年生', 'amount': 3000, 'members': []},
-      {'role': '新入生', 'amount': 1000, 'members': []},
-    ];
+    // デフォルトの役割を追加（多言語対応のため、buildメソッドで初期化）
+  }
+
+  void _initializeDefaultRoles() {
+    if (roles.isEmpty) {
+      roles = [
+        {'role': S.of(context)!.seniorStudent, 'amount': 3000, 'members': []},
+        {'role': S.of(context)!.freshmanStudent, 'amount': 1000, 'members': []},
+      ];
+    }
   }
 
   void _addRole(String roleName, int amount) {
@@ -81,7 +86,7 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
                 FilteringTextInputFormatter.digitsOnly,
               ],
               decoration: InputDecoration(
-                hintText: '金額を入力',
+                hintText: S.of(context)!.enterAmount,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(6),
                   borderSide: const BorderSide(color: Color(0xFFE5E5E5)),
@@ -102,7 +107,7 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('キャンセル'),
+            child: Text(S.of(context)!.cancel),
           ),
           TextButton(
             onPressed: () {
@@ -112,7 +117,7 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
                 Navigator.pop(context);
               }
             },
-            child: Text('確定'),
+            child: Text(S.of(context)!.confirm),
           ),
         ],
       ),
@@ -142,6 +147,8 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
 
   @override
   Widget build(BuildContext context) {
+    _initializeDefaultRoles();
+    
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
@@ -169,11 +176,12 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
               constraints: BoxConstraints(
                 maxHeight: MediaQuery.of(context).size.height * 0.4,
               ),
-              child: SlidableAutoCloseBehavior(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: roles.length,
-                  itemBuilder: (context, index) {
+              child: ClipRect(
+                child: SlidableAutoCloseBehavior(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: roles.length,
+                    itemBuilder: (context, index) {
                     final role = roles[index];
                     return Slidable(
                       key: ValueKey(role['role']),
@@ -251,6 +259,7 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
                 ),
               ),
             ),
+            ),
             const SizedBox(height: 16),
             // 役割を入力するボタン
             SizedBox(
@@ -290,7 +299,7 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
                   ),
                 ),
                 child: Text(
-                  '確定',
+                  S.of(context)!.confirm,
                   style: GoogleFonts.notoSansJp(
                     color: Colors.white,
                     fontSize: 16,

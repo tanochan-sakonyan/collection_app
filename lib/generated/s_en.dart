@@ -274,6 +274,18 @@ class SEn extends S {
   String get noRole => 'No role';
 
   @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get enterAmount => 'Enter amount';
+
+  @override
+  String get seniorStudent => 'Senior Student';
+
+  @override
+  String get freshmanStudent => 'Freshman Student';
+
+  @override
   String get splitMode => 'Split Mode';
 
   @override

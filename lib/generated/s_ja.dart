@@ -149,7 +149,7 @@ class SJa extends S {
   String get multiMemberHint => 'メンバーを改行区切りでまとめて登録できます';
 
   @override
-  String get confirm => '決定';
+  String get confirm => '確定';
 
   @override
   String get addEvent => 'イベント追加';
@@ -265,6 +265,18 @@ class SJa extends S {
 
   @override
   String get noRole => '役職無し';
+
+  @override
+  String get cancel => 'キャンセル';
+
+  @override
+  String get enterAmount => '金額を入力';
+
+  @override
+  String get seniorStudent => '4年生';
+
+  @override
+  String get freshmanStudent => '新入生';
 
   @override
   String get splitMode => '割り勘モード';

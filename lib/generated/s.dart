@@ -376,7 +376,7 @@ abstract class S {
   /// No description provided for @confirm.
   ///
   /// In ja, this message translates to:
-  /// **'決定'**
+  /// **'確定'**
   String get confirm;
 
   /// No description provided for @addEvent.
@@ -606,6 +606,30 @@ abstract class S {
   /// In ja, this message translates to:
   /// **'役職無し'**
   String get noRole;
+
+  /// No description provided for @cancel.
+  ///
+  /// In ja, this message translates to:
+  /// **'キャンセル'**
+  String get cancel;
+
+  /// No description provided for @enterAmount.
+  ///
+  /// In ja, this message translates to:
+  /// **'金額を入力'**
+  String get enterAmount;
+
+  /// No description provided for @seniorStudent.
+  ///
+  /// In ja, this message translates to:
+  /// **'4年生'**
+  String get seniorStudent;
+
+  /// No description provided for @freshmanStudent.
+  ///
+  /// In ja, this message translates to:
+  /// **'新入生'**
+  String get freshmanStudent;
 
   /// No description provided for @splitMode.
   ///

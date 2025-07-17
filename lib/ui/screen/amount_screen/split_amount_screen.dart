@@ -395,56 +395,58 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
       child: Column(
         children: [
           const SizedBox(height: 20),
-          // 説明文
-          Container(
-            padding: const EdgeInsets.all(16),
-            margin: const EdgeInsets.only(bottom: 20),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
+          // 説明文（役割がない場合のみ表示）
+          if (_roles.isEmpty) ...[
+            Container(
+              padding: const EdgeInsets.all(16),
+              margin: const EdgeInsets.only(bottom: 20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    S.of(context)!.roleBasedAmountSetting,
+                    style: GoogleFonts.notoSansJp(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    S.of(context)!.roleSetupDescription,
+                    style: GoogleFonts.notoSansJp(
+                      fontSize: 14,
+                      color: Colors.grey.shade700,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  S.of(context)!.roleBasedAmountSetting,
+            // 役割を入力するボタン
+            SizedBox(
+              width: 152,
+              height: 48,
+              child: OutlinedButton(
+                onPressed: _showRoleSetupDialog,
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(color: Color(0xFF75DCC6)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: Text(
+                  S.of(context)!.inputRole,
                   style: GoogleFonts.notoSansJp(
+                    color: const Color(0xFF75DCC6),
                     fontSize: 16,
-                    fontWeight: FontWeight.bold,
                   ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  S.of(context)!.roleSetupDescription,
-                  style: GoogleFonts.notoSansJp(
-                    fontSize: 14,
-                    color: Colors.grey.shade700,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // 役割を入力するボタン
-          SizedBox(
-            width: 152,
-            height: 48,
-            child: OutlinedButton(
-              onPressed: _showRoleSetupDialog,
-              style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: Color(0xFF75DCC6)),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: Text(
-                S.of(context)!.inputRole,
-                style: GoogleFonts.notoSansJp(
-                  color: const Color(0xFF75DCC6),
-                  fontSize: 16,
                 ),
               ),
             ),
-          ),
+          ],
           const SizedBox(height: 20),
           // メンバーリスト（役割が設定された場合のみ表示）
           if (_roles.isNotEmpty) ...[
