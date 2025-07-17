@@ -60,75 +60,88 @@ class _MemberRoleEditDialogState extends State<MemberRoleEditDialog> {
               constraints: BoxConstraints(
                 maxHeight: MediaQuery.of(context).size.height * 0.4,
               ),
-              child: ListView.separated(
+              child: ListView.builder(
                 shrinkWrap: true,
                 itemCount: widget.roles.length,
-                separatorBuilder: (context, index) => const Divider(
-                  thickness: 1,
-                  color: Colors.grey,
-                  height: 1,
-                ),
                 itemBuilder: (context, index) {
                   final role = widget.roles[index];
                   final roleName = role['role'] as String;
                   final isSelected = selectedRole == roleName;
                   
-                  return ListTile(
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    title: Text(
-                      roleName,
-                      style: GoogleFonts.notoSansJp(
-                        fontSize: 16,
-                        color: Colors.black,
+                  return Column(
+                    children: [
+                      ListTile(
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                        title: Text(
+                          roleName,
+                          style: GoogleFonts.notoSansJp(
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        trailing: SvgPicture.asset(
+                          'assets/icons/ic_next.svg',
+                          width: 16,
+                          height: 16,
+                          colorFilter: const ColorFilter.mode(
+                            Color(0xFF75DCC6),
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                        onTap: () {
+                          setState(() {
+                            selectedRole = roleName;
+                          });
+                          widget.onRoleChange(roleName);
+                          Navigator.pop(context);
+                        },
                       ),
-                    ),
-                    trailing: SvgPicture.asset(
-                      'assets/icons/ic_next.svg',
-                      width: 16,
-                      height: 16,
-                      colorFilter: const ColorFilter.mode(
-                        Color(0xFF75DCC6),
-                        BlendMode.srcIn,
+                      const Divider(
+                        thickness: 1,
+                        height: 1,
+                        color: Color(0xFFE8E8E8),
                       ),
-                    ),
-                    onTap: () {
-                      setState(() {
-                        selectedRole = roleName;
-                      });
-                      widget.onRoleChange(roleName);
-                      Navigator.pop(context);
-                    },
+                    ],
                   );
                 },
               ),
             ),
             const SizedBox(height: 24),
             // 役割なしオプション
-            ListTile(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              title: Text(
-                '役割なし',
-                style: GoogleFonts.notoSansJp(
-                  fontSize: 16,
-                  color: Colors.grey,
+            Column(
+              children: [
+                ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                  title: Text(
+                    '役割なし',
+                    style: GoogleFonts.notoSansJp(
+                      fontSize: 16,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  trailing: SvgPicture.asset(
+                    'assets/icons/ic_next.svg',
+                    width: 16,
+                    height: 16,
+                    colorFilter: const ColorFilter.mode(
+                      Colors.grey,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                  onTap: () {
+                    setState(() {
+                      selectedRole = null;
+                    });
+                    widget.onRoleChange(null);
+                    Navigator.pop(context);
+                  },
                 ),
-              ),
-              trailing: SvgPicture.asset(
-                'assets/icons/ic_next.svg',
-                width: 16,
-                height: 16,
-                colorFilter: const ColorFilter.mode(
-                  Colors.grey,
-                  BlendMode.srcIn,
+                const Divider(
+                  thickness: 1,
+                  height: 1,
+                  color: Color(0xFFE8E8E8),
                 ),
-              ),
-              onTap: () {
-                setState(() {
-                  selectedRole = null;
-                });
-                widget.onRoleChange(null);
-                Navigator.pop(context);
-              },
+              ],
             ),
           ],
         ),

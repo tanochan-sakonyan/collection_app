@@ -1024,13 +1024,13 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
             height: 40,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: _currentTab == 2 && _roles.isNotEmpty
+                backgroundColor: _currentTab == 2 && _roles.isEmpty
                     ? Colors.grey
                     : const Color(0xFF75DCC6),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
               ),
-              onPressed: _currentTab == 2 && _roles.isNotEmpty
+              onPressed: _currentTab == 2 && _roles.isEmpty
                   ? null
                   : () {
                       // JSONデータを出力
