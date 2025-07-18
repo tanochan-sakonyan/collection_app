@@ -264,7 +264,7 @@ class SJa extends S {
   String get modifyRole => '役割を修正';
 
   @override
-  String get noRole => '役職無し';
+  String get noRole => '役割無し';
 
   @override
   String get cancel => 'キャンセル';

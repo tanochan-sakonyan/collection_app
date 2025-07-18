@@ -265,7 +265,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
     if (_currentTab == 2 && _roles.isNotEmpty) {
       final Map<String, int> amountMap = {};
       _calculateRoleBasedAmounts(amountMap);
-      
+
       // 各メンバーの金額を更新
       for (int i = 0; i < widget.members.length; i++) {
         final member = widget.members[i];
@@ -374,9 +374,11 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
         onRoleConfirm: (roles) {
           setState(() {
             // 新しい役割リストに存在しない役割を削除
-            final newRoleNames = roles.map((role) => role['role'] as String).toSet();
-            _memberRoles.removeWhere((memberId, roleName) => !newRoleNames.contains(roleName));
-            
+            final newRoleNames =
+                roles.map((role) => role['role'] as String).toSet();
+            _memberRoles.removeWhere(
+                (memberId, roleName) => !newRoleNames.contains(roleName));
+
             _roles = roles;
             // 役割に基づいてメンバーの役割を設定（新しく追加された分のみ）
             for (final role in roles) {
@@ -407,18 +409,19 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
               roleMembers.removeWhere((m) => m.memberId == member.memberId);
               role['members'] = roleMembers;
             }
-            
+
             if (newRole == null) {
               _memberRoles.remove(member.memberId);
             } else {
               _memberRoles[member.memberId] = newRole;
               // 新しい役割にメンバーを追加
               final targetRole = _roles.firstWhere((r) => r['role'] == newRole);
-              final targetRoleMembers = List<Member>.from(targetRole['members'] as List);
+              final targetRoleMembers =
+                  List<Member>.from(targetRole['members'] as List);
               targetRoleMembers.add(member);
               targetRole['members'] = targetRoleMembers;
             }
-            
+
             // 金額を再計算
             _recalculateAmounts();
           });
@@ -430,22 +433,23 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
   void _outputJsonData() {
     // メンバーと金額、役割のマップデータを作成
     final List<Map<String, dynamic>> memberDataList = [];
-    
+
     for (int i = 0; i < widget.members.length; i++) {
       final member = widget.members[i];
       final controller = _controllers[i];
       final amountText = controller.text;
       final amount = int.tryParse(amountText.replaceAll(',', '')) ?? 0;
       final role = _memberRoles[member.memberId] ?? '';
-      
+
       memberDataList.add({
         'memberId': member.memberId,
         'amount': amount,
         'role': role,
       });
     }
-    
-    final jsonString = const JsonEncoder.withIndent('  ').convert(memberDataList);
+
+    final jsonString =
+        const JsonEncoder.withIndent('  ').convert(memberDataList);
     debugPrint('=== Split Amount Data ===');
     debugPrint(jsonString);
     debugPrint('========================');
@@ -479,7 +483,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
 
   Widget _buildRoleTab() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 44),
+      padding: const EdgeInsets.symmetric(horizontal: 28),
       child: Column(
         children: [
           const SizedBox(height: 20),
@@ -532,7 +536,6 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
               ),
             ),
           ],
-          const SizedBox(height: 20),
           // メンバーリスト（役割が設定された場合のみ表示）
           if (_roles.isNotEmpty) ...[
             Expanded(
@@ -546,12 +549,21 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                   return Column(
                     children: [
                       ListTile(
+                        visualDensity: const VisualDensity(
+                          horizontal: 0,
+                          vertical: -2,
+                        ),
+                        dense: true,
+                        contentPadding:
+                            const EdgeInsets.only(left: 16, right: 16, top: 8),
                         leading: GestureDetector(
                           onTap: () => _showMemberRoleEditDialog(member),
                           child: memberRole != null && memberRole.isNotEmpty
                               ? Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.17,
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 8, vertical: 4),
+                                      horizontal: 4, vertical: 4),
                                   decoration: BoxDecoration(
                                     color: const Color(0xFF75DCC6),
                                     borderRadius: BorderRadius.circular(12),
@@ -563,9 +575,12 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                                       color: Colors.white,
                                       fontWeight: FontWeight.w500,
                                     ),
+                                    textAlign: TextAlign.center,
                                   ),
                                 )
                               : Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.17,
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 8, vertical: 4),
                                   decoration: BoxDecoration(
@@ -579,6 +594,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                                       color: Colors.white,
                                       fontWeight: FontWeight.w500,
                                     ),
+                                    textAlign: TextAlign.center,
                                   ),
                                 ),
                         ),
@@ -594,21 +610,11 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(
-                              _numFmt.format(roleAmount),
-                              style: GoogleFonts.notoSansJp(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              S.of(context)!.currencyUnit,
-                              style: GoogleFonts.notoSansJp(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
+                            Text(_numFmt.format(roleAmount),
+                                style: Theme.of(context).textTheme.bodyLarge),
+                            const SizedBox(width: 8),
+                            Text(S.of(context)!.currencyUnit,
+                                style: Theme.of(context).textTheme.bodyMedium),
                           ],
                         ),
                       ),
@@ -624,8 +630,8 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
             const SizedBox(height: 20),
             // 役割を修正ボタン
             SizedBox(
-              width: 152,
-              height: 48,
+              width: 112,
+              height: 29,
               child: ElevatedButton(
                 onPressed: _showRoleSetupDialog,
                 style: ElevatedButton.styleFrom(
@@ -635,16 +641,13 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                     borderRadius: BorderRadius.circular(36),
                   ),
                 ),
-                child: Text(
-                  S.of(context)!.modifyRole,
-                  style: GoogleFonts.inter(
-                    color: const Color(0xFF75DCC6),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
+                child: Text(S.of(context)!.modifyRole,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xFF75DCC6))),
               ),
             ),
+            const SizedBox(height: 24),
           ],
         ],
       ),
@@ -733,8 +736,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
               children: [
                 const Spacer(flex: 10),
                 Text(
-                  S.of(context)!.setIndividualAmounts ??
-                      "Set individual amounts",
+                  S.of(context)!.setIndividualAmounts,
                   style: GoogleFonts.notoSansJp(
                       fontSize: 24, fontWeight: FontWeight.bold),
                 ),
@@ -833,8 +835,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            S.of(context)!.status_absence ??
-                                                "Absence",
+                                            S.of(context)!.status_absence,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodyMedium
@@ -863,8 +864,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                                           ),
                                           const SizedBox(width: 4),
                                           Text(
-                                            S.of(context)!.currencyUnit ??
-                                                "USD",
+                                            S.of(context)!.currencyUnit,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodyLarge
@@ -912,8 +912,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            S.of(context)!.status_absence ??
-                                                "Absence",
+                                            S.of(context)!.status_absence,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodyMedium
@@ -972,8 +971,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                                           ),
                                           const SizedBox(width: 6),
                                           Text(
-                                            S.of(context)!.currencyUnit ??
-                                                "USD",
+                                            S.of(context)!.currencyUnit,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodyLarge
@@ -1035,7 +1033,6 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                   : () {
                       // JSONデータを出力
                       _outputJsonData();
-                      
                       _onConfirm(
                         userId,
                         widget.eventId,
@@ -1047,8 +1044,8 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                     },
               child: Text(S.of(context)!.confirm,
                   style: GoogleFonts.inter(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
                       color: Colors.white)),
             ),
           ),

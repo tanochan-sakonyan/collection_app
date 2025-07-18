@@ -604,7 +604,7 @@ abstract class S {
   /// No description provided for @noRole.
   ///
   /// In ja, this message translates to:
-  /// **'役職無し'**
+  /// **'役割無し'**
   String get noRole;
 
   /// No description provided for @cancel.
