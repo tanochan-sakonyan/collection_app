@@ -369,113 +369,114 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
                     .bodyLarge
                     ?.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 12),
-            Container(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * 0.4,
-              ),
-              child: ClipRect(
-                child: SlidableAutoCloseBehavior(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: roles.length + 1, // 新しいロール追加用に +1
-                    itemBuilder: (context, index) {
-                      // 最後のアイテムは新しいロール追加用
-                      if (index == roles.length) {
-                        return _buildNewRoleListTile();
-                      }
-                      
-                      final role = roles[index];
-                      return Column(
-                        children: [
-                          Slidable(
-                            key: ValueKey(role['role']),
-                            endActionPane: ActionPane(
-                              motion: const ScrollMotion(),
-                              extentRatio: 0.25,
-                              children: [
-                                CustomSlidableAction(
-                                  onPressed: (context) {
-                                    _deleteRole(index);
-                                  },
-                                  backgroundColor: Colors.red,
-                                  foregroundColor: Colors.white,
-                                  child: SvgPicture.asset(
-                                    'assets/icons/ic_slide_delete.svg',
-                                    width: 18,
-                                    height: 18,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            child: Container(
-                              padding: const EdgeInsets.only(left: 16, top: 8),
-                              child: Row(
+            Flexible(
+              child: Container(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.5,
+                ),
+                child: ClipRect(
+                  child: SlidableAutoCloseBehavior(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: roles.length + 1, // 新しいロール追加用に +1
+                      itemBuilder: (context, index) {
+                        // 最後のアイテムは新しいロール追加用
+                        if (index == roles.length) {
+                          return _buildNewRoleListTile();
+                        }
+                        
+                        final role = roles[index];
+                        return Column(
+                          children: [
+                            Slidable(
+                              key: ValueKey(role['role']),
+                              endActionPane: ActionPane(
+                                motion: const ScrollMotion(),
+                                extentRatio: 0.25,
                                 children: [
-                                  Expanded(
-                                    flex: 2,
-                                    child: Text(
-                                      role['role'],
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium,
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 68,
-                                    height: 36,
-                                    padding: const EdgeInsets.only(
-                                        top: 4, bottom: 4, left: 12, right: 6),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: const Color(0xFFC6C6C8)),
-                                      borderRadius: BorderRadius.circular(6),
-                                    ),
-                                    child: Text(_numFmt.format(role['amount']),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge,
-                                        textAlign: TextAlign.right),
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    '円',
-                                    style: GoogleFonts.notoSansJp(
-                                      fontSize: 14,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  IconButton(
-                                    onPressed: () =>
-                                        _showRoleAssignmentDialog(index),
-                                    icon: SvgPicture.asset(
-                                      'assets/icons/ic_next.svg',
-                                      width: 14,
-                                      height: 14,
-                                      colorFilter: const ColorFilter.mode(
-                                        Color(0xFF75DCC6),
-                                        BlendMode.srcIn,
-                                      ),
+                                  CustomSlidableAction(
+                                    onPressed: (context) {
+                                      _deleteRole(index);
+                                    },
+                                    backgroundColor: Colors.red,
+                                    foregroundColor: Colors.white,
+                                    child: SvgPicture.asset(
+                                      'assets/icons/ic_slide_delete.svg',
+                                      width: 18,
+                                      height: 18,
                                     ),
                                   ),
                                 ],
                               ),
+                              child: Container(
+                                padding: const EdgeInsets.only(left: 16, top: 8),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 2,
+                                      child: Text(
+                                        role['role'],
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium,
+                                      ),
+                                    ),
+                                    Container(
+                                      width: 68,
+                                      height: 36,
+                                      padding: const EdgeInsets.only(
+                                          top: 4, bottom: 4, left: 12, right: 6),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: const Color(0xFFC6C6C8)),
+                                        borderRadius: BorderRadius.circular(6),
+                                      ),
+                                      child: Text(_numFmt.format(role['amount']),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge,
+                                          textAlign: TextAlign.right),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      '円',
+                                      style: GoogleFonts.notoSansJp(
+                                        fontSize: 14,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    IconButton(
+                                      onPressed: () =>
+                                          _showRoleAssignmentDialog(index),
+                                      icon: SvgPicture.asset(
+                                        'assets/icons/ic_next.svg',
+                                        width: 14,
+                                        height: 14,
+                                        colorFilter: const ColorFilter.mode(
+                                          Color(0xFF75DCC6),
+                                          BlendMode.srcIn,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
-                          const Divider(
-                            thickness: 1,
-                            height: 1,
-                            color: Color(0xFFE8E8E8),
-                          ),
-                        ],
-                      );
-                    },
+                            const Divider(
+                              thickness: 1,
+                              height: 1,
+                              color: Color(0xFFE8E8E8),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
             ),
             const SizedBox(height: 16),
-            const SizedBox(height: 24),
             SizedBox(
               width: 108,
               height: 40,
