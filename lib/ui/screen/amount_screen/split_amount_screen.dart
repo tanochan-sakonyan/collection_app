@@ -502,11 +502,8 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 20),
-                  Text(
-                    S.of(context)!.roleSetupDescription,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.black54,
-                        ),
+                  Text.rich(
+                    _buildRoleDescriptionTextSpan(context),
                     textAlign: TextAlign.center,
                   ),
                 ],
@@ -652,6 +649,39 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
         ],
       ),
     );
+  }
+
+  TextSpan _buildRoleDescriptionTextSpan(BuildContext context) {
+    final description = S.of(context)!.roleSetupDescription;
+    const boldPhrase = "役割別で割り勘"; // 太字にしたい部分
+
+    if (description.contains(boldPhrase)) {
+      final parts = description.split(boldPhrase);
+      return TextSpan(
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Colors.black54,
+            ),
+        children: [
+          TextSpan(text: parts[0]),
+          TextSpan(
+            text: boldPhrase,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: const Color(0xFF383838),
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          if (parts.length > 1) TextSpan(text: parts[1]),
+        ],
+      );
+    } else {
+      // フォールバック：boldPhraseが見つからない場合は通常のテキスト
+      return TextSpan(
+        text: description,
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Colors.black54,
+            ),
+      );
+    }
   }
 
   int _getRoleAmount(String? roleKey) {
