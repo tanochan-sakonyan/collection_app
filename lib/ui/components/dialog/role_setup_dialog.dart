@@ -45,7 +45,9 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
 
   void _initializeDefaultRoles() {
     // 既存ロールがなく、デフォルトロール復元フラグがtrueで、現在ロールが空の場合のみデフォルトロールを追加
-    if (widget.existingRoles == null && roles.isEmpty && widget.shouldRestoreDefaultRoles) {
+    if (widget.existingRoles == null &&
+        roles.isEmpty &&
+        widget.shouldRestoreDefaultRoles) {
       roles = [
         {'role': S.of(context)!.seniorStudent, 'amount': 3000, 'members': []},
         {'role': S.of(context)!.freshmanStudent, 'amount': 1000, 'members': []},
@@ -186,6 +188,7 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
     _initializeDefaultRoles();
 
     return Dialog(
+      backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
       ),
