@@ -33,6 +33,11 @@ class RoleSetupDialog extends StatefulWidget {
 class _RoleSetupDialogState extends State<RoleSetupDialog> {
   List<Map<String, dynamic>> roles = [];
   final _numFmt = NumberFormat.decimalPattern();
+  bool _isAddingNewRole = false;
+  final TextEditingController _newRoleNameController = TextEditingController();
+  final TextEditingController _newRoleAmountController = TextEditingController();
+  final FocusNode _newRoleNameFocusNode = FocusNode();
+  final FocusNode _newRoleAmountFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -41,6 +46,28 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
     if (widget.existingRoles != null) {
       roles = List<Map<String, dynamic>>.from(widget.existingRoles!);
     }
+    
+    // フォーカスノードのリスナーを設定
+    _newRoleNameFocusNode.addListener(() {
+      if (!_newRoleNameFocusNode.hasFocus && _isAddingNewRole) {
+        _cancelNewRoleIfEmpty();
+      }
+    });
+    
+    _newRoleAmountFocusNode.addListener(() {
+      if (!_newRoleAmountFocusNode.hasFocus && _isAddingNewRole) {
+        _cancelNewRoleIfEmpty();
+      }
+    });
+  }
+  
+  @override
+  void dispose() {
+    _newRoleNameController.dispose();
+    _newRoleAmountController.dispose();
+    _newRoleNameFocusNode.dispose();
+    _newRoleAmountFocusNode.dispose();
+    super.dispose();
   }
 
   void _initializeDefaultRoles() {
@@ -59,6 +86,40 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
     setState(() {
       roles.add({'role': roleName, 'amount': amount, 'members': []});
     });
+  }
+  
+  void _startAddingNewRole() {
+    setState(() {
+      _isAddingNewRole = true;
+      _newRoleNameController.text = '';
+      _newRoleAmountController.text = '0';
+    });
+    // 次のフレームでフォーカスを設定
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _newRoleNameFocusNode.requestFocus();
+    });
+  }
+  
+  void _cancelNewRoleIfEmpty() {
+    if (_newRoleNameController.text.isEmpty || _newRoleAmountController.text.isEmpty) {
+      setState(() {
+        _isAddingNewRole = false;
+        _newRoleNameController.clear();
+        _newRoleAmountController.clear();
+      });
+    }
+  }
+  
+  void _confirmNewRole() {
+    if (_newRoleNameController.text.isNotEmpty && _newRoleAmountController.text.isNotEmpty) {
+      final amount = int.tryParse(_newRoleAmountController.text.replaceAll(',', '')) ?? 0;
+      _addRole(_newRoleNameController.text, amount);
+      setState(() {
+        _isAddingNewRole = false;
+        _newRoleNameController.clear();
+        _newRoleAmountController.clear();
+      });
+    }
   }
 
   void _showRoleInputDialog() {
@@ -142,6 +203,106 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
     });
   }
 
+  Widget _buildNewRoleListTile() {
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.only(left: 16, top: 8),
+          child: _isAddingNewRole
+              ? Row(
+                  children: [
+                    // 役割名入力フィールド
+                    Expanded(
+                      flex: 2,
+                      child: TextField(
+                        controller: _newRoleNameController,
+                        focusNode: _newRoleNameFocusNode,
+                        decoration: const InputDecoration(
+                          hintText: '役割名',
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        ),
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        onSubmitted: (_) {
+                          _newRoleAmountFocusNode.requestFocus();
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    // 金額入力フィールド
+                    Container(
+                      width: 68,
+                      height: 36,
+                      child: TextField(
+                        controller: _newRoleAmountController,
+                        focusNode: _newRoleAmountFocusNode,
+                        keyboardType: TextInputType.number,
+                        textAlign: TextAlign.right,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: const BorderSide(color: Color(0xFFC6C6C8)),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                        ),
+                        style: Theme.of(context).textTheme.bodyLarge,
+                        onSubmitted: (_) {
+                          _confirmNewRole();
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      '円',
+                      style: GoogleFonts.notoSansJp(
+                        fontSize: 14,
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    IconButton(
+                      onPressed: _confirmNewRole,
+                      icon: SvgPicture.asset(
+                        'assets/icons/ic_next.svg',
+                        width: 14,
+                        height: 14,
+                        colorFilter: const ColorFilter.mode(
+                          Color(0xFF75DCC6),
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              : GestureDetector(
+                  onTap: _startAddingNewRole,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            S.of(context)!.roleNameInput,
+                            style: GoogleFonts.notoSansJp(
+                              fontSize: 14,
+                              color: const Color(0xFF999999),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+        ),
+        const Divider(
+          thickness: 1,
+          height: 1,
+          color: Color(0xFFE8E8E8),
+        ),
+      ],
+    );
+  }
+
   Map<String, String> _getCurrentMemberRoles() {
     final Map<String, String> currentMemberRoles = {};
     for (final role in roles) {
@@ -216,8 +377,13 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
                 child: SlidableAutoCloseBehavior(
                   child: ListView.builder(
                     shrinkWrap: true,
-                    itemCount: roles.length,
+                    itemCount: roles.length + 1, // 新しいロール追加用に +1
                     itemBuilder: (context, index) {
+                      // 最後のアイテムは新しいロール追加用
+                      if (index == roles.length) {
+                        return _buildNewRoleListTile();
+                      }
+                      
                       final role = roles[index];
                       return Column(
                         children: [
@@ -309,27 +475,6 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
               ),
             ),
             const SizedBox(height: 16),
-            // 役割を入力するボタン
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton(
-                onPressed: _showRoleInputDialog,
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  side: const BorderSide(color: Color(0xFF75DCC6)),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: Text(
-                  S.of(context)!.roleNameInput,
-                  style: GoogleFonts.notoSansJp(
-                    color: const Color(0xFF75DCC6),
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-            ),
             const SizedBox(height: 24),
             SizedBox(
               width: 108,
