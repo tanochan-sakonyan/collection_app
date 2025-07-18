@@ -50,13 +50,13 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
     // フォーカスノードのリスナーを設定
     _newRoleNameFocusNode.addListener(() {
       if (!_newRoleNameFocusNode.hasFocus && _isAddingNewRole) {
-        _cancelNewRoleIfEmpty();
+        _handleRoleNameFocusLoss();
       }
     });
     
     _newRoleAmountFocusNode.addListener(() {
       if (!_newRoleAmountFocusNode.hasFocus && _isAddingNewRole) {
-        _cancelNewRoleIfEmpty();
+        _handleAmountFocusLoss();
       }
     });
   }
@@ -100,8 +100,28 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
     });
   }
   
+  void _handleRoleNameFocusLoss() {
+    // 役割名が入力されていて、金額フィールドにフォーカスが移動していない場合
+    if (_newRoleNameController.text.isNotEmpty && !_newRoleAmountFocusNode.hasFocus) {
+      // 金額が空の場合はデフォルト値を設定
+      if (_newRoleAmountController.text.isEmpty) {
+        _newRoleAmountController.text = '0';
+      }
+      // 新しいロールを追加
+      _confirmNewRole();
+    } else if (_newRoleNameController.text.isEmpty) {
+      // 役割名が空の場合はキャンセル
+      _cancelNewRoleIfEmpty();
+    }
+  }
+  
+  void _handleAmountFocusLoss() {
+    // 金額入力完了時の処理（特に何もしない）
+    // 役割名が入力されていれば、既に _handleRoleNameFocusLoss で処理済み
+  }
+  
   void _cancelNewRoleIfEmpty() {
-    if (_newRoleNameController.text.isEmpty || _newRoleAmountController.text.isEmpty) {
+    if (_newRoleNameController.text.isEmpty) {
       setState(() {
         _isAddingNewRole = false;
         _newRoleNameController.clear();
@@ -111,7 +131,7 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
   }
   
   void _confirmNewRole() {
-    if (_newRoleNameController.text.isNotEmpty && _newRoleAmountController.text.isNotEmpty) {
+    if (_newRoleNameController.text.isNotEmpty) {
       final amount = int.tryParse(_newRoleAmountController.text.replaceAll(',', '')) ?? 0;
       _addRole(_newRoleNameController.text, amount);
       setState(() {
@@ -224,7 +244,10 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
                         ),
                         style: Theme.of(context).textTheme.bodyMedium,
                         onSubmitted: (_) {
-                          _newRoleAmountFocusNode.requestFocus();
+                          // 役割名が入力されている場合は金額フィールドにフォーカス
+                          if (_newRoleNameController.text.isNotEmpty) {
+                            _newRoleAmountFocusNode.requestFocus();
+                          }
                         },
                       ),
                     ),
@@ -247,7 +270,10 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
                         ),
                         style: Theme.of(context).textTheme.bodyLarge,
                         onSubmitted: (_) {
-                          _confirmNewRole();
+                          // Enterキーで明示的に確定する場合
+                          if (_newRoleNameController.text.isNotEmpty) {
+                            _confirmNewRole();
+                          }
                         },
                       ),
                     ),
