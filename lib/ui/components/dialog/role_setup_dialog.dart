@@ -225,7 +225,7 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
                             key: ValueKey(role['role']),
                             endActionPane: ActionPane(
                               motion: const ScrollMotion(),
-                              extentRatio: 0.30,
+                              extentRatio: 0.25,
                               children: [
                                 CustomSlidableAction(
                                   onPressed: (context) {
@@ -233,7 +233,11 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
                                   },
                                   backgroundColor: Colors.red,
                                   foregroundColor: Colors.white,
-                                  child: const Icon(Icons.delete),
+                                  child: SvgPicture.asset(
+                                    'assets/icons/ic_slide_delete.svg',
+                                    width: 18,
+                                    height: 18,
+                                  ),
                                 ),
                               ],
                             ),
