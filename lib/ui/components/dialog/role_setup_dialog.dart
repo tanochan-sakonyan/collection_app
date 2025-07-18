@@ -38,6 +38,11 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
   final TextEditingController _newRoleAmountController = TextEditingController();
   final FocusNode _newRoleNameFocusNode = FocusNode();
   final FocusNode _newRoleAmountFocusNode = FocusNode();
+  
+  // 既存ロールの金額編集用
+  int? _editingRoleIndex;
+  final TextEditingController _editRoleAmountController = TextEditingController();
+  final FocusNode _editRoleAmountFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -59,6 +64,13 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
         _handleAmountFocusLoss();
       }
     });
+    
+    // 既存ロール金額編集用のフォーカスリスナー
+    _editRoleAmountFocusNode.addListener(() {
+      if (!_editRoleAmountFocusNode.hasFocus && _editingRoleIndex != null) {
+        _confirmEditRoleAmount();
+      }
+    });
   }
   
   @override
@@ -67,6 +79,8 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
     _newRoleAmountController.dispose();
     _newRoleNameFocusNode.dispose();
     _newRoleAmountFocusNode.dispose();
+    _editRoleAmountController.dispose();
+    _editRoleAmountFocusNode.dispose();
     super.dispose();
   }
 
@@ -140,6 +154,35 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
         _newRoleAmountController.clear();
       });
     }
+  }
+  
+  void _startEditingRoleAmount(int index) {
+    setState(() {
+      _editingRoleIndex = index;
+      _editRoleAmountController.text = roles[index]['amount'].toString();
+    });
+    // 次のフレームでフォーカスを設定
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _editRoleAmountFocusNode.requestFocus();
+    });
+  }
+  
+  void _confirmEditRoleAmount() {
+    if (_editingRoleIndex != null) {
+      final amount = int.tryParse(_editRoleAmountController.text.replaceAll(',', '')) ?? 0;
+      setState(() {
+        roles[_editingRoleIndex!]['amount'] = amount;
+        _editingRoleIndex = null;
+        _editRoleAmountController.clear();
+      });
+    }
+  }
+  
+  void _cancelEditRoleAmount() {
+    setState(() {
+      _editingRoleIndex = null;
+      _editRoleAmountController.clear();
+    });
   }
 
   void _showRoleInputDialog() {
@@ -234,47 +277,57 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
                     // 役割名入力フィールド
                     Expanded(
                       flex: 2,
-                      child: TextField(
-                        controller: _newRoleNameController,
-                        focusNode: _newRoleNameFocusNode,
-                        decoration: const InputDecoration(
-                          hintText: '役割名',
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        ),
-                        style: Theme.of(context).textTheme.bodyMedium,
-                        onSubmitted: (_) {
-                          // 役割名が入力されている場合は金額フィールドにフォーカス
-                          if (_newRoleNameController.text.isNotEmpty) {
-                            _newRoleAmountFocusNode.requestFocus();
-                          }
+                      child: GestureDetector(
+                        onTap: () {
+                          // TextFieldのタップイベントを止める
                         },
+                        child: TextField(
+                          controller: _newRoleNameController,
+                          focusNode: _newRoleNameFocusNode,
+                          decoration: const InputDecoration(
+                            hintText: '役割名',
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          ),
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          onSubmitted: (_) {
+                            // 役割名が入力されている場合は金額フィールドにフォーカス
+                            if (_newRoleNameController.text.isNotEmpty) {
+                              _newRoleAmountFocusNode.requestFocus();
+                            }
+                          },
+                        ),
                       ),
                     ),
                     const SizedBox(width: 8),
                     // 金額入力フィールド
-                    Container(
-                      width: 68,
-                      height: 36,
-                      child: TextField(
-                        controller: _newRoleAmountController,
-                        focusNode: _newRoleAmountFocusNode,
-                        keyboardType: TextInputType.number,
-                        textAlign: TextAlign.right,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(6),
-                            borderSide: const BorderSide(color: Color(0xFFC6C6C8)),
+                    GestureDetector(
+                      onTap: () {
+                        // TextFieldのタップイベントを止める
+                      },
+                      child: Container(
+                        width: 68,
+                        height: 36,
+                        child: TextField(
+                          controller: _newRoleAmountController,
+                          focusNode: _newRoleAmountFocusNode,
+                          keyboardType: TextInputType.number,
+                          textAlign: TextAlign.right,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(6),
+                              borderSide: const BorderSide(color: Color(0xFFC6C6C8)),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
                           ),
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                          style: Theme.of(context).textTheme.bodyLarge,
+                          onSubmitted: (_) {
+                            // Enterキーで明示的に確定する場合
+                            if (_newRoleNameController.text.isNotEmpty) {
+                              _confirmNewRole();
+                            }
+                          },
                         ),
-                        style: Theme.of(context).textTheme.bodyLarge,
-                        onSubmitted: (_) {
-                          // Enterキーで明示的に確定する場合
-                          if (_newRoleNameController.text.isNotEmpty) {
-                            _confirmNewRole();
-                          }
-                        },
                       ),
                     ),
                     const SizedBox(width: 4),
@@ -379,14 +432,33 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.9,
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
+      child: GestureDetector(
+        onTap: () {
+          // 編集モードの場合は現在の入力値で確定
+          if (_editingRoleIndex != null) {
+            _confirmEditRoleAmount();
+          }
+          if (_isAddingNewRole) {
+            // 役割名が入力されている場合は確定、空の場合はキャンセル
+            if (_newRoleNameController.text.isNotEmpty) {
+              // 金額が空の場合はデフォルト値を設定
+              if (_newRoleAmountController.text.isEmpty) {
+                _newRoleAmountController.text = '0';
+              }
+              _confirmNewRole();
+            } else {
+              _cancelNewRoleIfEmpty();
+            }
+          }
+        },
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.9,
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(S.of(context)!.roleSetup,
@@ -447,22 +519,55 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
                                             .bodyMedium,
                                       ),
                                     ),
-                                    Container(
-                                      width: 68,
-                                      height: 36,
-                                      padding: const EdgeInsets.only(
-                                          top: 4, bottom: 4, left: 12, right: 6),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: const Color(0xFFC6C6C8)),
-                                        borderRadius: BorderRadius.circular(6),
-                                      ),
-                                      child: Text(_numFmt.format(role['amount']),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge,
-                                          textAlign: TextAlign.right),
-                                    ),
+                                    _editingRoleIndex == index
+                                        ? GestureDetector(
+                                            onTap: () {
+                                              // TextFieldのタップイベントを止める
+                                            },
+                                            child: Container(
+                                              width: 68,
+                                              height: 36,
+                                              child: TextField(
+                                                controller: _editRoleAmountController,
+                                                focusNode: _editRoleAmountFocusNode,
+                                                keyboardType: TextInputType.number,
+                                                textAlign: TextAlign.right,
+                                                decoration: InputDecoration(
+                                                  border: OutlineInputBorder(
+                                                    borderRadius: BorderRadius.circular(6),
+                                                    borderSide: const BorderSide(color: Color(0xFFC6C6C8)),
+                                                  ),
+                                                  contentPadding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                                                ),
+                                                style: Theme.of(context).textTheme.bodyLarge,
+                                                onSubmitted: (_) {
+                                                  _confirmEditRoleAmount();
+                                                },
+                                                onEditingComplete: () {
+                                                  _confirmEditRoleAmount();
+                                                },
+                                              ),
+                                            ),
+                                          )
+                                        : GestureDetector(
+                                            onTap: () => _startEditingRoleAmount(index),
+                                            child: Container(
+                                              width: 68,
+                                              height: 36,
+                                              padding: const EdgeInsets.only(
+                                                  top: 4, bottom: 4, left: 12, right: 6),
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    color: const Color(0xFFC6C6C8)),
+                                                borderRadius: BorderRadius.circular(6),
+                                              ),
+                                              child: Text(_numFmt.format(role['amount']),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyLarge,
+                                                  textAlign: TextAlign.right),
+                                            ),
+                                          ),
                                     const SizedBox(width: 4),
                                     Text(
                                       '円',
@@ -529,6 +634,7 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
             ),
           ],
         ),
+      ),
       ),
     );
   }

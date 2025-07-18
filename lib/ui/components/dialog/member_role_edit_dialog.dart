@@ -56,15 +56,55 @@ class _MemberRoleEditDialogState extends State<MemberRoleEditDialog> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
-            // 役割リスト
+            // 役割リスト（役割なしを含む）
             Container(
               constraints: BoxConstraints(
                 maxHeight: MediaQuery.of(context).size.height * 0.4,
               ),
               child: ListView.builder(
                 shrinkWrap: true,
-                itemCount: widget.roles.length,
+                itemCount: widget.roles.length + 1, // 役割なしを含むため+1
                 itemBuilder: (context, index) {
+                  // 最後のアイテムは「役割なし」
+                  if (index == widget.roles.length) {
+                    return Column(
+                      children: [
+                        ListTile(
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                          title: Text(
+                            '役割なし',
+                            style: GoogleFonts.notoSansJp(
+                              fontSize: 16,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                          trailing: SvgPicture.asset(
+                            'assets/icons/ic_next.svg',
+                            width: 16,
+                            height: 16,
+                            colorFilter: const ColorFilter.mode(
+                              Color(0xFF75DCC6),
+                              BlendMode.srcIn,
+                            ),
+                          ),
+                          onTap: () {
+                            setState(() {
+                              selectedRole = null;
+                            });
+                            widget.onRoleChange(null);
+                            Navigator.pop(context);
+                          },
+                        ),
+                        const Divider(
+                          thickness: 1,
+                          height: 1,
+                          color: Color(0xFFE8E8E8),
+                        ),
+                      ],
+                    );
+                  }
+
                   final role = widget.roles[index];
                   final roleName = role['role'] as String;
                   final isSelected = selectedRole == roleName;
@@ -107,44 +147,6 @@ class _MemberRoleEditDialogState extends State<MemberRoleEditDialog> {
                   );
                 },
               ),
-            ),
-            const SizedBox(height: 24),
-            // 役割なしオプション
-            Column(
-              children: [
-                ListTile(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-                  title: Text(
-                    '役割なし',
-                    style: GoogleFonts.notoSansJp(
-                      fontSize: 16,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                  trailing: SvgPicture.asset(
-                    'assets/icons/ic_next.svg',
-                    width: 16,
-                    height: 16,
-                    colorFilter: const ColorFilter.mode(
-                      Colors.grey,
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                  onTap: () {
-                    setState(() {
-                      selectedRole = null;
-                    });
-                    widget.onRoleChange(null);
-                    Navigator.pop(context);
-                  },
-                ),
-                const Divider(
-                  thickness: 1,
-                  height: 1,
-                  color: Color(0xFFE8E8E8),
-                ),
-              ],
             ),
           ],
         ),
