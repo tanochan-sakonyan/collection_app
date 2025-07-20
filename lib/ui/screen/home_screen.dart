@@ -475,8 +475,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                     ),
                     const SizedBox(width: 2),
                     Expanded(
-                      // child: Align(
-                      //   alignment: Alignment.centerLeft,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
                         child: TabBar(
                           isScrollable: true,
                           controller: _tabController,
@@ -570,7 +570,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                             );
                           }).toList(),
                         ),
-                      //),
+                      ),
                     ),
                   ],
                 ),
