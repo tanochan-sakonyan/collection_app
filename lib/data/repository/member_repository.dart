@@ -66,8 +66,8 @@ class MemberRepository {
   Future<List<Member>> inputMembersMoney(String userId, String eventId,
       List<Map<String, dynamic>> membersMoneyList) async {
     debugPrint("Repository内でinputMembersMoney関数が呼ばれました");
-    final url =
-        Uri.parse('$baseUrl/users/$userId/events/$eventId/members/money-bulk');
+    final url = Uri.parse(
+        'http://127.0.0.1:5000/users/$userId/events/$eventId/members/money-bulk');
     final response = await http.put(url,
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'members': membersMoneyList}));
