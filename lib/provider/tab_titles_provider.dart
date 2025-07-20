@@ -16,7 +16,16 @@ final tabTitlesProvider = Provider<List<String>>((ref) {
 
   final fullyPaidEvents = user.events.where((event) => isAllMembersPaid(event)).toList();
 
-  final sortedEvents = [...unpaidEvents, ...fullyPaidEvents];
+  if (unpaidEvents.isEmpty) {
+    return fullyPaidEvents.map((event) => event.eventId).toList();
+  }
 
-  return sortedEvents.map((event) => event.eventId).toList();
+  final newCreatedEvent = unpaidEvents.last;
+  final otherUnpaidEvents = unpaidEvents.sublist(0, unpaidEvents.length - 1);
+
+  return [
+    newCreatedEvent.eventId,
+    ...otherUnpaidEvents.map((event) => event.eventId),
+    ...fullyPaidEvents.map((event) => event.eventId),
+  ];
 });
