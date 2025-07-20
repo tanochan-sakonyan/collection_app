@@ -25,6 +25,7 @@ mixin _$Member {
   String? get lineUserId => throw _privateConstructorUsedError;
   PaymentStatus get status => throw _privateConstructorUsedError;
   int? get memberMoney => throw _privateConstructorUsedError;
+  String? get role => throw _privateConstructorUsedError;
 
   /// Serializes this Member to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -45,7 +46,8 @@ abstract class $MemberCopyWith<$Res> {
       String memberName,
       String? lineUserId,
       PaymentStatus status,
-      int? memberMoney});
+      int? memberMoney,
+      String? role});
 }
 
 /// @nodoc
@@ -68,6 +70,7 @@ class _$MemberCopyWithImpl<$Res, $Val extends Member>
     Object? lineUserId = freezed,
     Object? status = null,
     Object? memberMoney = freezed,
+    Object? role = freezed,
   }) {
     return _then(_value.copyWith(
       memberId: null == memberId
@@ -90,6 +93,10 @@ class _$MemberCopyWithImpl<$Res, $Val extends Member>
           ? _value.memberMoney
           : memberMoney // ignore: cast_nullable_to_non_nullable
               as int?,
+      role: freezed == role
+          ? _value.role
+          : role // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -106,7 +113,8 @@ abstract class _$$MemberImplCopyWith<$Res> implements $MemberCopyWith<$Res> {
       String memberName,
       String? lineUserId,
       PaymentStatus status,
-      int? memberMoney});
+      int? memberMoney,
+      String? role});
 }
 
 /// @nodoc
@@ -127,6 +135,7 @@ class __$$MemberImplCopyWithImpl<$Res>
     Object? lineUserId = freezed,
     Object? status = null,
     Object? memberMoney = freezed,
+    Object? role = freezed,
   }) {
     return _then(_$MemberImpl(
       memberId: null == memberId
@@ -149,6 +158,10 @@ class __$$MemberImplCopyWithImpl<$Res>
           ? _value.memberMoney
           : memberMoney // ignore: cast_nullable_to_non_nullable
               as int?,
+      role: freezed == role
+          ? _value.role
+          : role // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -162,7 +175,8 @@ class _$MemberImpl implements _Member {
       required this.memberName,
       this.lineUserId,
       required this.status,
-      this.memberMoney});
+      this.memberMoney,
+      this.role});
 
   factory _$MemberImpl.fromJson(Map<String, dynamic> json) =>
       _$$MemberImplFromJson(json);
@@ -177,10 +191,12 @@ class _$MemberImpl implements _Member {
   final PaymentStatus status;
   @override
   final int? memberMoney;
+  @override
+  final String? role;
 
   @override
   String toString() {
-    return 'Member(memberId: $memberId, memberName: $memberName, lineUserId: $lineUserId, status: $status, memberMoney: $memberMoney)';
+    return 'Member(memberId: $memberId, memberName: $memberName, lineUserId: $lineUserId, status: $status, memberMoney: $memberMoney, role: $role)';
   }
 
   @override
@@ -196,13 +212,14 @@ class _$MemberImpl implements _Member {
                 other.lineUserId == lineUserId) &&
             (identical(other.status, status) || other.status == status) &&
             (identical(other.memberMoney, memberMoney) ||
-                other.memberMoney == memberMoney));
+                other.memberMoney == memberMoney) &&
+            (identical(other.role, role) || other.role == role));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType, memberId, memberName, lineUserId, status, memberMoney);
+      runtimeType, memberId, memberName, lineUserId, status, memberMoney, role);
 
   /// Create a copy of Member
   /// with the given fields replaced by the non-null parameter values.
@@ -226,7 +243,8 @@ abstract class _Member implements Member {
       required final String memberName,
       final String? lineUserId,
       required final PaymentStatus status,
-      final int? memberMoney}) = _$MemberImpl;
+      final int? memberMoney,
+      final String? role}) = _$MemberImpl;
 
   factory _Member.fromJson(Map<String, dynamic> json) = _$MemberImpl.fromJson;
 
@@ -240,6 +258,8 @@ abstract class _Member implements Member {
   PaymentStatus get status;
   @override
   int? get memberMoney;
+  @override
+  String? get role;
 
   /// Create a copy of Member
   /// with the given fields replaced by the non-null parameter values.

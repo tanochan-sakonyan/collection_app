@@ -13,6 +13,7 @@ class Member with _$Member {
     String? lineUserId,
     required PaymentStatus status,
     int? memberMoney,
+    String? role,
   }) = _Member;
 
   factory Member.fromJson(Map<String, dynamic> json) => _$MemberFromJson(json);

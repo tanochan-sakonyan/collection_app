@@ -250,6 +250,7 @@ class MemberList extends ConsumerWidget {
                                         key: (index == 0) ? slidableKey : null,
                                         child: ListTile(
                                           minTileHeight: 44,
+                                          leading: _buildRoleBadge(context, member, members),
                                           title: (member.memberName != null)
                                               ? Text(
                                                   member.memberName,
@@ -594,6 +595,57 @@ class MemberList extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  Widget? _buildRoleBadge(BuildContext context, Member member, List<Member>? members) {
+    // 一人でもroleがあるメンバーがいるかチェック
+    final hasAnyRole = members?.any((m) => m.role != null && m.role!.isNotEmpty) ?? false;
+    
+    if (!hasAnyRole) {
+      // 誰も役割がない場合は何も表示しない
+      return null;
+    }
+    
+    // 現在のメンバーの役割をチェック
+    if (member.role != null && member.role!.isNotEmpty) {
+      // 役割がある場合は役割名を表示
+      return Container(
+        width: MediaQuery.of(context).size.width * 0.17,
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+        decoration: BoxDecoration(
+          color: const Color(0xFF75DCC6),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Text(
+          member.role!,
+          style: GoogleFonts.notoSansJp(
+            fontSize: 12,
+            color: Colors.white,
+            fontWeight: FontWeight.w500,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      );
+    } else {
+      // 役割がない場合は「役割なし」を表示
+      return Container(
+        width: MediaQuery.of(context).size.width * 0.17,
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: Colors.grey.shade400,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Text(
+          S.of(context)!.noRole,
+          style: GoogleFonts.notoSansJp(
+            fontSize: 12,
+            color: Colors.white,
+            fontWeight: FontWeight.w500,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      );
+    }
   }
 
   Widget _buildStatusIcon(PaymentStatus? status) {
