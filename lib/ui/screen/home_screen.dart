@@ -388,6 +388,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       key: _scaffoldKey,
       backgroundColor: Colors.white,
       appBar: AppBar(
+        elevation: 0,
         backgroundColor: Colors.white,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -474,13 +475,16 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                     ),
                     const SizedBox(width: 2),
                     Expanded(
-                      child: Align(
-                        alignment: Alignment.centerLeft,
+                      // child: Align(
+                      //   alignment: Alignment.centerLeft,
                         child: TabBar(
                           isScrollable: true,
                           controller: _tabController,
-                          labelPadding: const EdgeInsets.symmetric(horizontal: 1),
+                          labelPadding: EdgeInsets.zero,
+                          indicatorPadding: EdgeInsets.zero,
                           indicator: const BoxDecoration(),
+                          indicatorColor: Colors.transparent,
+                          dividerColor: Colors.transparent,
                           tabs: _tabTitles.asMap().entries.map((entry) {
                             final index = entry.key;
                             final eventId = entry.value;
@@ -566,7 +570,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                             );
                           }).toList(),
                         ),
-                      ),
+                      //),
                     ),
                   ],
                 ),

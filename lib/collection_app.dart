@@ -83,6 +83,11 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(textStyle: textTheme.labelLarge),
         ),
+        tabBarTheme: const TabBarThemeData(
+          indicator: BoxDecoration(),
+          indicatorColor: Colors.transparent,
+          dividerColor: Colors.transparent,
+        ),
       ),
       debugShowCheckedModeBanner: false,
       localizationsDelegates: const [
