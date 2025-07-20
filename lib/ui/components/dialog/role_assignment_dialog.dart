@@ -78,16 +78,24 @@ class _RoleAssignmentDialogState extends State<RoleAssignmentDialog> {
                   final isAbsent = member.status == PaymentStatus.absence;
 
                   final existingRole = widget.memberRoles[member.memberId];
-                  final hasExistingRole = existingRole != null && existingRole.isNotEmpty && existingRole != widget.roleName;
-                  
+                  final hasExistingRole = existingRole != null &&
+                      existingRole.isNotEmpty &&
+                      existingRole != widget.roleName;
+
                   return Column(
                     children: [
                       ListTile(
+                        visualDensity: const VisualDensity(
+                          horizontal: 0,
+                          vertical: -2,
+                        ),
+                        dense: true,
                         contentPadding:
-                            const EdgeInsets.symmetric(horizontal: 16),
+                            const EdgeInsets.only(left: 16, right: 16, top: 8),
                         leading: hasExistingRole
                             ? Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
                                   color: const Color(0xFF75DCC6),
                                   borderRadius: BorderRadius.circular(12),
@@ -102,7 +110,9 @@ class _RoleAssignmentDialogState extends State<RoleAssignmentDialog> {
                                 ),
                               )
                             : GestureDetector(
-                                onTap: isAbsent ? null : () => _toggleMember(member),
+                                onTap: isAbsent
+                                    ? null
+                                    : () => _toggleMember(member),
                                 child: SvgPicture.asset(
                                   isSelected && !isAbsent
                                       ? 'assets/icons/ic_check_circle_teal.svg'
@@ -116,10 +126,14 @@ class _RoleAssignmentDialogState extends State<RoleAssignmentDialog> {
                           member.memberName,
                           style: GoogleFonts.notoSansJp(
                             fontSize: 16,
-                            color: isAbsent || hasExistingRole ? Colors.grey : Colors.black,
+                            color: isAbsent || hasExistingRole
+                                ? Colors.grey
+                                : Colors.black,
                           ),
                         ),
-                        onTap: isAbsent || hasExistingRole ? null : () => _toggleMember(member),
+                        onTap: isAbsent || hasExistingRole
+                            ? null
+                            : () => _toggleMember(member),
                       ),
                       const Divider(
                         thickness: 1,

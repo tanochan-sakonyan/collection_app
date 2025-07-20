@@ -70,7 +70,12 @@ class _MemberRoleEditDialogState extends State<MemberRoleEditDialog> {
                     return Column(
                       children: [
                         ListTile(
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                          visualDensity: const VisualDensity(
+                            horizontal: 0,
+                            vertical: -2,
+                          ),
+                          dense: true,
+                          contentPadding: const EdgeInsets.only(left: 16, right: 16, top: 8),
                           title: Text(
                             '役割なし',
                             style: GoogleFonts.notoSansJp(
@@ -112,8 +117,13 @@ class _MemberRoleEditDialogState extends State<MemberRoleEditDialog> {
                   return Column(
                     children: [
                       ListTile(
+                        visualDensity: const VisualDensity(
+                          horizontal: 0,
+                          vertical: -2,
+                        ),
+                        dense: true,
                         contentPadding:
-                            const EdgeInsets.symmetric(horizontal: 16),
+                            const EdgeInsets.only(left: 16, right: 16, top: 8),
                         title: Text(
                           roleName,
                           style: GoogleFonts.notoSansJp(
