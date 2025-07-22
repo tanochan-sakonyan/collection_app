@@ -373,13 +373,15 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
         onConfirm: () {},
         onRoleConfirm: (roles) {
           setState(() {
-            // 新しい役割リストに存在しない役割を削除
+            // ロールリストは常に保持（メンバーが割り当てられていなくても）
+            _roles = roles;
+            
+            // 新しい役割リストに存在しない役割のみメンバーロールから削除
             final newRoleNames =
                 roles.map((role) => role['role'] as String).toSet();
             _memberRoles.removeWhere(
                 (memberId, roleName) => !newRoleNames.contains(roleName));
 
-            _roles = roles;
             // 役割に基づいてメンバーの役割を設定（新しく追加された分のみ）
             for (final role in roles) {
               final roleMembers = List<Member>.from(role['members'] as List);

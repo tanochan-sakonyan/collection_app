@@ -657,6 +657,14 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
                 height: 40,
                 child: ElevatedButton(
                   onPressed: () {
+                    // 新しい役割の追加を確定
+                    if (_isAddingNewRole && _newRoleNameController.text.isNotEmpty) {
+                      // 金額が空の場合はデフォルト値を設定
+                      if (_newRoleAmountController.text.isEmpty) {
+                        _newRoleAmountController.text = '0';
+                      }
+                      _confirmNewRole();
+                    }
                     widget.onRoleConfirm(roles);
                     Navigator.pop(context);
                   },
