@@ -29,8 +29,11 @@ class _RoleAssignmentDialogState extends State<RoleAssignmentDialog> {
   @override
   void initState() {
     super.initState();
-    // デフォルトでは誰も選択されていない状態
-    selectedMembers = [];
+    // 現在の役割が割り当てられているメンバーを初期選択状態にする
+    selectedMembers = widget.members.where((member) {
+      final existingRole = widget.memberRoles[member.memberId];
+      return existingRole == widget.roleName;
+    }).toList();
   }
 
   void _toggleMember(Member member) {
@@ -79,8 +82,8 @@ class _RoleAssignmentDialogState extends State<RoleAssignmentDialog> {
 
                   final existingRole = widget.memberRoles[member.memberId];
                   final hasExistingRole = existingRole != null &&
-                      existingRole.isNotEmpty &&
-                      existingRole != widget.roleName;
+                      existingRole.isNotEmpty;
+                  final isCurrentRole = existingRole == widget.roleName;
 
                   return Column(
                     children: [
@@ -101,7 +104,7 @@ class _RoleAssignmentDialogState extends State<RoleAssignmentDialog> {
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Text(
-                                  existingRole,
+                                  existingRole!,
                                   style: GoogleFonts.notoSansJp(
                                     fontSize: 12,
                                     color: Colors.white,
@@ -126,12 +129,12 @@ class _RoleAssignmentDialogState extends State<RoleAssignmentDialog> {
                           member.memberName,
                           style: GoogleFonts.notoSansJp(
                             fontSize: 16,
-                            color: isAbsent || hasExistingRole
+                            color: isAbsent || (hasExistingRole && !isCurrentRole)
                                 ? Colors.grey
                                 : Colors.black,
                           ),
                         ),
-                        onTap: isAbsent || hasExistingRole
+                        onTap: isAbsent || (hasExistingRole && !isCurrentRole)
                             ? null
                             : () => _toggleMember(member),
                       ),
