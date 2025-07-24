@@ -609,7 +609,6 @@ class MemberList extends ConsumerWidget {
       return null;
     }
 
-    // 現在のメンバーの役割をチェック
     if (member.role != null && member.role!.isNotEmpty) {
       // 役割がある場合は役割名を表示
       return Container(
