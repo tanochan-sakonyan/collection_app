@@ -3,12 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'dart:ui' show FontFeature;
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/screen/amount_screen/split_amount_screen.dart';
-import 'package:mr_collection/generated/s.dart';
 
 class InputAmountScreen extends ConsumerStatefulWidget {
   final String eventId;
@@ -37,7 +35,6 @@ class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
     fontSize: 48,
     fontWeight: FontWeight.bold,
     color: Colors.black,
-    fontFeatures: const [FontFeature.tabularFigures()],
   );
 
   @override
@@ -45,6 +42,22 @@ class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
     super.initState();
     _controller = TextEditingController();
     _focusNode = FocusNode();
+
+    // 現在のイベントの既存金額を取得してデフォルト値として設定
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final user = ref.read(userProvider);
+      if (user != null) {
+        final event = user.events.firstWhere(
+          (e) => e.eventId == widget.eventId,
+          orElse: () => throw StateError('Event not found'),
+        );
+        if (event.totalMoney != null && event.totalMoney! > 0) {
+          setState(() {
+            _amount = event.totalMoney!;
+          });
+        }
+      }
+    });
   }
 
   @override
@@ -250,7 +263,6 @@ class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
                 if (!_isEditing) {
                   setState(() {
                     _isEditing = true;
-
                     _controller.text = _formatWithCommas(_amount);
                   });
                   Future.delayed(Duration.zero, () {
