@@ -2,9 +2,25 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 
-class TermsOfServiceScreen extends StatelessWidget {
+class TermsOfServiceScreen extends StatefulWidget {
   const TermsOfServiceScreen({super.key});
+
+  @override
+  State<TermsOfServiceScreen> createState() => _TermsOfServiceScreenState();
+}
+
+class _TermsOfServiceScreenState extends State<TermsOfServiceScreen> {
+  final AnalyticsService _analytics = AnalyticsService();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _analytics.logScreenView('terms_of_service_screen', screenClass: 'TermsOfServiceScreen');
+    });
+  }
 
   Future<void> _launchURL(String url) async {
     final uri = Uri.parse(url);

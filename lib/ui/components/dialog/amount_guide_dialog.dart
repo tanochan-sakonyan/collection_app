@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 
 class AmountGuideDialog extends StatefulWidget {
   const AmountGuideDialog({
@@ -23,6 +24,7 @@ class _AmountGuideDialogState extends State<AmountGuideDialog> {
   void initState() {
     super.initState();
     _pageController = PageController();
+    AnalyticsService().logDialogOpen('amount_guide_dialog');
   }
 
   @override
@@ -67,7 +69,14 @@ class _AmountGuideDialogState extends State<AmountGuideDialog> {
                     height: 310,
                     child: PageView(
                       controller: _pageController,
-                      onPageChanged: widget.onPageChanged,
+                      onPageChanged: (index) {
+                        widget.onPageChanged(index);
+                        AnalyticsService().logButtonTap(
+                          'page_change',
+                          screen: 'amount_guide_dialog',
+                          parameters: {'page_index': index}
+                        );
+                      },
                       children: const [
                         _SplitModePage(),
                         _AdjustModePage(),

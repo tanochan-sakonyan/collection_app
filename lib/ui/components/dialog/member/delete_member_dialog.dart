@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 
 class DeleteMemberDialog extends ConsumerStatefulWidget {
   final String userId;
@@ -23,6 +24,12 @@ class DeleteMemberDialog extends ConsumerStatefulWidget {
 class _DeleteMemberDialogState extends ConsumerState<DeleteMemberDialog> {
   bool _isButtonEnabled = true;
 
+  @override
+  void initState() {
+    super.initState();
+    AnalyticsService().logDialogOpen('delete_member_dialog');
+  }
+
   Future<void> _deleteMember() async {
     if (!_isButtonEnabled) return;
 
@@ -36,8 +43,16 @@ class _DeleteMemberDialogState extends ConsumerState<DeleteMemberDialog> {
       await ref
           .read(userProvider.notifier)
           .deleteMember(widget.userId, widget.eventId, widget.memberId);
+      AnalyticsService().logDialogClose(
+        'delete_member_dialog',
+        'member_deleted'
+      );
       Navigator.of(context).pop();
     } catch (error) {
+      AnalyticsService().logDialogClose(
+        'delete_member_dialog',
+        'delete_error'
+      );
       debugPrint('メンバー削除に失敗しました: $error');
       Future.delayed(const Duration(seconds: 2), () {
         setState(() {
@@ -84,6 +99,14 @@ class _DeleteMemberDialogState extends ConsumerState<DeleteMemberDialog> {
                     width: 107,
                     child: ElevatedButton(
                       onPressed: () {
+                        AnalyticsService().logButtonTap(
+                          'cancel_delete',
+                          screen: 'delete_member_dialog'
+                        );
+                        AnalyticsService().logDialogClose(
+                          'delete_member_dialog',
+                          'cancel'
+                        );
                         Navigator.of(context).pop();
                       },
                       style: ElevatedButton.styleFrom(
@@ -104,7 +127,13 @@ class _DeleteMemberDialogState extends ConsumerState<DeleteMemberDialog> {
                     height: 36,
                     width: 107,
                     child: ElevatedButton(
-                      onPressed: _isButtonEnabled ? _deleteMember : null,
+                      onPressed: _isButtonEnabled ? () {
+                        AnalyticsService().logButtonTap(
+                          'confirm_delete',
+                          screen: 'delete_member_dialog'
+                        );
+                        _deleteMember();
+                      } : null,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFF2F2F2),
                         elevation: 2,

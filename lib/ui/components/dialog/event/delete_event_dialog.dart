@@ -4,6 +4,7 @@ import 'package:mr_collection/provider/user_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 
 class DeleteEventDialog extends ConsumerStatefulWidget {
   final String userId;
@@ -22,6 +23,12 @@ class DeleteEventDialog extends ConsumerStatefulWidget {
 
 class _DeleteEventDialogState extends ConsumerState<DeleteEventDialog> {
   bool _isButtonEnabled = true;
+
+  @override
+  void initState() {
+    super.initState();
+    AnalyticsService().logDialogOpen('delete_event_dialog');
+  }
   Future<void> _deleteEvent(ref, String userId, String eventId) async {
     if (!_isButtonEnabled) return;
     setState(() {
@@ -32,8 +39,16 @@ class _DeleteEventDialogState extends ConsumerState<DeleteEventDialog> {
 
     try {
       await ref.read(userProvider.notifier).deleteEvent(userId, eventId);
+      AnalyticsService().logDialogClose(
+        'delete_event_dialog',
+        'event_deleted'
+      );
       Navigator.of(ref).pop();
     } catch (error) {
+      AnalyticsService().logDialogClose(
+        'delete_event_dialog',
+        'delete_error'
+      );
       debugPrint('イベントの削除に失敗しました: $error');
       setState(() {
         _isButtonEnabled = true;
@@ -77,6 +92,14 @@ class _DeleteEventDialogState extends ConsumerState<DeleteEventDialog> {
                     width: 107,
                     child: ElevatedButton(
                       onPressed: () {
+                        AnalyticsService().logButtonTap(
+                          'cancel_delete',
+                          screen: 'delete_event_dialog'
+                        );
+                        AnalyticsService().logDialogClose(
+                          'delete_event_dialog',
+                          'cancel'
+                        );
                         Navigator.of(context).pop();
                       },
                       style: ElevatedButton.styleFrom(
@@ -102,8 +125,13 @@ class _DeleteEventDialogState extends ConsumerState<DeleteEventDialog> {
                     width: 107,
                     child: ElevatedButton(
                       onPressed: _isButtonEnabled
-                          ? () =>
-                              _deleteEvent(ref, widget.userId, widget.eventId)
+                          ? () {
+                              AnalyticsService().logButtonTap(
+                                'confirm_delete',
+                                screen: 'delete_event_dialog'
+                              );
+                              _deleteEvent(ref, widget.userId, widget.eventId);
+                            }
                           : null,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFF2F2F2),

@@ -15,6 +15,7 @@ import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/ui/screen/line_add_member/select_line_group_screen.dart';
 import 'package:mr_collection/ui/screen/line_add_member/invite_official_account_to_line_group_screen.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 
 class AddEventDialog extends ConsumerStatefulWidget {
   final String userId;
@@ -42,6 +43,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
   @override
   void initState() {
     super.initState();
+    AnalyticsService().logDialogOpen('add_event_dialog');
     _controller.addListener(() {
       final text = _controller.text.trim();
       if (text.length > 8) {
@@ -118,8 +120,16 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
         await ref.read(userProvider.notifier).createEvent(eventName, userId);
       }
       debugPrint('イベント名: $eventName, ユーザーID: $userId');
+      AnalyticsService().logDialogClose(
+        'add_event_dialog',
+        'event_created'
+      );
       Navigator.of(context).pop();
     } catch (error) {
+      AnalyticsService().logDialogClose(
+        'add_event_dialog',
+        'event_creation_error'
+      );
       debugPrint('イベントの追加に失敗しました: $error');
     } finally {
       ref.read(loadingProvider.notifier).state = false;
@@ -288,8 +298,13 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                                 width: 112,
                                 height: 28,
                                 child: ElevatedButton(
-                                  onPressed:
-                                      _isButtonEnabled ? _choiceEvent : null,
+                                  onPressed: _isButtonEnabled ? () {
+                                    AnalyticsService().logButtonTap(
+                                      'transfer_members',
+                                      screen: 'add_event_dialog'
+                                    );
+                                    _choiceEvent();
+                                  } : null,
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: _isTransferMode
                                         ? const Color(0xFF76DCC6)
@@ -371,7 +386,13 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                                       ),
                                       onPressed: (_isButtonEnabled &&
                                               !ref.watch(loadingProvider))
-                                          ? () => _selectLineGroup()
+                                          ? () {
+                                              AnalyticsService().logButtonTap(
+                                                'select_line_group',
+                                                screen: 'add_event_dialog'
+                                              );
+                                              _selectLineGroup();
+                                            }
                                           : null,
                                     ),
                             ),
@@ -384,8 +405,13 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                       width: 272,
                       height: 40,
                       child: ElevatedButton(
-                        onPressed:
-                            _isButtonEnabled ? () => _createEvent() : null,
+                        onPressed: _isButtonEnabled ? () {
+                          AnalyticsService().logButtonTap(
+                            'confirm_create_event',
+                            screen: 'add_event_dialog'
+                          );
+                          _createEvent();
+                        } : null,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFF2F2F2),
                           elevation: 2,

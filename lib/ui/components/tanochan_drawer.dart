@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/provider/user_provider.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 import 'package:mr_collection/ui/components/dialog/auth/delete_account_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/auth/logout_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/paypay_dialog.dart';
@@ -51,6 +52,7 @@ class _TanochanDrawerState extends State<TanochanDrawer>
               text: S.of(context)!.paypay,
               icon: SvgPicture.asset("assets/icons/drawer_yen.svg"),
               onTap: () {
+                AnalyticsService().logButtonTap('paypay_menu', screen: 'drawer');
                 showDialog(
                   context: context,
                   builder: (context) => const PayPayDialog(),
@@ -76,6 +78,7 @@ class _TanochanDrawerState extends State<TanochanDrawer>
               text: S.of(context)!.questionnaire,
               icon: SvgPicture.asset("assets/icons/drawer_envelope.svg"),
               onTap: () {
+                AnalyticsService().logButtonTap('questionnaire_menu', screen: 'drawer');
                 showDialog(
                     context: context,
                     builder: (context) {
@@ -89,6 +92,7 @@ class _TanochanDrawerState extends State<TanochanDrawer>
               text: S.of(context)!.logout,
               icon: SvgPicture.asset("assets/icons/drawer_key.svg"),
               onTap: () {
+                AnalyticsService().logButtonTap('logout_menu', screen: 'drawer');
                 showDialog(
                     context: context,
                     builder: (context) => const LogoutDialog());
@@ -101,6 +105,7 @@ class _TanochanDrawerState extends State<TanochanDrawer>
               icon: SvgPicture.asset("assets/icons/drawer_x.svg"),
               onTap: () async {
                 const url = "https://x.com/shukinkun";
+                AnalyticsService().logExternalLinkTap('x_link', url, screen: 'drawer');
                 if (await canLaunchUrl(Uri.parse(url))) {
                   await launchUrl(Uri.parse(url),
                       mode: LaunchMode.externalApplication);
@@ -118,6 +123,7 @@ class _TanochanDrawerState extends State<TanochanDrawer>
               icon: SvgPicture.asset("assets/icons/drawer_monitor.svg"),
               onTap: () async {
                 const url = "https://tanochan.studio.site/";
+                AnalyticsService().logExternalLinkTap('official_site', url, screen: 'drawer');
                 if (await canLaunchUrl(Uri.parse(url))) {
                   await launchUrl(Uri.parse(url),
                       mode: LaunchMode.externalApplication);
@@ -134,6 +140,7 @@ class _TanochanDrawerState extends State<TanochanDrawer>
               text: S.of(context)!.updateInformation,
               icon: SvgPicture.asset("assets/icons/drawer_megaphone.svg"),
               onTap: () {
+                AnalyticsService().logButtonTap('update_info_menu', screen: 'drawer');
                 showDialog(
                   context: context,
                   builder: (_) => UpdateInfoAndSuggestOfficialLineDialog(
@@ -149,6 +156,7 @@ class _TanochanDrawerState extends State<TanochanDrawer>
               text: S.of(context)!.termsOfService,
               icon: SvgPicture.asset("assets/icons/drawer_file.svg"),
               onTap: () {
+                AnalyticsService().logButtonTap('terms_of_service_menu', screen: 'drawer');
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -161,6 +169,7 @@ class _TanochanDrawerState extends State<TanochanDrawer>
               context,
               text: S.of(context)!.privacyPolicy,
               onTap: () {
+                AnalyticsService().logButtonTap('privacy_policy_menu', screen: 'drawer');
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -177,6 +186,7 @@ class _TanochanDrawerState extends State<TanochanDrawer>
                 text: S.of(context)!.deleteAccount,
                 onTap: () {
                   if (user != null) {
+                    AnalyticsService().logButtonTap('delete_account_menu', screen: 'drawer');
                     showDialog(
                         context: context,
                         builder: (context) =>

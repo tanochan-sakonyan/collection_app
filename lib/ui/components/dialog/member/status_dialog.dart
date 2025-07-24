@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 
 class StatusDialog extends StatelessWidget {
   final String userId;
@@ -20,6 +21,9 @@ class StatusDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ダイアログ表示をログに記録
+    AnalyticsService().logDialogOpen('status_dialog');
+    
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Container(
@@ -102,6 +106,15 @@ class StatusDialog extends StatelessWidget {
   }) {
     return GestureDetector(
       onTap: () async {
+        AnalyticsService().logButtonTap(
+          'status_change',
+          screen: 'status_dialog',
+          parameters: {'status': status}
+        );
+        AnalyticsService().logDialogClose(
+          'status_dialog',
+          'status_selected'
+        );
         Navigator.pop(context);
         debugPrint('eventId: $eventId, memberId: $memberId, status: $status');
         await onStatusChange(userId, eventId, memberId, status);

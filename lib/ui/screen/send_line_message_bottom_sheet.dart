@@ -8,6 +8,7 @@ import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/line_message_confirm_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/paypay_dialog.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 
 class LineMessageBottomSheet extends ConsumerStatefulWidget {
   final Event event;
@@ -28,10 +29,14 @@ class _UnpaidMessageBottomSheetState
     extends ConsumerState<LineMessageBottomSheet> {
   late TextEditingController _controller;
   bool _includePaypayLink = false;
+  final AnalyticsService _analytics = AnalyticsService();
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _analytics.logScreenView('send_line_message_bottom_sheet', screenClass: 'LineMessageBottomSheet');
+    });
     _controller = TextEditingController(text: _generateDefaultMessage());
   }
 
@@ -140,7 +145,10 @@ class _UnpaidMessageBottomSheetState
               children: [
                 const SizedBox(width: 8),
                 GestureDetector(
-                  onTap: () => _onCheckChanged(context, !_includePaypayLink),
+                  onTap: () {
+                    _analytics.logCheckboxToggle('include_paypay_link', !_includePaypayLink, screen: 'send_line_message_bottom_sheet');
+                    _onCheckChanged(context, !_includePaypayLink);
+                  },
                   child: SvgPicture.asset(
                     _includePaypayLink
                         ? 'assets/icons/ic_check_circle_teal.svg'

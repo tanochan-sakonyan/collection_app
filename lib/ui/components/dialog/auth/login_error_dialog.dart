@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 
 class LoginErrorDialog extends StatelessWidget {
   const LoginErrorDialog({
@@ -8,6 +9,9 @@ class LoginErrorDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ダイアログ表示をログに記録
+    AnalyticsService().logDialogOpen('login_error_dialog');
+    
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(23),
@@ -44,7 +48,17 @@ class LoginErrorDialog extends StatelessWidget {
               height: 40,
               width: 272,
               child: ElevatedButton(
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () {
+                  AnalyticsService().logButtonTap(
+                    'close',
+                    screen: 'login_error_dialog'
+                  );
+                  AnalyticsService().logDialogClose(
+                    'login_error_dialog',
+                    'close'
+                  );
+                  Navigator.of(context).pop();
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFC5C5C5),
                   shape: RoundedRectangleBorder(

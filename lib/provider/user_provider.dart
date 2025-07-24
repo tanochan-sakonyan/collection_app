@@ -52,6 +52,7 @@ class UserNotifier extends StateNotifier<User?> {
     } catch (e) {
       debugPrint('ユーザー登録の際にエラーが発生しました。: $e');
       state = null;
+      return null;
     }
   }
 
@@ -66,6 +67,7 @@ class UserNotifier extends StateNotifier<User?> {
     } catch (e) {
       debugPrint('ユーザー登録の際にエラーが発生しました。: $e');
       state = null;
+      return null;
     }
   }
 
@@ -428,7 +430,6 @@ class UserNotifier extends StateNotifier<User?> {
       case PaymentStatus.paid:
         return 1;
       case PaymentStatus.absence:
-      default:
         return 2;
     }
   }

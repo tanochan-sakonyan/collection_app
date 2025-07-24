@@ -4,6 +4,7 @@ import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/auth/delete_complete_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 
 class DeleteAccountDialog extends ConsumerStatefulWidget {
   final String userId;
@@ -17,15 +18,29 @@ class DeleteAccountDialog extends ConsumerStatefulWidget {
 class _DeleteAccountDialogState extends ConsumerState<DeleteAccountDialog> {
   bool _checked = false;
 
+  @override
+  void initState() {
+    super.initState();
+    AnalyticsService().logDialogOpen('delete_account_dialog');
+  }
+
   Future<void> _deleteUser(String userId) async {
     try {
       await ref.read(userProvider.notifier).deleteUser(userId);
+      AnalyticsService().logDialogClose(
+        'delete_account_dialog',
+        'delete_success'
+      );
       showDialog(
         context: context,
         barrierDismissible: false,
         builder: (context) => const DeleteCompleteDialog(),
       );
     } catch (error) {
+      AnalyticsService().logDialogClose(
+        'delete_account_dialog',
+        'delete_error'
+      );
       debugPrint('ユーザーの削除に失敗しました: $error: delete_account_dialog.dart');
     }
   }
@@ -98,6 +113,11 @@ class _DeleteAccountDialogState extends ConsumerState<DeleteAccountDialog> {
                       setState(() {
                         _checked = value ?? false;
                       });
+                      AnalyticsService().logCheckboxToggle(
+                        'delete_confirmation',
+                        value ?? false,
+                        screen: 'delete_account_dialog'
+                      );
                     },
                   ),
                   Expanded(
@@ -122,6 +142,14 @@ class _DeleteAccountDialogState extends ConsumerState<DeleteAccountDialog> {
                     width: 107,
                     child: ElevatedButton(
                       onPressed: () {
+                        AnalyticsService().logButtonTap(
+                          'cancel_delete',
+                          screen: 'delete_account_dialog'
+                        );
+                        AnalyticsService().logDialogClose(
+                          'delete_account_dialog',
+                          'cancel'
+                        );
                         Navigator.of(context).pop(false);
                       },
                       style: ElevatedButton.styleFrom(
@@ -146,6 +174,10 @@ class _DeleteAccountDialogState extends ConsumerState<DeleteAccountDialog> {
                     child: ElevatedButton(
                       onPressed: _checked
                           ? () {
+                              AnalyticsService().logButtonTap(
+                                'confirm_delete',
+                                screen: 'delete_account_dialog'
+                              );
                               _deleteUser(widget.userId);
                             }
                           : null,

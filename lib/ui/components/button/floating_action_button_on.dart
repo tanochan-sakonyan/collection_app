@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 import 'package:mr_collection/ui/screen/send_line_message_bottom_sheet.dart';
 
 class FloatingActionButtonOn extends StatelessWidget {
@@ -29,6 +30,7 @@ class FloatingActionButtonOn extends StatelessWidget {
       onPressed: tabController.indexIsChanging
           ? null
           : () async {
+              AnalyticsService().logButtonTap('fab_send_message', screen: 'event_detail', parameters: {'event_id': event.eventId});
               final unpaidMembers = event.members
                   .where((m) => m.status == PaymentStatus.unpaid)
                   .toList();

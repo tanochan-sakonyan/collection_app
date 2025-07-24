@@ -16,6 +16,7 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 import 'dart:io' show Platform;
 
 final checkboxProvider = StateProvider<bool>((ref) => false);
@@ -30,6 +31,15 @@ class LoginScreen extends ConsumerStatefulWidget {
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _isAppleButtonEnabled = true;
   bool isLoading = false;
+  final AnalyticsService _analytics = AnalyticsService();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _analytics.logScreenView('login_screen', screenClass: 'LoginScreen');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +86,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             horizontal: 20, vertical: 12),
                       ),
                       onPressed: () async {
+                        _analytics.logButtonTap('line_login_button', screen: 'login_screen');
                         if (isChecked) {
                           final prefs = await SharedPreferences.getInstance();
                           final isLineLoggedIn =
@@ -195,6 +206,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                         onPressed: () async {
                           if (!_isAppleButtonEnabled) return;
+                          _analytics.logButtonTap('apple_login_button', screen: 'login_screen');
                           setState(() {
                             _isAppleButtonEnabled = false;
                           });
@@ -368,6 +380,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       Checkbox(
                         value: isChecked,
                         onChanged: (bool? value) {
+                          _analytics.logCheckboxToggle('terms_agreement', value!, screen: 'login_screen');
                           ref.read(checkboxProvider.notifier).state = value!;
                         },
                         activeColor: Colors.black,
@@ -382,12 +395,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               alignment: PlaceholderAlignment.baseline,
                               baseline: TextBaseline.alphabetic,
                               child: GestureDetector(
-                                onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const TermsOfServiceScreen()),
-                                ),
+                                onTap: () {
+                                  _analytics.logButtonTap('terms_of_service_link', screen: 'login_screen');
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const TermsOfServiceScreen()),
+                                  );
+                                },
                                 child: Text(
                                   S.of(context)!.termsOfService ??
                                       "Terms Of Service", // "Terms of Service"
@@ -401,12 +417,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               alignment: PlaceholderAlignment.baseline,
                               baseline: TextBaseline.alphabetic,
                               child: GestureDetector(
-                                onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const PrivacyPolicyScreen()),
-                                ),
+                                onTap: () {
+                                  _analytics.logButtonTap('privacy_policy_link', screen: 'login_screen');
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const PrivacyPolicyScreen()),
+                                  );
+                                },
                                 child: Text(
                                   S.of(context)!.privacyPolicy ??
                                       "Privacy Policy",

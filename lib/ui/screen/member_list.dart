@@ -15,9 +15,8 @@ import 'package:mr_collection/ui/components/dialog/member/status_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:mr_collection/ui/screen/amount_screen/input_amount_screen.dart';
-import 'package:mr_collection/ui/screen/send_line_message_bottom_sheet.dart';
-import '../components/dialog/member/edit_member_name_dialog.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 
 class MemberList extends ConsumerWidget {
   final Event event;
@@ -28,6 +27,8 @@ class MemberList extends ConsumerWidget {
   final GlobalKey? memberAddKey;
   final GlobalKey? slidableKey;
   final GlobalKey? sortKey;
+  
+  static final AnalyticsService _analytics = AnalyticsService();
 
   const MemberList({
     super.key,
@@ -118,6 +119,7 @@ class MemberList extends ConsumerWidget {
                           GestureDetector(
                             key: sortKey,
                             onTap: () {
+                              _analytics.logButtonTap('sort_members', screen: 'member_list');
                               ref
                                   .read(userProvider.notifier)
                                   .sortingMembers(eventId);
@@ -172,6 +174,8 @@ class MemberList extends ConsumerWidget {
                                         children: [
                                           CustomSlidableAction(
                                             onPressed: (context) {
+                                              _analytics.logSwipeAction('edit', 'member', screen: 'member_list');
+                                              _analytics.logDialogOpen('edit_member_name_dialog', screen: 'member_list');
                                               showDialog(
                                                 context: context,
                                                 builder: (
@@ -210,6 +214,8 @@ class MemberList extends ConsumerWidget {
                                           ),
                                           CustomSlidableAction(
                                             onPressed: (context) {
+                                              _analytics.logSwipeAction('delete', 'member', screen: 'member_list');
+                                              _analytics.logDialogOpen('delete_member_dialog', screen: 'member_list');
                                               showDialog(
                                                 context: context,
                                                 builder: (
@@ -311,6 +317,8 @@ class MemberList extends ConsumerWidget {
                                             member.status,
                                           ),
                                           onTap: () {
+                                            _analytics.logItemSelect('member', member.memberId, screen: 'member_list');
+                                            _analytics.logDialogOpen('status_dialog', screen: 'member_list');
                                             showDialog(
                                               context: context,
                                               builder: (context) =>
@@ -384,6 +392,8 @@ class MemberList extends ConsumerWidget {
                           // const SizedBox(width: 100),
                           TextButton(
                             onPressed: () {
+                              _analytics.logButtonTap('add_member', screen: 'member_list');
+                              _analytics.logDialogOpen('add_member_dialog', screen: 'member_list');
                               showDialog(
                                 context: context,
                                 builder: (context) => AddMemberDialog(
@@ -443,6 +453,7 @@ class MemberList extends ConsumerWidget {
                     ),
                   ),
                   onPressed: () {
+                    _analytics.logButtonTap('settle_payment', screen: 'member_list');
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => InputAmountScreen(

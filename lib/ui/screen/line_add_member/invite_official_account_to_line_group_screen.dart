@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 
 class InviteOfficialAccountToLineGroupScreen extends ConsumerStatefulWidget {
   const InviteOfficialAccountToLineGroupScreen({super.key});
@@ -13,6 +14,16 @@ class InviteOfficialAccountToLineGroupScreen extends ConsumerStatefulWidget {
 
 class CheckSelectedLineGroupScreenState
     extends ConsumerState<InviteOfficialAccountToLineGroupScreen> {
+  final AnalyticsService _analytics = AnalyticsService();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _analytics.logScreenView('invite_official_account_to_line_group_screen', screenClass: 'InviteOfficialAccountToLineGroupScreen');
+    });
+  }
+
   Future<void> _launchLine() async {
     final uri = Uri.parse('https://lin.ee/cLwUgQtP');
     if (await canLaunchUrl(uri)) {

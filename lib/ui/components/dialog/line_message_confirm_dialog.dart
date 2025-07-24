@@ -8,6 +8,7 @@ import 'package:mr_collection/ui/components/dialog/line_message_complete_dialog.
 import 'package:mr_collection/ui/components/dialog/line_message_failed_dialog.dart';
 import 'package:mr_collection/ui/screen/home_screen.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 
 class LineMessageConfirmDialog extends ConsumerWidget {
   final Event event;
@@ -18,6 +19,10 @@ class LineMessageConfirmDialog extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isLoading = ref.watch(loadingProvider);
+    
+    // ダイアログ表示をログに記録
+    AnalyticsService().logDialogOpen('line_message_confirm_dialog');
+    
     return CircleIndicator(
       child: Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -68,7 +73,17 @@ class LineMessageConfirmDialog extends ConsumerWidget {
                       width: 108,
                       height: 48,
                       child: OutlinedButton(
-                        onPressed: () => Navigator.pop(context, false),
+                        onPressed: () {
+                          AnalyticsService().logButtonTap(
+                            'back',
+                            screen: 'line_message_confirm_dialog'
+                          );
+                          AnalyticsService().logDialogClose(
+                            'line_message_confirm_dialog',
+                            'back'
+                          );
+                          Navigator.pop(context, false);
+                        },
                         style: OutlinedButton.styleFrom(
                           side: const BorderSide(
                               color: Color(0xFF75DCC6), width: 1),
@@ -96,6 +111,10 @@ class LineMessageConfirmDialog extends ConsumerWidget {
                         onPressed: isLoading
                             ? null
                             : () async {
+                                AnalyticsService().logButtonTap(
+                                  'send_message',
+                                  screen: 'line_message_confirm_dialog'
+                                );
                                 final userId = ref.read(userProvider)?.userId;
                                 if (userId == null) return;
 
@@ -107,6 +126,10 @@ class LineMessageConfirmDialog extends ConsumerWidget {
                                           userId, event.eventId, message);
 
                                   if (isSuccess) {
+                                    AnalyticsService().logDialogClose(
+                                      'line_message_confirm_dialog',
+                                      'send_success'
+                                    );
                                     await showDialog(
                                         context: context,
                                         builder: (_) =>
@@ -117,6 +140,10 @@ class LineMessageConfirmDialog extends ConsumerWidget {
                                       (_) => false,
                                     );
                                   } else {
+                                    AnalyticsService().logDialogClose(
+                                      'line_message_confirm_dialog',
+                                      'send_failed'
+                                    );
                                     await showDialog(
                                         context: context,
                                         builder: (_) =>

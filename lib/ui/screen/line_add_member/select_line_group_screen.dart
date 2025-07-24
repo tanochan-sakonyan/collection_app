@@ -7,14 +7,32 @@ import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/ui/components/dialog/invite_official_account_to_line_group_dialog.dart';
 import 'check_selected_line_group_screen.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 
-class SelectLineGroupScreen extends StatelessWidget {
+class SelectLineGroupScreen extends StatefulWidget {
   final List<LineGroup> lineGroups;
-  const SelectLineGroupScreen({Key? key, required this.lineGroups})
-      : super(key: key);
+  const SelectLineGroupScreen({super.key, required this.lineGroups});
+
+  @override
+  State<SelectLineGroupScreen> createState() => _SelectLineGroupScreenState();
+}
+
+class _SelectLineGroupScreenState extends State<SelectLineGroupScreen> {
+  final AnalyticsService _analytics = AnalyticsService();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _analytics.logScreenView('select_line_group_screen',
+          screenClass: 'SelectLineGroupScreen');
+    });
+  }
 
   Future<void> _checkSelectedLineGroup(
       BuildContext context, LineGroup lineGroup) async {
+    _analytics.logItemSelect('line_group', lineGroup.groupId,
+        screen: 'select_line_group_screen');
     Navigator.of(context).push<Event>(
       MaterialPageRoute(
           builder: (_) => CheckSelectedLineGroupScreen(lineGroup: lineGroup)),
@@ -111,9 +129,9 @@ class SelectLineGroupScreen extends StatelessWidget {
           const SizedBox(height: 32),
           Expanded(
               child: ListView.builder(
-            itemCount: lineGroups.length,
+            itemCount: widget.lineGroups.length,
             itemBuilder: (context, index) {
-              final lineGroup = lineGroups[index];
+              final lineGroup = widget.lineGroups[index];
               return Column(
                 children: [
                   SizedBox(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 import 'package:mr_collection/ui/components/dialog/suggest_send_message_dialog.dart';
 
 class FloatingActionButtonOff extends StatelessWidget {
@@ -28,6 +29,7 @@ class FloatingActionButtonOff extends StatelessWidget {
       onPressed: tabController.indexIsChanging
           ? null
           : () async {
+              AnalyticsService().logButtonTap('fab_suggest_send_message', screen: 'event_detail', parameters: {'event_id': event.eventId});
               showDialog(
                   context: context,
                   builder: (BuildContext context) {

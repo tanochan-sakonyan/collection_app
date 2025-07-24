@@ -5,6 +5,7 @@ import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/ui/screen/transfer/check_selected_event_screen.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 
 class ChoiceEventScreen extends ConsumerStatefulWidget {
   const ChoiceEventScreen({super.key});
@@ -13,7 +14,18 @@ class ChoiceEventScreen extends ConsumerStatefulWidget {
 }
 
 class ChoiceEventScreenState extends ConsumerState<ChoiceEventScreen> {
+  final AnalyticsService _analytics = AnalyticsService();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _analytics.logScreenView('choice_event_screen', screenClass: 'ChoiceEventScreen');
+    });
+  }
+
   Future<void> _checkSelectedEvent(Event event) async {
+    _analytics.logItemSelect('event', event.eventId, screen: 'choice_event_screen');
     final picked = await Navigator.of(context).push<Event>(
       MaterialPageRoute(
           builder: (_) => CheckSelectedEventScreen(selectedEvent: event)),

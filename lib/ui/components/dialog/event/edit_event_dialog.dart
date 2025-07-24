@@ -4,6 +4,7 @@ import 'package:mr_collection/provider/user_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 
 class EditEventDialog extends ConsumerStatefulWidget {
   final String userId;
@@ -28,6 +29,7 @@ class EditEventDialogState extends ConsumerState<EditEventDialog> {
   @override
   void initState() {
     super.initState();
+    AnalyticsService().logDialogOpen('edit_event_dialog');
     _controller.text = widget.currentEventName;
 
     _controller.addListener(() {
@@ -80,10 +82,18 @@ class EditEventDialogState extends ConsumerState<EditEventDialog> {
       await ref.read(userProvider.notifier).editEventName(
           widget.userId, widget.eventId, _controller.text.trim());
       if (mounted) {
+        AnalyticsService().logDialogClose(
+          'edit_event_dialog',
+          'event_updated'
+        );
         Navigator.of(context).pop();
       }
     } catch (e) {
       if (mounted) {
+        AnalyticsService().logDialogClose(
+          'edit_event_dialog',
+          'update_error'
+        );
         setState(() {
           _errorMessage = 'イベント名の更新に失敗しました : edit_event_name_dialog.dart';
           _isButtonEnabled = true;
@@ -169,8 +179,13 @@ class EditEventDialogState extends ConsumerState<EditEventDialog> {
                   width: 272,
                   height: 40,
                   child: ElevatedButton(
-                    onPressed:
-                        _isButtonEnabled ? () => _editMemberName() : null,
+                    onPressed: _isButtonEnabled ? () {
+                      AnalyticsService().logButtonTap(
+                        'confirm_edit_event',
+                        screen: 'edit_event_dialog'
+                      );
+                      _editMemberName();
+                    } : null,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFF2F2F2),
                       elevation: 2,

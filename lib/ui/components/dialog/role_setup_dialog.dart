@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/ui/components/dialog/role_assignment_dialog.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 
 class RoleSetupDialog extends StatefulWidget {
   final List<Member> members;
@@ -49,6 +50,7 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
   @override
   void initState() {
     super.initState();
+    AnalyticsService().logDialogOpen('role_setup_dialog');
     // 既存のロールがある場合はそれを使用、ない場合は空のリストから開始
     if (widget.existingRoles != null) {
       roles = List<Map<String, dynamic>>.from(widget.existingRoles!);
@@ -99,6 +101,11 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
   }
 
   void _addRole(String roleName, int amount) {
+    AnalyticsService().logButtonTap(
+      'add_role',
+      screen: 'role_setup_dialog',
+      parameters: {'role_name': roleName, 'amount': amount}
+    );
     setState(() {
       roles.add({'role': roleName, 'amount': amount, 'members': []});
     });
@@ -266,6 +273,11 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
   }
 
   void _deleteRole(int index) {
+    AnalyticsService().logButtonTap(
+      'delete_role',
+      screen: 'role_setup_dialog',
+      parameters: {'role_name': roles[index]['role']}
+    );
     setState(() {
       roles.removeAt(index);
     });
@@ -665,6 +677,15 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
                       }
                       _confirmNewRole();
                     }
+                    AnalyticsService().logButtonTap(
+                      'confirm_role_setup',
+                      screen: 'role_setup_dialog',
+                      parameters: {'roles_count': roles.length}
+                    );
+                    AnalyticsService().logDialogClose(
+                      'role_setup_dialog',
+                      'roles_confirmed'
+                    );
                     widget.onRoleConfirm(roles);
                     Navigator.pop(context);
                   },

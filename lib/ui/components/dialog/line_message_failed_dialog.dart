@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 
 class LineMessageFailedDialog extends StatelessWidget {
   const LineMessageFailedDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // ダイアログ表示をログに記録
+    AnalyticsService().logDialogOpen('line_message_failed_dialog');
+    
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(23)),
       child: SizedBox(
@@ -36,7 +40,17 @@ class LineMessageFailedDialog extends StatelessWidget {
               height: 40,
               width: 272,
               child: ElevatedButton(
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () {
+                  AnalyticsService().logButtonTap(
+                    'close',
+                    screen: 'line_message_failed_dialog'
+                  );
+                  AnalyticsService().logDialogClose(
+                    'line_message_failed_dialog',
+                    'close'
+                  );
+                  Navigator.of(context).pop();
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFC5C5C5),
                   shape: RoundedRectangleBorder(

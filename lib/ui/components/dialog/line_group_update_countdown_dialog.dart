@@ -5,6 +5,7 @@ import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/countdown_timer.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 
 class LineGroupUpdateCountdownDialog extends ConsumerWidget {
   final Event currentEvent;
@@ -17,6 +18,9 @@ class LineGroupUpdateCountdownDialog extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userId = ref.read(userProvider)?.userId;
+
+    // ダイアログ表示をログに記録
+    AnalyticsService().logDialogOpen('line_group_update_countdown_dialog');
 
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -71,6 +75,14 @@ class LineGroupUpdateCountdownDialog extends ConsumerWidget {
                   width: 120,
                   child: ElevatedButton(
                     onPressed: () {
+                      AnalyticsService().logButtonTap(
+                        'do_not_refresh',
+                        screen: 'line_group_update_countdown_dialog'
+                      );
+                      AnalyticsService().logDialogClose(
+                        'line_group_update_countdown_dialog',
+                        'no_refresh'
+                      );
                       Navigator.of(context).pop();
                     },
                     style: ElevatedButton.styleFrom(
@@ -96,11 +108,27 @@ class LineGroupUpdateCountdownDialog extends ConsumerWidget {
                   width: 120,
                   child: ElevatedButton(
                     onPressed: () async {
-                      final updatedGroup = await ref
-                          .read(userProvider.notifier)
-                          .refreshLineGroupMember(
-                              currentEvent.lineGroupId!, userId!);
-                      Navigator.of(context).pop(updatedGroup);
+                      AnalyticsService().logButtonTap(
+                        'refresh_line_group',
+                        screen: 'line_group_update_countdown_dialog'
+                      );
+                      try {
+                        final updatedGroup = await ref
+                            .read(userProvider.notifier)
+                            .refreshLineGroupMember(
+                                currentEvent.lineGroupId!, userId!);
+                        AnalyticsService().logDialogClose(
+                          'line_group_update_countdown_dialog',
+                          'refresh_success'
+                        );
+                        Navigator.of(context).pop(updatedGroup);
+                      } catch (error) {
+                        AnalyticsService().logDialogClose(
+                          'line_group_update_countdown_dialog',
+                          'refresh_error'
+                        );
+                        Navigator.of(context).pop();
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,

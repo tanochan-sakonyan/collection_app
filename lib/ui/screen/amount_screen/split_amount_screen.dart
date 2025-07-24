@@ -13,6 +13,7 @@ import 'package:mr_collection/ui/components/dialog/role_setup_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/member_role_edit_dialog.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/ui/screen/home_screen.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 import 'dart:convert';
 
 class _TabPill extends StatelessWidget {
@@ -50,7 +51,10 @@ class _TabPill extends StatelessWidget {
             color: Colors.transparent,
             child: InkWell(
               borderRadius: BorderRadius.circular(48),
-              onTap: onTap,
+              onTap: () {
+                AnalyticsService().logTabSwitch('tab_$_currentTab', 'split_method', screen: 'split_amount_screen');
+                onTap();
+              },
               child: Center(
                 child: Text(
                   label,
@@ -98,10 +102,14 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
   List<Map<String, dynamic>> _roles = [];
   Map<String, String> _memberRoles = {};
   bool _isFirstTimeShowingRoleDialog = true;
+  final AnalyticsService _analytics = AnalyticsService();
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _analytics.logScreenView('split_amount_screen', screenClass: 'SplitAmountScreen');
+    });
     final activeMembers =
         widget.members.where((m) => m.status != PaymentStatus.absence).toList();
     final evenShare = (widget.amount / activeMembers.length).ceil();

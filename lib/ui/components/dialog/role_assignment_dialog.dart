@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 
 class RoleAssignmentDialog extends StatefulWidget {
   final String roleName;
@@ -29,6 +30,7 @@ class _RoleAssignmentDialogState extends State<RoleAssignmentDialog> {
   @override
   void initState() {
     super.initState();
+    AnalyticsService().logDialogOpen('role_assignment_dialog');
     // 現在の役割が割り当てられているメンバーを初期選択状態にする
     selectedMembers = widget.members.where((member) {
       final existingRole = widget.memberRoles[member.memberId];
@@ -37,6 +39,14 @@ class _RoleAssignmentDialogState extends State<RoleAssignmentDialog> {
   }
 
   void _toggleMember(Member member) {
+    AnalyticsService().logButtonTap(
+      'toggle_member_role',
+      screen: 'role_assignment_dialog',
+      parameters: {
+        'member_name': member.memberName,
+        'role_name': widget.roleName
+      }
+    );
     setState(() {
       if (selectedMembers.contains(member)) {
         selectedMembers.remove(member);
@@ -155,6 +165,18 @@ class _RoleAssignmentDialogState extends State<RoleAssignmentDialog> {
               height: 40,
               child: ElevatedButton(
                 onPressed: () {
+                  AnalyticsService().logButtonTap(
+                    'assign_roles',
+                    screen: 'role_assignment_dialog',
+                    parameters: {
+                      'role_name': widget.roleName,
+                      'member_count': selectedMembers.length
+                    }
+                  );
+                  AnalyticsService().logDialogClose(
+                    'role_assignment_dialog',
+                    'roles_assigned'
+                  );
                   widget.onAssign(selectedMembers);
                   Navigator.pop(context);
                 },

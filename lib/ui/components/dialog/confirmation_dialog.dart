@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/paypay_dialog.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 
 class ConfirmationDialog extends ConsumerWidget {
   const ConfirmationDialog({
@@ -11,6 +12,9 @@ class ConfirmationDialog extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
+
+    // ダイアログ表示をログに記録
+    AnalyticsService().logDialogOpen('confirmation_dialog');
 
     return Dialog(
       shape: RoundedRectangleBorder(
@@ -50,6 +54,10 @@ class ConfirmationDialog extends ConsumerWidget {
                   width: 272,
                   child: ElevatedButton(
                     onPressed: () {
+                      AnalyticsService().logButtonTap(
+                        'paypay_link_included',
+                        screen: 'confirmation_dialog'
+                      );
                       if (user?.paypayUrl == null) {
                         showDialog(
                           context: context,
@@ -78,6 +86,10 @@ class ConfirmationDialog extends ConsumerWidget {
                   width: 272,
                   child: ElevatedButton(
                     onPressed: () {
+                      AnalyticsService().logButtonTap(
+                        'paypay_link_not_included',
+                        screen: 'confirmation_dialog'
+                      );
                       // TODO LINEでメッセージを送信
                     },
                     style: ElevatedButton.styleFrom(

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 
 class CheckSelectedEventScreen extends ConsumerStatefulWidget {
   final Event selectedEvent;
@@ -14,6 +15,16 @@ class CheckSelectedEventScreen extends ConsumerStatefulWidget {
 
 class CheckSelectedEventScreenState
     extends ConsumerState<CheckSelectedEventScreen> {
+  final AnalyticsService _analytics = AnalyticsService();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _analytics.logScreenView('check_selected_event_screen', screenClass: 'CheckSelectedEventScreen');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final event = widget.selectedEvent;

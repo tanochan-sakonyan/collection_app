@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 
 class AddMemberDialog extends ConsumerStatefulWidget {
   final String userId;
@@ -23,6 +24,7 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
   @override
   void initState() {
     super.initState();
+    AnalyticsService().logDialogOpen('add_member_dialog');
     _controller.addListener(() {
       final lines = _controller.text
           .split('\n')
@@ -77,8 +79,18 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
       await ref
           .read(userProvider.notifier)
           .createMembers(widget.userId, widget.eventId, rawText);
-      if (mounted) Navigator.of(context).pop();
+      if (mounted) {
+        AnalyticsService().logDialogClose(
+          'add_member_dialog',
+          'members_added'
+        );
+        Navigator.of(context).pop();
+      }
     } catch (e) {
+      AnalyticsService().logDialogClose(
+        'add_member_dialog',
+        'add_error'
+      );
       setState(() {
         _errorMessage = 'メンバーの追加に失敗しました';
       });
@@ -184,7 +196,13 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
                   width: 272,
                   height: 40,
                   child: ElevatedButton(
-                    onPressed: _isButtonEnabled ? () => _createMember() : null,
+                    onPressed: _isButtonEnabled ? () {
+                      AnalyticsService().logButtonTap(
+                        'confirm_add_members',
+                        screen: 'add_member_dialog'
+                      );
+                      _createMember();
+                    } : null,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFF2F2F2),
                       elevation: 2,

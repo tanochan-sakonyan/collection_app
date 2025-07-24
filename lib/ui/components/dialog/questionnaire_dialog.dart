@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mr_collection/ui/components/webview/webview.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 
 class QuestionnaireDialog extends StatelessWidget {
   const QuestionnaireDialog({super.key});
@@ -8,6 +9,9 @@ class QuestionnaireDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ダイアログ表示をログに記録
+    AnalyticsService().logDialogOpen('questionnaire_dialog');
+    
     return Dialog(
       backgroundColor: Colors.white,
       insetPadding: const EdgeInsets.all(24),
@@ -57,6 +61,14 @@ class QuestionnaireDialog extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
+                  AnalyticsService().logButtonTap(
+                    'open_questionnaire',
+                    screen: 'questionnaire_dialog'
+                  );
+                  AnalyticsService().logDialogClose(
+                    'questionnaire_dialog',
+                    'questionnaire_opened'
+                  );
                   Navigator.of(context).pop();
                   Navigator.of(context).push(
                     MaterialPageRoute(

@@ -3,6 +3,7 @@ import 'package:flutter_line_sdk/flutter_line_sdk.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/ui/screen/login_screen.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 
 class LogoutDialog extends StatelessWidget {
   const LogoutDialog({
@@ -11,6 +12,9 @@ class LogoutDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ダイアログ表示をログに記録
+    AnalyticsService().logDialogOpen('logout_dialog');
+    
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
@@ -42,7 +46,17 @@ class LogoutDialog extends StatelessWidget {
                   height: 36,
                   width: 107,
                   child: ElevatedButton(
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () {
+                      AnalyticsService().logButtonTap(
+                        'cancel_logout',
+                        screen: 'logout_dialog'
+                      );
+                      AnalyticsService().logDialogClose(
+                        'logout_dialog',
+                        'cancel'
+                      );
+                      Navigator.of(context).pop();
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFD7D7D7),
                       elevation: 2,
@@ -65,7 +79,13 @@ class LogoutDialog extends StatelessWidget {
                   height: 36,
                   width: 107,
                   child: ElevatedButton(
-                    onPressed: () => _signOut(context),
+                    onPressed: () {
+                      AnalyticsService().logButtonTap(
+                        'confirm_logout',
+                        screen: 'logout_dialog'
+                      );
+                      _signOut(context);
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFF2F2F2),
                       elevation: 2,
@@ -95,10 +115,22 @@ class LogoutDialog extends StatelessWidget {
 
 final _lineSdk = LineSDK.instance;
 Future<void> _signOut(context) async {
-  await _lineSdk.logout();
-  Navigator.of(context).pushReplacement(
-    MaterialPageRoute(
-      builder: (context) => const LoginScreen(),
-    ),
-  );
+  try {
+    await _lineSdk.logout();
+    AnalyticsService().logDialogClose(
+      'logout_dialog',
+      'logout_success'
+    );
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => const LoginScreen(),
+      ),
+    );
+  } catch (error) {
+    AnalyticsService().logDialogClose(
+      'logout_dialog',
+      'logout_error'
+    );
+    debugPrint('ログアウトに失敗しました: $error');
+  }
 }

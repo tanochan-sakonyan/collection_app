@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 
 class MemberRoleEditDialog extends StatefulWidget {
   final Member member;
@@ -27,6 +28,7 @@ class _MemberRoleEditDialogState extends State<MemberRoleEditDialog> {
   @override
   void initState() {
     super.initState();
+    AnalyticsService().logDialogOpen('member_role_edit_dialog');
     selectedRole = widget.currentRole;
   }
 
@@ -94,10 +96,18 @@ class _MemberRoleEditDialogState extends State<MemberRoleEditDialog> {
                             ),
                           ),
                           onTap: () {
+                            AnalyticsService().logButtonTap(
+                              'remove_role',
+                              screen: 'member_role_edit_dialog'
+                            );
                             setState(() {
                               selectedRole = null;
                             });
                             widget.onRoleChange(null);
+                            AnalyticsService().logDialogClose(
+                              'member_role_edit_dialog',
+                              'role_removed'
+                            );
                             Navigator.pop(context);
                           },
                         ),
@@ -141,10 +151,19 @@ class _MemberRoleEditDialogState extends State<MemberRoleEditDialog> {
                           ),
                         ),
                         onTap: () {
+                          AnalyticsService().logButtonTap(
+                            'select_role',
+                            screen: 'member_role_edit_dialog',
+                            parameters: {'role_name': roleName}
+                          );
                           setState(() {
                             selectedRole = roleName;
                           });
                           widget.onRoleChange(roleName);
+                          AnalyticsService().logDialogClose(
+                            'member_role_edit_dialog',
+                            'role_selected'
+                          );
                           Navigator.pop(context);
                         },
                       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 
 class ToggleButton extends StatefulWidget {
   final bool initialValue;
@@ -40,6 +41,7 @@ class ToggleButtonState extends State<ToggleButton>
   void toggleSwitch() {
     setState(() {
       isOn = !isOn;
+      AnalyticsService().logButtonTap('toggle_switch', parameters: {'new_value': isOn});
       widget.onChanged(isOn);
       if (isOn) {
         _controller.forward();

@@ -7,6 +7,7 @@ import 'package:mr_collection/data/model/freezed/line_group_member.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
 import 'package:mr_collection/ui/screen/home_screen.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 
 class CheckSelectedLineGroupScreen extends ConsumerStatefulWidget {
   final LineGroup lineGroup;
@@ -19,6 +20,16 @@ class CheckSelectedLineGroupScreen extends ConsumerStatefulWidget {
 
 class CheckSelectedLineGroupScreenState
     extends ConsumerState<CheckSelectedLineGroupScreen> {
+  final AnalyticsService _analytics = AnalyticsService();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _analytics.logScreenView('check_selected_line_group_screen', screenClass: 'CheckSelectedLineGroupScreen');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(loadingProvider);

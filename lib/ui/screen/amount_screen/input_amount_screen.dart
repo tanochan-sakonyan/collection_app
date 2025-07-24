@@ -7,6 +7,7 @@ import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/screen/amount_screen/split_amount_screen.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 
 class InputAmountScreen extends ConsumerStatefulWidget {
   final String eventId;
@@ -30,6 +31,7 @@ class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
   late FocusNode _focusNode;
 
   int _amount = 10000;
+  final AnalyticsService _analytics = AnalyticsService();
 
   final _numberStyle = GoogleFonts.inter(
     fontSize: 48,
@@ -40,6 +42,9 @@ class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _analytics.logScreenView('input_amount_screen', screenClass: 'InputAmountScreen');
+    });
     _controller = TextEditingController();
     _focusNode = FocusNode();
 
@@ -183,7 +188,10 @@ class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
               contentPadding: EdgeInsets.zero,
             ),
             inputFormatters: [_buildAmountFormatter()],
-            onSubmitted: (_) => _finishEditing(),
+            onSubmitted: (_) {
+              _analytics.logTextInput('amount_field', screen: 'input_amount_screen', length: _controller.text.length);
+              _finishEditing();
+            },
           ),
         ),
       );
@@ -216,7 +224,10 @@ class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: GestureDetector(
-          onTap: () => Navigator.pop(context),
+          onTap: () {
+            _analytics.logNavigationBack('input_amount_screen');
+            Navigator.pop(context);
+          },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -261,6 +272,7 @@ class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
               behavior: HitTestBehavior.translucent,
               onTap: () {
                 if (!_isEditing) {
+                  _analytics.logButtonTap('amount_input_field', screen: 'input_amount_screen');
                   setState(() {
                     _isEditing = true;
                     _controller.text = _formatWithCommas(_amount);
@@ -283,6 +295,8 @@ class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
                       borderRadius: BorderRadius.circular(12)),
                 ),
                 onPressed: () {
+                  _analytics.logButtonTap('next_button', screen: 'input_amount_screen');
+                  _analytics.logAmountInput(widget.eventId, _amount);
                   if (_isEditing) _finishEditing();
                   _inputTotalMoney(
                     userId,

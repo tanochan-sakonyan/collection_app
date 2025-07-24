@@ -26,6 +26,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:mr_collection/ui/components/event_zero_components.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key, this.user});
@@ -42,6 +43,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   int _currentTabIndex = 0;
   late final BannerAd _banner;
   bool _loaded = false;
+  final AnalyticsService _analytics = AnalyticsService();
 
   final GlobalKey eventAddKey = GlobalKey();
   final GlobalKey leftTabKey = GlobalKey();
@@ -56,6 +58,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _analytics.logScreenView('home_screen', screenClass: 'HomeScreen');
+    });
     _initKeys();
     _tabTitles = ref.read(tabTitlesProvider);
     tabController = TabController(length: _tabTitles.length, vsync: this);
@@ -63,7 +68,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     tabController.addListener(() {
       if (tabController.index != _currentTabIndex &&
           !tabController.indexIsChanging) {
+        final oldIndex = _currentTabIndex;
         _currentTabIndex = tabController.index;
+        _analytics.logTabSwitch('tab_$oldIndex', 'tab_$_currentTabIndex', screen: 'home_screen');
         _saveTabIndex(_currentTabIndex);
       }
     });
@@ -291,6 +298,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                             onPressed: isSaving
                                 ? null
                                 : () async {
+                                    _analytics.logButtonTap('save_note', screen: 'home_screen');
                                     final newNote = controller.text.trim();
                                     ref.read(loadingProvider.notifier).state =
                                         true;
@@ -399,6 +407,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                   ? const SizedBox(width: 24)
                   : IconButton(
                       onPressed: () {
+                        _analytics.logButtonTap('tutorial_button', screen: 'home_screen');
                         _resetTutorial();
                         WidgetsBinding.instance.addPostFrameCallback((_) {
                           _showTutorial();
@@ -423,6 +432,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                     height: screenWidth * 0.07,
                   ),
                   onPressed: () {
+                    _analytics.logButtonTap('settings_drawer', screen: 'home_screen');
                     _scaffoldKey.currentState?.openDrawer();
                   },
                 ),
@@ -491,6 +501,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                 key: isFirstTab ? leftTabKey : null,
                                 onTap: () {
                                   if (index == _currentTabIndex) {
+                                    _analytics.logDialogOpen('edit_event_dialog', screen: 'home_screen');
                                     showDialog(
                                         context: context,
                                         builder: (BuildContext context) {
@@ -506,15 +517,19 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                     tabController.animateTo(index);
                                   }
                                 },
-                                onLongPress: () => showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return DeleteEventDialog(
-                                      userId: ref.read(userProvider)!.userId,
-                                      eventId: eventId,
-                                    );
-                                  },
-                                ),
+                                onLongPress: () {
+                                  _analytics.logLongPress('event_tab', screen: 'home_screen');
+                                  _analytics.logDialogOpen('delete_event_dialog', screen: 'home_screen');
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return DeleteEventDialog(
+                                        userId: ref.read(userProvider)!.userId,
+                                        eventId: eventId,
+                                      );
+                                    },
+                                  );
+                                },
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 8.0),
@@ -545,6 +560,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                               height: screenWidth * 0.07,
                             ),
                             onPressed: () {
+                              _analytics.logButtonTap('add_event_button', screen: 'home_screen');
+                              _analytics.logDialogOpen('add_event_dialog', screen: 'home_screen');
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
@@ -582,6 +599,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
             if (isLineConnected)
               GestureDetector(
                 onTap: () async {
+                  _analytics.logButtonTap('line_group_update', screen: 'home_screen');
+                  _analytics.logDialogOpen('line_group_update_countdown_dialog', screen: 'home_screen');
                   final updatedGroup = await showDialog<LineGroup>(
                     context: context,
                     builder: (BuildContext context) {
@@ -681,8 +700,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                 Expanded(
                                   flex: 1,
                                   child: GestureDetector(
-                                    onTap: () => _showEditNoteBottomSheet(
-                                        context, event),
+                                    onTap: () {
+                                      _analytics.logButtonTap('edit_note', screen: 'home_screen');
+                                      _showEditNoteBottomSheet(context, event);
+                                    },
                                     child: Container(
                                       width: double.infinity,
                                       color: Colors.white,

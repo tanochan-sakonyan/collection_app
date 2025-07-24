@@ -4,6 +4,7 @@ import 'package:mr_collection/provider/user_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
+import 'package:mr_collection/services/analytics_service.dart';
 
 class EditMemberNameDialog extends ConsumerStatefulWidget {
   final String userId;
@@ -31,6 +32,7 @@ class EditMemberNameDialogState extends ConsumerState<EditMemberNameDialog> {
   @override
   void initState() {
     super.initState();
+    AnalyticsService().logDialogOpen('edit_member_name_dialog');
     _controller.text = widget.currentName;
 
     _controller.addListener(() {
@@ -86,8 +88,16 @@ class EditMemberNameDialogState extends ConsumerState<EditMemberNameDialog> {
           _isButtonEnabled = true;
         });
       });
+      AnalyticsService().logDialogClose(
+        'edit_member_name_dialog',
+        'member_updated'
+      );
       Navigator.of(context).pop();
     } catch (e) {
+      AnalyticsService().logDialogClose(
+        'edit_member_name_dialog',
+        'update_error'
+      );
       setState(() {
         _errorMessage = 'メンバー名の更新に失敗しました : edit_member_name_dialog.dart';
         _isButtonEnabled = true;
@@ -172,8 +182,13 @@ class EditMemberNameDialogState extends ConsumerState<EditMemberNameDialog> {
                   width: 272,
                   height: 40,
                   child: ElevatedButton(
-                    onPressed:
-                        _isButtonEnabled ? () => _editMemberName() : null,
+                    onPressed: _isButtonEnabled ? () {
+                      AnalyticsService().logButtonTap(
+                        'confirm_edit_member',
+                        screen: 'edit_member_name_dialog'
+                      );
+                      _editMemberName();
+                    } : null,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFF2F2F2),
                       elevation: 2,
