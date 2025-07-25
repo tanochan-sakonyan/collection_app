@@ -51,10 +51,7 @@ class _TabPill extends StatelessWidget {
             color: Colors.transparent,
             child: InkWell(
               borderRadius: BorderRadius.circular(48),
-              onTap: () {
-                AnalyticsService().logTabSwitch('tab_$_currentTab', 'split_method', screen: 'split_amount_screen');
-                onTap();
-              },
+              onTap: onTap,
               child: Center(
                 child: Text(
                   label,
@@ -108,7 +105,8 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _analytics.logScreenView('split_amount_screen', screenClass: 'SplitAmountScreen');
+      _analytics.logScreenView('split_amount_screen',
+          screenClass: 'SplitAmountScreen');
     });
     final activeMembers =
         widget.members.where((m) => m.status != PaymentStatus.absence).toList();
@@ -383,7 +381,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
           setState(() {
             // ロールリストは常に保持（メンバーが割り当てられていなくても）
             _roles = roles;
-            
+
             // 新しい役割リストに存在しない役割のみメンバーロールから削除
             final newRoleNames =
                 roles.map((role) => role['role'] as String).toSet();
