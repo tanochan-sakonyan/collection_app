@@ -23,6 +23,10 @@ mixin _$Event {
   String get eventId => throw _privateConstructorUsedError;
   String get eventName => throw _privateConstructorUsedError;
   String? get lineGroupId => throw _privateConstructorUsedError;
+  @JsonKey(
+      name: 'fetched_at',
+      fromJson: _parseHttpDateToJST,
+      toJson: _dateToHttpString)
   DateTime? get lineMembersFetchedAt => throw _privateConstructorUsedError;
   List<Member> get members => throw _privateConstructorUsedError;
   String? get memo => throw _privateConstructorUsedError;
@@ -46,6 +50,10 @@ abstract class $EventCopyWith<$Res> {
       {String eventId,
       String eventName,
       String? lineGroupId,
+      @JsonKey(
+          name: 'fetched_at',
+          fromJson: _parseHttpDateToJST,
+          toJson: _dateToHttpString)
       DateTime? lineMembersFetchedAt,
       List<Member> members,
       String? memo,
@@ -119,6 +127,10 @@ abstract class _$$EventImplCopyWith<$Res> implements $EventCopyWith<$Res> {
       {String eventId,
       String eventName,
       String? lineGroupId,
+      @JsonKey(
+          name: 'fetched_at',
+          fromJson: _parseHttpDateToJST,
+          toJson: _dateToHttpString)
       DateTime? lineMembersFetchedAt,
       List<Member> members,
       String? memo,
@@ -187,7 +199,11 @@ class _$EventImpl implements _Event {
       {required this.eventId,
       required this.eventName,
       required this.lineGroupId,
-      required this.lineMembersFetchedAt,
+      @JsonKey(
+          name: 'fetched_at',
+          fromJson: _parseHttpDateToJST,
+          toJson: _dateToHttpString)
+      this.lineMembersFetchedAt,
       required final List<Member> members,
       required this.memo,
       this.totalMoney})
@@ -203,6 +219,10 @@ class _$EventImpl implements _Event {
   @override
   final String? lineGroupId;
   @override
+  @JsonKey(
+      name: 'fetched_at',
+      fromJson: _parseHttpDateToJST,
+      toJson: _dateToHttpString)
   final DateTime? lineMembersFetchedAt;
   final List<Member> _members;
   @override
@@ -273,7 +293,11 @@ abstract class _Event implements Event {
       {required final String eventId,
       required final String eventName,
       required final String? lineGroupId,
-      required final DateTime? lineMembersFetchedAt,
+      @JsonKey(
+          name: 'fetched_at',
+          fromJson: _parseHttpDateToJST,
+          toJson: _dateToHttpString)
+      final DateTime? lineMembersFetchedAt,
       required final List<Member> members,
       required final String? memo,
       final int? totalMoney}) = _$EventImpl;
@@ -287,6 +311,10 @@ abstract class _Event implements Event {
   @override
   String? get lineGroupId;
   @override
+  @JsonKey(
+      name: 'fetched_at',
+      fromJson: _parseHttpDateToJST,
+      toJson: _dateToHttpString)
   DateTime? get lineMembersFetchedAt;
   @override
   List<Member> get members;

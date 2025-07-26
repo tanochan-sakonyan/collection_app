@@ -162,28 +162,27 @@ class _MemberListState extends ConsumerState<MemberList> with TickerProviderStat
                     ),
                     ClipRect(
                       child:
-                          // TODO: 規約対応
-                          // (event.lineGroupId != null &&
-                          //         DateTime.now().isAfter(event.lineMembersFetchedAt!
-                          //             .add(const Duration(hours: 24))) &&
-                          //         (members == null || members!.isEmpty))
-                          //     ? Center(
-                          //         child: Text(
-                          //           S.of(context)!.memberDeletedAfter24h ??
-                          //               "Member information has been deleted after 24 hours.",
-                          //           style: Theme.of(context)
-                          //               .textTheme
-                          //               .bodyMedium
-                          //               ?.copyWith(
-                          //                 fontSize: 14,
-                          //                 color: Colors.grey,
-                          //               ),
-                          //           textAlign: TextAlign.center,
-                          //         ),
-                          //       )
-                          //    :
-                          SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.35,
+                          (widget.event.lineGroupId != null &&
+                                  DateTime.now().isAfter(widget.event.lineMembersFetchedAt!
+                                      .add(const Duration(hours: 24))) &&
+                                  (members == null || members!.isEmpty))
+                              ? Center(
+                                  child: Text(
+                                    S.of(context)!.memberDeletedAfter24h ??
+                                        "Member information has been deleted after 24 hours.",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                          fontSize: 14,
+                                          color: Colors.grey,
+                                        ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                )
+                             :
+                           SizedBox(
+                         height: MediaQuery.of(context).size.height * 0.35,
                         child: SlidableAutoCloseBehavior(
                           child: ListView.builder(
                             itemCount: widget.members?.length,

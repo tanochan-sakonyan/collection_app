@@ -363,6 +363,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     final Event? currentEvent =
         user?.events.firstWhereOrNull((e) => e.eventId == currentEventId);
 
+    debugPrint('currentEvent: $currentEvent');
+    debugPrint('lineGroupId: ${currentEvent?.lineGroupId}');
+    debugPrint('lineMembersFetchedAt: ${currentEvent?.lineMembersFetchedAt}');
+
     final bool isLineConnected = currentEvent != null &&
         currentEvent.lineGroupId != null &&
         currentEvent.lineGroupId!.isNotEmpty;
