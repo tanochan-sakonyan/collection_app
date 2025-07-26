@@ -161,11 +161,12 @@ class _MemberListState extends ConsumerState<MemberList> with TickerProviderStat
                       ),
                     ),
                     ClipRect(
-                      child:
-                          (widget.event.lineGroupId != null &&
-                                  DateTime.now().isAfter(widget.event.lineMembersFetchedAt!
-                                      .add(const Duration(hours: 24))) &&
-                                  (members == null || members!.isEmpty))
+                      child: SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.35,
+                        child: (widget.event.lineGroupId != null
+                              &&  DateTime.now().isAfter(widget.event.lineMembersFetchedAt!.add(const Duration(hours: 24)))
+                              &&  (members == null || members!.isEmpty)
+                        )
                               ? Center(
                                   child: Text(
                                     S.of(context)!.memberDeletedAfter24h ??
@@ -181,9 +182,7 @@ class _MemberListState extends ConsumerState<MemberList> with TickerProviderStat
                                   ),
                                 )
                              :
-                           SizedBox(
-                         height: MediaQuery.of(context).size.height * 0.35,
-                        child: SlidableAutoCloseBehavior(
+                         SlidableAutoCloseBehavior(
                           child: ListView.builder(
                             itemCount: widget.members?.length,
                             itemBuilder: (context, index) {

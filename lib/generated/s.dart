@@ -724,13 +724,13 @@ abstract class S {
   /// No description provided for @autoDeleteMemberCountdown.
   ///
   /// In ja, this message translates to:
-  /// **'メンバー自動削除まで'**
+  /// **'メンバー自動削除まで '**
   String get autoDeleteMemberCountdown;
 
   /// No description provided for @memberDeletedAfter24h.
   ///
   /// In ja, this message translates to:
-  /// **'24時間が経過したためメンバー情報が削除されました'**
+  /// **'24時間が経過したため\nメンバー情報が削除されました'**
   String get memberDeletedAfter24h;
 
   /// No description provided for @lineGroupExpireTitle.
@@ -828,6 +828,18 @@ abstract class S {
   /// In ja, this message translates to:
   /// **'読み込みに10~20秒ほどかかる場合があります。\n次回アップデートで改善予定です。'**
   String get loadingApologizeMessage;
+
+  /// No description provided for @remainingHour.
+  ///
+  /// In ja, this message translates to:
+  /// **'時間'**
+  String get remainingHour;
+
+  /// No description provided for @remainingMinute.
+  ///
+  /// In ja, this message translates to:
+  /// **'分'**
+  String get remainingMinute;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

@@ -327,10 +327,10 @@ class SJa extends S {
       '※LINEグループから取得したメンバー情報は24時間で消去されるため、\n24時間が経過する前に再取得をするようお願いいたします。\n再取得の際、支払い状況は引き継がれます。';
 
   @override
-  String get autoDeleteMemberCountdown => 'メンバー自動削除まで';
+  String get autoDeleteMemberCountdown => 'メンバー自動削除まで ';
 
   @override
-  String get memberDeletedAfter24h => '24時間が経過したためメンバー情報が削除されました';
+  String get memberDeletedAfter24h => '24時間が経過したため\nメンバー情報が削除されました';
 
   @override
   String get lineGroupExpireTitle => 'メンバー情報有効期限が\nもうすぐ切れます';
@@ -382,4 +382,10 @@ class SJa extends S {
   @override
   String get loadingApologizeMessage =>
       '読み込みに10~20秒ほどかかる場合があります。\n次回アップデートで改善予定です。';
+
+  @override
+  String get remainingHour => '時間';
+
+  @override
+  String get remainingMinute => '分';
 }

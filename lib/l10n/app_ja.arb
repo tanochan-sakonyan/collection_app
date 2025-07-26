@@ -104,8 +104,8 @@
   "selectLineGroupDesc2": "このメンバーでイベントを作成しますか？",
   "selectLineGroupButton": "このメンバーでイベント作成",
   "selectLineGroupNote": "※LINEグループから取得したメンバー情報は24時間で消去されるため、\n24時間が経過する前に再取得をするようお願いいたします。\n再取得の際、支払い状況は引き継がれます。",
-  "autoDeleteMemberCountdown": "メンバー自動削除まで",
-  "memberDeletedAfter24h": "24時間が経過したためメンバー情報が削除されました",
+  "autoDeleteMemberCountdown": "メンバー自動削除まで ",
+  "memberDeletedAfter24h": "24時間が経過したため\nメンバー情報が削除されました",
   "lineGroupExpireTitle": "メンバー情報有効期限が\nもうすぐ切れます",
   "lineGroupExpireDesc": "LINEの利用規約に則り、メンバー情報有効期限を過ぎる\nと、メンバーと支払い状況の情報が削除されます。\n再取得をし、有効期限をリセットしてください。",
   "doNotRefresh": "取得しない",
@@ -121,5 +121,7 @@
   "send": "送信",
   "sendConfirmation": "送信確認",
   "completeSending": "送信完了",
-  "loadingApologizeMessage": "読み込みに10~20秒ほどかかる場合があります。\n次回アップデートで改善予定です。"
+  "loadingApologizeMessage": "読み込みに10~20秒ほどかかる場合があります。\n次回アップデートで改善予定です。",
+  "remainingHour": "時間",
+  "remainingMinute": "分"
 }
