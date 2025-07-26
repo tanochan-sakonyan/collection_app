@@ -39,7 +39,7 @@ class SJa extends S {
   String get person => '人';
 
   @override
-  String get settlePayment => '精 算';
+  String get settlePayment => '合計 ーーー円';
 
   @override
   String get update_1 => 'LINEとの連携機能を現在開発中です。';
@@ -52,6 +52,21 @@ class SJa extends S {
 
   @override
   String get paypay => 'PayPayリンクを登録';
+
+  @override
+  String get paypayDialogMessage1 => 'PayPayリンクを入力してください。';
+
+  @override
+  String get paypayDialogMessage2 => '受け取りリンクを入力';
+
+  @override
+  String get paypayDialogMessage3 => '反映まで3~5ほどかかる場合があります。';
+
+  @override
+  String get paypayDialogSuccessMessage => 'PayPayリンクを送信しました。';
+
+  @override
+  String get paypayDialogFailMessage => 'PayPayリンクの送信に失敗しました。';
 
   @override
   String get questionnaire => '目安箱';
@@ -266,6 +281,9 @@ class SJa extends S {
   String get openFailed => 'ページを開けませんでした';
 
   @override
+  String get updateInformation => 'アップデート情報';
+
+  @override
   String get selectLineGroupTitle => 'LINEグループから\nメンバー追加';
 
   @override
@@ -288,7 +306,12 @@ class SJa extends S {
   String get inviteOfficialAccountStep2 => 'LINE公式アカウントを\n集金対象のグループに招待';
 
   @override
-  String get inviteOfficialAccountNote => '「集金くん」がグループ内で\n宣伝メッセージ等を送ることはありません。';
+  String get inviteOfficialAccountNote1 =>
+      '「集金くん」がグループ内で\n宣伝メッセージ等を送ることはありません。';
+
+  @override
+  String get inviteOfficialAccountNote2 =>
+      'Appleを利用してログインしている場合は、\n一度ログアウトした後に、LINEログインを利用してください';
 
   @override
   String get group => 'グループ';
@@ -317,7 +340,7 @@ class SJa extends S {
       'LINEの利用規約に則り、メンバー情報有効期限を過ぎる\nと、メンバーと支払い状況の情報が削除されます。\n再取得をし、有効期限をリセットしてください。';
 
   @override
-  String get dontRefresh => '取得しない';
+  String get doNotRefresh => '取得しない';
 
   @override
   String get refresh => '再取得';
@@ -340,4 +363,23 @@ class SJa extends S {
   @override
   String get lineNotConnectedMessage2 =>
       '『LINEグループから追加』を使用すると、\nイベントとLINEグループを連携できます！';
+
+  @override
+  String get sendMessage => '催促メッセージの送信';
+
+  @override
+  String get sendPayPayLink => 'PayPayリンクの送付';
+
+  @override
+  String get send => '送信';
+
+  @override
+  String get sendConfirmation => '送信確認';
+
+  @override
+  String get completeSending => '送信完了';
+
+  @override
+  String get loadingApologizeMessage =>
+      '読み込みに10~20秒ほどかかる場合があります。\n次回アップデートで改善予定です。';
 }

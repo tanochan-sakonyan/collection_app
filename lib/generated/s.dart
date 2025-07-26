@@ -63,7 +63,7 @@ import 's_ja.dart';
 /// property.
 abstract class S {
   S(String locale)
-    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -85,16 +85,16 @@ abstract class S {
   /// of delegates is preferred or required.
   static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
       <LocalizationsDelegate<dynamic>>[
-        delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ];
+    delegate,
+    GlobalMaterialLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+  ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('ja'),
-    Locale('en'),
+    Locale('en')
   ];
 
   /// No description provided for @shukinkun.
@@ -160,7 +160,7 @@ abstract class S {
   /// No description provided for @settlePayment.
   ///
   /// In ja, this message translates to:
-  /// **'精 算'**
+  /// **'合計 ーーー円'**
   String get settlePayment;
 
   /// No description provided for @update_1.
@@ -186,6 +186,36 @@ abstract class S {
   /// In ja, this message translates to:
   /// **'PayPayリンクを登録'**
   String get paypay;
+
+  /// No description provided for @paypayDialogMessage1.
+  ///
+  /// In ja, this message translates to:
+  /// **'PayPayリンクを入力してください。'**
+  String get paypayDialogMessage1;
+
+  /// No description provided for @paypayDialogMessage2.
+  ///
+  /// In ja, this message translates to:
+  /// **'受け取りリンクを入力'**
+  String get paypayDialogMessage2;
+
+  /// No description provided for @paypayDialogMessage3.
+  ///
+  /// In ja, this message translates to:
+  /// **'反映まで3~5ほどかかる場合があります。'**
+  String get paypayDialogMessage3;
+
+  /// No description provided for @paypayDialogSuccessMessage.
+  ///
+  /// In ja, this message translates to:
+  /// **'PayPayリンクを送信しました。'**
+  String get paypayDialogSuccessMessage;
+
+  /// No description provided for @paypayDialogFailMessage.
+  ///
+  /// In ja, this message translates to:
+  /// **'PayPayリンクの送信に失敗しました。'**
+  String get paypayDialogFailMessage;
 
   /// No description provided for @questionnaire.
   ///
@@ -607,6 +637,12 @@ abstract class S {
   /// **'ページを開けませんでした'**
   String get openFailed;
 
+  /// No description provided for @updateInformation.
+  ///
+  /// In ja, this message translates to:
+  /// **'アップデート情報'**
+  String get updateInformation;
+
   /// No description provided for @selectLineGroupTitle.
   ///
   /// In ja, this message translates to:
@@ -649,11 +685,17 @@ abstract class S {
   /// **'LINE公式アカウントを\n集金対象のグループに招待'**
   String get inviteOfficialAccountStep2;
 
-  /// No description provided for @inviteOfficialAccountNote.
+  /// No description provided for @inviteOfficialAccountNote1.
   ///
   /// In ja, this message translates to:
   /// **'「集金くん」がグループ内で\n宣伝メッセージ等を送ることはありません。'**
-  String get inviteOfficialAccountNote;
+  String get inviteOfficialAccountNote1;
+
+  /// No description provided for @inviteOfficialAccountNote2.
+  ///
+  /// In ja, this message translates to:
+  /// **'Appleを利用してログインしている場合は、\n一度ログアウトした後に、LINEログインを利用してください'**
+  String get inviteOfficialAccountNote2;
 
   /// No description provided for @group.
   ///
@@ -703,11 +745,11 @@ abstract class S {
   /// **'LINEの利用規約に則り、メンバー情報有効期限を過ぎる\nと、メンバーと支払い状況の情報が削除されます。\n再取得をし、有効期限をリセットしてください。'**
   String get lineGroupExpireDesc;
 
-  /// No description provided for @dontRefresh.
+  /// No description provided for @doNotRefresh.
   ///
   /// In ja, this message translates to:
   /// **'取得しない'**
-  String get dontRefresh;
+  String get doNotRefresh;
 
   /// No description provided for @refresh.
   ///
@@ -750,6 +792,42 @@ abstract class S {
   /// In ja, this message translates to:
   /// **'『LINEグループから追加』を使用すると、\nイベントとLINEグループを連携できます！'**
   String get lineNotConnectedMessage2;
+
+  /// No description provided for @sendMessage.
+  ///
+  /// In ja, this message translates to:
+  /// **'催促メッセージの送信'**
+  String get sendMessage;
+
+  /// No description provided for @sendPayPayLink.
+  ///
+  /// In ja, this message translates to:
+  /// **'PayPayリンクの送付'**
+  String get sendPayPayLink;
+
+  /// No description provided for @send.
+  ///
+  /// In ja, this message translates to:
+  /// **'送信'**
+  String get send;
+
+  /// No description provided for @sendConfirmation.
+  ///
+  /// In ja, this message translates to:
+  /// **'送信確認'**
+  String get sendConfirmation;
+
+  /// No description provided for @completeSending.
+  ///
+  /// In ja, this message translates to:
+  /// **'送信完了'**
+  String get completeSending;
+
+  /// No description provided for @loadingApologizeMessage.
+  ///
+  /// In ja, this message translates to:
+  /// **'読み込みに10~20秒ほどかかる場合があります。\n次回アップデートで改善予定です。'**
+  String get loadingApologizeMessage;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {
@@ -778,9 +856,8 @@ S lookupS(Locale locale) {
   }
 
   throw FlutterError(
-    'S.delegate failed to load unsupported locale "$locale". This is likely '
-    'an issue with the localizations generation tool. Please file an issue '
-    'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.',
-  );
+      'S.delegate failed to load unsupported locale "$locale". This is likely '
+      'an issue with the localizations generation tool. Please file an issue '
+      'on GitHub with a reproducible sample app and the gen-l10n configuration '
+      'that was used.');
 }

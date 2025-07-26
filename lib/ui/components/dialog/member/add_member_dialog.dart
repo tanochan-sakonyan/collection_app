@@ -30,7 +30,7 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
           .where((e) => e.isNotEmpty);
       if (lines.any((n) => n.length > 9)) {
         setState(() {
-          _errorMessage = S.of(context)?.maxCharacterMessage_9 ??
+          _errorMessage = S.of(context)!.maxCharacterMessage_9 ??
               "You can enter up to 9 characters.";
         });
       } else {
@@ -56,11 +56,10 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
         .toList();
 
     if (memberNames.isEmpty) {
-      setState(() => _errorMessage =
-          S.of(context)?.enterMemberPrompt ?? "Please enter a member name.");
+      setState(() => _errorMessage = S.of(context)!.enterMemberPrompt);
       return;
     } else if (memberNames.any((n) => n.length > 9)) {
-      setState(() => _errorMessage = S.of(context)?.maxCharacterMessage_9 ??
+      setState(() => _errorMessage = S.of(context)!.maxCharacterMessage_9 ??
           "You can enter up to 9 characters.");
       return;
     } else {
@@ -99,7 +98,7 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
       child: Dialog(
         backgroundColor: const Color(0xFFFFFFFF),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(14),
         ),
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -111,7 +110,7 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
               children: [
                 const SizedBox(height: 8),
                 Text(
-                  S.of(context)?.addMembers ?? "Add Members",
+                  S.of(context)!.addMembers,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
@@ -150,8 +149,7 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
                       maxLines: 10,
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: S.of(context)?.multiMemberHint ??
-                            "You can add multiple members by separating them with line breaks.",
+                        hintText: S.of(context)!.multiMemberHint,
                         hintStyle: Theme.of(context)
                             .textTheme
                             .bodySmall
@@ -193,7 +191,8 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
                       shape: const StadiumBorder(),
                     ),
                     child: Text(
-                      S.of(context)?.confirm ?? "Confirm",
+                      S.of(context)!.confirm,
+
                       style: const TextStyle(
                         color: Colors.black,
                         fontSize: 14.0,

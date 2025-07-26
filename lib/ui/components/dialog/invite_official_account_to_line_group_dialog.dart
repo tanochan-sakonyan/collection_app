@@ -36,7 +36,7 @@ class InviteOfficialAccountToLineGroupDialog extends StatelessWidget {
           children: [
             const SizedBox(height: 12),
             Text(
-              S.of(context)?.inviteOfficialAccountTitle ??
+              S.of(context)!.inviteOfficialAccountTitle ??
                   "Invite the official LINE account to the group",
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.bold,
@@ -46,8 +46,8 @@ class InviteOfficialAccountToLineGroupDialog extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              S.of(context)?.inviteOfficialAccountDesc1 ??
-                  "You can only get members from LINE groups where 'Shuukin-kun' is invited.",
+              S.of(context)!.inviteOfficialAccountDesc1 ??
+                  "You can only get members from LINE groups where 'Shukin-kun' is invited.",
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
                     color: const Color(0xFF6A6A6A),
@@ -90,7 +90,7 @@ class InviteOfficialAccountToLineGroupDialog extends StatelessWidget {
                       ),
                       const SizedBox(width: 2),
                       Text(
-                        S.of(context)?.shukinkun ?? "Shukinkun",
+                        S.of(context)!.shukinkun,
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
                               color: Colors.black,
@@ -116,7 +116,7 @@ class InviteOfficialAccountToLineGroupDialog extends StatelessWidget {
                       height: 44,
                     ),
                     Text(
-                      S.of(context)?.group ?? "Group",
+                      S.of(context)!.group,
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
                           color: Colors.black,
