@@ -10,7 +10,6 @@ import 'package:mr_collection/provider/amount_loading_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/member/add_member_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/member/delete_member_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/member/edit_member_name_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/member/status_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -19,7 +18,7 @@ import 'package:mr_collection/ui/screen/send_line_message_bottom_sheet.dart';
 import '../components/dialog/member/edit_member_name_dialog.dart';
 import 'package:mr_collection/generated/s.dart';
 
-class MemberList extends ConsumerWidget {
+class MemberList extends ConsumerStatefulWidget {
   final Event event;
   final List<Member>? members;
   final String eventId;
@@ -39,6 +38,30 @@ class MemberList extends ConsumerWidget {
     this.slidableKey,
     this.sortKey,
   });
+
+  @override
+  ConsumerState<MemberList> createState() => _MemberListState();
+}
+
+class _MemberListState extends ConsumerState<MemberList> with TickerProviderStateMixin {
+
+  late final List<GlobalKey> slidableKeys;
+
+  @override
+  void initState() {
+    super.initState();
+    slidableKeys = List.generate(widget.members?.length ?? 0, (_) => GlobalKey());
+  }
+
+  void closeAllSlidables(List<GlobalKey> keys) {
+    for (final key in keys) {
+      final ctx = key.currentContext;
+      if (ctx != null) {
+        Slidable.of(ctx)?.close();
+      }
+    }
+  }
+
   Future<void> _updateMemberStatus(
     WidgetRef ref,
     String userId,
@@ -56,7 +79,8 @@ class MemberList extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+
     // TODO: 未払い、支払い済は、一旦コメントアウト
     // final int? attendanceCount =
     //     members?.where((member) => member.status == PaymentStatus.paid).length;
@@ -66,9 +90,17 @@ class MemberList extends ConsumerWidget {
     //
     // const double iconSize = 30.0;
 
-    final isAmountLoading = ref.watch(amountLoadingProvider(eventId));
+    final members = widget.members ?? [];
+    final isAmountLoading = ref.watch(amountLoadingProvider(widget.eventId));
+    final slidableKeys = List.generate(members.length, (_) => GlobalKey());
 
-    return Padding(
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () {
+        closeAllSlidables(slidableKeys);
+        FocusScope.of(context).unfocus();
+      },
+      child: Padding(
       padding: const EdgeInsets.only(top: 8, left: 29, right: 29),
       child: Stack(
         children: [
@@ -116,11 +148,11 @@ class MemberList extends ConsumerWidget {
                           ),
                           const SizedBox(width: 3),
                           GestureDetector(
-                            key: sortKey,
+                            key: widget.sortKey,
                             onTap: () {
                               ref
                                   .read(userProvider.notifier)
-                                  .sortingMembers(eventId);
+                                  .sortingMembers(widget.eventId);
                             },
                             child: SvgPicture.asset('assets/icons/sort.svg'),
                           ),
@@ -154,9 +186,12 @@ class MemberList extends ConsumerWidget {
                         height: MediaQuery.of(context).size.height * 0.35,
                         child: SlidableAutoCloseBehavior(
                           child: ListView.builder(
-                            itemCount: members?.length,
+                            itemCount: widget.members?.length,
                             itemBuilder: (context, index) {
-                              final member = members?[index];
+                              final member = widget.members?[index];
+                              if (member == null) {
+                                return const SizedBox();
+                              }
                               return Padding(
                                 padding: const EdgeInsets.only(
                                   left: 16,
@@ -165,13 +200,14 @@ class MemberList extends ConsumerWidget {
                                 child: Column(
                                   children: [
                                     Slidable(
-                                      key: ValueKey(member!.memberId),
+                                      key: slidableKeys[index],
                                       endActionPane: ActionPane(
                                         motion: const ScrollMotion(),
                                         extentRatio: 0.60,
                                         children: [
                                           CustomSlidableAction(
                                             onPressed: (context) {
+                                              closeAllSlidables(slidableKeys);
                                               showDialog(
                                                 context: context,
                                                 builder: (
@@ -183,7 +219,7 @@ class MemberList extends ConsumerWidget {
                                                         userProvider,
                                                       )!
                                                       .userId,
-                                                  eventId: eventId,
+                                                  eventId: widget.eventId,
                                                   memberId: member.memberId,
                                                   currentName:
                                                       member.memberName,
@@ -210,6 +246,7 @@ class MemberList extends ConsumerWidget {
                                           ),
                                           CustomSlidableAction(
                                             onPressed: (context) {
+                                              closeAllSlidables(slidableKeys);
                                               showDialog(
                                                 context: context,
                                                 builder: (
@@ -221,7 +258,7 @@ class MemberList extends ConsumerWidget {
                                                         userProvider,
                                                       )!
                                                       .userId,
-                                                  eventId: eventId,
+                                                  eventId: widget.eventId,
                                                   memberId: member.memberId,
                                                 ),
                                               );
@@ -247,7 +284,7 @@ class MemberList extends ConsumerWidget {
                                         ],
                                       ),
                                       child: Container(
-                                        key: (index == 0) ? slidableKey : null,
+                                        key: (index == 0) ? widget.slidableKey : null,
                                         child: ListTile(
                                           minTileHeight: 44,
                                           title: (member.memberName != null)
@@ -316,7 +353,7 @@ class MemberList extends ConsumerWidget {
                                                 userId: ref
                                                     .read(userProvider)!
                                                     .userId,
-                                                eventId: eventId.toString(),
+                                                eventId: widget.eventId.toString(),
                                                 memberId: member.memberId,
                                                 member: member.memberName,
                                                 onStatusChange: (
@@ -382,11 +419,12 @@ class MemberList extends ConsumerWidget {
                           // const SizedBox(width: 100),
                           TextButton(
                             onPressed: () {
+                              closeAllSlidables(slidableKeys);
                               showDialog(
                                 context: context,
                                 builder: (context) => AddMemberDialog(
                                   userId: ref.read(userProvider)!.userId,
-                                  eventId: eventId,
+                                  eventId: widget.eventId,
                                 ),
                               );
                             },
@@ -398,7 +436,7 @@ class MemberList extends ConsumerWidget {
                               ),
                             ),
                             child: Row(
-                              key: memberAddKey,
+                              key: widget.memberAddKey,
                               children: [
                                 SizedBox(
                                   height: 24,
@@ -441,19 +479,20 @@ class MemberList extends ConsumerWidget {
                     ),
                   ),
                   onPressed: () {
+                    closeAllSlidables(slidableKeys);
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => InputAmountScreen(
-                          eventId: eventId,
-                          eventName: eventName,
-                          members: members!,
+                          eventId: widget.eventId,
+                          eventName: widget.eventName,
+                          members: widget.members!,
                         ),
                       ),
                     );
                   },
-                  child: (event.totalMoney != null)
+                  child: (widget.event.totalMoney != null)
                       ? Text(
-                          "合計 ${event.totalMoney.toString()} ${S.of(context)!.currencyUnit}",
+                          "合計 ${widget.event.totalMoney.toString()} ${S.of(context)!.currencyUnit}",
                           style:
                               Theme.of(context).textTheme.bodyLarge?.copyWith(
                                     fontSize: 20,
@@ -593,6 +632,7 @@ class MemberList extends ConsumerWidget {
           ),
         ],
       ),
+    ),
     );
   }
 
