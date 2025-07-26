@@ -9,8 +9,11 @@ import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/amount_guide_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/role_setup_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/member_role_edit_dialog.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/ui/screen/home_screen.dart';
+import 'dart:convert';
 
 class _TabPill extends StatelessWidget {
   const _TabPill({
@@ -92,6 +95,9 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
   late TabController _tabController;
   final _numFmt = NumberFormat.decimalPattern();
   late int _currentTab;
+  List<Map<String, dynamic>> _roles = [];
+  Map<String, String> _memberRoles = {};
+  bool _isFirstTimeShowingRoleDialog = true;
 
   @override
   void initState() {
@@ -121,7 +127,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
     );
     _locked =
         widget.members.map((m) => m.status == PaymentStatus.absence).toList();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
     _currentTab = 0;
     _tabController.addListener(() {
       if (_currentTab != _tabController.index && mounted) {
@@ -188,6 +194,9 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                 ? 0
                 : int.tryParse(_controllers[i].text.replaceAll(',', '')) ?? 0;
       }
+    } else if (_tabController.index == 2) {
+      // 役割タブの場合の処理
+      _calculateRoleBasedAmounts(amountMap);
     }
     debugPrint('送信する金額マップ: $amountMap');
 
@@ -195,6 +204,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
         .map((entry) => {
               'memberId': entry.key,
               'memberMoney': entry.value,
+              'role': _memberRoles[entry.key] ?? '',
             })
         .toList();
 
@@ -251,6 +261,22 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
   }
 
   void _recalculateAmounts() {
+    // 役割から調整タブの場合は役割に基づく金額計算
+    if (_currentTab == 2 && _roles.isNotEmpty) {
+      final Map<String, int> amountMap = {};
+      _calculateRoleBasedAmounts(amountMap);
+
+      // 各メンバーの金額を更新
+      for (int i = 0; i < widget.members.length; i++) {
+        final member = widget.members[i];
+        final amount = amountMap[member.memberId] ?? 0;
+        _controllers[i].text = _numFmt.format(amount);
+      }
+      setState(() {});
+      return;
+    }
+
+    // 通常の計算ロジック
     int lockedSum = 0;
     for (int i = 0; i < widget.members.length; i++) {
       if (widget.members[i].status == PaymentStatus.absence) continue;
@@ -295,6 +321,142 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
     setState(() {});
   }
 
+  void _calculateRoleBasedAmounts(Map<String, int> amountMap) {
+    // 役割に基づいて金額を計算
+    int totalRoleAmount = 0;
+
+    for (final member in widget.members) {
+      if (member.status == PaymentStatus.absence) {
+        amountMap[member.memberId] = 0;
+        continue;
+      }
+
+      final memberRole = _memberRoles[member.memberId];
+      if (memberRole != null) {
+        final role = _roles.firstWhere(
+          (r) => r['role'] == memberRole,
+          orElse: () => {'amount': 0},
+        );
+        final roleAmount = role['amount'] ?? 0;
+        amountMap[member.memberId] = roleAmount as int;
+        totalRoleAmount += roleAmount as int;
+      } else {
+        amountMap[member.memberId] = 0;
+      }
+    }
+
+    // 残りの金額を役職なしのメンバーで分割
+    final remainingAmount = widget.amount - totalRoleAmount;
+    final noRoleMembers = widget.members
+        .where((m) =>
+            m.status != PaymentStatus.absence &&
+            (_memberRoles[m.memberId] == null ||
+                _memberRoles[m.memberId] == ''))
+        .toList();
+
+    if (noRoleMembers.isNotEmpty && remainingAmount > 0) {
+      final perPersonAmount = (remainingAmount / noRoleMembers.length).ceil();
+      for (final member in noRoleMembers) {
+        amountMap[member.memberId] = perPersonAmount;
+      }
+    }
+  }
+
+  void _showRoleSetupDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => RoleSetupDialog(
+        members: widget.members,
+        memberRoles: _memberRoles,
+        shouldRestoreDefaultRoles: _isFirstTimeShowingRoleDialog,
+        existingRoles: _roles.isNotEmpty ? _roles : null,
+        onConfirm: () {},
+        onRoleConfirm: (roles) {
+          setState(() {
+            // ロールリストは常に保持（メンバーが割り当てられていなくても）
+            _roles = roles;
+            
+            // 新しい役割リストに存在しない役割のみメンバーロールから削除
+            final newRoleNames =
+                roles.map((role) => role['role'] as String).toSet();
+            _memberRoles.removeWhere(
+                (memberId, roleName) => !newRoleNames.contains(roleName));
+
+            // 役割に基づいてメンバーの役割を設定（新しく追加された分のみ）
+            for (final role in roles) {
+              final roleMembers = List<Member>.from(role['members'] as List);
+              for (final member in roleMembers) {
+                _memberRoles[member.memberId] = role['role'];
+              }
+            }
+            _isFirstTimeShowingRoleDialog = false;
+          });
+        },
+      ),
+    );
+  }
+
+  void _showMemberRoleEditDialog(Member member) {
+    showDialog(
+      context: context,
+      builder: (context) => MemberRoleEditDialog(
+        member: member,
+        roles: _roles,
+        currentRole: _memberRoles[member.memberId],
+        onRoleChange: (newRole) {
+          setState(() {
+            // 現在の役割から該当メンバーを削除
+            for (final role in _roles) {
+              final roleMembers = List<Member>.from(role['members'] as List);
+              roleMembers.removeWhere((m) => m.memberId == member.memberId);
+              role['members'] = roleMembers;
+            }
+
+            if (newRole == null) {
+              _memberRoles.remove(member.memberId);
+            } else {
+              _memberRoles[member.memberId] = newRole;
+              // 新しい役割にメンバーを追加
+              final targetRole = _roles.firstWhere((r) => r['role'] == newRole);
+              final targetRoleMembers =
+                  List<Member>.from(targetRole['members'] as List);
+              targetRoleMembers.add(member);
+              targetRole['members'] = targetRoleMembers;
+            }
+
+            // 金額を再計算
+            _recalculateAmounts();
+          });
+        },
+      ),
+    );
+  }
+
+  void _outputJsonData() {
+    // メンバーと金額、役割のマップデータを作成
+    final List<Map<String, dynamic>> memberDataList = [];
+
+    for (int i = 0; i < widget.members.length; i++) {
+      final member = widget.members[i];
+      final controller = _controllers[i];
+      final amountText = controller.text;
+      final amount = int.tryParse(amountText.replaceAll(',', '')) ?? 0;
+      final role = _memberRoles[member.memberId] ?? '';
+
+      memberDataList.add({
+        'memberId': member.memberId,
+        'amount': amount,
+        'role': role,
+      });
+    }
+
+    final jsonString =
+        const JsonEncoder.withIndent('  ').convert(memberDataList);
+    debugPrint('=== Split Amount Data ===');
+    debugPrint(jsonString);
+    debugPrint('========================');
+  }
+
   TextInputFormatter _buildAmountFormatter() {
     return TextInputFormatter.withFunction((oldValue, newValue) {
       String text = newValue.text;
@@ -319,6 +481,239 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
         selection: TextSelection.collapsed(offset: cursor),
       );
     });
+  }
+
+  Widget _buildRoleTab() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 28),
+      child: Column(
+        children: [
+          const SizedBox(height: 20),
+          // 説明文（役割がない場合のみ表示）
+          if (_roles.isEmpty) ...[
+            Container(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  Text(
+                    S.of(context)!.roleBasedAmountSetting,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black,
+                        ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 20),
+                  Text.rich(
+                    _buildRoleDescriptionTextSpan(context),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 80),
+            SizedBox(
+              width: 164,
+              height: 48,
+              child: ElevatedButton(
+                onPressed: () => _showRoleSetupDialog(),
+                style: ElevatedButton.styleFrom(
+                  elevation: 0,
+                  backgroundColor: const Color(0xFFF2F2F2),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(36),
+                  ),
+                ),
+                child: Text(
+                  S.of(context)!.inputRole,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: const Color(0xFF75DCC6),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                      ),
+                ),
+              ),
+            ),
+          ],
+          // メンバーリスト（役割が設定された場合のみ表示）
+          if (_roles.isNotEmpty) ...[
+            Expanded(
+              child: ListView.builder(
+                itemCount: widget.members.length,
+                itemBuilder: (context, i) {
+                  final member = widget.members[i];
+                  final memberRole = _memberRoles[member.memberId];
+                  final roleAmount = _getRoleAmount(memberRole);
+
+                  return Column(
+                    children: [
+                      ListTile(
+                        visualDensity: const VisualDensity(
+                          horizontal: 0,
+                          vertical: -2,
+                        ),
+                        dense: true,
+                        contentPadding:
+                            const EdgeInsets.only(left: 16, right: 16, top: 8),
+                        leading: GestureDetector(
+                          onTap: () => _showMemberRoleEditDialog(member),
+                          child: memberRole != null && memberRole.isNotEmpty
+                              ? Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.17,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 4, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFF75DCC6),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Text(
+                                    memberRole,
+                                    style: GoogleFonts.notoSansJp(
+                                      fontSize: 12,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                )
+                              : Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.17,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.shade400,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Text(
+                                    S.of(context)!.noRole,
+                                    style: GoogleFonts.notoSansJp(
+                                      fontSize: 12,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                        ),
+                        title: Text(
+                          member.memberName,
+                          style: GoogleFonts.notoSansJp(
+                            fontSize: 16,
+                            color: member.status == PaymentStatus.absence
+                                ? const Color(0xFFC0C0C0)
+                                : Colors.black,
+                          ),
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(_numFmt.format(roleAmount),
+                                style: Theme.of(context).textTheme.bodyLarge),
+                            const SizedBox(width: 8),
+                            Text(S.of(context)!.currencyUnit,
+                                style: Theme.of(context).textTheme.bodyMedium),
+                          ],
+                        ),
+                      ),
+                      const Divider(
+                        height: 1,
+                        color: Color(0xFFE8E8E8),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: 20),
+            // 役割を修正ボタン
+            SizedBox(
+              width: 112,
+              height: 29,
+              child: ElevatedButton(
+                onPressed: _showRoleSetupDialog,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFF2F2F2),
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(36),
+                  ),
+                ),
+                child: Text(S.of(context)!.modifyRole,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xFF75DCC6))),
+              ),
+            ),
+            const SizedBox(height: 24),
+          ],
+        ],
+      ),
+    );
+  }
+
+  TextSpan _buildRoleDescriptionTextSpan(BuildContext context) {
+    final description = S.of(context)!.roleSetupDescription;
+    const boldPhrase = "役割別で割り勘"; // 太字にしたい部分
+
+    if (description.contains(boldPhrase)) {
+      final parts = description.split(boldPhrase);
+      return TextSpan(
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Colors.black54,
+            ),
+        children: [
+          TextSpan(text: parts[0]),
+          TextSpan(
+            text: boldPhrase,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: const Color(0xFF383838),
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          if (parts.length > 1) TextSpan(text: parts[1]),
+        ],
+      );
+    } else {
+      // フォールバック：boldPhraseが見つからない場合は通常のテキスト
+      return TextSpan(
+        text: description,
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Colors.black54,
+            ),
+      );
+    }
+  }
+
+  int _getRoleAmount(String? roleKey) {
+    if (roleKey == null || roleKey.isEmpty) {
+      // 役職なしの場合、残りの金額を均等割り
+      int totalRoleAmount = 0;
+      for (final role in _roles) {
+        final roleMembers = List<Member>.from(role['members'] as List);
+        totalRoleAmount += (role['amount'] as int) * roleMembers.length;
+      }
+
+      final remainingAmount = widget.amount - totalRoleAmount;
+      final noRoleMembers = widget.members
+          .where((m) =>
+              m.status != PaymentStatus.absence &&
+              (_memberRoles[m.memberId] == null ||
+                  _memberRoles[m.memberId] == ''))
+          .toList();
+
+      if (noRoleMembers.isNotEmpty && remainingAmount > 0) {
+        return (remainingAmount / noRoleMembers.length).ceil();
+      }
+      return 0;
+    }
+
+    final role = _roles.firstWhere(
+      (r) => r['role'] == roleKey,
+      orElse: () => {'amount': 0},
+    );
+    return role['amount'] ?? 0;
   }
 
   @override
@@ -373,8 +768,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
               children: [
                 const Spacer(flex: 10),
                 Text(
-                  S.of(context)!.setIndividualAmounts ??
-                      "Set individual amounts",
+                  S.of(context)!.setIndividualAmounts,
                   style: GoogleFonts.notoSansJp(
                       fontSize: 24, fontWeight: FontWeight.bold),
                 ),
@@ -424,6 +818,16 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                       _tabController.animateTo(1);
                     },
                   ),
+                  const SizedBox(width: 12),
+                  _TabPill(
+                    label: S.of(context)!.adjustByRole,
+                    selected: _currentTab == 2,
+                    onTap: () {
+                      if (_currentTab == 2) return;
+                      setState(() => _currentTab = 2);
+                      _tabController.animateTo(2);
+                    },
+                  ),
                 ],
               ),
             ),
@@ -463,8 +867,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            S.of(context)!.status_absence ??
-                                                "Absence",
+                                            S.of(context)!.status_absence,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodyMedium
@@ -493,8 +896,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                                           ),
                                           const SizedBox(width: 4),
                                           Text(
-                                            S.of(context)!.currencyUnit ??
-                                                "USD",
+                                            S.of(context)!.currencyUnit,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodyLarge
@@ -542,8 +944,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            S.of(context)!.status_absence ??
-                                                "Absence",
+                                            S.of(context)!.status_absence,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodyMedium
@@ -602,8 +1003,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                                           ),
                                           const SizedBox(width: 6),
                                           Text(
-                                            S.of(context)!.currencyUnit ??
-                                                "USD",
+                                            S.of(context)!.currencyUnit,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodyLarge
@@ -635,6 +1035,8 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                         );
                       },
                     ),
+                    // 役割から調整タブ
+                    _buildRoleTab(),
                   ],
                 ),
               ),
@@ -652,24 +1054,30 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
             height: 40,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF75DCC6),
+                backgroundColor: _currentTab == 2 && _roles.isEmpty
+                    ? Colors.grey
+                    : const Color(0xFF75DCC6),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
               ),
-              onPressed: () {
-                _onConfirm(
-                  userId,
-                  widget.eventId,
-                );
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const HomeScreen()));
-              },
+              onPressed: _currentTab == 2 && _roles.isEmpty
+                  ? null
+                  : () {
+                      // JSONデータを出力
+                      _outputJsonData();
+                      _onConfirm(
+                        userId,
+                        widget.eventId,
+                      );
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const HomeScreen()));
+                    },
               child: Text(S.of(context)!.confirm,
                   style: GoogleFonts.inter(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
                       color: Colors.white)),
             ),
           ),

@@ -376,7 +376,7 @@ abstract class S {
   /// No description provided for @confirm.
   ///
   /// In ja, this message translates to:
-  /// **'決定'**
+  /// **'確 定'**
   String get confirm;
 
   /// No description provided for @addEvent.
@@ -540,6 +540,96 @@ abstract class S {
   /// In ja, this message translates to:
   /// **'金額の調整'**
   String get adjustAmounts;
+
+  /// No description provided for @adjustByRole.
+  ///
+  /// In ja, this message translates to:
+  /// **'役割から調整'**
+  String get adjustByRole;
+
+  /// No description provided for @roleBasedAmountSetting.
+  ///
+  /// In ja, this message translates to:
+  /// **'役割別に金額を設定する'**
+  String get roleBasedAmountSetting;
+
+  /// No description provided for @roleSetupDescription.
+  ///
+  /// In ja, this message translates to:
+  /// **'3年生は3000円、2年生は2000円、\n1年生は残りを割り勘....のように\n役割別で割り勘をしたいときにおすすめ！'**
+  String get roleSetupDescription;
+
+  /// No description provided for @inputRole.
+  ///
+  /// In ja, this message translates to:
+  /// **'役割を入力する'**
+  String get inputRole;
+
+  /// No description provided for @roleSetup.
+  ///
+  /// In ja, this message translates to:
+  /// **'役割設定'**
+  String get roleSetup;
+
+  /// No description provided for @roleNameInput.
+  ///
+  /// In ja, this message translates to:
+  /// **'役割名を入力'**
+  String get roleNameInput;
+
+  /// No description provided for @assignRole.
+  ///
+  /// In ja, this message translates to:
+  /// **'役割を一括割り当て'**
+  String get assignRole;
+
+  /// No description provided for @assign.
+  ///
+  /// In ja, this message translates to:
+  /// **'割り当て'**
+  String get assign;
+
+  /// No description provided for @assignRoleToMembers.
+  ///
+  /// In ja, this message translates to:
+  /// **'を一括割り当て'**
+  String get assignRoleToMembers;
+
+  /// No description provided for @modifyRole.
+  ///
+  /// In ja, this message translates to:
+  /// **'役割を修正'**
+  String get modifyRole;
+
+  /// No description provided for @noRole.
+  ///
+  /// In ja, this message translates to:
+  /// **'役割無し'**
+  String get noRole;
+
+  /// No description provided for @cancel.
+  ///
+  /// In ja, this message translates to:
+  /// **'キャンセル'**
+  String get cancel;
+
+  /// No description provided for @enterAmount.
+  ///
+  /// In ja, this message translates to:
+  /// **'金額を入力'**
+  String get enterAmount;
+
+  /// No description provided for @seniorStudent.
+  ///
+  /// In ja, this message translates to:
+  /// **'4年'**
+  String get seniorStudent;
+
+  /// No description provided for @freshmanStudent.
+  ///
+  /// In ja, this message translates to:
+  /// **'新入生'**
+  String get freshmanStudent;
 
   /// No description provided for @splitMode.
   ///

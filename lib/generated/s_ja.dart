@@ -149,7 +149,7 @@ class SJa extends S {
   String get multiMemberHint => 'メンバーを改行区切りでまとめて登録できます';
 
   @override
-  String get confirm => '決定';
+  String get confirm => '確 定';
 
   @override
   String get addEvent => 'イベント追加';
@@ -231,6 +231,52 @@ class SJa extends S {
 
   @override
   String get adjustAmounts => '金額の調整';
+
+  @override
+  String get adjustByRole => '役割から調整';
+
+  @override
+  String get roleBasedAmountSetting => '役割別に金額を設定する';
+
+  @override
+  String get roleSetupDescription =>
+      '3年生は3000円、2年生は2000円、\n1年生は残りを割り勘....のように\n役割別で割り勘をしたいときにおすすめ！';
+
+  @override
+  String get inputRole => '役割を入力する';
+
+  @override
+  String get roleSetup => '役割設定';
+
+  @override
+  String get roleNameInput => '役割名を入力';
+
+  @override
+  String get assignRole => '役割を一括割り当て';
+
+  @override
+  String get assign => '割り当て';
+
+  @override
+  String get assignRoleToMembers => 'を一括割り当て';
+
+  @override
+  String get modifyRole => '役割を修正';
+
+  @override
+  String get noRole => '役割無し';
+
+  @override
+  String get cancel => 'キャンセル';
+
+  @override
+  String get enterAmount => '金額を入力';
+
+  @override
+  String get seniorStudent => '4年';
+
+  @override
+  String get freshmanStudent => '新入生';
 
   @override
   String get splitMode => '割り勘モード';

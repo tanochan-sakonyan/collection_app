@@ -240,6 +240,52 @@ class SEn extends S {
   String get adjustAmounts => 'Adjust amounts';
 
   @override
+  String get adjustByRole => 'Adjust by Role';
+
+  @override
+  String get roleBasedAmountSetting => 'Set amounts by role';
+
+  @override
+  String get roleSetupDescription =>
+      '3rd years pay 3000 yen, 2nd years pay 2000 yen,\n1st years pay the rest...\nRecommended for role-based payment splits!';
+
+  @override
+  String get inputRole => 'Input role';
+
+  @override
+  String get roleSetup => 'Role Setup';
+
+  @override
+  String get roleNameInput => 'Enter role name';
+
+  @override
+  String get assignRole => 'Assign role in bulk';
+
+  @override
+  String get assign => 'Assign';
+
+  @override
+  String get assignRoleToMembers => ' in bulk';
+
+  @override
+  String get modifyRole => 'Modify role';
+
+  @override
+  String get noRole => 'No role';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get enterAmount => 'Enter amount';
+
+  @override
+  String get seniorStudent => 'Senior Student';
+
+  @override
+  String get freshmanStudent => 'Freshman Student';
+
+  @override
   String get splitMode => 'Split Mode';
 
   @override

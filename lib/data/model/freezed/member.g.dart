@@ -12,6 +12,7 @@ _$MemberImpl _$$MemberImplFromJson(Map<String, dynamic> json) => _$MemberImpl(
       lineUserId: json['line_user_id'] as String?,
       status: $enumDecode(_$PaymentStatusEnumMap, json['status']),
       memberMoney: (json['member_money'] as num?)?.toInt(),
+      role: json['role'] as String?,
     );
 
 Map<String, dynamic> _$$MemberImplToJson(_$MemberImpl instance) =>
@@ -21,6 +22,7 @@ Map<String, dynamic> _$$MemberImplToJson(_$MemberImpl instance) =>
       'line_user_id': instance.lineUserId,
       'status': _$PaymentStatusEnumMap[instance.status]!,
       'member_money': instance.memberMoney,
+      'role': instance.role,
     };
 
 const _$PaymentStatusEnumMap = {
