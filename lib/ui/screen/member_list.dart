@@ -109,19 +109,19 @@ class _MemberListState extends ConsumerState<MemberList> with TickerProviderStat
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  border: Border.all(color: Colors.black),
+                  border: Border.all(color: Color(0xFF76DCC6)),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Column(
                   children: [
                     Container(
                       decoration: const BoxDecoration(
-                        color: Color(0xFFE8E8E8),
+                        color: Color(0xFF76DCC6),
                         borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(12),
-                          topRight: Radius.circular(12),
+                          topLeft: Radius.circular(11),
+                          topRight: Radius.circular(11),
                         ),
-                        border: Border(bottom: BorderSide(color: Colors.black)),
+                        border: Border(bottom: BorderSide(color: Color(0xFF76DCC6))),
                       ),
                       height: 32,
                       child: Row(
@@ -388,7 +388,7 @@ class _MemberListState extends ConsumerState<MemberList> with TickerProviderStat
                         ),
                       ),
                     ),
-                    const Divider(color: Colors.black, thickness: 1, height: 1),
+                    const Divider(color: Color(0xFF76DCC6), thickness: 1, height: 1),
                     SizedBox(
                       height: 44,
                       child: Row(

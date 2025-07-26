@@ -398,30 +398,25 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.white,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              tabTitles.isEmpty
-                  ? const SizedBox(width: 24)
-                  : IconButton(
-                      onPressed: () {
-                        _resetTutorial();
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          _showTutorial();
-                        });
-                      },
-                      icon: SvgPicture.asset(
-                        'assets/icons/question_circle.svg',
-                        width: 24,
-                        height: 24,
-                      ),
-                    ),
-            ],
-          ),
           automaticallyImplyLeading: false,
           actions: [
             Row(
               children: [
+                tabTitles.isEmpty
+                    ? const SizedBox(width: 24)
+                    : IconButton(
+                  onPressed: () {
+                    _resetTutorial();
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      _showTutorial();
+                    });
+                  },
+                  icon: SvgPicture.asset(
+                    'assets/icons/question_circle.svg',
+                    width: 38,
+                    height: 38,
+                  ),
+                ),
                 IconButton(
                   icon: SvgPicture.asset(
                     'assets/icons/settings.svg',
@@ -618,7 +613,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                 style: Theme.of(context)
                                     .textTheme
                                     .labelSmall
-                                    ?.copyWith(color: Colors.black)),
+                                    ?.copyWith(
+                                    fontSize: 14,
+                                    color: Colors.black)),
                             CountdownTimer(
                               expireTime: currentEvent.lineMembersFetchedAt!
                                   .add(const Duration(hours: 24)),
@@ -626,6 +623,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                   .textTheme
                                   .labelSmall
                                   ?.copyWith(
+                                    fontSize: 14,
                                     color: Colors.black,
                                   ),
                               onExpired: () {
@@ -637,8 +635,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                             const SizedBox(width: 8),
                             SvgPicture.asset(
                               'assets/icons/ic_update.svg',
-                              width: 20,
-                              height: 20,
+                              width: 32,
+                              height: 32,
                             ),
                             const SizedBox(width: 36),
                           ]
