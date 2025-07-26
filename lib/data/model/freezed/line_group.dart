@@ -36,7 +36,7 @@ DateTime? _parseHttpDateToJST(String? httpDate) {
   }
 }
 
-// DateTimeからHTTP日付形式（未使用なら空でもOK）
+// DateTimeからHTTP日付形式
 String? _dateToHttpString(DateTime? date) {
   if (date == null) return null;
   return DateFormat('EEE, dd MMM yyyy HH:mm:ss', 'en_US').format(date) + ' GMT';

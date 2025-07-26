@@ -28,7 +28,6 @@ class Event with _$Event {
 DateTime? _parseHttpDateToJST(String? httpDate) {
   if (httpDate == null) return null;
   try {
-    // "Sat, 26 Jul 2025 10:57:35 GMT" ← これに完全一致させる
     return DateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'", 'en_US')
         .parseUtc(httpDate)
         .toLocal();
@@ -38,7 +37,7 @@ DateTime? _parseHttpDateToJST(String? httpDate) {
   }
 }
 
-// DateTimeからHTTP日付形式（未使用なら空でもOK）
+// DateTimeからHTTP日付形式
 String? _dateToHttpString(DateTime? date) {
   if (date == null) return null;
   return DateFormat('EEE, dd MMM yyyy HH:mm:ss', 'en_US').format(date) + ' GMT';
