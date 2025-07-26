@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:mr_collection/generated/s.dart';
 
 class CountdownTimer extends StatefulWidget {
   final DateTime expireTime;
@@ -47,7 +48,9 @@ class _CountdownTimerState extends State<CountdownTimer> {
   String _format(Duration d) {
     final hours = d.inHours.toString().padLeft(2, "0");
     final minutes = (d.inMinutes % 60).toString().padLeft(2, "0");
-    return "$hours時間$minutes分";
+    final hourUnit = S.of(context)!.remainingHour;
+    final minuteUnit = S.of(context)!.remainingMinute;
+    return "$hours$hourUnit$minutes$minuteUnit";
   }
 
   @override

@@ -10,6 +10,7 @@ _$LineGroupImpl _$$LineGroupImplFromJson(Map<String, dynamic> json) =>
     _$LineGroupImpl(
       groupId: json['group_id'] as String,
       groupName: json['group_name'] as String,
+      fetchedAt: _parseHttpDateToJST(json['fetched_at'] as String?),
       members: (json['members'] as List<dynamic>)
           .map((e) => LineGroupMember.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -19,5 +20,6 @@ Map<String, dynamic> _$$LineGroupImplToJson(_$LineGroupImpl instance) =>
     <String, dynamic>{
       'group_id': instance.groupId,
       'group_name': instance.groupName,
+      'fetched_at': _dateToHttpString(instance.fetchedAt),
       'members': instance.members.map((e) => e.toJson()).toList(),
     };

@@ -89,6 +89,8 @@ class EventRepository {
       }),
     );
 
+    debugPrint('createEventAndGetMembersFromLine レスポンス: ${response.body}');
+
     final data = jsonDecode(response.body) as Map<String, dynamic>;
     if (response.statusCode != 200 && response.statusCode != 201) {
       final msg = data['message'] as String? ?? 'Unknown error';

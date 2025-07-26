@@ -165,6 +165,8 @@ class UserNotifier extends StateNotifier<User?> {
     try {
       final newEvent = await eventRepository.createEventAndGetMembersFromLine(
           userId, groupId, eventName, members);
+      debugPrint("作成されたnewEvent: $newEvent");
+      debugPrint("lineGroupFetchedAt: ${newEvent.lineMembersFetchedAt}");
       final updatedUser = state?.copyWith(
         events: [...state!.events, newEvent],
       );
@@ -216,7 +218,7 @@ class UserNotifier extends StateNotifier<User?> {
       if (event.eventId == eventId) {
         return event.copyWith(
           members: updatedMembers,
-          // lineMembersFetchedAt: updatedLineGroup.fetchedAt, // TODO: 規約対応
+          lineMembersFetchedAt: updatedLineGroup.fetchedAt,
         );
       }
       return event;

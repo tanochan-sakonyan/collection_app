@@ -20,9 +20,7 @@ LineGroupMember _$LineGroupMemberFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$LineGroupMember {
-  @JsonKey(name: 'user_id')
   String get memberId => throw _privateConstructorUsedError;
-  @JsonKey(name: 'display_name')
   String get memberName => throw _privateConstructorUsedError;
 
   /// Serializes this LineGroupMember to a JSON map.
@@ -41,9 +39,7 @@ abstract class $LineGroupMemberCopyWith<$Res> {
           LineGroupMember value, $Res Function(LineGroupMember) then) =
       _$LineGroupMemberCopyWithImpl<$Res, LineGroupMember>;
   @useResult
-  $Res call(
-      {@JsonKey(name: 'user_id') String memberId,
-      @JsonKey(name: 'display_name') String memberName});
+  $Res call({String memberId, String memberName});
 }
 
 /// @nodoc
@@ -85,9 +81,7 @@ abstract class _$$LineGroupMemberImplCopyWith<$Res>
       __$$LineGroupMemberImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {@JsonKey(name: 'user_id') String memberId,
-      @JsonKey(name: 'display_name') String memberName});
+  $Res call({String memberId, String memberName});
 }
 
 /// @nodoc
@@ -124,17 +118,14 @@ class __$$LineGroupMemberImplCopyWithImpl<$Res>
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class _$LineGroupMemberImpl implements _LineGroupMember {
   const _$LineGroupMemberImpl(
-      {@JsonKey(name: 'user_id') required this.memberId,
-      @JsonKey(name: 'display_name') required this.memberName});
+      {required this.memberId, required this.memberName});
 
   factory _$LineGroupMemberImpl.fromJson(Map<String, dynamic> json) =>
       _$$LineGroupMemberImplFromJson(json);
 
   @override
-  @JsonKey(name: 'user_id')
   final String memberId;
   @override
-  @JsonKey(name: 'display_name')
   final String memberName;
 
   @override
@@ -176,18 +167,15 @@ class _$LineGroupMemberImpl implements _LineGroupMember {
 
 abstract class _LineGroupMember implements LineGroupMember {
   const factory _LineGroupMember(
-          {@JsonKey(name: 'user_id') required final String memberId,
-          @JsonKey(name: 'display_name') required final String memberName}) =
-      _$LineGroupMemberImpl;
+      {required final String memberId,
+      required final String memberName}) = _$LineGroupMemberImpl;
 
   factory _LineGroupMember.fromJson(Map<String, dynamic> json) =
       _$LineGroupMemberImpl.fromJson;
 
   @override
-  @JsonKey(name: 'user_id')
   String get memberId;
   @override
-  @JsonKey(name: 'display_name')
   String get memberName;
 
   /// Create a copy of LineGroupMember

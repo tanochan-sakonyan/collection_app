@@ -21,8 +21,12 @@ LineGroup _$LineGroupFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$LineGroup {
   String get groupId => throw _privateConstructorUsedError;
-  String get groupName =>
-      throw _privateConstructorUsedError; // required DateTime fetchedAt, // TODO: 規約対応
+  String get groupName => throw _privateConstructorUsedError;
+  @JsonKey(
+      name: 'fetched_at',
+      fromJson: _parseHttpDateToJST,
+      toJson: _dateToHttpString)
+  DateTime? get fetchedAt => throw _privateConstructorUsedError;
   List<LineGroupMember> get members => throw _privateConstructorUsedError;
 
   /// Serializes this LineGroup to a JSON map.
@@ -40,7 +44,15 @@ abstract class $LineGroupCopyWith<$Res> {
   factory $LineGroupCopyWith(LineGroup value, $Res Function(LineGroup) then) =
       _$LineGroupCopyWithImpl<$Res, LineGroup>;
   @useResult
-  $Res call({String groupId, String groupName, List<LineGroupMember> members});
+  $Res call(
+      {String groupId,
+      String groupName,
+      @JsonKey(
+          name: 'fetched_at',
+          fromJson: _parseHttpDateToJST,
+          toJson: _dateToHttpString)
+      DateTime? fetchedAt,
+      List<LineGroupMember> members});
 }
 
 /// @nodoc
@@ -60,6 +72,7 @@ class _$LineGroupCopyWithImpl<$Res, $Val extends LineGroup>
   $Res call({
     Object? groupId = null,
     Object? groupName = null,
+    Object? fetchedAt = freezed,
     Object? members = null,
   }) {
     return _then(_value.copyWith(
@@ -71,6 +84,10 @@ class _$LineGroupCopyWithImpl<$Res, $Val extends LineGroup>
           ? _value.groupName
           : groupName // ignore: cast_nullable_to_non_nullable
               as String,
+      fetchedAt: freezed == fetchedAt
+          ? _value.fetchedAt
+          : fetchedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       members: null == members
           ? _value.members
           : members // ignore: cast_nullable_to_non_nullable
@@ -87,7 +104,15 @@ abstract class _$$LineGroupImplCopyWith<$Res>
       __$$LineGroupImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String groupId, String groupName, List<LineGroupMember> members});
+  $Res call(
+      {String groupId,
+      String groupName,
+      @JsonKey(
+          name: 'fetched_at',
+          fromJson: _parseHttpDateToJST,
+          toJson: _dateToHttpString)
+      DateTime? fetchedAt,
+      List<LineGroupMember> members});
 }
 
 /// @nodoc
@@ -105,6 +130,7 @@ class __$$LineGroupImplCopyWithImpl<$Res>
   $Res call({
     Object? groupId = null,
     Object? groupName = null,
+    Object? fetchedAt = freezed,
     Object? members = null,
   }) {
     return _then(_$LineGroupImpl(
@@ -116,6 +142,10 @@ class __$$LineGroupImplCopyWithImpl<$Res>
           ? _value.groupName
           : groupName // ignore: cast_nullable_to_non_nullable
               as String,
+      fetchedAt: freezed == fetchedAt
+          ? _value.fetchedAt
+          : fetchedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       members: null == members
           ? _value._members
           : members // ignore: cast_nullable_to_non_nullable
@@ -131,6 +161,11 @@ class _$LineGroupImpl implements _LineGroup {
   const _$LineGroupImpl(
       {required this.groupId,
       required this.groupName,
+      @JsonKey(
+          name: 'fetched_at',
+          fromJson: _parseHttpDateToJST,
+          toJson: _dateToHttpString)
+      required this.fetchedAt,
       required final List<LineGroupMember> members})
       : _members = members;
 
@@ -141,9 +176,13 @@ class _$LineGroupImpl implements _LineGroup {
   final String groupId;
   @override
   final String groupName;
-// required DateTime fetchedAt, // TODO: 規約対応
+  @override
+  @JsonKey(
+      name: 'fetched_at',
+      fromJson: _parseHttpDateToJST,
+      toJson: _dateToHttpString)
+  final DateTime? fetchedAt;
   final List<LineGroupMember> _members;
-// required DateTime fetchedAt, // TODO: 規約対応
   @override
   List<LineGroupMember> get members {
     if (_members is EqualUnmodifiableListView) return _members;
@@ -153,7 +192,7 @@ class _$LineGroupImpl implements _LineGroup {
 
   @override
   String toString() {
-    return 'LineGroup(groupId: $groupId, groupName: $groupName, members: $members)';
+    return 'LineGroup(groupId: $groupId, groupName: $groupName, fetchedAt: $fetchedAt, members: $members)';
   }
 
   @override
@@ -164,12 +203,14 @@ class _$LineGroupImpl implements _LineGroup {
             (identical(other.groupId, groupId) || other.groupId == groupId) &&
             (identical(other.groupName, groupName) ||
                 other.groupName == groupName) &&
+            (identical(other.fetchedAt, fetchedAt) ||
+                other.fetchedAt == fetchedAt) &&
             const DeepCollectionEquality().equals(other._members, _members));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, groupId, groupName,
+  int get hashCode => Object.hash(runtimeType, groupId, groupName, fetchedAt,
       const DeepCollectionEquality().hash(_members));
 
   /// Create a copy of LineGroup
@@ -192,6 +233,11 @@ abstract class _LineGroup implements LineGroup {
   const factory _LineGroup(
       {required final String groupId,
       required final String groupName,
+      @JsonKey(
+          name: 'fetched_at',
+          fromJson: _parseHttpDateToJST,
+          toJson: _dateToHttpString)
+      required final DateTime? fetchedAt,
       required final List<LineGroupMember> members}) = _$LineGroupImpl;
 
   factory _LineGroup.fromJson(Map<String, dynamic> json) =
@@ -200,7 +246,13 @@ abstract class _LineGroup implements LineGroup {
   @override
   String get groupId;
   @override
-  String get groupName; // required DateTime fetchedAt, // TODO: 規約対応
+  String get groupName;
+  @override
+  @JsonKey(
+      name: 'fetched_at',
+      fromJson: _parseHttpDateToJST,
+      toJson: _dateToHttpString)
+  DateTime? get fetchedAt;
   @override
   List<LineGroupMember> get members;
 
