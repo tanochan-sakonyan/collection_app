@@ -63,21 +63,14 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     tabController = TabController(length: _tabTitles.length, vsync: this);
 
     tabController.addListener(() {
-      if (tabController.index != _currentTabIndex &&
-          !tabController.indexIsChanging) {
+      if (tabController.index != _currentTabIndex) {
+        setState(() {
         _currentTabIndex = tabController.index;
         _saveTabIndex(_currentTabIndex);
+        });
       }
     });
 
-    tabController.animation?.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        if (tabController.index != _currentTabIndex) {
-          _currentTabIndex = tabController.index;
-          _saveTabIndex(_currentTabIndex);
-        }
-      }
-    });
     _loadSavedTabIndex();
 
     _banner = BannerAd(
