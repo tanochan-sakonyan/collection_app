@@ -165,7 +165,6 @@ class _MemberListState extends ConsumerState<MemberList> with TickerProviderStat
                         height: MediaQuery.of(context).size.height * 0.35,
                         child: (widget.event.lineGroupId != null
                               &&  DateTime.now().isAfter(widget.event.lineMembersFetchedAt!.add(const Duration(hours: 24)))
-                              &&  (members == null || members!.isEmpty)
                         )
                               ? Center(
                                   child: Text(
