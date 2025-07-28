@@ -98,7 +98,11 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   ),
                   const TextSpan(
                       text:
-                          "）でお問い合わせください。\n\nこのプライバシーポリシーページは、アプリプライバシーポリシージェネレーターによって生成され、一部をアプリの具体的な機能に応じてカスタマイズしています。"),
+                          "）でお問い合わせください。\n\nこのプライバシーポリシーページは、アプリプライバシーポリシージェネレーターによって生成され、一部をアプリの具体的な機能に応じてカスタマイズしています。\n\n"),
+                  const TextSpan(
+                      text: "制定日：2024年12月1日\n最終更新日：2025年7月28日",
+                      style: TextStyle(
+                          fontStyle: FontStyle.italic, color: Colors.grey)),
                 ],
               ),
             ),
