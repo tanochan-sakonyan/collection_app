@@ -17,6 +17,7 @@ import 'package:mr_collection/ui/components/dialog/event/delete_event_dialog.dar
 import 'package:mr_collection/ui/components/dialog/event/edit_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/line_group_update_countdown_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/suggest_send_message_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/terms_privacy_update_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_and_suggest_official_line_dialog.dart';
 import 'package:mr_collection/ui/screen/send_line_message_bottom_sheet.dart';
 import 'package:mr_collection/ui/screen/member_list.dart';
@@ -72,6 +73,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     });
 
     _loadSavedTabIndex();
+    _checkAndShowPrivacyPolicyUpdate();
 
     _banner = BannerAd(
       adUnitId: AdHelper.bannerProdId(), // ad_helperを呼び出す
@@ -207,6 +209,32 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     if (mounted && savedIndex < tabController.length) {
       _currentTabIndex = savedIndex;
       tabController.animateTo(savedIndex);
+    }
+  }
+
+  // 2025年7月28日、LINEから取得したグループ情報が、24時間で切れることを利用規約・プライバシーポリシーに追記。
+  Future<void> _checkAndShowPrivacyPolicyUpdate() async {
+    final prefs = await SharedPreferences.getInstance();
+    final hasShownUpdate =
+        prefs.getBool('terms_and_privacy_update_20250728') ?? false;
+
+    if (!hasShownUpdate) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        await Future.delayed(const Duration(milliseconds: 100));
+        if (mounted) {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return const TermsPrivacyUpdateDialog();
+            },
+          );
+          // フラグをtrueに変更
+          await prefs.setBool('terms_and_privacy_update_20250728', true);
+        }
+      });
+    } else {
+      debugPrint('Terms and Privacy Update dialog already shown.');
     }
   }
 
