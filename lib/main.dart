@@ -10,6 +10,11 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   await LineSDK.instance.setup('2006612683');
 
   await SystemChrome.setPreferredOrientations([
@@ -18,11 +23,14 @@ void main() async {
 
   await MobileAds.instance.initialize();
 
+  RequestConfiguration requestConfiguration = RequestConfiguration(
+    testDeviceIds: ['4ABC92F2F1C3BE03787BD48F9E8B39EA'],
+  );
+  MobileAds.instance.updateRequestConfiguration(requestConfiguration);
+
   await interstitial.load();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+
 
   runApp(
     const ProviderScope(child: CollectionApp()),

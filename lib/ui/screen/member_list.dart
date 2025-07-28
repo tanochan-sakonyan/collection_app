@@ -109,19 +109,19 @@ class _MemberListState extends ConsumerState<MemberList> with TickerProviderStat
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  border: Border.all(color: Colors.black),
+                  border: Border.all(color: Color(0xFF76DCC6)),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Column(
                   children: [
                     Container(
                       decoration: const BoxDecoration(
-                        color: Color(0xFFE8E8E8),
+                        color: Color(0xFF76DCC6),
                         borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(12),
-                          topRight: Radius.circular(12),
+                          topLeft: Radius.circular(11),
+                          topRight: Radius.circular(11),
                         ),
-                        border: Border(bottom: BorderSide(color: Colors.black)),
+                        border: Border(bottom: BorderSide(color: Color(0xFF76DCC6))),
                       ),
                       height: 32,
                       child: Row(
@@ -161,30 +161,27 @@ class _MemberListState extends ConsumerState<MemberList> with TickerProviderStat
                       ),
                     ),
                     ClipRect(
-                      child:
-                          // TODO: 規約対応
-                          // (event.lineGroupId != null &&
-                          //         DateTime.now().isAfter(event.lineMembersFetchedAt!
-                          //             .add(const Duration(hours: 24))) &&
-                          //         (members == null || members!.isEmpty))
-                          //     ? Center(
-                          //         child: Text(
-                          //           S.of(context)!.memberDeletedAfter24h ??
-                          //               "Member information has been deleted after 24 hours.",
-                          //           style: Theme.of(context)
-                          //               .textTheme
-                          //               .bodyMedium
-                          //               ?.copyWith(
-                          //                 fontSize: 14,
-                          //                 color: Colors.grey,
-                          //               ),
-                          //           textAlign: TextAlign.center,
-                          //         ),
-                          //       )
-                          //    :
-                          SizedBox(
+                      child: SizedBox(
                         height: MediaQuery.of(context).size.height * 0.35,
-                        child: SlidableAutoCloseBehavior(
+                        child: (widget.event.lineGroupId != null
+                              &&  DateTime.now().isAfter(widget.event.lineMembersFetchedAt!.add(const Duration(hours: 24)))
+                        )
+                              ? Center(
+                                  child: Text(
+                                    S.of(context)!.memberDeletedAfter24h ??
+                                        "Member information has been deleted after 24 hours.",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                          fontSize: 14,
+                                          color: Colors.grey,
+                                        ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                )
+                             :
+                         SlidableAutoCloseBehavior(
                           child: ListView.builder(
                             itemCount: widget.members?.length,
                             itemBuilder: (context, index) {
@@ -391,7 +388,7 @@ class _MemberListState extends ConsumerState<MemberList> with TickerProviderStat
                         ),
                       ),
                     ),
-                    const Divider(color: Colors.black, thickness: 1, height: 1),
+                    const Divider(color: Color(0xFF76DCC6), thickness: 1, height: 1),
                     SizedBox(
                       height: 44,
                       child: Row(

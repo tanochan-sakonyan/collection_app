@@ -1,0 +1,6 @@
+-keep class com.google.android.gms.** { *; }
+-keep class com.google.ads.** { *; }
+-keep class com.google.android.ads.** { *; }
+-dontwarn com.google.android.gms.**
+-dontwarn com.google.ads.**
+-dontwarn com.google.android.ads.**

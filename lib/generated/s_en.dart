@@ -385,11 +385,11 @@ class SEn extends S {
       '*Member information obtained from the LINE group will be deleted after 24 hours.\nPlease reacquire before 24 hours have passed.\nPayment statuses will be retained when reacquiring.';
 
   @override
-  String get autoDeleteMemberCountdown => 'Auto member deletion in';
+  String get autoDeleteMemberCountdown => 'Auto member deletion in ';
 
   @override
   String get memberDeletedAfter24h =>
-      'Member information has been deleted after 24 hours.';
+      'Member information \nhas been deleted after 24 hours.';
 
   @override
   String get lineGroupExpireTitle => 'Member info will expire soon';
@@ -442,4 +442,10 @@ class SEn extends S {
   @override
   String get loadingApologizeMessage =>
       'Loading may take around 10–20 seconds. \n We plan to improve this in the next update.';
+
+  @override
+  String get remainingHour => 'h';
+
+  @override
+  String get remainingMinute => 'm';
 }

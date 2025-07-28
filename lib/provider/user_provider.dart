@@ -114,15 +114,17 @@ class UserNotifier extends StateNotifier<User?> {
 
   /// イベント関連
 
-  Future<void> createEvent(String eventName, String userId) async {
+  Future<String?> createEvent(String eventName, String userId) async {
     try {
       final newEvent = await eventRepository.createEvent(eventName, userId);
       final updatedUser = state?.copyWith(
         events: [...state!.events, newEvent],
       );
       state = updatedUser;
+      return newEvent.eventId;
     } catch (e) {
       debugPrint('イベントの作成中にエラーが発生しました: $e');
+      return null;
     }
   }
 
@@ -146,7 +148,7 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
-  Future<void> createEventAndTransferMembers(
+  Future<String?> createEventAndTransferMembers(
       String eventId, String eventName, String userId) async {
     try {
       final newEvent = await eventRepository.createEventAndTransferMembers(
@@ -155,22 +157,28 @@ class UserNotifier extends StateNotifier<User?> {
         events: [...state!.events, newEvent],
       );
       state = updatedUser;
+      return newEvent.eventId;
     } catch (e) {
       debugPrint('イベントの作成中にエラーが発生しました: $e');
+      return null;
     }
   }
 
-  Future<void> createEventAndGetMembersFromLine(String userId, String groupId,
+  Future<String?> createEventAndGetMembersFromLine(String userId, String groupId,
       String eventName, List<LineGroupMember> members) async {
     try {
       final newEvent = await eventRepository.createEventAndGetMembersFromLine(
           userId, groupId, eventName, members);
+      debugPrint("作成されたnewEvent: $newEvent");
+      debugPrint("lineGroupFetchedAt: ${newEvent.lineMembersFetchedAt}");
       final updatedUser = state?.copyWith(
         events: [...state!.events, newEvent],
       );
       state = updatedUser;
+      return newEvent.eventId;
     } catch (e) {
       debugPrint('イベントの作成中にエラーが発生しました: $e');
+      return null;
     }
   }
 
@@ -216,7 +224,7 @@ class UserNotifier extends StateNotifier<User?> {
       if (event.eventId == eventId) {
         return event.copyWith(
           members: updatedMembers,
-          // lineMembersFetchedAt: updatedLineGroup.fetchedAt, // TODO: 規約対応
+          lineMembersFetchedAt: updatedLineGroup.fetchedAt,
         );
       }
       return event;
