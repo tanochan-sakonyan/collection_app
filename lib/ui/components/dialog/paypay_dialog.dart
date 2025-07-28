@@ -32,6 +32,7 @@ class PayPayDialogState extends ConsumerState<PayPayDialog> {
       final userId = user?.userId.toString();
 
       await userRepository.sendPaypayLink(userId, paypayLink);
+      ref.read(userProvider.notifier).updatePaypayLink(paypayLink);
       Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(S.of(context)!.paypayDialogSuccessMessage)),
