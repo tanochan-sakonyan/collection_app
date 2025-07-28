@@ -18,14 +18,21 @@ class TermsOfServiceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF76DCC6),
       appBar: AppBar(
+          backgroundColor: const Color.fromARGB(255, 173, 252, 235),
           title: Text(
-        S.of(context)!.termsOfService,
-      )),
+            S.of(context)!.termsOfService,
+          )),
       body: SingleChildScrollView(
-        child: Center(
-          child: Padding(
-            padding: EdgeInsets.all(16),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: BorderRadius.circular(12),
+            ),
+            padding: const EdgeInsets.all(20),
             child: RichText(
               text: TextSpan(
                 style: const TextStyle(color: Colors.black, fontSize: 14),
