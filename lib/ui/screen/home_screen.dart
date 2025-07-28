@@ -445,10 +445,11 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                           icon: SvgPicture.asset('assets/icons/plus.svg',
                               width: screenWidth * 0.07,
                               height: screenWidth * 0.07,
-                              colorFilter: ColorFilter.mode(
+                              colorFilter: const ColorFilter.mode(
                                   Colors.white, BlendMode.srcIn)),
-                          onPressed: () {
-                            showDialog(
+                          onPressed: () async {
+                            final String? createdEventId =
+                                await showDialog<String>(
                               context: context,
                               builder: (BuildContext context) {
                                 return AddEventDialog(
@@ -456,6 +457,22 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                 );
                               },
                             );
+
+                            if (createdEventId != null) {
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                final updatedTabTitles =
+                                    ref.read(tabTitlesProvider);
+                                final eventIndex =
+                                    updatedTabTitles.indexOf(createdEventId);
+                                if (eventIndex != -1) {
+                                  setState(() {
+                                    _currentTabIndex = eventIndex;
+                                    _saveTabIndex(_currentTabIndex);
+                                  });
+                                  tabController.animateTo(eventIndex);
+                                }
+                              });
+                            }
                           },
                         ),
                         // TODO リリース初期段階では、一括削除機能のボタンは非表示

@@ -108,17 +108,18 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
     ref.read(loadingProvider.notifier).state = true;
 
     try {
+      String? createdEventId;
       if (_isTransferMode) {
-        await ref.read(userProvider.notifier).createEventAndTransferMembers(
+        createdEventId = await ref.read(userProvider.notifier).createEventAndTransferMembers(
             _selectedEvent!.eventId, eventName, userId);
       } else if (lineGroup != null) {
-        await ref.read(userProvider.notifier).createEventAndGetMembersFromLine(
+        createdEventId = await ref.read(userProvider.notifier).createEventAndGetMembersFromLine(
             userId, lineGroup!.groupId, eventName, lineGroup!.members);
       } else {
-        await ref.read(userProvider.notifier).createEvent(eventName, userId);
+        createdEventId = await ref.read(userProvider.notifier).createEvent(eventName, userId);
       }
       debugPrint('イベント名: $eventName, ユーザーID: $userId');
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(createdEventId);
     } catch (error) {
       debugPrint('イベントの追加に失敗しました: $error');
     } finally {
