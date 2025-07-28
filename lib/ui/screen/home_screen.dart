@@ -178,15 +178,19 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     tabController.addListener(() {
       if (tabController.index != _currentTabIndex &&
           !tabController.indexIsChanging) {
-        _currentTabIndex = tabController.index;
-        _saveTabIndex(_currentTabIndex);
+        setState(() {
+          _currentTabIndex = tabController.index;
+          _saveTabIndex(_currentTabIndex);
+        });
       }
     });
     tabController.animation?.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         if (tabController.index != _currentTabIndex) {
-          _currentTabIndex = tabController.index;
-          _saveTabIndex(_currentTabIndex);
+          setState(() {
+            _currentTabIndex = tabController.index;
+            _saveTabIndex(_currentTabIndex);
+          });
         }
       }
     });
@@ -496,7 +500,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                             indicator: const BoxDecoration(),
                             indicatorColor: Colors.transparent,
                             dividerColor: Colors.transparent,
-                            tabs: _tabTitles.asMap().entries.map((entry) {
+                            tabs: tabTitles.asMap().entries.map((entry) {
                               final index = entry.key;
                               final eventId = entry.value;
                               final bool isSelected = index == _currentTabIndex;
@@ -667,7 +671,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                   ? const EventZeroComponents()
                   : TabBarView(
                       controller: tabController,
-                      children: _tabTitles.asMap().entries.map((entry) {
+                      children: tabTitles.asMap().entries.map((entry) {
                         final index = entry.key;
                         final eventId = entry.value;
                         final event = user!.events.firstWhere(
