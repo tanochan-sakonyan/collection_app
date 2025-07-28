@@ -186,22 +186,7 @@ class CheckSelectedLineGroupScreenState
                 onPressed: isLoading
                     ? null
                     : () async {
-                        ref.read(loadingProvider.notifier).state = true;
-                        try {
-                          await ref
-                              .read(userProvider.notifier)
-                              .createEventAndGetMembersFromLine(
-                                  userId, groupId, eventName, members);
-                          ref.read(loadingProvider.notifier).state = false;
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => const HomeScreen(),
-                            ),
-                          );
-                        } catch (e) {
-                          ref.read(loadingProvider.notifier).state = false;
-                          debugPrint('イベント作成失敗: $e');
-                        }
+                        Navigator.pop(context, lineGroup);
                       },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF76DCC6),

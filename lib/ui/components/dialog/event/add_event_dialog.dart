@@ -340,7 +340,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                                       width: 112,
                                       height: 28,
                                       child: ElevatedButton(
-                                        onPressed: null,
+                                        onPressed: () {},
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor:
                                               const Color(0xFF06C755),
@@ -358,9 +358,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                                               ?.copyWith(
                                                 fontSize: 10,
                                                 fontWeight: FontWeight.w500,
-                                                color: _isTransferMode
-                                                    ? Colors.white
-                                                    : Colors.black,
+                                                color:   Colors.white
                                               ),
                                         ),
                                       ))
