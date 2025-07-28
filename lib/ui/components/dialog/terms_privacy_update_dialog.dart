@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mr_collection/ui/screen/privacy_policy_screen.dart';
+import 'package:mr_collection/ui/screen/terms_of_service_screen.dart';
 
 class TermsPrivacyUpdateDialog extends StatelessWidget {
   const TermsPrivacyUpdateDialog({super.key});
@@ -26,13 +28,71 @@ class TermsPrivacyUpdateDialog extends StatelessWidget {
                   ),
             ),
             const SizedBox(height: 28),
-            Text(
-              'コンテンツ利用に当たっては、\n本利用規約・プライバシーポリシー\n 双方に同意したものとみなします。',
+            Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'コンテンツ利用に当たっては、\n本',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(color: Colors.grey),
+                  ),
+                  WidgetSpan(
+                    alignment: PlaceholderAlignment.baseline,
+                    baseline: TextBaseline.alphabetic,
+                    child: GestureDetector(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const TermsOfServiceScreen(),
+                        ),
+                      ),
+                      child: Text(
+                        '利用規約',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(color: Colors.blue),
+                      ),
+                    ),
+                  ),
+                  TextSpan(
+                    text: '・',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(color: Colors.grey),
+                  ),
+                  WidgetSpan(
+                    alignment: PlaceholderAlignment.baseline,
+                    baseline: TextBaseline.alphabetic,
+                    child: GestureDetector(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const PrivacyPolicyScreen(),
+                        ),
+                      ),
+                      child: Text(
+                        'プライバシーポリシー',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(color: Colors.blue),
+                      ),
+                    ),
+                  ),
+                  TextSpan(
+                    text: '\n双方に同意したものとみなします。',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(color: Colors.grey),
+                  ),
+                ],
+              ),
               textAlign: TextAlign.center,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium
-                  ?.copyWith(color: Colors.grey),
             ),
             const SizedBox(height: 32),
             SizedBox(

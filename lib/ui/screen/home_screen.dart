@@ -213,14 +213,13 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     }
   }
 
+  // 2025年7月28日、LINEから取得したグループ情報が、24時間で切れることを利用規約・プライバシーポリシーに追記。
   Future<void> _checkAndShowPrivacyPolicyUpdate() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('terms_and_privacy_update_20250728', false);
     final hasShownUpdate =
         prefs.getBool('terms_and_privacy_update_20250728') ?? false;
 
     if (!hasShownUpdate) {
-      // 少し遅延させてからダイアログを表示
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         await Future.delayed(const Duration(milliseconds: 100));
         if (mounted) {
@@ -232,7 +231,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
             },
           );
           // フラグを設定して二度と表示しないようにする
-          // await prefs.setBool('terms_and_privacy_update_20250728', true);
+          await prefs.setBool('terms_and_privacy_update_20250728', true);
         }
       });
     } else {
