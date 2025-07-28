@@ -19,24 +19,42 @@ class TermsPrivacyUpdateDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'プライバシーポリシーを\n一部変更しました',
+              '利用規約・プライバシーポリシーを\n一部変更しました',
               textAlign: TextAlign.center,
-              style: GoogleFonts.notoSansJp(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-                height: 1.5,
-              ),
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+            ),
+            const SizedBox(height: 28),
+            Text(
+              'コンテンツ利用に当たっては、\n本利用規約・プライバシーポリシー\n 双方に同意したものとみなします。',
+              textAlign: TextAlign.center,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Colors.grey),
             ),
             const SizedBox(height: 32),
-            Text(
-              'コンテンツ利用に当たっては、\n本利用規約・プライバシーポリシー双方に\n同意したものとみなします。',
-              textAlign: TextAlign.center,
-              style: GoogleFonts.notoSansJp(
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
-                color: const Color(0xFF888888),
-                height: 1.6,
+            SizedBox(
+              height: 40,
+              width: 120,
+              child: ElevatedButton(
+                onPressed: Navigator.of(context).pop,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFF2F2F2),
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                child: Text(
+                  'OK',
+                  style: GoogleFonts.notoSansJp(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black,
+                  ),
+                ),
               ),
             ),
           ],

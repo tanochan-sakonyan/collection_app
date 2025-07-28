@@ -16,6 +16,7 @@ import 'package:mr_collection/ui/components/dialog/event/add_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/event/delete_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/event/edit_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/line_group_update_countdown_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/terms_privacy_update_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_and_suggest_official_line_dialog.dart';
 import 'package:mr_collection/ui/screen/member_list.dart';
 import 'package:mr_collection/ui/components/tanochan_drawer.dart';
@@ -77,6 +78,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       }
     });
     _loadSavedTabIndex();
+    _checkAndShowPrivacyPolicyUpdate();
 
     _banner = BannerAd(
       adUnitId: AdHelper.bannerProdId(), // ad_helperを呼び出す
@@ -208,6 +210,33 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     if (mounted && savedIndex < tabController.length) {
       _currentTabIndex = savedIndex;
       tabController.animateTo(savedIndex);
+    }
+  }
+
+  Future<void> _checkAndShowPrivacyPolicyUpdate() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('terms_and_privacy_update_20250728', false);
+    final hasShownUpdate =
+        prefs.getBool('terms_and_privacy_update_20250728') ?? false;
+
+    if (!hasShownUpdate) {
+      // 少し遅延させてからダイアログを表示
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        await Future.delayed(const Duration(milliseconds: 100));
+        if (mounted) {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return const TermsPrivacyUpdateDialog();
+            },
+          );
+          // フラグを設定して二度と表示しないようにする
+          // await prefs.setBool('terms_and_privacy_update_20250728', true);
+        }
+      });
+    } else {
+      debugPrint('Terms and Privacy Update dialog already shown.');
     }
   }
 
