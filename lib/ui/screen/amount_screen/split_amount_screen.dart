@@ -1063,8 +1063,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
               onPressed: _currentTab == 2 && _roles.isEmpty
                   ? null
                   : () {
-                      // JSONデータを出力
-                      _outputJsonData();
+// Removed debug comment and _outputJsonData() call
                       _onConfirm(
                         userId,
                         widget.eventId,
