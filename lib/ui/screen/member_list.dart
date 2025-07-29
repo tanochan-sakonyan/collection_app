@@ -10,7 +10,6 @@ import 'package:mr_collection/provider/amount_loading_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/member/add_member_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/member/delete_member_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/member/edit_member_name_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/member/status_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -19,7 +18,7 @@ import 'package:mr_collection/ui/screen/send_line_message_bottom_sheet.dart';
 import '../components/dialog/member/edit_member_name_dialog.dart';
 import 'package:mr_collection/generated/s.dart';
 
-class MemberList extends ConsumerWidget {
+class MemberList extends ConsumerStatefulWidget {
   final Event event;
   final List<Member>? members;
   final String eventId;
@@ -39,6 +38,30 @@ class MemberList extends ConsumerWidget {
     this.slidableKey,
     this.sortKey,
   });
+
+  @override
+  ConsumerState<MemberList> createState() => _MemberListState();
+}
+
+class _MemberListState extends ConsumerState<MemberList> with TickerProviderStateMixin {
+
+  late final List<GlobalKey> slidableKeys;
+
+  @override
+  void initState() {
+    super.initState();
+    slidableKeys = List.generate(widget.members?.length ?? 0, (_) => GlobalKey());
+  }
+
+  void closeAllSlidables(List<GlobalKey> keys) {
+    for (final key in keys) {
+      final ctx = key.currentContext;
+      if (ctx != null) {
+        Slidable.of(ctx)?.close();
+      }
+    }
+  }
+
   Future<void> _updateMemberStatus(
     WidgetRef ref,
     String userId,
@@ -56,7 +79,8 @@ class MemberList extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+
     // TODO: 未払い、支払い済は、一旦コメントアウト
     // final int? attendanceCount =
     //     members?.where((member) => member.status == PaymentStatus.paid).length;
@@ -66,9 +90,17 @@ class MemberList extends ConsumerWidget {
     //
     // const double iconSize = 30.0;
 
-    final isAmountLoading = ref.watch(amountLoadingProvider(eventId));
+    final members = widget.members ?? [];
+    final isAmountLoading = ref.watch(amountLoadingProvider(widget.eventId));
+    final slidableKeys = List.generate(members.length, (_) => GlobalKey());
 
-    return Padding(
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () {
+        closeAllSlidables(slidableKeys);
+        FocusScope.of(context).unfocus();
+      },
+      child: Padding(
       padding: const EdgeInsets.only(top: 8, left: 29, right: 29),
       child: Stack(
         children: [
@@ -77,19 +109,19 @@ class MemberList extends ConsumerWidget {
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  border: Border.all(color: Colors.black),
+                  border: Border.all(color: Color(0xFF76DCC6)),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Column(
                   children: [
                     Container(
                       decoration: const BoxDecoration(
-                        color: Color(0xFFE8E8E8),
+                        color: Color(0xFF76DCC6),
                         borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(12),
-                          topRight: Radius.circular(12),
+                          topLeft: Radius.circular(11),
+                          topRight: Radius.circular(11),
                         ),
-                        border: Border(bottom: BorderSide(color: Colors.black)),
+                        border: Border(bottom: BorderSide(color: Color(0xFF76DCC6))),
                       ),
                       height: 32,
                       child: Row(
@@ -116,11 +148,11 @@ class MemberList extends ConsumerWidget {
                           ),
                           const SizedBox(width: 3),
                           GestureDetector(
-                            key: sortKey,
+                            key: widget.sortKey,
                             onTap: () {
                               ref
                                   .read(userProvider.notifier)
-                                  .sortingMembers(eventId);
+                                  .sortingMembers(widget.eventId);
                             },
                             child: SvgPicture.asset('assets/icons/sort.svg'),
                           ),
@@ -129,34 +161,34 @@ class MemberList extends ConsumerWidget {
                       ),
                     ),
                     ClipRect(
-                      child:
-                          // TODO: 規約対応
-                          // (event.lineGroupId != null &&
-                          //         DateTime.now().isAfter(event.lineMembersFetchedAt!
-                          //             .add(const Duration(hours: 24))) &&
-                          //         (members == null || members!.isEmpty))
-                          //     ? Center(
-                          //         child: Text(
-                          //           S.of(context)!.memberDeletedAfter24h ??
-                          //               "Member information has been deleted after 24 hours.",
-                          //           style: Theme.of(context)
-                          //               .textTheme
-                          //               .bodyMedium
-                          //               ?.copyWith(
-                          //                 fontSize: 14,
-                          //                 color: Colors.grey,
-                          //               ),
-                          //           textAlign: TextAlign.center,
-                          //         ),
-                          //       )
-                          //    :
-                          SizedBox(
+                      child: SizedBox(
                         height: MediaQuery.of(context).size.height * 0.35,
-                        child: SlidableAutoCloseBehavior(
+                        child: (widget.event.lineGroupId != null
+                              &&  DateTime.now().isAfter(widget.event.lineMembersFetchedAt!.add(const Duration(hours: 24)))
+                        )
+                              ? Center(
+                                  child: Text(
+                                    S.of(context)!.memberDeletedAfter24h ??
+                                        "Member information has been deleted after 24 hours.",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                          fontSize: 14,
+                                          color: Colors.grey,
+                                        ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                )
+                             :
+                         SlidableAutoCloseBehavior(
                           child: ListView.builder(
-                            itemCount: members?.length,
+                            itemCount: widget.members?.length,
                             itemBuilder: (context, index) {
-                              final member = members?[index];
+                              final member = widget.members?[index];
+                              if (member == null) {
+                                return const SizedBox();
+                              }
                               return Padding(
                                 padding: const EdgeInsets.only(
                                   left: 16,
@@ -165,13 +197,14 @@ class MemberList extends ConsumerWidget {
                                 child: Column(
                                   children: [
                                     Slidable(
-                                      key: ValueKey(member!.memberId),
+                                      key: slidableKeys[index],
                                       endActionPane: ActionPane(
                                         motion: const ScrollMotion(),
                                         extentRatio: 0.60,
                                         children: [
                                           CustomSlidableAction(
                                             onPressed: (context) {
+                                              closeAllSlidables(slidableKeys);
                                               showDialog(
                                                 context: context,
                                                 builder: (
@@ -183,7 +216,7 @@ class MemberList extends ConsumerWidget {
                                                         userProvider,
                                                       )!
                                                       .userId,
-                                                  eventId: eventId,
+                                                  eventId: widget.eventId,
                                                   memberId: member.memberId,
                                                   currentName:
                                                       member.memberName,
@@ -210,6 +243,7 @@ class MemberList extends ConsumerWidget {
                                           ),
                                           CustomSlidableAction(
                                             onPressed: (context) {
+                                              closeAllSlidables(slidableKeys);
                                               showDialog(
                                                 context: context,
                                                 builder: (
@@ -221,7 +255,7 @@ class MemberList extends ConsumerWidget {
                                                         userProvider,
                                                       )!
                                                       .userId,
-                                                  eventId: eventId,
+                                                  eventId: widget.eventId,
                                                   memberId: member.memberId,
                                                 ),
                                               );
@@ -247,9 +281,11 @@ class MemberList extends ConsumerWidget {
                                         ],
                                       ),
                                       child: Container(
-                                        key: (index == 0) ? slidableKey : null,
+                                        key: (index == 0) ? widget.slidableKey : null,
                                         child: ListTile(
                                           minTileHeight: 44,
+                                          leading: _buildRoleBadge(
+                                              context, member, members),
                                           title: (member.memberName != null)
                                               ? Text(
                                                   member.memberName,
@@ -316,7 +352,7 @@ class MemberList extends ConsumerWidget {
                                                 userId: ref
                                                     .read(userProvider)!
                                                     .userId,
-                                                eventId: eventId.toString(),
+                                                eventId: widget.eventId.toString(),
                                                 memberId: member.memberId,
                                                 member: member.memberName,
                                                 onStatusChange: (
@@ -352,7 +388,7 @@ class MemberList extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    const Divider(color: Colors.black, thickness: 1, height: 1),
+                    const Divider(color: Color(0xFF76DCC6), thickness: 1, height: 1),
                     SizedBox(
                       height: 44,
                       child: Row(
@@ -382,11 +418,12 @@ class MemberList extends ConsumerWidget {
                           // const SizedBox(width: 100),
                           TextButton(
                             onPressed: () {
+                              closeAllSlidables(slidableKeys);
                               showDialog(
                                 context: context,
                                 builder: (context) => AddMemberDialog(
                                   userId: ref.read(userProvider)!.userId,
-                                  eventId: eventId,
+                                  eventId: widget.eventId,
                                 ),
                               );
                             },
@@ -398,7 +435,7 @@ class MemberList extends ConsumerWidget {
                               ),
                             ),
                             child: Row(
-                              key: memberAddKey,
+                              key: widget.memberAddKey,
                               children: [
                                 SizedBox(
                                   height: 24,
@@ -441,19 +478,20 @@ class MemberList extends ConsumerWidget {
                     ),
                   ),
                   onPressed: () {
+                    closeAllSlidables(slidableKeys);
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => InputAmountScreen(
-                          eventId: eventId,
-                          eventName: eventName,
-                          members: members!,
+                          eventId: widget.eventId,
+                          eventName: widget.eventName,
+                          members: widget.members!,
                         ),
                       ),
                     );
                   },
-                  child: (event.totalMoney != null)
+                  child: (widget.event.totalMoney != null)
                       ? Text(
-                          "合計 ${event.totalMoney.toString()} ${S.of(context)!.currencyUnit}",
+                          "合計 ${widget.event.totalMoney.toString()} ${S.of(context)!.currencyUnit}",
                           style:
                               Theme.of(context).textTheme.bodyLarge?.copyWith(
                                     fontSize: 20,
@@ -593,7 +631,62 @@ class MemberList extends ConsumerWidget {
           ),
         ],
       ),
+    ),
     );
+  }
+
+  Widget? _buildRoleBadge(
+      BuildContext context, Member member, List<Member>? members) {
+    // 一人でもroleがあるメンバーがいるかチェック
+    final hasAnyRole =
+        members?.any((m) => m.role != null && m.role!.isNotEmpty) ?? false;
+
+    if (!hasAnyRole) {
+      // 誰も役割がない場合は何も表示しない
+      return null;
+    }
+
+    if (member.role != null && member.role!.isNotEmpty) {
+      // 役割がある場合は役割名を表示
+      return Container(
+        width: MediaQuery.of(context).size.width * 0.17,
+        padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 4),
+        decoration: BoxDecoration(
+          color: const Color(0xFF75DCC6),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Text(
+          member.role!,
+          style: GoogleFonts.notoSansJp(
+            fontSize: 10,
+            color: Colors.white,
+            fontWeight: FontWeight.w500,
+          ),
+          textAlign: TextAlign.center,
+          maxLines: 1,
+        ),
+      );
+    } else {
+      // 役割がない場合は「役割なし」を表示
+      return Container(
+        width: MediaQuery.of(context).size.width * 0.17,
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+        decoration: BoxDecoration(
+          color: Colors.grey.shade400,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: AutoSizeText(
+          S.of(context)!.noRole,
+          style: GoogleFonts.notoSansJp(
+            fontSize: 10,
+            color: Colors.white,
+            fontWeight: FontWeight.w500,
+          ),
+          textAlign: TextAlign.center,
+          maxLines: 1,
+        ),
+      );
+    }
   }
 
   Widget _buildStatusIcon(PaymentStatus? status) {

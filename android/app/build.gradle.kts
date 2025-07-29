@@ -36,7 +36,7 @@ android {
         applicationId = "app.web.mr_collection"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = 24
+        minSdk = 25
         targetSdk = 35
         versionCode = 11
         versionName = "first relrease"
@@ -58,6 +58,11 @@ android {
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
             isShrinkResources = false
+            //TODO: Androidリリース後に広告搭載する時に使う
+//            proguardFiles(
+//                getDefaultProguardFile("proguard-android-optimize.txt"),
+//                "proguard-rules.pro"
+//            )
         }
     }
 }

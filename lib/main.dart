@@ -10,6 +10,11 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   await LineSDK.instance.setup('2006612683');
 
   await SystemChrome.setPreferredOrientations([
@@ -20,9 +25,11 @@ void main() async {
 
   await interstitial.load();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  //TODO: Androidリリース後に広告搭載する時に使う
+  // RequestConfiguration requestConfiguration = RequestConfiguration(
+  //   testDeviceIds: ['4ABC92F2F1C3BE03787BD48F9E8B39EA'],
+  // );
+  // MobileAds.instance.updateRequestConfiguration(requestConfiguration);
 
   runApp(
     const ProviderScope(child: CollectionApp()),

@@ -16,8 +16,10 @@ import 'package:mr_collection/ui/components/dialog/event/add_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/event/delete_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/event/edit_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/line_group_update_countdown_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/suggest_send_message_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/terms_privacy_update_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_and_suggest_official_line_dialog.dart';
+import 'package:mr_collection/ui/screen/send_line_message_bottom_sheet.dart';
 import 'package:mr_collection/ui/screen/member_list.dart';
 import 'package:mr_collection/ui/components/tanochan_drawer.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
@@ -62,21 +64,14 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     tabController = TabController(length: _tabTitles.length, vsync: this);
 
     tabController.addListener(() {
-      if (tabController.index != _currentTabIndex &&
-          !tabController.indexIsChanging) {
-        _currentTabIndex = tabController.index;
-        _saveTabIndex(_currentTabIndex);
+      if (tabController.index != _currentTabIndex) {
+        setState(() {
+          _currentTabIndex = tabController.index;
+          _saveTabIndex(_currentTabIndex);
+        });
       }
     });
 
-    tabController.animation?.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        if (tabController.index != _currentTabIndex) {
-          _currentTabIndex = tabController.index;
-          _saveTabIndex(_currentTabIndex);
-        }
-      }
-    });
     _loadSavedTabIndex();
     _checkAndShowPrivacyPolicyUpdate();
 
@@ -185,15 +180,19 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     tabController.addListener(() {
       if (tabController.index != _currentTabIndex &&
           !tabController.indexIsChanging) {
-        _currentTabIndex = tabController.index;
-        _saveTabIndex(_currentTabIndex);
+        setState(() {
+          _currentTabIndex = tabController.index;
+          _saveTabIndex(_currentTabIndex);
+        });
       }
     });
     tabController.animation?.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         if (tabController.index != _currentTabIndex) {
-          _currentTabIndex = tabController.index;
-          _saveTabIndex(_currentTabIndex);
+          setState(() {
+            _currentTabIndex = tabController.index;
+            _saveTabIndex(_currentTabIndex);
+          });
         }
       }
     });
@@ -230,7 +229,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
               return const TermsPrivacyUpdateDialog();
             },
           );
-          // フラグを設定して二度と表示しないようにする
+          // フラグをtrueに変更
           await prefs.setBool('terms_and_privacy_update_20250728', true);
         }
       });
@@ -389,6 +388,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     final Event? currentEvent =
         user?.events.firstWhereOrNull((e) => e.eventId == currentEventId);
 
+    debugPrint('currentEvent: $currentEvent');
+    debugPrint('lineGroupId: ${currentEvent?.lineGroupId}');
+    debugPrint('lineMembersFetchedAt: ${currentEvent?.lineMembersFetchedAt}');
+
     final bool isLineConnected = currentEvent != null &&
         currentEvent.lineGroupId != null &&
         currentEvent.lineGroupId!.isNotEmpty;
@@ -420,30 +423,25 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.white,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              tabTitles.isEmpty
-                  ? const SizedBox(width: 24)
-                  : IconButton(
-                      onPressed: () {
-                        _resetTutorial();
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          _showTutorial();
-                        });
-                      },
-                      icon: SvgPicture.asset(
-                        'assets/icons/question_circle.svg',
-                        width: 24,
-                        height: 24,
-                      ),
-                    ),
-            ],
-          ),
           automaticallyImplyLeading: false,
           actions: [
             Row(
               children: [
+                tabTitles.isEmpty
+                    ? const SizedBox(width: 24)
+                    : IconButton(
+                        onPressed: () {
+                          _resetTutorial();
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            _showTutorial();
+                          });
+                        },
+                        icon: SvgPicture.asset(
+                          'assets/icons/question_circle.svg',
+                          width: 38,
+                          height: 38,
+                        ),
+                      ),
                 IconButton(
                   icon: SvgPicture.asset(
                     'assets/icons/settings.svg',
@@ -464,30 +462,76 @@ class HomeScreenState extends ConsumerState<HomeScreen>
             preferredSize: Size.fromHeight(screenHeight * 0.04),
             child: Stack(
               children: [
-                Container(
-                  height: screenHeight * 0.04,
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        color: Color(0xFFC0C8CA),
-                        width: 1,
-                      ),
-                    ),
-                  ),
-                ),
                 SizedBox(
                   height: screenHeight * 0.04,
                   child: Row(
                     children: [
+                      const SizedBox(width: 36),
+                      Container(
+                        decoration: const BoxDecoration(
+                          color: Color(0xFF76DCC6),
+                          shape: BoxShape.circle,
+                        ),
+                        child: IconButton(
+                          key: eventAddKey,
+                          icon: SvgPicture.asset('assets/icons/plus.svg',
+                              width: screenWidth * 0.07,
+                              height: screenWidth * 0.07,
+                              colorFilter: const ColorFilter.mode(
+                                  Colors.white, BlendMode.srcIn)),
+                          onPressed: () async {
+                            final String? createdEventId =
+                                await showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AddEventDialog(
+                                  userId: ref.read(userProvider)!.userId,
+                                );
+                              },
+                            );
+
+                            if (createdEventId != null) {
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                final updatedTabTitles =
+                                    ref.read(tabTitlesProvider);
+                                final eventIndex =
+                                    updatedTabTitles.indexOf(createdEventId);
+                                if (eventIndex != -1) {
+                                  setState(() {
+                                    _currentTabIndex = eventIndex;
+                                    _saveTabIndex(_currentTabIndex);
+                                  });
+                                  tabController.animateTo(eventIndex);
+                                }
+                              });
+                            }
+                          },
+                        ),
+                        // TODO リリース初期段階では、一括削除機能のボタンは非表示
+                        // IconButton(
+                        //   onPressed: () {
+                        //     // TODO 一括削除処理
+                        //   },
+                        //   icon: SvgPicture.asset('assets/icons/delete.svg'),
+                        // ),
+                        // const SizedBox(width: 8),
+                      ),
                       Expanded(
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: TabBar(
                             isScrollable: true,
                             controller: tabController,
-                            tabs: _tabTitles.asMap().entries.map((entry) {
+                            tabAlignment: TabAlignment.start,
+                            labelPadding: EdgeInsets.zero,
+                            indicatorPadding: EdgeInsets.zero,
+                            indicator: const BoxDecoration(),
+                            indicatorColor: Colors.transparent,
+                            dividerColor: Colors.transparent,
+                            tabs: tabTitles.asMap().entries.map((entry) {
                               final index = entry.key;
                               final eventId = entry.value;
+                              final bool isSelected = index == _currentTabIndex;
                               final event = user!.events.firstWhere(
                                 (e) => e.eventId == eventId,
                                 orElse: () => const Event(
@@ -531,6 +575,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                                   event.eventName);
                                         });
                                   } else {
+                                    setState(() => _currentTabIndex = index);
                                     tabController.animateTo(index);
                                   }
                                 },
@@ -544,57 +589,42 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                   },
                                 ),
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 3),
                                   child: Tab(
-                                    child: Text(event.eventName,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium
-                                            ?.copyWith(
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16, vertical: 4),
+                                      decoration: BoxDecoration(
+                                        color: isSelected
+                                            ? const Color(0xFF76DCC6)
+                                            : Colors.white,
+                                        borderRadius:
+                                            BorderRadius.circular(999),
+                                        border: Border.all(
+                                          color: isSelected
+                                              ? const Color(0xFF76DCC6)
+                                              : Colors.grey.shade400,
+                                          width: 1,
+                                        ),
+                                      ),
+                                      child: Text(event.eventName,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium
+                                              ?.copyWith(
                                                 fontSize: 14,
-                                                color: tabTextColor)),
+                                                color: isSelected
+                                                    ? Colors.white
+                                                    : tabTextColor,
+                                              )),
+                                    ),
                                   ),
                                 ),
                               );
                             }).toList(),
-                            indicatorColor: Colors.black,
-                            indicatorWeight: 1,
                           ),
                         ),
-                      ),
-                      Row(
-                        children: [
-                          IconButton(
-                            key: eventAddKey,
-                            icon: SvgPicture.asset(
-                              'assets/icons/plus.svg',
-                              width: screenWidth * 0.07,
-                              height: screenWidth * 0.07,
-                            ),
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AddEventDialog(
-                                    userId: ref.read(userProvider)!.userId,
-                                  );
-                                },
-                              );
-                            },
-                          ),
-                          SizedBox(
-                            width: screenWidth * 0.04,
-                          ),
-                          // TODO リリース初期段階では、一括削除機能のボタンは非表示
-                          // IconButton(
-                          //   onPressed: () {
-                          //     // TODO 一括削除処理
-                          //   },
-                          //   icon: SvgPicture.asset('assets/icons/delete.svg'),
-                          // ),
-                          // const SizedBox(width: 8),
-                        ],
                       ),
                     ],
                   ),
@@ -632,7 +662,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                 style: Theme.of(context)
                                     .textTheme
                                     .labelSmall
-                                    ?.copyWith(color: Colors.black)),
+                                    ?.copyWith(
+                                        fontSize: 14, color: Colors.black)),
                             CountdownTimer(
                               expireTime: currentEvent.lineMembersFetchedAt!
                                   .add(const Duration(hours: 24)),
@@ -640,6 +671,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                   .textTheme
                                   .labelSmall
                                   ?.copyWith(
+                                    fontSize: 14,
                                     color: Colors.black,
                                   ),
                               onExpired: () {
@@ -651,8 +683,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                             const SizedBox(width: 8),
                             SvgPicture.asset(
                               'assets/icons/ic_update.svg',
-                              width: 20,
-                              height: 20,
+                              width: 32,
+                              height: 32,
                             ),
                             const SizedBox(width: 36),
                           ]
@@ -667,7 +699,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                   ? const EventZeroComponents()
                   : TabBarView(
                       controller: tabController,
-                      children: _tabTitles.asMap().entries.map((entry) {
+                      children: tabTitles.asMap().entries.map((entry) {
                         final index = entry.key;
                         final eventId = entry.value;
                         final event = user!.events.firstWhere(

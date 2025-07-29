@@ -15,10 +15,14 @@ class SelectLineGroupScreen extends StatelessWidget {
 
   Future<void> _checkSelectedLineGroup(
       BuildContext context, LineGroup lineGroup) async {
-    Navigator.of(context).push<Event>(
+    final selectedLineGroup = await Navigator.of(context).push<LineGroup>(
       MaterialPageRoute(
           builder: (_) => CheckSelectedLineGroupScreen(lineGroup: lineGroup)),
     );
+
+    if (selectedLineGroup != null) {
+      Navigator.pop(context, selectedLineGroup);
+    }
   }
 
   @override

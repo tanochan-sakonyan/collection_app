@@ -240,6 +240,52 @@ class SEn extends S {
   String get adjustAmounts => 'Adjust amounts';
 
   @override
+  String get adjustByRole => 'Adjust by Role';
+
+  @override
+  String get roleBasedAmountSetting => 'Set amounts by role';
+
+  @override
+  String get roleSetupDescription =>
+      '3rd years pay 3000 yen, 2nd years pay 2000 yen,\n1st years pay the rest...\nRecommended for role-based payment splits!';
+
+  @override
+  String get inputRole => 'Input role';
+
+  @override
+  String get roleSetup => 'Role Setup';
+
+  @override
+  String get roleNameInput => 'Enter role name';
+
+  @override
+  String get assignRole => 'Assign role in bulk';
+
+  @override
+  String get assign => 'Assign';
+
+  @override
+  String get assignRoleToMembers => ' in bulk';
+
+  @override
+  String get modifyRole => 'Modify role';
+
+  @override
+  String get noRole => 'No role';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get enterAmount => 'Enter amount';
+
+  @override
+  String get seniorStudent => 'Senior Student';
+
+  @override
+  String get freshmanStudent => 'Freshman Student';
+
+  @override
   String get splitMode => 'Split Mode';
 
   @override
@@ -339,11 +385,11 @@ class SEn extends S {
       '*Member information obtained from the LINE group will be deleted after 24 hours.\nPlease reacquire before 24 hours have passed.\nPayment statuses will be retained when reacquiring.';
 
   @override
-  String get autoDeleteMemberCountdown => 'Auto member deletion in';
+  String get autoDeleteMemberCountdown => 'Auto member deletion in ';
 
   @override
   String get memberDeletedAfter24h =>
-      'Member information has been deleted after 24 hours.';
+      'Member information \nhas been deleted after 24 hours.';
 
   @override
   String get lineGroupExpireTitle => 'Member info will expire soon';
@@ -396,4 +442,10 @@ class SEn extends S {
   @override
   String get loadingApologizeMessage =>
       'Loading may take around 10–20 seconds. \n We plan to improve this in the next update.';
+
+  @override
+  String get remainingHour => 'h';
+
+  @override
+  String get remainingMinute => 'm';
 }
