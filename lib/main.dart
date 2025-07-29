@@ -23,14 +23,13 @@ void main() async {
 
   await MobileAds.instance.initialize();
 
-  RequestConfiguration requestConfiguration = RequestConfiguration(
-    testDeviceIds: ['4ABC92F2F1C3BE03787BD48F9E8B39EA'],
-  );
-  MobileAds.instance.updateRequestConfiguration(requestConfiguration);
-
   await interstitial.load();
 
-
+  //TODO: Androidリリース後に広告搭載する時に使う
+  // RequestConfiguration requestConfiguration = RequestConfiguration(
+  //   testDeviceIds: ['4ABC92F2F1C3BE03787BD48F9E8B39EA'],
+  // );
+  // MobileAds.instance.updateRequestConfiguration(requestConfiguration);
 
   runApp(
     const ProviderScope(child: CollectionApp()),
