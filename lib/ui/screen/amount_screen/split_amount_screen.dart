@@ -375,7 +375,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
           setState(() {
             // ロールリストは常に保持（メンバーが割り当てられていなくても）
             _roles = roles;
-            
+
             // 新しい役割リストに存在しない役割のみメンバーロールから削除
             final newRoleNames =
                 roles.map((role) => role['role'] as String).toSet();
@@ -430,31 +430,6 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
         },
       ),
     );
-  }
-
-  void _outputJsonData() {
-    // メンバーと金額、役割のマップデータを作成
-    final List<Map<String, dynamic>> memberDataList = [];
-
-    for (int i = 0; i < widget.members.length; i++) {
-      final member = widget.members[i];
-      final controller = _controllers[i];
-      final amountText = controller.text;
-      final amount = int.tryParse(amountText.replaceAll(',', '')) ?? 0;
-      final role = _memberRoles[member.memberId] ?? '';
-
-      memberDataList.add({
-        'memberId': member.memberId,
-        'amount': amount,
-        'role': role,
-      });
-    }
-
-    final jsonString =
-        const JsonEncoder.withIndent('  ').convert(memberDataList);
-    debugPrint('=== Split Amount Data ===');
-    debugPrint(jsonString);
-    debugPrint('========================');
   }
 
   TextInputFormatter _buildAmountFormatter() {
@@ -993,8 +968,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                                                       fontSize: 16,
                                                       fontWeight: _locked[i]
                                                           ? FontWeight.w700
-                                                          : FontWeight
-                                                              .w400, // ★変更
+                                                          : FontWeight.w400,
                                                     ),
                                                 onSubmitted: (v) =>
                                                     _handleSubmitted(i, v),
@@ -1063,7 +1037,6 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
               onPressed: _currentTab == 2 && _roles.isEmpty
                   ? null
                   : () {
-// Removed debug comment and _outputJsonData() call
                       _onConfirm(
                         userId,
                         widget.eventId,
