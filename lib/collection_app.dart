@@ -11,6 +11,7 @@ import 'package:mr_collection/ui/screen/home_screen.dart';
 import 'package:mr_collection/ui/screen/login_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:upgrader/upgrader.dart';
 
 class CollectionApp extends ConsumerStatefulWidget {
   const CollectionApp({super.key});
@@ -102,9 +103,15 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: S.supportedLocales,
-      home: FutureBuilder<Map<String, bool>>(
-        future: _checkLoginStatus(),
-        builder: (context, snapshot) {
+      home:  UpgradeAlert(
+        upgrader: Upgrader(
+          //デバッグの時のみtrueに戻す
+          debugDisplayAlways: false,
+          debugLogging: false,
+        ),
+        child: FutureBuilder<Map<String, bool>>(
+          future: _checkLoginStatus(),
+          builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Container(
               color: const Color(0xFF75DCC6),
@@ -233,6 +240,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
           }
         },
       ),
+    )
     );
   }
 }
