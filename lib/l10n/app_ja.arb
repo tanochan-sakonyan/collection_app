@@ -139,5 +139,6 @@
   "completeSending": "送信完了",
   "loadingApologizeMessage": "読み込みに10~20秒ほどかかる場合があります。\n次回アップデートで改善予定です。",
   "remainingHour": "時間",
-  "remainingMinute": "分"
+  "remainingMinute": "分",
+  "cannotreflesh": "前回のメンバー情報更新から\n24時間以上経過しているため、\n再取得できません。"
 }

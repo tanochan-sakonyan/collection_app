@@ -434,4 +434,7 @@ class SJa extends S {
 
   @override
   String get remainingMinute => '分';
+
+  @override
+  String get cannotreflesh => '前回のメンバー情報更新から\n24時間以上経過しているため、\n再取得できません。';
 }

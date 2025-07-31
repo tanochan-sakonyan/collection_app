@@ -640,17 +640,36 @@ class HomeScreenState extends ConsumerState<HomeScreen>
             if (isLineConnected)
               GestureDetector(
                 onTap: () async {
-                  final updatedGroup = await showDialog<LineGroup>(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return LineGroupUpdateCountdownDialog(
-                          currentEvent: currentEvent);
-                    },
-                  );
-                  if (updatedGroup != null) {
-                    ref
-                        .read(userProvider.notifier)
-                        .updateMemberDifference(currentEventId, updatedGroup);
+                  if (DateTime.now().isAfter(currentEvent.lineMembersFetchedAt!.add(const Duration(hours: 24)))){
+                    showDialog(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                      content: Text(
+                        S.of(context)!.cannotreflesh,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context)
+                                .textTheme
+                                .labelSmall
+                                ?.copyWith(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black),
+                        ),
+                      )
+                    );
+                  } else{
+                    final updatedGroup = await showDialog<LineGroup>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return LineGroupUpdateCountdownDialog(
+                            currentEvent: currentEvent);
+                      },
+                    );
+                    if (updatedGroup != null) {
+                      ref
+                          .read(userProvider.notifier)
+                          .updateMemberDifference(currentEventId, updatedGroup);
+                    }
                   }
                 },
                 child: Row(

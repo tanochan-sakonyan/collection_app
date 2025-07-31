@@ -139,5 +139,6 @@
   "completeSending": "Sending complete",
   "loadingApologizeMessage": "Loading may take around 10–20 seconds. \n We plan to improve this in the next update.",
   "remainingHour": "h",
-  "remainingMinute": "m"
+  "remainingMinute": "m",
+  "cannotreflesh": "You can no longer refresh the members\n because more than 24 hours\n have passed since the last fetch."
 }

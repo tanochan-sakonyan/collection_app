@@ -930,6 +930,12 @@ abstract class S {
   /// In ja, this message translates to:
   /// **'分'**
   String get remainingMinute;
+
+  /// No description provided for @cannotreflesh.
+  ///
+  /// In ja, this message translates to:
+  /// **'前回のメンバー情報更新から\n24時間以上経過しているため、\n再取得できません。'**
+  String get cannotreflesh;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

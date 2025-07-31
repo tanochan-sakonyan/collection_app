@@ -448,4 +448,8 @@ class SEn extends S {
 
   @override
   String get remainingMinute => 'm';
+
+  @override
+  String get cannotreflesh =>
+      'You can no longer refresh the members\n because more than 24 hours\n have passed since the last fetch.';
 }
