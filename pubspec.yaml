@@ -37,6 +37,7 @@ dependencies:
   collection: ^1.19.1
   firebase_core: ^3.15.1
   firebase_analytics: ^11.5.2
+  upgrader: ^11.4.0
 
 dev_dependencies:
   flutter_test:

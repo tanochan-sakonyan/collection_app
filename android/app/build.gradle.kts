@@ -39,7 +39,7 @@ android {
         minSdk = 25
         targetSdk = 35
         versionCode = 11
-        versionName = "first relrease"
+        versionName = "1.0.0"
     }
 
     signingConfigs {
