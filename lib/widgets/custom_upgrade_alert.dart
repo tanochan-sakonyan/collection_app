@@ -65,13 +65,11 @@ class _CustomUpgradeAlertState extends State<CustomUpgradeAlert> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (!_dialogShown) {
-      // デバッグモードでのみ表示するかの判定
       bool shouldShow = false;
       if (widget.upgrader != null) {
-        // upgraderが渡されている場合は、そのupgraderの設定に従う
-        shouldShow = true; // collection_app.dartでdebugDisplayAlwaysの制御を行う
+        shouldShow = true;
       }
-      
+
       if (shouldShow) {
         _dialogShown = true;
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -179,7 +177,8 @@ class _CustomUpgradeAlertState extends State<CustomUpgradeAlert> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF75DCC6),
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 32, vertical: 16),
                       textStyle: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
