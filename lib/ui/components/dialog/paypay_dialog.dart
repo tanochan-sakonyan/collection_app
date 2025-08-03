@@ -110,15 +110,7 @@ class PayPayDialogState extends ConsumerState<PayPayDialog> {
                   ),
                 ),
               ),
-              const SizedBox(height: 12),
-              Text(
-                S.of(context)!.paypayDialogMessage3,
-                style: Theme.of(context)
-                    .textTheme
-                    .labelSmall
-                    ?.copyWith(color: Colors.grey),
-              ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 24),
               SizedBox(
                 height: 40,
                 width: 272,
