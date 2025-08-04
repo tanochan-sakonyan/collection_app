@@ -13,7 +13,13 @@ subprojects {
     project.layout.buildDirectory.value(newSubprojectBuildDir)
 }
 subprojects {
-    project.evaluationDependsOn(":app")
+    afterEvaluate {
+        if (project.hasProperty("android")) {
+            tasks.matching { it.name == "extractDeepLinksRelease" || it.name == "extractDeepLinksDebug" }.configureEach {
+                mustRunAfter(tasks.matching { it.name.contains("GoogleServices") })
+            }
+        }
+    }
 }
 
 tasks.register<Delete>("clean") {
