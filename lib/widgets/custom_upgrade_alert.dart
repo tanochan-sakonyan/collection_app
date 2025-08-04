@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:upgrader/upgrader.dart';
+import 'package:mr_collection/generated/s.dart';
 
 class CustomUpgradeAlert extends StatefulWidget {
   final Widget child;
@@ -52,7 +53,7 @@ class _CustomUpgradeAlertState extends State<CustomUpgradeAlert> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                '新しいバージョンがあります',
+                S.of(context)!.upgradeTitle,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
@@ -71,7 +72,7 @@ class _CustomUpgradeAlertState extends State<CustomUpgradeAlert> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                'アップデートをすると',
+                S.of(context)!.updateDescription,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
@@ -81,7 +82,7 @@ class _CustomUpgradeAlertState extends State<CustomUpgradeAlert> {
               Row(
                 children: [
                   Text(
-                    '以下の新機能が使えるようになります',
+                    S.of(context)!.newFeatures,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
@@ -95,7 +96,7 @@ class _CustomUpgradeAlertState extends State<CustomUpgradeAlert> {
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 18),
               Center(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -131,7 +132,7 @@ class _CustomUpgradeAlertState extends State<CustomUpgradeAlert> {
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
               child: Text(
-                '今はしない',
+                S.of(context)!.notNow,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
@@ -154,7 +155,7 @@ class _CustomUpgradeAlertState extends State<CustomUpgradeAlert> {
                 Navigator.of(context).pop();
               },
               child: Text(
-                'アップデート',
+                S.of(context)!.update,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,

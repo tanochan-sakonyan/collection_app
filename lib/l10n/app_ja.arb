@@ -139,5 +139,10 @@
   "completeSending": "送信完了",
   "loadingApologizeMessage": "読み込みに10~20秒ほどかかる場合があります。\n次回アップデートで改善予定です。",
   "remainingHour": "時間",
-  "remainingMinute": "分"
+  "remainingMinute": "分",
+  "upgradeTitle": "新しいバージョンがあります",
+  "notNow": "今はしない",
+  "update": "アップデート",
+  "updateDescription": "アップデートをすると",
+  "newFeatures": "以下の新機能が使えるようになります"
 }

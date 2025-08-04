@@ -434,4 +434,19 @@ class SJa extends S {
 
   @override
   String get remainingMinute => '分';
+
+  @override
+  String get upgradeTitle => '新しいバージョンがあります';
+
+  @override
+  String get notNow => '今はしない';
+
+  @override
+  String get update => 'アップデート';
+
+  @override
+  String get updateDescription => 'アップデートをすると';
+
+  @override
+  String get newFeatures => '以下の新機能が使えるようになります';
 }

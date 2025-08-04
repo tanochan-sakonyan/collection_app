@@ -448,4 +448,19 @@ class SEn extends S {
 
   @override
   String get remainingMinute => 'm';
+
+  @override
+  String get upgradeTitle => 'A new version is available';
+
+  @override
+  String get notNow => 'Not now';
+
+  @override
+  String get update => 'Update';
+
+  @override
+  String get updateDescription => 'By updating,';
+
+  @override
+  String get newFeatures => 'you can use these new features';
 }
