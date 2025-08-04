@@ -240,7 +240,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
             
             if (eventMember.memberMoney != null) {
               _controllers[i].text = _numFmt.format(eventMember.memberMoney!);
-              _locked[i] = true; // 過去に設定された金額は固定として扱う
+              // 過去のデータを引き継ぐが、新しい金額入力に対応するためロックは解除
               
               // ロール情報の引き継ぎ
               if (eventMember.role != null && eventMember.role!.isNotEmpty) {
