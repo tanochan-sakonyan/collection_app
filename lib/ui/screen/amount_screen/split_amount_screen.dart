@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'dart:ui' show FontFeature;
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/provider/user_provider.dart';
@@ -13,7 +12,6 @@ import 'package:mr_collection/ui/components/dialog/role_setup_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/member_role_edit_dialog.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/ui/screen/home_screen.dart';
-import 'dart:convert';
 
 class _TabPill extends StatelessWidget {
   const _TabPill({
@@ -96,7 +94,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
   final _numFmt = NumberFormat.decimalPattern();
   late int _currentTab;
   List<Map<String, dynamic>> _roles = [];
-  Map<String, String> _memberRoles = {};
+  final Map<String, String> _memberRoles = {};
   bool _isFirstTimeShowingRoleDialog = true;
 
   @override
@@ -113,6 +111,11 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
           ),
         )
         .toList();
+
+    // 過去のデータを引き継ぐ処理
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadPreviousData();
+    });
     _focusNodes = List.generate(
       widget.members.length,
       (i) {
@@ -136,7 +139,6 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
     });
   }
 
-  @override
   void _showGuideDialog() {
     showGeneralDialog(
       context: context,
@@ -168,7 +170,6 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
         fontSize: 48,
         fontWeight: FontWeight.bold,
         color: Colors.black,
-        fontFeatures: const [FontFeature.tabularFigures()],
       );
   TextStyle get _yenStyle => _numberStyle.copyWith(fontSize: 36);
 
@@ -217,6 +218,99 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
       debugPrint('金額入力中にエラーが発生しました: $e');
       return;
     }
+  }
+
+  void _loadPreviousData() {
+    final user = ref.read(userProvider);
+    if (user == null) return;
+
+    try {
+      final event = user.events.firstWhere(
+        (e) => e.eventId == widget.eventId,
+      );
+
+      // 個別金額の引き継ぎ
+      if (event.members.isNotEmpty) {
+        for (int i = 0; i < widget.members.length; i++) {
+          final member = widget.members[i];
+          try {
+            final eventMember = event.members.firstWhere(
+              (m) => m.memberId == member.memberId,
+            );
+            
+            if (eventMember.memberMoney != null) {
+              _controllers[i].text = _numFmt.format(eventMember.memberMoney!);
+              _locked[i] = true; // 過去に設定された金額は固定として扱う
+              
+              // ロール情報の引き継ぎ
+              if (eventMember.role != null && eventMember.role!.isNotEmpty) {
+                _memberRoles[member.memberId] = eventMember.role!;
+              }
+            }
+          } catch (e) {
+            // メンバーが見つからない場合はデフォルト値のまま
+            debugPrint('${member.memberName}のデータが見つかりません: $e');
+          }
+        }
+
+        // ロール情報から役割リストを復元
+        _restoreRolesFromMemberRoles();
+        setState(() {});
+      }
+    } catch (e) {
+      debugPrint('過去のデータの読み込みに失敗しました: $e');
+    }
+  }
+
+  void _restoreRolesFromMemberRoles() {
+    if (_memberRoles.isEmpty) return;
+
+    final Map<String, List<Member>> roleGroups = {};
+    final Map<String, int> roleAmounts = {};
+    
+    // 過去のイベントデータから役割ごとの金額を取得
+    final user = ref.read(userProvider);
+    if (user != null) {
+      try {
+        final event = user.events.firstWhere(
+          (e) => e.eventId == widget.eventId,
+        );
+        
+        // 各役割の金額を過去のデータから計算
+        for (final eventMember in event.members) {
+          if (eventMember.role != null && eventMember.role!.isNotEmpty &&
+              eventMember.memberMoney != null) {
+            roleAmounts[eventMember.role!] = eventMember.memberMoney!;
+          }
+        }
+      } catch (e) {
+        debugPrint('過去のイベントデータの取得に失敗: $e');
+      }
+    }
+    
+    // メンバーロールから役割グループを作成
+    _memberRoles.forEach((memberId, roleName) {
+      if (roleName.isNotEmpty) {
+        roleGroups[roleName] ??= [];
+        try {
+          final member = widget.members.firstWhere(
+            (m) => m.memberId == memberId,
+          );
+          roleGroups[roleName]!.add(member);
+        } catch (e) {
+          debugPrint('メンバーが見つかりません: $memberId');
+        }
+      }
+    });
+
+    // ロールリストを復元（過去のデータから金額も復元）
+    _roles = roleGroups.entries.map((entry) => {
+      'role': entry.key,
+      'amount': roleAmounts[entry.key] ?? 0, // 過去のデータから金額を復元
+      'members': entry.value,
+    }).toList();
+
+    _isFirstTimeShowingRoleDialog = false;
   }
 
   void _handleSubmitted(int index, String rawText) {
@@ -333,13 +427,15 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
 
       final memberRole = _memberRoles[member.memberId];
       if (memberRole != null) {
-        final role = _roles.firstWhere(
-          (r) => r['role'] == memberRole,
-          orElse: () => {'amount': 0},
-        );
-        final roleAmount = role['amount'] ?? 0;
-        amountMap[member.memberId] = roleAmount as int;
-        totalRoleAmount += roleAmount as int;
+        Map<String, dynamic>? role;
+        try {
+          role = _roles.firstWhere((r) => r['role'] == memberRole);
+        } catch (e) {
+          role = {'amount': 0};
+        }
+        final roleAmount = (role['amount'] ?? 0) as int;
+        amountMap[member.memberId] = roleAmount;
+        totalRoleAmount += roleAmount;
       } else {
         amountMap[member.memberId] = 0;
       }
@@ -684,11 +780,13 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
       return 0;
     }
 
-    final role = _roles.firstWhere(
-      (r) => r['role'] == roleKey,
-      orElse: () => {'amount': 0},
-    );
-    return role['amount'] ?? 0;
+    Map<String, dynamic>? role;
+    try {
+      role = _roles.firstWhere((r) => r['role'] == roleKey);
+    } catch (e) {
+      role = {'amount': 0};
+    }
+    return (role['amount'] ?? 0) as int;
   }
 
   @override
