@@ -139,5 +139,10 @@
   "completeSending": "Sending complete",
   "loadingApologizeMessage": "Loading may take around 10–20 seconds. \n We plan to improve this in the next update.",
   "remainingHour": "h",
-  "remainingMinute": "m"
+  "remainingMinute": "m",
+  "upgradeTitle": "A new version is available",
+  "notNow": "Not now",
+  "update": "Update",
+  "updateDescription": "By updating,",
+  "newFeatures": "you can use these new features"
 }

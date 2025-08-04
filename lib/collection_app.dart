@@ -12,6 +12,7 @@ import 'package:mr_collection/ui/screen/login_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:upgrader/upgrader.dart';
+import 'package:mr_collection/widgets/custom_upgrade_alert.dart';
 
 class CollectionApp extends ConsumerStatefulWidget {
   const CollectionApp({super.key});
@@ -71,176 +72,202 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
     );
 
     return MaterialApp(
-      // locale: _locale, //デバッグ時のみ 本番環境ではこの行をコメントアウト
-      title: '集金くん',
-      navigatorObservers: [
-        FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
-      ],
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.white,
+        // locale: _locale, //デバッグ時のみ 本番環境ではこの行をコメントアウト
+        title: '集金くん',
+        navigatorObservers: [
+          FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
+        ],
+        theme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.white,
+          ),
+          brightness: Brightness.light,
+          fontFamily: 'Montserrat',
+          fontFamilyFallback: const ['Noto Sans JP'],
+          textTheme: textTheme,
+          primaryTextTheme: textTheme,
+          tabBarTheme: const TabBarThemeData(
+            indicator: BoxDecoration(),
+            indicatorColor: Colors.transparent,
+            dividerColor: Colors.transparent,
+          ),
+          dialogTheme: const DialogThemeData(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(24)),
+            ),
+            titleTextStyle: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+              fontFamily: 'Montserrat',
+            ),
+            contentTextStyle: TextStyle(
+              fontSize: 14,
+              color: Colors.black,
+              fontFamily: 'Montserrat',
+            ),
+          ),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF75DCC6),
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ),
+          textButtonTheme: TextButtonThemeData(
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.grey,
+            ),
+          ),
         ),
-        brightness: Brightness.light,
-        fontFamily: 'Montserrat',
-        fontFamilyFallback: const ['Noto Sans JP'],
-        textTheme: textTheme,
-        primaryTextTheme: textTheme,
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(textStyle: textTheme.labelLarge),
-        ),
-        tabBarTheme: const TabBarThemeData(
-          indicator: BoxDecoration(),
-          indicatorColor: Colors.transparent,
-          dividerColor: Colors.transparent,
-        ),
-      ),
-      debugShowCheckedModeBanner: false,
-      localizationsDelegates: const [
-        S.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: S.supportedLocales,
-      home:  UpgradeAlert(
-        upgrader: Upgrader(
-          //デバッグの時のみtrueに戻す
-          debugDisplayAlways: false,
-          debugLogging: false,
-        ),
-        child: FutureBuilder<Map<String, bool>>(
-          future: _checkLoginStatus(),
-          builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Container(
-              color: const Color(0xFF75DCC6),
-              child: Center(
-                  child: SvgPicture.asset('assets/icons/reverse_icon.svg')),
-            );
-          } else if (snapshot.hasError) {
-            return Center(child: Text('エラーが発生しました: ${snapshot.error}'));
-          } else {
-            final data = snapshot.data ?? {};
-            final isLineLoggedIn = data['isLineLoggedIn'] ?? false;
-            final isAppleLoggedIn = data['isAppleLoggedIn'] ?? false;
+        debugShowCheckedModeBanner: false,
+        localizationsDelegates: const [
+          S.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: S.supportedLocales,
+        home: CustomUpgradeAlert(
+          upgrader: Upgrader(
+            debugDisplayAlways: false,
+            debugLogging: false,
+          ),
+          child: FutureBuilder<Map<String, bool>>(
+            future: _checkLoginStatus(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Container(
+                  color: const Color(0xFF75DCC6),
+                  child: Center(
+                      child: SvgPicture.asset('assets/icons/reverse_icon.svg')),
+                );
+              } else if (snapshot.hasError) {
+                return Center(child: Text('エラーが発生しました: ${snapshot.error}'));
+              } else {
+                final data = snapshot.data ?? {};
+                final isLineLoggedIn = data['isLineLoggedIn'] ?? false;
+                final isAppleLoggedIn = data['isAppleLoggedIn'] ?? false;
 
-            if (isLineLoggedIn) {
-              // LINEログインの場合の処理
-              return FutureBuilder<String?>(
-                future: _getLineUserId(),
-                builder: (context, userIdSnapshot) {
-                  if (userIdSnapshot.connectionState ==
-                      ConnectionState.waiting) {
-                    return Container(
-                      color: const Color(0xFF75DCC6),
-                      child: Center(
-                          child: SvgPicture.asset(
-                              'assets/icons/reverse_icon.svg')),
-                    );
-                  } else if (userIdSnapshot.hasError) {
-                    return Center(
-                        child: Text('エラーが発生しました: ${userIdSnapshot.error}'));
-                  } else {
-                    final userId = userIdSnapshot.data;
-                    debugPrint('userId: $userId');
-                    if (userId != null) {
-                      return FutureBuilder<User?>(
-                        future: _loadUser(ref, userId),
-                        builder: (context, userSnapshot) {
-                          if (userSnapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Container(
-                              color: const Color(0xFF75DCC6),
-                              child: Center(
-                                  child: SvgPicture.asset(
-                                      'assets/icons/reverse_icon.svg')),
-                            );
-                          } else if (userSnapshot.hasError) {
-                            return Center(
-                                child:
-                                    Text('ユーザー取得エラー: ${userSnapshot.error}'));
-                          } else {
-                            final user = userSnapshot.data;
-                            if (user != null) {
-                              _updateCurrentLoginMedia('line');
-                              return HomeScreen(user: user);
-                            } else {
-                              return const LoginScreen();
-                            }
-                          }
-                        },
-                      );
-                    } else {
-                      debugPrint('userIdが存在しないため、LoginScreenに遷移します。');
-                      return const LoginScreen();
-                    }
-                  }
-                },
-              );
-            } else if (isAppleLoggedIn) {
-              // Appleログインの場合の処理
-              return FutureBuilder<String?>(
-                future: _getAppleUserId(),
-                builder: (context, userIdSnapshot) {
-                  if (userIdSnapshot.connectionState ==
-                      ConnectionState.waiting) {
-                    return Container(
-                      color: const Color(0xFF75DCC6),
-                      child: Center(
-                          child: SvgPicture.asset(
-                              'assets/icons/reverse_icon.svg')),
-                    );
-                  } else if (userIdSnapshot.hasError) {
-                    return Center(
-                        child: Text('エラーが発生しました: ${userIdSnapshot.error}'));
-                  } else {
-                    final userId = userIdSnapshot.data;
-                    debugPrint('userId: $userId');
-                    if (userId != null) {
-                      return FutureBuilder<User?>(
-                        future: ref
-                            .read(userProvider.notifier)
-                            .fetchUserById(userId),
-                        builder: (context, userSnapshot) {
-                          if (userSnapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Container(
-                              color: const Color(0xFF75DCC6),
-                              child: Center(
-                                  child: SvgPicture.asset(
-                                      'assets/icons/reverse_icon.svg')),
-                            );
-                          } else if (userSnapshot.hasError) {
-                            return Center(
-                                child:
-                                    Text('ユーザー取得エラー: ${userSnapshot.error}'));
-                          } else {
-                            final user = userSnapshot.data;
-                            if (user != null) {
-                              _updateCurrentLoginMedia('apple');
-                              return HomeScreen(user: user);
-                            } else {
-                              return const LoginScreen();
-                            }
-                          }
-                        },
-                      );
-                    } else {
-                      debugPrint('userIdが存在しないため、LoginScreenに遷移します。');
-                      return const LoginScreen();
-                    }
-                  }
-                },
-              );
-            } else {
-              // どちらもログイン状態でなければ、LoginScreenに遷移
-              return const LoginScreen();
-            }
-          }
-        },
-      ),
-    )
-    );
+                if (isLineLoggedIn) {
+                  // LINEログインの場合の処理
+                  return FutureBuilder<String?>(
+                    future: _getLineUserId(),
+                    builder: (context, userIdSnapshot) {
+                      if (userIdSnapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return Container(
+                          color: const Color(0xFF75DCC6),
+                          child: Center(
+                              child: SvgPicture.asset(
+                                  'assets/icons/reverse_icon.svg')),
+                        );
+                      } else if (userIdSnapshot.hasError) {
+                        return Center(
+                            child: Text('エラーが発生しました: ${userIdSnapshot.error}'));
+                      } else {
+                        final userId = userIdSnapshot.data;
+                        debugPrint('userId: $userId');
+                        if (userId != null) {
+                          return FutureBuilder<User?>(
+                            future: _loadUser(ref, userId),
+                            builder: (context, userSnapshot) {
+                              if (userSnapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Container(
+                                  color: const Color(0xFF75DCC6),
+                                  child: Center(
+                                      child: SvgPicture.asset(
+                                          'assets/icons/reverse_icon.svg')),
+                                );
+                              } else if (userSnapshot.hasError) {
+                                return Center(
+                                    child: Text(
+                                        'ユーザー取得エラー: ${userSnapshot.error}'));
+                              } else {
+                                final user = userSnapshot.data;
+                                if (user != null) {
+                                  _updateCurrentLoginMedia('line');
+                                  return HomeScreen(user: user);
+                                } else {
+                                  return const LoginScreen();
+                                }
+                              }
+                            },
+                          );
+                        } else {
+                          debugPrint('userIdが存在しないため、LoginScreenに遷移します。');
+                          return const LoginScreen();
+                        }
+                      }
+                    },
+                  );
+                } else if (isAppleLoggedIn) {
+                  // Appleログインの場合の処理
+                  return FutureBuilder<String?>(
+                    future: _getAppleUserId(),
+                    builder: (context, userIdSnapshot) {
+                      if (userIdSnapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return Container(
+                          color: const Color(0xFF75DCC6),
+                          child: Center(
+                              child: SvgPicture.asset(
+                                  'assets/icons/reverse_icon.svg')),
+                        );
+                      } else if (userIdSnapshot.hasError) {
+                        return Center(
+                            child: Text('エラーが発生しました: ${userIdSnapshot.error}'));
+                      } else {
+                        final userId = userIdSnapshot.data;
+                        debugPrint('userId: $userId');
+                        if (userId != null) {
+                          return FutureBuilder<User?>(
+                            future: ref
+                                .read(userProvider.notifier)
+                                .fetchUserById(userId),
+                            builder: (context, userSnapshot) {
+                              if (userSnapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Container(
+                                  color: const Color(0xFF75DCC6),
+                                  child: Center(
+                                      child: SvgPicture.asset(
+                                          'assets/icons/reverse_icon.svg')),
+                                );
+                              } else if (userSnapshot.hasError) {
+                                return Center(
+                                    child: Text(
+                                        'ユーザー取得エラー: ${userSnapshot.error}'));
+                              } else {
+                                final user = userSnapshot.data;
+                                if (user != null) {
+                                  _updateCurrentLoginMedia('apple');
+                                  return HomeScreen(user: user);
+                                } else {
+                                  return const LoginScreen();
+                                }
+                              }
+                            },
+                          );
+                        } else {
+                          debugPrint('userIdが存在しないため、LoginScreenに遷移します。');
+                          return const LoginScreen();
+                        }
+                      }
+                    },
+                  );
+                } else {
+                  // どちらもログイン状態でなければ、LoginScreenに遷移
+                  return const LoginScreen();
+                }
+              }
+            },
+          ),
+        ));
   }
 }
