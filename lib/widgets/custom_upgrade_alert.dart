@@ -1,57 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:upgrader/upgrader.dart';
-
-class CustomUpgraderMessages extends UpgraderMessages {
-  @override
-  String get title => '新しいバージョンがあります';
-
-  @override
-  String get releaseNotes => '新機能';
-
-  @override
-  String get body => '';
-
-  @override
-  String get prompt => '';
-
-  @override
-  String get buttonTitleIgnore => '今はしない';
-
-  @override
-  String get buttonTitleLater => '';
-
-  @override
-  String get buttonTitleUpdate => 'アップデート';
-
-  @override
-  String message(UpgraderMessage messageKey) {
-    switch (messageKey) {
-      case UpgraderMessage.body:
-        return '';
-      case UpgraderMessage.prompt:
-        return '';
-      case UpgraderMessage.releaseNotes:
-        return '新機能';
-      case UpgraderMessage.title:
-        return '新しいバージョンがあります';
-      case UpgraderMessage.buttonTitleIgnore:
-        return '今はしない';
-      case UpgraderMessage.buttonTitleUpdate:
-        return 'アップデート';
-      case UpgraderMessage.buttonTitleLater:
-        return '';
-    }
-  }
-}
 
 class CustomUpgradeAlert extends StatefulWidget {
   final Widget child;
-  final Upgrader? upgrader;
+  final Upgrader upgrader;
 
   const CustomUpgradeAlert({
     super.key,
     required this.child,
-    this.upgrader,
+    required this.upgrader,
   });
 
   @override
@@ -65,170 +24,147 @@ class _CustomUpgradeAlertState extends State<CustomUpgradeAlert> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (!_dialogShown) {
-      bool shouldShow = false;
-      if (widget.upgrader != null) {
-        shouldShow = true;
-      }
-
-      if (shouldShow) {
-        _dialogShown = true;
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          _showCustomDialog();
-        });
-      }
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _showCustomDialog();
+      });
+      _dialogShown = true;
     }
   }
 
-  void _showCustomDialog() {
+  void _showCustomDialog() async {
+    await widget.upgrader.initialize();
+
+    final appStoreVersion = widget.upgrader.currentAppStoreVersion ?? "";
+    final releaseNotes = widget.upgrader.releaseNotes ?? "リリースノートなし";
+    final notesList = releaseNotes.split('\n').where((line) => line.trim().isNotEmpty).take(3).toList();
+    final installedVersion = widget.upgrader.currentInstalledVersion ?? "";
+
+    debugPrint("現在のバージョン: $installedVersion");
+    debugPrint("新しいバージョン: $appStoreVersion");
+
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (BuildContext context) {
+      builder: (context) {
         return AlertDialog(
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(24)),
-          ),
-          backgroundColor: Colors.white,
-          contentPadding: const EdgeInsets.all(32),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '新しいバージョンがあります',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontFamily: 'Montserrat',
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(width: 8),
-                  Text(
-                    '🎉',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 32),
-              const Text(
-                'アップデートをすると',
-                style: TextStyle(
+              Text(
+                '新しいバージョンがあります',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontSize: 16,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w700,
                   color: Colors.black,
-                  fontFamily: 'Montserrat',
                 ),
-                textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 8),
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '以下の新機能が使えるようになります',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black,
-                      fontFamily: 'Montserrat',
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(width: 8),
-                  Text(
-                    '✨',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 32),
-              _buildFeatureItem('メンバーの役職から自動計算'),
-              const SizedBox(height: 16),
-              _buildFeatureItem('LINE取得情報の自動削除の更新機能'),
-              const SizedBox(height: 16),
-              _buildFeatureItem('デザインのバージョンアップ'),
-              const SizedBox(height: 40),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.grey[600],
-                      textStyle: const TextStyle(
-                        fontSize: 16,
-                        fontFamily: 'Montserrat',
-                        fontFamilyFallback: ['Noto Sans JP'],
-                      ),
-                    ),
-                    child: const Text('今はしない'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      // アップデートロジックをここに実装
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF75DCC6),
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 32, vertical: 16),
-                      textStyle: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Montserrat',
-                        fontFamilyFallback: ['Noto Sans JP'],
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                    ),
-                    child: const Text('アップデート'),
-                  ),
-                ],
+              const SizedBox(width: 2),
+              const Text(
+                '🎉',
+                style: TextStyle(fontSize: 16),
               ),
             ],
           ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'アップデートをすると',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black,
+                ),
+              ),
+              Row(
+                children: [
+                  Text(
+                    '以下の新機能が使えるようになります',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(width: 2),
+                  const Text(
+                    '✨',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: notesList.map((line) =>
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SvgPicture.asset(
+                          'assets/icons/ic_check_circle_teal.svg',
+                          width: 22,
+                          height: 22,
+                        ),
+                        const SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
+                            line,
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.black,
+                            ),
+                          )
+                        ),
+                      ],
+                    )
+                  ).toList(),
+                ),
+              ),
+            ],
+          ),
+          actionsAlignment: MainAxisAlignment.center,
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                '今はしない',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black,
+                )
+              ),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(120, 36),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                backgroundColor: const Color(0xFF75DCC6),
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              onPressed: () {
+                widget.upgrader.sendUserToAppStore();
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'アップデート',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                )
+              ),
+            ),
+          ],
         );
       },
-    );
-  }
-
-  Widget _buildFeatureItem(String text) {
-    return Row(
-      children: [
-        Container(
-          width: 24,
-          height: 24,
-          decoration: const BoxDecoration(
-            color: Color(0xFF75DCC6),
-            shape: BoxShape.circle,
-          ),
-          child: const Icon(
-            Icons.check,
-            color: Colors.white,
-            size: 16,
-          ),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Text(
-            text,
-            style: const TextStyle(
-              fontSize: 16,
-              color: Colors.black,
-              fontFamily: 'Montserrat',
-              fontFamilyFallback: ['Noto Sans JP'],
-            ),
-          ),
-        ),
-      ],
     );
   }
 

@@ -134,9 +134,8 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
         supportedLocales: S.supportedLocales,
         home: CustomUpgradeAlert(
           upgrader: Upgrader(
-            debugDisplayAlways: true,
+            debugDisplayAlways: true, //TODO: デバッグ時以外はfalse
             debugLogging: false,
-            messages: CustomUpgraderMessages(),
           ),
           child: FutureBuilder<Map<String, bool>>(
             future: _checkLoginStatus(),
