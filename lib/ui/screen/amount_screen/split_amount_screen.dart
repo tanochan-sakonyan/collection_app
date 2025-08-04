@@ -112,7 +112,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
         )
         .toList();
 
-    // 過去のデータを引き継ぐ処理
+    // 過去のデータを引き継ぐ
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadPreviousData();
     });
@@ -196,7 +196,6 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                 : int.tryParse(_controllers[i].text.replaceAll(',', '')) ?? 0;
       }
     } else if (_tabController.index == 2) {
-      // 役割タブの場合の処理
       _calculateRoleBasedAmounts(amountMap);
     }
     debugPrint('送信する金額マップ: $amountMap');
@@ -237,23 +236,17 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
             final eventMember = event.members.firstWhere(
               (m) => m.memberId == member.memberId,
             );
-            
+
             if (eventMember.memberMoney != null) {
               _controllers[i].text = _numFmt.format(eventMember.memberMoney!);
-              // 過去のデータを引き継ぐが、新しい金額入力に対応するためロックは解除
-              
-              // ロール情報の引き継ぎ
               if (eventMember.role != null && eventMember.role!.isNotEmpty) {
                 _memberRoles[member.memberId] = eventMember.role!;
               }
             }
           } catch (e) {
-            // メンバーが見つからない場合はデフォルト値のまま
             debugPrint('${member.memberName}のデータが見つかりません: $e');
           }
         }
-
-        // ロール情報から役割リストを復元
         _restoreRolesFromMemberRoles();
         setState(() {});
       }
@@ -267,18 +260,17 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
 
     final Map<String, List<Member>> roleGroups = {};
     final Map<String, int> roleAmounts = {};
-    
-    // 過去のイベントデータから役割ごとの金額を取得
+
     final user = ref.read(userProvider);
     if (user != null) {
       try {
         final event = user.events.firstWhere(
           (e) => e.eventId == widget.eventId,
         );
-        
-        // 各役割の金額を過去のデータから計算
+
         for (final eventMember in event.members) {
-          if (eventMember.role != null && eventMember.role!.isNotEmpty &&
+          if (eventMember.role != null &&
+              eventMember.role!.isNotEmpty &&
               eventMember.memberMoney != null) {
             roleAmounts[eventMember.role!] = eventMember.memberMoney!;
           }
@@ -287,8 +279,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
         debugPrint('過去のイベントデータの取得に失敗: $e');
       }
     }
-    
-    // メンバーロールから役割グループを作成
+
     _memberRoles.forEach((memberId, roleName) {
       if (roleName.isNotEmpty) {
         roleGroups[roleName] ??= [];
@@ -303,12 +294,13 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
       }
     });
 
-    // ロールリストを復元（過去のデータから金額も復元）
-    _roles = roleGroups.entries.map((entry) => {
-      'role': entry.key,
-      'amount': roleAmounts[entry.key] ?? 0, // 過去のデータから金額を復元
-      'members': entry.value,
-    }).toList();
+    _roles = roleGroups.entries
+        .map((entry) => {
+              'role': entry.key,
+              'amount': roleAmounts[entry.key] ?? 0,
+              'members': entry.value,
+            })
+        .toList();
 
     _isFirstTimeShowingRoleDialog = false;
   }
