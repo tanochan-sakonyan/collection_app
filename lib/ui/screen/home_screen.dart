@@ -19,6 +19,7 @@ import 'package:mr_collection/ui/components/dialog/line_group_update_countdown_d
 import 'package:mr_collection/ui/components/dialog/suggest_send_message_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/terms_privacy_update_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_and_suggest_official_line_dialog.dart';
+import 'package:mr_collection/ui/components/line_member_delete_limit_countdown.dart';
 import 'package:mr_collection/ui/screen/send_line_message_bottom_sheet.dart';
 import 'package:mr_collection/ui/screen/member_list.dart';
 import 'package:mr_collection/ui/components/tanochan_drawer.dart';
@@ -638,80 +639,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           children: [
             const SizedBox(height: 6),
             if (isLineConnected)
-              GestureDetector(
-                onTap: () async {
-                  if (DateTime.now().isAfter(currentEvent.lineMembersFetchedAt!.add(const Duration(hours: 24)))){
-                    showDialog(
-                      context: context,
-                      builder: (ctx) => AlertDialog(
-                      content: Text(
-                        S.of(context)!.cannotreflesh,
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context)
-                                .textTheme
-                                .labelSmall
-                                ?.copyWith(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.black),
-                        ),
-                      )
-                    );
-                  } else{
-                    final updatedGroup = await showDialog<LineGroup>(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return LineGroupUpdateCountdownDialog(
-                            currentEvent: currentEvent);
-                      },
-                    );
-                    if (updatedGroup != null) {
-                      ref
-                          .read(userProvider.notifier)
-                          .updateMemberDifference(currentEventId, updatedGroup);
-                    }
-                  }
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    ...(currentEvent.lineMembersFetchedAt != null)
-                        ? [
-                            Text(S.of(context)!.autoDeleteMemberCountdown,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelSmall
-                                    ?.copyWith(
-                                        fontSize: 14, color: Colors.black)),
-                            CountdownTimer(
-                              expireTime: currentEvent.lineMembersFetchedAt!
-                                  .add(const Duration(hours: 24)),
-                              textStyle: Theme.of(context)
-                                  .textTheme
-                                  .labelSmall
-                                  ?.copyWith(
-                                    fontSize: 14,
-                                    color: Colors.black,
-                                  ),
-                              onExpired: () {
-                                ref
-                                    .read(userProvider.notifier)
-                                    .clearMembersOfEvent(currentEventId);
-                              },
-                            ),
-                            const SizedBox(width: 8),
-                            SvgPicture.asset(
-                              'assets/icons/ic_update.svg',
-                              width: 32,
-                              height: 32,
-                            ),
-                            const SizedBox(width: 36),
-                          ]
-                        : [
-                            const SizedBox(height: 4),
-                          ],
-                  ],
-                ),
+              LineMemberDeleteLimitCountdown(
+                currentEvent: currentEvent,
+                currentEventId: currentEventId
               ),
             Expanded(
               child: tabTitles.isEmpty
