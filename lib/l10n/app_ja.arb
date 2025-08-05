@@ -123,7 +123,7 @@
   "autoDeleteMemberCountdown": "メンバー自動削除まで ",
   "memberDeletedAfter24h": "24時間が経過したため\nメンバー情報が削除されました",
   "lineGroupExpireTitle": "メンバー情報有効期限が\nもうすぐ切れます",
-  "lineGroupExpireDesc": "LINEの利用規約に則り、メンバー情報有効期限を過ぎる\nと、メンバーと支払い状況の情報が削除されます。\n再取得をし、有効期限をリセットしてください。",
+  "lineGroupExpireDesc": "LINEの利用規約に則り、メンバー情報有効期限を過ぎると、メンバーと支払い状況の情報が削除されます。\n再取得をし、有効期限をリセットしてください。",
   "doNotRefresh": "取得しない",
   "refresh": "再取得",
   "note": "memo",

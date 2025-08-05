@@ -383,7 +383,7 @@ class SJa extends S {
 
   @override
   String get lineGroupExpireDesc =>
-      'LINEの利用規約に則り、メンバー情報有効期限を過ぎる\nと、メンバーと支払い状況の情報が削除されます。\n再取得をし、有効期限をリセットしてください。';
+      'LINEの利用規約に則り、メンバー情報有効期限を過ぎると、メンバーと支払い状況の情報が削除されます。\n再取得をし、有効期限をリセットしてください。';
 
   @override
   String get doNotRefresh => '取得しない';
