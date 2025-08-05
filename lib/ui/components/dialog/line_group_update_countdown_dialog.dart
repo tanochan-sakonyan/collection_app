@@ -44,8 +44,7 @@ class LineGroupUpdateCountdownDialog extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Text(
-                S.of(context)!.lineGroupExpireDesc ??
-                    "According to LINE's terms of use, after the member info expires,\nmember and payment status information will be deleted.\nPlease reacquire to reset the expiration date.",
+                S.of(context)!.lineGroupExpireDesc,
                 textAlign: TextAlign.start,
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       fontWeight: FontWeight.w500,
