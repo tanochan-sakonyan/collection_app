@@ -832,7 +832,7 @@ abstract class S {
   /// No description provided for @lineGroupExpireDesc.
   ///
   /// In ja, this message translates to:
-  /// **'LINEの利用規約に則り、メンバー情報有効期限を過ぎる\nと、メンバーと支払い状況の情報が削除されます。\n再取得をし、有効期限をリセットしてください。'**
+  /// **'LINEの利用規約に則り、メンバー情報有効期限を過ぎると、メンバーと支払い状況の情報が削除されます。\n再取得をし、有効期限をリセットしてください。'**
   String get lineGroupExpireDesc;
 
   /// No description provided for @doNotRefresh.
@@ -930,6 +930,12 @@ abstract class S {
   /// In ja, this message translates to:
   /// **'分'**
   String get remainingMinute;
+
+  /// No description provided for @cannotreflesh.
+  ///
+  /// In ja, this message translates to:
+  /// **'前回のメンバー情報更新から\n24時間以上経過しているため、\n再取得できません。'**
+  String get cannotreflesh;
 
   /// No description provided for @upgradeTitle.
   ///
