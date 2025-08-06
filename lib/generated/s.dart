@@ -936,6 +936,36 @@ abstract class S {
   /// In ja, this message translates to:
   /// **'前回のメンバー情報更新から\n24時間以上経過しているため、\n再取得できません。'**
   String get cannotreflesh;
+
+  /// No description provided for @upgradeTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'新しいバージョンがあります'**
+  String get upgradeTitle;
+
+  /// No description provided for @notNow.
+  ///
+  /// In ja, this message translates to:
+  /// **'今はしない'**
+  String get notNow;
+
+  /// No description provided for @update.
+  ///
+  /// In ja, this message translates to:
+  /// **'アップデート'**
+  String get update;
+
+  /// No description provided for @updateDescription.
+  ///
+  /// In ja, this message translates to:
+  /// **'アップデートをすると'**
+  String get updateDescription;
+
+  /// No description provided for @newFeatures.
+  ///
+  /// In ja, this message translates to:
+  /// **'以下の新機能が使えるようになります'**
+  String get newFeatures;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

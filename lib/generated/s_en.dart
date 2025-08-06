@@ -452,4 +452,19 @@ class SEn extends S {
   @override
   String get cannotreflesh =>
       'You can no longer refresh the members\n because more than 24 hours\n have passed since the last fetch.';
+
+  @override
+  String get upgradeTitle => 'A new version is available';
+
+  @override
+  String get notNow => 'Not now';
+
+  @override
+  String get update => 'Update';
+
+  @override
+  String get updateDescription => 'By updating,';
+
+  @override
+  String get newFeatures => 'you can use these new features';
 }

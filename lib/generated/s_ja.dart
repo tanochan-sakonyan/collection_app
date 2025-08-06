@@ -437,4 +437,19 @@ class SJa extends S {
 
   @override
   String get cannotreflesh => '前回のメンバー情報更新から\n24時間以上経過しているため、\n再取得できません。';
+
+  @override
+  String get upgradeTitle => '新しいバージョンがあります';
+
+  @override
+  String get notNow => '今はしない';
+
+  @override
+  String get update => 'アップデート';
+
+  @override
+  String get updateDescription => 'アップデートをすると';
+
+  @override
+  String get newFeatures => '以下の新機能が使えるようになります';
 }

@@ -140,5 +140,10 @@
   "loadingApologizeMessage": "読み込みに10~20秒ほどかかる場合があります。\n次回アップデートで改善予定です。",
   "remainingHour": "時間",
   "remainingMinute": "分",
-  "cannotreflesh": "前回のメンバー情報更新から\n24時間以上経過しているため、\n再取得できません。"
+  "cannotreflesh": "前回のメンバー情報更新から\n24時間以上経過しているため、\n再取得できません。",
+  "upgradeTitle": "新しいバージョンがあります",
+  "notNow": "今はしない",
+  "update": "アップデート",
+  "updateDescription": "アップデートをすると",
+  "newFeatures": "以下の新機能が使えるようになります"
 }
