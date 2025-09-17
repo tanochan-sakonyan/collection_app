@@ -1,0 +1,136 @@
+{
+  "fill-specializations" : [
+    {
+      "value" : "automatic"
+    },
+    {
+      "appearance" : "dark",
+      "value" : "system-dark"
+    }
+  ],
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "fill-specializations" : [
+            {
+              "value" : "automatic"
+            },
+            {
+              "appearance" : "dark",
+              "value" : {
+                "linear-gradient" : [
+                  "extended-srgb:0.00000,0.78039,0.74510,1.00000",
+                  "display-p3:0.64280,0.89951,0.83955,1.00000"
+                ]
+              }
+            }
+          ],
+          "image-name" : "上.svg",
+          "name" : "上",
+          "opacity-specializations" : [
+            {
+              "appearance" : "dark",
+              "value" : 0.65
+            },
+            {
+              "appearance" : "tinted",
+              "value" : 0.55
+            }
+          ],
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              -0.5859375,
+              -263.125
+            ]
+          }
+        },
+        {
+          "fill-specializations" : [
+            {
+              "value" : "automatic"
+            },
+            {
+              "appearance" : "dark",
+              "value" : {
+                "linear-gradient" : [
+                  "extended-srgb:0.00000,0.78039,0.74510,1.00000",
+                  "display-p3:0.64280,0.89951,0.83955,1.00000"
+                ]
+              }
+            }
+          ],
+          "image-name" : "真ん中.svg",
+          "name" : "真ん中",
+          "opacity-specializations" : [
+            {
+              "appearance" : "dark",
+              "value" : 0.65
+            },
+            {
+              "appearance" : "tinted",
+              "value" : 0.55
+            }
+          ],
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              -19.9296875,
+              18.75
+            ]
+          }
+        },
+        {
+          "fill-specializations" : [
+            {
+              "value" : "automatic"
+            },
+            {
+              "appearance" : "dark",
+              "value" : {
+                "linear-gradient" : [
+                  "extended-srgb:0.00000,0.78039,0.74510,1.00000",
+                  "display-p3:0.64280,0.89951,0.83955,1.00000"
+                ]
+              }
+            }
+          ],
+          "image-name" : "下.svg",
+          "name" : "下",
+          "opacity-specializations" : [
+            {
+              "appearance" : "dark",
+              "value" : 0.65
+            },
+            {
+              "appearance" : "tinted",
+              "value" : 0.55
+            }
+          ],
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              9.9375,
+              295.6796875
+            ]
+          }
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}
