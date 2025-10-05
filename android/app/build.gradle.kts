@@ -43,8 +43,8 @@ android {
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 25
         targetSdk = 35
-        versionCode = 220
-        versionName = "first relrease"
+        versionCode = 11
+        versionName = "1.1.0"
     }
 
     signingConfigs {
@@ -57,17 +57,17 @@ android {
     }
 
     buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("release")
-            isMinifyEnabled = false
-            isShrinkResources = false
-            //TODO: Androidリリース後に広告搭載する時に使う
-//            proguardFiles(
-//                getDefaultProguardFile("proguard-android-optimize.txt"),
-//                "proguard-rules.pro"
-//            )
+    release {
+        // TODO: Add your own signing config for the release build.
+        // Signing with the debug keys for now, so `flutter run --release` works.
+        signingConfig = signingConfigs.getByName("release")
+        isMinifyEnabled = false
+        isShrinkResources = false
+        //TODO: Androidリリース後に広告搭載する時に使う
+    //            proguardFiles(
+    //                getDefaultProguardFile("proguard-android-optimize.txt"),
+    //                "proguard-rules.pro"
+    //            )
         }
     }
 }

@@ -1,25 +1,22 @@
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:mr_collection/ads/ad_helper.dart';
-import 'package:mr_collection/data/model/freezed/line_group.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/provider/tab_titles_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/button/floating_action_button_off.dart';
 import 'package:mr_collection/ui/components/button/floating_action_button_on.dart';
 import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
-import 'package:mr_collection/ui/components/countdown_timer.dart';
 import 'package:mr_collection/ui/components/dialog/event/add_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/event/delete_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/event/edit_event_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/line_group_update_countdown_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/suggest_send_message_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/terms_privacy_update_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_and_suggest_official_line_dialog.dart';
-import 'package:mr_collection/ui/screen/send_line_message_bottom_sheet.dart';
+import 'package:mr_collection/ui/components/line_member_delete_limit_countdown.dart';
 import 'package:mr_collection/ui/screen/member_list.dart';
 import 'package:mr_collection/ui/components/tanochan_drawer.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
@@ -43,8 +40,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<String> _tabTitles = [];
   int _currentTabIndex = 0;
-  late final BannerAd _banner;
-  bool _loaded = false;
+  BannerAd? _banner;
+  bool _isBannerLoaded = false;
+  static const int _maxBannerLoadAttempts = 3;
+  int _bannerLoadAttempts = 0;
 
   final GlobalKey eventAddKey = GlobalKey();
   final GlobalKey leftTabKey = GlobalKey();
@@ -75,18 +74,44 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     _loadSavedTabIndex();
     _checkAndShowPrivacyPolicyUpdate();
 
-    _banner = BannerAd(
-      adUnitId: AdHelper.bannerProdId(), // ad_helperを呼び出す
+    _createBannerAd();
+  }
+
+  void _createBannerAd() {
+    _banner?.dispose();
+    _isBannerLoaded = false;
+
+    final banner = BannerAd(
+      adUnitId:
+          kReleaseMode ? AdHelper.bannerProdId() : AdHelper.bannerTestId(),
       request: const AdRequest(),
       size: AdSize.banner,
       listener: BannerAdListener(
-        onAdLoaded: (_) => setState(() => _loaded = true),
+        onAdLoaded: (_) {
+          if (!mounted) return;
+          setState(() {
+            _isBannerLoaded = true;
+            _bannerLoadAttempts = 0;
+          });
+        },
         onAdFailedToLoad: (ad, error) {
-          ad.dispose();
           debugPrint('Ad load failed: $error');
+          ad.dispose();
+          if (!mounted) return;
+          setState(() {
+            _isBannerLoaded = false;
+            _banner = null;
+          });
+          if (_bannerLoadAttempts < _maxBannerLoadAttempts) {
+            _bannerLoadAttempts += 1;
+            _createBannerAd();
+          }
         },
       ),
-    )..load();
+    );
+
+    banner.load();
+    _banner = banner;
   }
 
   void _initKeys() {
@@ -169,7 +194,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   @override
   void dispose() {
     tabController.dispose();
-    _banner.dispose();
+    _banner?.dispose();
     super.dispose();
   }
 
@@ -638,62 +663,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           children: [
             const SizedBox(height: 6),
             if (isLineConnected)
-              GestureDetector(
-                onTap: () async {
-                  final updatedGroup = await showDialog<LineGroup>(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return LineGroupUpdateCountdownDialog(
-                          currentEvent: currentEvent);
-                    },
-                  );
-                  if (updatedGroup != null) {
-                    ref
-                        .read(userProvider.notifier)
-                        .updateMemberDifference(currentEventId, updatedGroup);
-                  }
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    ...(currentEvent.lineMembersFetchedAt != null)
-                        ? [
-                            Text(S.of(context)!.autoDeleteMemberCountdown,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelSmall
-                                    ?.copyWith(
-                                        fontSize: 14, color: Colors.black)),
-                            CountdownTimer(
-                              expireTime: currentEvent.lineMembersFetchedAt!
-                                  .add(const Duration(hours: 24)),
-                              textStyle: Theme.of(context)
-                                  .textTheme
-                                  .labelSmall
-                                  ?.copyWith(
-                                    fontSize: 14,
-                                    color: Colors.black,
-                                  ),
-                              onExpired: () {
-                                ref
-                                    .read(userProvider.notifier)
-                                    .clearMembersOfEvent(currentEventId);
-                              },
-                            ),
-                            const SizedBox(width: 8),
-                            SvgPicture.asset(
-                              'assets/icons/ic_update.svg',
-                              width: 32,
-                              height: 32,
-                            ),
-                            const SizedBox(width: 36),
-                          ]
-                        : [
-                            const SizedBox(height: 4),
-                          ],
-                  ],
-                ),
-              ),
+              LineMemberDeleteLimitCountdown(
+                  currentEvent: currentEvent, currentEventId: currentEventId),
             Expanded(
               child: tabTitles.isEmpty
                   ? const EventZeroComponents()
@@ -815,13 +786,13 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                       }).toList(),
                     ),
             ),
-            if (_loaded)
+            if (_isBannerLoaded && _banner != null)
               SafeArea(
                 top: false,
                 child: SizedBox(
-                  width: _banner.size.width.toDouble(),
-                  height: _banner.size.height.toDouble(),
-                  child: AdWidget(ad: _banner),
+                  width: _banner!.size.width.toDouble(),
+                  height: _banner!.size.height.toDouble(),
+                  child: AdWidget(ad: _banner!),
                 ),
               ),
           ],

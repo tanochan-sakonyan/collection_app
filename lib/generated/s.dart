@@ -832,7 +832,7 @@ abstract class S {
   /// No description provided for @lineGroupExpireDesc.
   ///
   /// In ja, this message translates to:
-  /// **'LINEの利用規約に則り、メンバー情報有効期限を過ぎる\nと、メンバーと支払い状況の情報が削除されます。\n再取得をし、有効期限をリセットしてください。'**
+  /// **'LINEの利用規約に則り、メンバー情報有効期限を過ぎると、メンバーと支払い状況の情報が削除されます。\n再取得をし、有効期限をリセットしてください。'**
   String get lineGroupExpireDesc;
 
   /// No description provided for @doNotRefresh.
@@ -930,6 +930,42 @@ abstract class S {
   /// In ja, this message translates to:
   /// **'分'**
   String get remainingMinute;
+
+  /// No description provided for @cannotreflesh.
+  ///
+  /// In ja, this message translates to:
+  /// **'前回のメンバー情報更新から\n24時間以上経過しているため、\n再取得できません。'**
+  String get cannotreflesh;
+
+  /// No description provided for @upgradeTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'新しいバージョンがあります'**
+  String get upgradeTitle;
+
+  /// No description provided for @notNow.
+  ///
+  /// In ja, this message translates to:
+  /// **'今はしない'**
+  String get notNow;
+
+  /// No description provided for @update.
+  ///
+  /// In ja, this message translates to:
+  /// **'アップデート'**
+  String get update;
+
+  /// No description provided for @updateDescription.
+  ///
+  /// In ja, this message translates to:
+  /// **'アップデートをすると'**
+  String get updateDescription;
+
+  /// No description provided for @newFeatures.
+  ///
+  /// In ja, this message translates to:
+  /// **'以下の新機能が使えるようになります'**
+  String get newFeatures;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

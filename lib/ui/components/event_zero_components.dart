@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/provider/user_provider.dart';
@@ -54,7 +53,7 @@ class EventZeroComponents extends ConsumerWidget {
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontSize: 16,
                     fontWeight: FontWeight.w900,
-                    color: const Color(0xFF76DCC6))),
+                    color: const Color(0xFFFFFFFF))),
           ),
         ],
       ),
