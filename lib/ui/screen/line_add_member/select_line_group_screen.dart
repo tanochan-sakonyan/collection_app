@@ -19,7 +19,7 @@ class SelectLineGroupScreen extends StatelessWidget {
       MaterialPageRoute(
           builder: (_) => CheckSelectedLineGroupScreen(lineGroup: lineGroup)),
     );
-
+    // ここでaddEventDialogに戻る
     if (selectedLineGroup != null) {
       Navigator.pop(context, selectedLineGroup);
     }
