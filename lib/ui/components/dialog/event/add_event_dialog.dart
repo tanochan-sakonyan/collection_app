@@ -110,13 +110,19 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
     try {
       String? createdEventId;
       if (_isTransferMode) {
-        createdEventId = await ref.read(userProvider.notifier).createEventAndTransferMembers(
-            _selectedEvent!.eventId, eventName, userId);
+        createdEventId = await ref
+            .read(userProvider.notifier)
+            .createEventAndTransferMembers(
+                _selectedEvent!.eventId, eventName, userId);
       } else if (lineGroup != null) {
-        createdEventId = await ref.read(userProvider.notifier).createEventAndGetMembersFromLine(
-            userId, lineGroup!.groupId, eventName, lineGroup!.members);
+        createdEventId = await ref
+            .read(userProvider.notifier)
+            .createEventAndGetMembersFromLine(
+                userId, lineGroup!.groupId, eventName, lineGroup!.members);
       } else {
-        createdEventId = await ref.read(userProvider.notifier).createEvent(eventName, userId);
+        createdEventId = await ref
+            .read(userProvider.notifier)
+            .createEvent(eventName, userId);
       }
       debugPrint('イベント名: $eventName, ユーザーID: $userId');
       Navigator.of(context).pop(createdEventId);
@@ -195,211 +201,75 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
               borderRadius: BorderRadius.circular(14),
             ),
             child: Padding(
-              padding: const EdgeInsets.only(top: 8, left: 24, right: 24),
+              padding: const EdgeInsets.only(top: 40, left: 24, right: 24),
               child: Container(
                 width: 320,
-                height: 330,
+                height: 360,
                 color: Colors.white,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Center(
-                      child: Text(
-                        S.of(context)!.addEvent,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w700,
-                            ),
-                      ),
-                    ),
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      SvgPicture.asset('assets/icons/ic_clipboard_list.svg',
+                          width: 56, height: 56),
+                      const SizedBox(width: 8),
+                      SvgPicture.asset('assets/icons/line.svg',
+                          width: 56, height: 56),
+                    ]),
                     const SizedBox(height: 20),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "Event",
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              fontSize: 10.0,
-                              fontWeight: FontWeight.w700,
-                            ),
-                      ),
-                    ),
-                    Container(
-                      width: 272,
-                      height: 48,
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: const Color(0xFFE8E8E8)),
-                      ),
-                      child: TextField(
-                        controller: _controller,
-                        // textAlignVertical: TextAlignVertical.center,
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Container(
-                      height: 20,
-                      width: double.infinity,
-                      color: Colors.white,
-                      alignment: Alignment.centerRight,
-                      child: _errorMessage != null
-                          ? Text(
-                              _errorMessage!,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelSmall
-                                  ?.copyWith(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w300,
-                                    color: Colors.red,
-                                  ),
-                            )
-                          : null,
-                    ),
-                    const SizedBox(height: 4),
-                    // Options Section
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            width: 272,
-                            height: 48,
-                            child: ListTile(
-                              contentPadding: EdgeInsets.zero,
-                              title: Text(
-                                S.of(context)!.transferMembers,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium
-                                    ?.copyWith(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black),
-                              ),
-                              trailing: SizedBox(
-                                width: 112,
-                                height: 28,
-                                child: ElevatedButton(
-                                  onPressed:
-                                      _isButtonEnabled ? _choiceEvent : null,
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: _isTransferMode
-                                        ? const Color(0xFF76DCC6)
-                                        : const Color(0xFFECECEC),
-                                    elevation: 2,
-                                    shape: const StadiumBorder(),
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 4, vertical: 0),
-                                  ),
-                                  child: Text(
-                                    _selectedEvent?.eventName ??
-                                        S.of(context)!.selectEvent,
-                                    maxLines: 1,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium
-                                        ?.copyWith(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w500,
-                                          color: _isTransferMode
-                                              ? Colors.white
-                                              : Colors.black,
-                                        ),
-                                  ),
-                                ),
-                              ),
-                            ),
+                    Text(
+                      S.of(context)!.addEvent,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
                           ),
-                          SizedBox(
-                            width: 272,
-                            height: 48,
-                            child: ListTile(
-                              contentPadding: EdgeInsets.zero,
-                              dense: true,
-                              title: Text(
-                                S.of(context)!.addFromLine,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium
-                                    ?.copyWith(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black),
-                              ),
-                              trailing: lineGroup != null
-                                  ? SizedBox(
-                                      width: 112,
-                                      height: 28,
-                                      child: ElevatedButton(
-                                        onPressed: () {},
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor:
-                                              const Color(0xFF06C755),
-                                          elevation: 2,
-                                          shape: const StadiumBorder(),
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 4, vertical: 0),
-                                        ),
-                                        child: Text(
-                                          lineGroup!.groupName,
-                                          maxLines: 1,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium
-                                              ?.copyWith(
-                                                fontSize: 10,
-                                                fontWeight: FontWeight.w500,
-                                                color:   Colors.white
-                                              ),
-                                        ),
-                                      ))
-                                  : IconButton(
-                                      icon: SvgPicture.asset(
-                                        'assets/icons/line.svg',
-                                        width: 32,
-                                        height: 32,
-                                      ),
-                                      onPressed: (_isButtonEnabled &&
-                                              !ref.watch(loadingProvider))
-                                          ? () => _selectLineGroup()
-                                          : null,
-                                    ),
-                            ),
-                          ),
-                        ],
-                      ),
                     ),
-                    const SizedBox(height: 24),
-                    SizedBox(
-                      width: 272,
-                      height: 40,
-                      child: ElevatedButton(
-                        onPressed:
-                            _isButtonEnabled ? () => _createEvent() : null,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFF2F2F2),
-                          elevation: 2,
-                          shape: const StadiumBorder(),
+                    const SizedBox(height: 8),
+                    Text(
+                        "“LINEグループから作成”をすると、\n自動でグループのメンバーを追加し、\nグループにメッセージを送信できます。",
+                        style: GoogleFonts.notoSansJp(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w400,
                         ),
-                        child: Text(
-                          S.of(context)!.confirm,
-                          style: GoogleFonts.notoSansJp(
-                              color: Colors.black,
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w400),
-                        ),
-                      ),
-                    ),
+                        textAlign: TextAlign.center),
                     const SizedBox(height: 20),
+                    EventDialogComponent(
+                      label: 'LINEグループから作成',
+                      leading: SvgPicture.asset(
+                        'assets/icons/ic_smile_bubble.svg',
+                        width: 24,
+                        height: 24,
+                        // スクショのようなグレー
+                        colorFilter: const ColorFilter.mode(
+                            Colors.black38, BlendMode.srcIn),
+                      ),
+                      onTap: () {},
+                    ),
+                    const SizedBox(height: 8),
+                    EventDialogComponent(
+                      label: '他のイベントからメンバー引継ぎ',
+                      leading: SvgPicture.asset(
+                        'assets/icons/ic_download_file.svg',
+                        width: 24,
+                        height: 24,
+                        colorFilter: const ColorFilter.mode(
+                            Colors.black38, BlendMode.srcIn),
+                      ),
+                      onTap: () {},
+                    ),
+                    const SizedBox(height: 8),
+                    EventDialogComponent(
+                      label: '空のイベントを作成',
+                      leading: SvgPicture.asset(
+                        'assets/icons/ic_empty_clipboard.svg',
+                        width: 24,
+                        height: 24,
+                        colorFilter: const ColorFilter.mode(
+                            Colors.black38, BlendMode.srcIn),
+                      ),
+                      onTap: () {},
+                    ),
                   ],
                 ),
               ),
@@ -424,6 +294,50 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class EventDialogComponent extends StatelessWidget {
+  const EventDialogComponent({
+    super.key,
+    required this.label,
+    this.leading,
+    this.onTap,
+  });
+
+  final String label;
+  final Widget? leading;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 280,
+      height: 44,
+      child: Material(
+        color: const Color(0xFFEFEFEF),
+        borderRadius: BorderRadius.circular(16),
+        child: Row(
+          children: [
+            const SizedBox(width: 20),
+            SizedBox(
+              width: 14,
+              height: 14,
+              child: leading,
+            ),
+            const SizedBox(width: 16),
+            Text(
+              label,
+              style: GoogleFonts.notoSansJp(
+                fontSize: 11,
+                fontWeight: FontWeight.w400, // Regular
+                color: Colors.black,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

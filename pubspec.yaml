@@ -105,6 +105,10 @@ flutter:
     - assets/icons/icon.png
     - assets/icons/line_official_badge.png
     - assets/images/img_add_from_line.png
+    - assets/icons/ic_clipboard_list.svg
+    - assets/icons/ic_smile_bubble.svg
+    - assets/icons/ic_download_file.svg
+    - assets/icons/ic_empty_clipboard.svg
 
   fonts:
     - family: Montserrat

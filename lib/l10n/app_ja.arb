@@ -47,7 +47,7 @@
   "enterMemberPrompt": "メンバーを入力してください",
   "multiMemberHint": "メンバーを改行区切りでまとめて登録できます",
   "confirm": "決定",
-  "addEvent": "イベント追加",
+  "addEvent": "イベント作成",
   "transferMembers": "メンバー引継ぎ",
   "selectEvent": "イベントを選択",
   "addFromLine": "LINEグループから追加",
