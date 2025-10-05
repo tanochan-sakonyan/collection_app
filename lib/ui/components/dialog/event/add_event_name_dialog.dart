@@ -23,8 +23,16 @@ enum AddEventMode {
 }
 
 class AddEventNameDialog extends ConsumerStatefulWidget {
-  const AddEventNameDialog({super.key, required this.mode});
+  const AddEventNameDialog({
+    super.key,
+    required this.mode,
+    this.selectedEvent,
+    this.selectedLineGroup,
+  });
+
   final AddEventMode mode;
+  final Event? selectedEvent;
+  final LineGroup? selectedLineGroup;
 
   @override
   ConsumerState<AddEventNameDialog> createState() => _AddEventNameDialogState();
@@ -49,6 +57,8 @@ class _AddEventNameDialogState extends ConsumerState<AddEventNameDialog> {
   @override
   void initState() {
     super.initState();
+    _selectedEvent = widget.selectedEvent;
+    _lineGroup = widget.selectedLineGroup;
     _controller.addListener(() {
       final text = _controller.text.trim();
       if (text.length > 8) {
@@ -190,6 +200,7 @@ class _AddEventNameDialogState extends ConsumerState<AddEventNameDialog> {
       }
       if (!mounted) return;
       Navigator.of(context).pop(createdEventId);
+      Navigator.of(context).popUntil((route) => route.isFirst);
     } catch (e) {
       debugPrint('イベント作成失敗: $e');
     } finally {
