@@ -95,11 +95,11 @@ class _AddEventNameDialogState extends ConsumerState<AddEventNameDialog> {
   }
 
   Future<void> _choiceEvent() async {
-    final picked = await Navigator.of(context).push<Event>(
+    final selectedEvent = await Navigator.of(context).push<Event>(
       MaterialPageRoute(builder: (_) => const ChoiceEventScreen()),
     );
-    if (picked != null) {
-      setState(() => _selectedEvent = picked);
+    if (selectedEvent != null) {
+      setState(() => _selectedEvent = selectedEvent);
     }
   }
 
@@ -131,13 +131,13 @@ class _AddEventNameDialogState extends ConsumerState<AddEventNameDialog> {
         ),
       );
     } else {
-      final picked = await Navigator.of(context).push<LineGroup>(
+      final selectedLineGroup = await Navigator.of(context).push<LineGroup>(
         MaterialPageRoute(
           builder: (_) => SelectLineGroupScreen(lineGroups: lineGroups),
         ),
       );
-      if (picked != null) {
-        setState(() => _lineGroup = picked);
+      if (selectedLineGroup != null) {
+        setState(() => _lineGroup = selectedLineGroup);
       }
     }
   }

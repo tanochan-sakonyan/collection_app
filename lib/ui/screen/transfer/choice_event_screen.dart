@@ -15,16 +15,17 @@ class ChoiceEventScreen extends ConsumerStatefulWidget {
 
 class ChoiceEventScreenState extends ConsumerState<ChoiceEventScreen> {
   Future<void> _checkSelectedEvent(Event event) async {
-    final picked = await Navigator.of(context).push<Event>(
+    final selectedEvent = await Navigator.of(context).push<Event>(
       MaterialPageRoute(
           builder: (_) => CheckSelectedEventScreen(selectedEvent: event)),
     );
-    if (picked != null) {
-      Navigator.of(context).pop(picked);
+    if (selectedEvent != null) {
+      Navigator.of(context).pop(selectedEvent);
       showDialog(
           context: context,
           builder: (_) => AddEventNameDialog(
-              mode: AddEventMode.transferMembers, selectedEvent: picked));
+              mode: AddEventMode.transferMembers,
+              selectedEvent: selectedEvent));
     }
   }
 

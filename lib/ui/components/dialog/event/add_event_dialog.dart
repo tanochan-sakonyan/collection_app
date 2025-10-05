@@ -76,12 +76,12 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
 
   // メンバー引き継ぎ
   Future<void> _choiceEvent() async {
-    final picked = await Navigator.of(context).push<Event>(
+    final selectedEvent = await Navigator.of(context).push<Event>(
       MaterialPageRoute(
         builder: (_) => const ChoiceEventScreen(),
       ),
     );
-    if (picked != null) {
+    if (selectedEvent != null) {
       setState(() {});
     }
   }
@@ -120,14 +120,14 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
             builder: (_) => const InviteOfficialAccountToLineGroupScreen()),
       );
     } else {
-      final pickedLineGroup = await Navigator.of(context).push<LineGroup>(
+      final selectedLineGroup = await Navigator.of(context).push<LineGroup>(
         MaterialPageRoute(
             builder: (_) => SelectLineGroupScreen(lineGroups: lineGroups)),
       );
       if (!mounted) return;
-      if (pickedLineGroup != null) {
+      if (selectedLineGroup != null) {
         setState(() {
-          lineGroup = pickedLineGroup;
+          lineGroup = selectedLineGroup;
         });
       }
     }
@@ -158,7 +158,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                       SvgPicture.asset('assets/icons/ic_clipboard_list.svg',
                           width: 56, height: 56),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: 28),
                       SvgPicture.asset('assets/icons/line.svg',
                           width: 56, height: 56),
                     ]),
@@ -188,19 +188,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                           colorFilter: const ColorFilter.mode(
                               Colors.black38, BlendMode.srcIn),
                         ),
-                        onTap: _selectLineGroup
-                        // onTap: (_isButtonEnabled && !ref.watch(loadingProvider))
-                        //     ? () async {
-                        //         await showDialog<String?>(
-                        //           context: context,
-                        //           barrierDismissible: true,
-                        //           builder: (_) => const AddEventNameDialog(
-                        //             mode: AddEventMode.fromLineGroup,
-                        //           ),
-                        //         );
-                        //       }
-                        //     : null,
-                        ),
+                        onTap: _selectLineGroup),
                     const SizedBox(height: 8),
                     EventDialogComponent(
                         label: '他のイベントからメンバー引継ぎ',
@@ -211,17 +199,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                           colorFilter: const ColorFilter.mode(
                               Colors.black38, BlendMode.srcIn),
                         ),
-                        onTap: _choiceEvent
-                        // onTap: () async {
-                        //   await showDialog<String?>(
-                        //     context: context,
-                        //     barrierDismissible: true,
-                        //     builder: (_) => const AddEventNameDialog(
-                        //       mode: AddEventMode.transferMembers,
-                        //     ),
-                        //   );
-                        // },
-                        ),
+                        onTap: _choiceEvent),
                     const SizedBox(height: 8),
                     EventDialogComponent(
                       label: '空のイベントを作成',
