@@ -3,6 +3,7 @@ import UIKit
 
 import LineSDK
 
+@MainActor
 public class FlutterLineSdkPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: "com.linecorp/flutter_line_sdk", binaryMessenger: registrar.messenger())
@@ -74,6 +75,7 @@ enum LineChannelMethod: String {
   case toBeta
   #endif
 
+  @MainActor
   func call(arguments: [String: Any]?, result: @escaping FlutterResult) {
 
     let runner: (_ arguments: [String: Any]?, _ result: @escaping FlutterResult) -> Void
@@ -97,6 +99,7 @@ enum LineChannelMethod: String {
   }
 }
 
+@MainActor
 extension LineChannelMethod {
 
   func setup(arguments: [String: Any]?, result: @escaping FlutterResult) {

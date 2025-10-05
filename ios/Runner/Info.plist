@@ -72,5 +72,13 @@
     <array>
         <string>lineauth2</string>
     </array>
+    <!-- iOS26におけるデバッグモードエラー対応で以下を追加 -->
+    <key>NSBonjourServices</key>
+    <array>
+        <string>_dartobservatory._tcp</string>
+        <string>_dartVmService._tcp</string>
+    </array>
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>This app needs local network access for Flutter debugging.</string>
 </dict>
 </plist>
