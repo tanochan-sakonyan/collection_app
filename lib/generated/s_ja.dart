@@ -152,7 +152,7 @@ class SJa extends S {
   String get confirm => '確 定';
 
   @override
-  String get addEvent => 'イベント追加';
+  String get addEvent => 'イベント作成';
 
   @override
   String get transferMembers => 'メンバー引継ぎ';
@@ -161,7 +161,7 @@ class SJa extends S {
   String get selectEvent => 'イベントを選択';
 
   @override
-  String get addFromLine => 'LINEグループから追加';
+  String get addFromLine => 'LINEグループ';
 
   @override
   String get back => '戻る';

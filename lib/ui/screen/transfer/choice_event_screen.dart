@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
+import 'package:mr_collection/ui/components/dialog/event/add_event_name_dialog.dart';
 import 'package:mr_collection/ui/screen/transfer/check_selected_event_screen.dart';
 import 'package:mr_collection/generated/s.dart';
 
@@ -14,12 +15,17 @@ class ChoiceEventScreen extends ConsumerStatefulWidget {
 
 class ChoiceEventScreenState extends ConsumerState<ChoiceEventScreen> {
   Future<void> _checkSelectedEvent(Event event) async {
-    final picked = await Navigator.of(context).push<Event>(
+    final selectedEvent = await Navigator.of(context).push<Event>(
       MaterialPageRoute(
           builder: (_) => CheckSelectedEventScreen(selectedEvent: event)),
     );
-    if (picked != null) {
-      Navigator.of(context).pop(picked);
+    if (selectedEvent != null) {
+      Navigator.of(context).pop(selectedEvent);
+      showDialog(
+          context: context,
+          builder: (_) => AddEventNameDialog(
+              mode: AddEventMode.transferMembers,
+              selectedEvent: selectedEvent));
     }
   }
 

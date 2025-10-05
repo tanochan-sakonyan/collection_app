@@ -186,6 +186,7 @@ class CheckSelectedLineGroupScreenState
                 onPressed: isLoading
                     ? null
                     : () async {
+                        // ここでLINEグループを受け取って1つ前の画面に戻る(_checkSelectedLineGroup)
                         Navigator.pop(context, lineGroup);
                       },
                 style: ElevatedButton.styleFrom(

@@ -382,7 +382,7 @@ abstract class S {
   /// No description provided for @addEvent.
   ///
   /// In ja, this message translates to:
-  /// **'イベント追加'**
+  /// **'イベント作成'**
   String get addEvent;
 
   /// No description provided for @transferMembers.
@@ -400,7 +400,7 @@ abstract class S {
   /// No description provided for @addFromLine.
   ///
   /// In ja, this message translates to:
-  /// **'LINEグループから追加'**
+  /// **'LINEグループ'**
   String get addFromLine;
 
   /// No description provided for @back.
