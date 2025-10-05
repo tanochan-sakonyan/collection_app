@@ -15,7 +15,6 @@ import 'package:mr_collection/ui/screen/transfer/choice_event_screen.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/ui/screen/line_add_member/select_line_group_screen.dart';
-import 'package:mr_collection/ui/components/dialog/event/add_event_name_dialog.dart';
 
 enum AddEventMode {
   fromLineGroup, // LINEグループから作成
@@ -34,10 +33,6 @@ class AddEventDialog extends ConsumerStatefulWidget {
 
 class AddEventDialogState extends ConsumerState<AddEventDialog> {
   final TextEditingController _controller = TextEditingController();
-  String? _errorMessage;
-  bool _isButtonEnabled = true;
-  Event? _selectedEvent;
-  bool get _isTransferMode => _selectedEvent != null;
   LineGroup? lineGroup;
 
   Timer? _slowLoadingTimer;
@@ -52,13 +47,9 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
     _controller.addListener(() {
       final text = _controller.text.trim();
       if (text.length > 8) {
-        setState(() {
-          _errorMessage = S.of(context)!.maxCharacterMessage_8;
-        });
+        setState(() {});
       } else {
-        setState(() {
-          _errorMessage = null;
-        });
+        setState(() {});
       }
     });
 
@@ -88,58 +79,6 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
     super.dispose();
   }
 
-  Future<void> _createEvent() async {
-    final eventName = _controller.text.trim();
-    final userId = ref.read(userProvider)!.userId;
-
-    if (!_isButtonEnabled) return;
-    setState(() {
-      _isButtonEnabled = false;
-    });
-
-    if (eventName.isEmpty) {
-      _errorMessage = S.of(context)!.enterEventName;
-    } else if (eventName.length > 8) {
-      _errorMessage = S.of(context)!.maxCharacterMessage_8;
-    } else {
-      _errorMessage = null;
-    }
-
-    if (eventName.isEmpty || eventName.length > 8) {
-      setState(() {
-        _isButtonEnabled = true;
-      });
-      return;
-    }
-
-    ref.read(loadingProvider.notifier).state = true;
-
-    try {
-      String? createdEventId;
-      if (_isTransferMode) {
-        createdEventId = await ref
-            .read(userProvider.notifier)
-            .createEventAndTransferMembers(
-                _selectedEvent!.eventId, eventName, userId);
-      } else if (lineGroup != null) {
-        createdEventId = await ref
-            .read(userProvider.notifier)
-            .createEventAndGetMembersFromLine(
-                userId, lineGroup!.groupId, eventName, lineGroup!.members);
-      } else {
-        createdEventId = await ref
-            .read(userProvider.notifier)
-            .createEvent(eventName, userId);
-      }
-      debugPrint('イベント名: $eventName, ユーザーID: $userId');
-      Navigator.of(context).pop(createdEventId);
-    } catch (error) {
-      debugPrint('イベントの追加に失敗しました: $error');
-    } finally {
-      ref.read(loadingProvider.notifier).state = false;
-    }
-  }
-
   // メンバー引き継ぎ
   Future<void> _choiceEvent() async {
     final picked = await Navigator.of(context).push<Event>(
@@ -148,9 +87,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
       ),
     );
     if (picked != null) {
-      setState(() {
-        _selectedEvent = picked;
-      });
+      setState(() {});
     }
   }
 
