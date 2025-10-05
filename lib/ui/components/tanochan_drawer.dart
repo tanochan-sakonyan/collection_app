@@ -123,23 +123,6 @@ class TanochanDrawerState extends State<TanochanDrawer>
               const SizedBox(height: 20),
               _buildMenuItem(
                 context,
-                text: S.of(context)!.logout,
-                icon: SvgPicture.asset("assets/icons/drawer_key.svg"),
-                onTap: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) => const LogoutDialog());
-                },
-              ),
-              const SizedBox(height: 14),
-              const Divider(
-                indent: 20,
-                color: Colors.grey,
-                thickness: 1,
-              ),
-              const SizedBox(height: 14),
-              _buildMenuItem(
-                context,
                 text: S.of(context)!.xLink,
                 icon: SvgPicture.asset("assets/icons/drawer_x.svg"),
                 onTap: () async {
@@ -225,6 +208,17 @@ class TanochanDrawerState extends State<TanochanDrawer>
                 thickness: 1,
               ),
               const SizedBox(height: 14),
+              _buildMenuItem(
+                context,
+                text: S.of(context)!.logout,
+                icon: SvgPicture.asset("assets/icons/drawer_key.svg"),
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) => const LogoutDialog());
+                },
+              ),
+              const SizedBox(height: 20),
               Consumer(builder: (context, ref, child) {
                 final user = ref.watch(userProvider);
                 return _buildMenuItem(
