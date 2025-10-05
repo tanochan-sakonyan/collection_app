@@ -140,7 +140,7 @@ class UpdateInfoDialog extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            'ご意見・ご要望は「目安箱」からいつでも\nお気軽にお寄せください📮',
+            'ご意見・ご要望はアンケートからいつでも\nお気軽にお寄せください📮',
             style: Theme.of(context)
                 .textTheme
                 .bodyMedium

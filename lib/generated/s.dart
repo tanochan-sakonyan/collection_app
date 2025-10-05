@@ -220,7 +220,7 @@ abstract class S {
   /// No description provided for @questionnaire.
   ///
   /// In ja, this message translates to:
-  /// **'目安箱'**
+  /// **'アンケート'**
   String get questionnaire;
 
   /// No description provided for @logout.

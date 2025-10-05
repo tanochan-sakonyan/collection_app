@@ -52,12 +52,24 @@ class TanochanDrawerState extends State<TanochanDrawer>
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(height: MediaQuery.of(context).size.height * 0.1),
-              Text(
-                S.of(context)!.setting,
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                    ),
+              Row(
+                children: [
+                  const SizedBox(width: 16),
+                  Image.asset(
+                    'assets/icons/icon.png',
+                    width: 33,
+                    height: 33,
+                    fit: BoxFit.cover,
+                  ),
+                  const SizedBox(width: 16),
+                  Text(
+                    S.of(context)!.shukinkun,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                        ),
+                  ),
+                ],
               ),
               const SizedBox(height: 8),
               const Divider(
@@ -76,6 +88,12 @@ class TanochanDrawerState extends State<TanochanDrawer>
                   );
                 },
               ),
+              const SizedBox(height: 14),
+              const Divider(
+                indent: 20,
+                color: Colors.grey,
+                thickness: 1,
+              ),
               // const SizedBox(height: 20),
               // _buildMenuItem(
               //   context,
@@ -89,7 +107,7 @@ class TanochanDrawerState extends State<TanochanDrawer>
               //     );
               //   },
               // ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 14),
               _buildMenuItem(
                 context,
                 text: S.of(context)!.questionnaire,
@@ -113,7 +131,13 @@ class TanochanDrawerState extends State<TanochanDrawer>
                       builder: (context) => const LogoutDialog());
                 },
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 14),
+              const Divider(
+                indent: 20,
+                color: Colors.grey,
+                thickness: 1,
+              ),
+              const SizedBox(height: 14),
               _buildMenuItem(
                 context,
                 text: S.of(context)!.xLink,
@@ -162,7 +186,13 @@ class TanochanDrawerState extends State<TanochanDrawer>
                   );
                 },
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 14),
+              const Divider(
+                indent: 20,
+                color: Colors.grey,
+                thickness: 1,
+              ),
+              const SizedBox(height: 14),
               _buildMenuItem(
                 context,
                 text: S.of(context)!.termsOfService,
@@ -188,7 +218,13 @@ class TanochanDrawerState extends State<TanochanDrawer>
                 },
                 icon: SvgPicture.asset("assets/icons/drawer_file.svg"),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 14),
+              const Divider(
+                indent: 20,
+                color: Colors.grey,
+                thickness: 1,
+              ),
+              const SizedBox(height: 14),
               Consumer(builder: (context, ref, child) {
                 final user = ref.watch(userProvider);
                 return _buildMenuItem(
