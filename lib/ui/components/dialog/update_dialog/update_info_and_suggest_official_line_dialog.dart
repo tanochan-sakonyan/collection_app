@@ -42,10 +42,10 @@ class _UpdateInfoAndSuggestOfficialLineDialogState
                 onPageChanged: widget.onPageChanged,
                 children: const [
                   UpdateInfoDialog(
-                    version: "2.0.0",
-                    first: "LINEグループから一括メンバー追加",
-                    second: "グループにメッセージを自動送信",
-                    third: "メモ機能・イベント名編集機能",
+                    version: "2.2.1",
+                    first: "アイコンをガラスに！(iOS限定)",
+                    second: "アップデートをお知らせする機能",
+                    third: "その他、軽微な修正",
                   ),
                   SuggestOfficialLineDialogAfter(),
                 ],
