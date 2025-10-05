@@ -54,7 +54,7 @@ class EventZeroComponents extends ConsumerWidget {
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontSize: 16,
                     fontWeight: FontWeight.w900,
-                    color: const Color(0xFF76DCC6))),
+                    color: const Color(0xFFFFFFFF))),
           ),
         ],
       ),
