@@ -69,7 +69,7 @@ class SJa extends S {
   String get paypayDialogFailMessage => 'PayPayリンクの送信に失敗しました。';
 
   @override
-  String get questionnaire => '目安箱';
+  String get questionnaire => 'アンケート';
 
   @override
   String get logout => 'ログアウト';

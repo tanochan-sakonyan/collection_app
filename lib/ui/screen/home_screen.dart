@@ -446,6 +446,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       child: Scaffold(
         key: _scaffoldKey,
         backgroundColor: Colors.white,
+        drawerScrimColor: Colors.transparent,
         appBar: AppBar(
           backgroundColor: Colors.white,
           automaticallyImplyLeading: false,
