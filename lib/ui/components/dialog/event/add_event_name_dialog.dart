@@ -17,9 +17,9 @@ import 'package:mr_collection/ui/screen/transfer/choice_event_screen.dart';
 
 /// AddEventNameDialog の表示モード
 enum AddEventMode {
-  fromLineGroup, // LINEグループから作成
-  transferMembers, // 他のイベントからメンバー引継ぎ
-  empty, // 空のイベントを作成（中央の要素は非表示）
+  fromLineGroup,
+  transferMembers,
+  empty,
 }
 
 class AddEventNameDialog extends ConsumerStatefulWidget {
