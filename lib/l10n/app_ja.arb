@@ -50,7 +50,7 @@
   "addEvent": "イベント作成",
   "transferMembers": "メンバー引継ぎ",
   "selectEvent": "イベントを選択",
-  "addFromLine": "LINEグループから追加",
+  "addFromLine": "LINEグループ",
   "back": "戻る",
   "selectEventToTransfer": "メンバーを引継ぎたい\nイベントを選択してください",
   "confirmTransferFromEvent": "このメンバーを引継ぎますか？",

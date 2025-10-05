@@ -161,7 +161,7 @@ class SJa extends S {
   String get selectEvent => 'イベントを選択';
 
   @override
-  String get addFromLine => 'LINEグループから追加';
+  String get addFromLine => 'LINEグループ';
 
   @override
   String get back => '戻る';
