@@ -21,7 +21,7 @@ class QuestionnaireDialog extends StatelessWidget {
               S.of(context)!.questionnaire,
               style: Theme.of(context)
                   .textTheme
-                  .bodyLarge
+                  .titleLarge
                   ?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 24),
@@ -50,7 +50,7 @@ class QuestionnaireDialog extends StatelessWidget {
               height: 48,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFF2F2F2),
+                  backgroundColor: const Color(0xFF76DCC6),
                   shadowColor: Colors.transparent,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(32),
@@ -68,7 +68,7 @@ class QuestionnaireDialog extends StatelessWidget {
                   S.of(context)!.suggest,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF76DCC6),
+                        color: const Color(0xFFFFFFFF),
                       ),
                 ),
               ),

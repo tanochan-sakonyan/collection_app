@@ -250,13 +250,13 @@ abstract class S {
   /// No description provided for @questionnaireDescription.
   ///
   /// In ja, this message translates to:
-  /// **'「集金くん」にあったらいいなと思う機能があれば、ご意見いただけると幸いです。'**
+  /// **'「集金くん」に追加してほしい機能があれば、\nぜひご意見ください！'**
   String get questionnaireDescription;
 
   /// No description provided for @feedbackThanks.
   ///
   /// In ja, this message translates to:
-  /// **'今後のアップデートの参考にさせていただきます。'**
+  /// **'今後のアップデートの\n参考にさせていただきます。'**
   String get feedbackThanks;
 
   /// No description provided for @suggest.

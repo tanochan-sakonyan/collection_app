@@ -84,11 +84,10 @@ class SJa extends S {
   String get deleteAccount => 'アカウントの削除';
 
   @override
-  String get questionnaireDescription =>
-      '「集金くん」にあったらいいなと思う機能があれば、ご意見いただけると幸いです。';
+  String get questionnaireDescription => '「集金くん」に追加してほしい機能があれば、\nぜひご意見ください！';
 
   @override
-  String get feedbackThanks => '今後のアップデートの参考にさせていただきます。';
+  String get feedbackThanks => '今後のアップデートの\n参考にさせていただきます。';
 
   @override
   String get suggest => '機能を提案する';
