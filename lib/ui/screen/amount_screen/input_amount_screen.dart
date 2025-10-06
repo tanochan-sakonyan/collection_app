@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/provider/user_provider.dart';
+import 'package:mr_collection/ui/components/dialog/member/member_empty_error_dialog.dart';
 import 'package:mr_collection/ui/screen/amount_screen/split_amount_screen.dart';
 
 class InputAmountScreen extends ConsumerStatefulWidget {
@@ -289,17 +290,24 @@ class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
                     widget.eventId,
                     _amount,
                   );
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => SplitAmountScreen(
-                        eventId: widget.eventId,
-                        eventName: widget.eventName,
-                        members: widget.members,
-                        amount: _amount,
+                  final hasMembers = (widget.members?.length ?? 0) > 0;
+                  if (hasMembers) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => SplitAmountScreen(
+                          eventId: widget.eventId,
+                          eventName: widget.eventName,
+                          members: widget.members,
+                          amount: _amount,
+                        ),
                       ),
-                    ),
-                  );
+                    );
+                  } else {
+                    showDialog(
+                        context: context,
+                        builder: (_) => const MemberEmptyErrorDialog());
+                  }
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,

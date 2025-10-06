@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/data/model/freezed/line_group.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
+import 'package:mr_collection/ui/components/dialog/event/add_event_name_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/invite_official_account_to_line_group_dialog.dart';
 import 'check_selected_line_group_screen.dart';
 import 'package:mr_collection/generated/s.dart';
@@ -19,9 +20,14 @@ class SelectLineGroupScreen extends StatelessWidget {
       MaterialPageRoute(
           builder: (_) => CheckSelectedLineGroupScreen(lineGroup: lineGroup)),
     );
-
+    // ここでaddEventNameDialogに遷移
     if (selectedLineGroup != null) {
       Navigator.pop(context, selectedLineGroup);
+      showDialog(
+          context: context,
+          builder: (_) => AddEventNameDialog(
+              mode: AddEventMode.fromLineGroup,
+              selectedLineGroup: selectedLineGroup));
     }
   }
 

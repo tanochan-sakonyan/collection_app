@@ -69,7 +69,7 @@ class SJa extends S {
   String get paypayDialogFailMessage => 'PayPayリンクの送信に失敗しました。';
 
   @override
-  String get questionnaire => '目安箱';
+  String get questionnaire => 'アンケート';
 
   @override
   String get logout => 'ログアウト';
@@ -84,11 +84,10 @@ class SJa extends S {
   String get deleteAccount => 'アカウントの削除';
 
   @override
-  String get questionnaireDescription =>
-      '「集金くん」にあったらいいなと思う機能があれば、ご意見いただけると幸いです。';
+  String get questionnaireDescription => '「集金くん」に追加してほしい機能があれば、\nぜひご意見ください！';
 
   @override
-  String get feedbackThanks => '今後のアップデートの参考にさせていただきます。';
+  String get feedbackThanks => '今後のアップデートの\n参考にさせていただきます。';
 
   @override
   String get suggest => '機能を提案する';
@@ -152,7 +151,7 @@ class SJa extends S {
   String get confirm => '確 定';
 
   @override
-  String get addEvent => 'イベント追加';
+  String get addEvent => 'イベント作成';
 
   @override
   String get transferMembers => 'メンバー引継ぎ';
@@ -161,7 +160,7 @@ class SJa extends S {
   String get selectEvent => 'イベントを選択';
 
   @override
-  String get addFromLine => 'LINEグループから追加';
+  String get addFromLine => 'LINEグループ';
 
   @override
   String get back => '戻る';

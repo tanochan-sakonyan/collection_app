@@ -63,7 +63,7 @@ import 's_ja.dart';
 /// property.
 abstract class S {
   S(String locale)
-    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -85,16 +85,16 @@ abstract class S {
   /// of delegates is preferred or required.
   static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
       <LocalizationsDelegate<dynamic>>[
-        delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ];
+    delegate,
+    GlobalMaterialLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+  ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('ja'),
-    Locale('en'),
+    Locale('en')
   ];
 
   /// No description provided for @shukinkun.
@@ -220,7 +220,7 @@ abstract class S {
   /// No description provided for @questionnaire.
   ///
   /// In ja, this message translates to:
-  /// **'目安箱'**
+  /// **'アンケート'**
   String get questionnaire;
 
   /// No description provided for @logout.
@@ -250,13 +250,13 @@ abstract class S {
   /// No description provided for @questionnaireDescription.
   ///
   /// In ja, this message translates to:
-  /// **'「集金くん」にあったらいいなと思う機能があれば、ご意見いただけると幸いです。'**
+  /// **'「集金くん」に追加してほしい機能があれば、\nぜひご意見ください！'**
   String get questionnaireDescription;
 
   /// No description provided for @feedbackThanks.
   ///
   /// In ja, this message translates to:
-  /// **'今後のアップデートの参考にさせていただきます。'**
+  /// **'今後のアップデートの\n参考にさせていただきます。'**
   String get feedbackThanks;
 
   /// No description provided for @suggest.
@@ -382,7 +382,7 @@ abstract class S {
   /// No description provided for @addEvent.
   ///
   /// In ja, this message translates to:
-  /// **'イベント追加'**
+  /// **'イベント作成'**
   String get addEvent;
 
   /// No description provided for @transferMembers.
@@ -400,7 +400,7 @@ abstract class S {
   /// No description provided for @addFromLine.
   ///
   /// In ja, this message translates to:
-  /// **'LINEグループから追加'**
+  /// **'LINEグループ'**
   String get addFromLine;
 
   /// No description provided for @back.
@@ -994,9 +994,8 @@ S lookupS(Locale locale) {
   }
 
   throw FlutterError(
-    'S.delegate failed to load unsupported locale "$locale". This is likely '
-    'an issue with the localizations generation tool. Please file an issue '
-    'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.',
-  );
+      'S.delegate failed to load unsupported locale "$locale". This is likely '
+      'an issue with the localizations generation tool. Please file an issue '
+      'on GitHub with a reproducible sample app and the gen-l10n configuration '
+      'that was used.');
 }

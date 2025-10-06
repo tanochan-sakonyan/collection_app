@@ -38,6 +38,7 @@ dependencies:
   firebase_core: ^3.15.1
   firebase_analytics: ^11.5.2
   upgrader: ^11.4.0
+  liquid_glass_renderer: ^0.1.1-dev.10
 
 dev_dependencies:
   flutter_test:
@@ -104,6 +105,10 @@ flutter:
     - assets/icons/icon.png
     - assets/icons/line_official_badge.png
     - assets/images/img_add_from_line.png
+    - assets/icons/ic_clipboard_list.svg
+    - assets/icons/ic_smile_bubble.svg
+    - assets/icons/ic_download_file.svg
+    - assets/icons/ic_empty_clipboard.svg
 
   fonts:
     - family: Montserrat
