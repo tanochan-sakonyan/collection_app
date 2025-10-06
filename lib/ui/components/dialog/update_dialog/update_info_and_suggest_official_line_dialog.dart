@@ -42,9 +42,9 @@ class _UpdateInfoAndSuggestOfficialLineDialogState
                 onPageChanged: widget.onPageChanged,
                 children: const [
                   UpdateInfoDialog(
-                    version: "2.2.1",
+                    version: "2.3.0",
                     first: "アイコンをガラスに！(iOS限定)",
-                    second: "アップデートをお知らせする機能",
+                    second: "一部画面のデザイン変更",
                     third: "その他、軽微な修正",
                   ),
                   SuggestOfficialLineDialogAfter(),
