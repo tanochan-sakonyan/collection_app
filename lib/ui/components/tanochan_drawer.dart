@@ -8,6 +8,7 @@ import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/auth/delete_account_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/auth/logout_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/donation/donation_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/paypay_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/questionnaire_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_and_suggest_official_line_dialog.dart';
@@ -166,6 +167,18 @@ class TanochanDrawerState extends State<TanochanDrawer>
                       vsync: this,
                       onPageChanged: (i) {},
                     ),
+                  );
+                },
+              ),
+              const SizedBox(height: 20),
+              _buildMenuItem(
+                context,
+                text: "コーヒー1杯をご馳走する",
+                icon: SvgPicture.asset("assets/icons/drawer_coffee.svg"),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (_) => DonationDialog(),
                   );
                 },
               ),
