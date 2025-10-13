@@ -6,6 +6,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
+import 'package:mr_collection/ui/components/dialog/donation/donation_thanks_large_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/donation/donation_thanks_medium_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/donation/donation_thanks_small_dialog.dart';
+
 class _DonationOption {
   const _DonationOption({
     required this.productId,
@@ -84,16 +88,19 @@ class DonationDialogState extends ConsumerState<DonationDialog> {
           _isStoreAvailable = false;
           _isLoadingProducts = false;
         });
+        _reportIssue('In-app purchase store not available.');
         return;
       }
 
       _purchaseSubscription ??= _inAppPurchase.purchaseStream
           .listen(_handlePurchaseUpdates,
               onError: (Object error, StackTrace stackTrace) {
-        debugPrint('Purchase stream error: $error');
+        _reportIssue(
+          'Purchase stream error: $error',
+          userMessage: '購入処理でエラーが発生しました。',
+        );
         if (mounted) {
           setState(() => _processingProductId = null);
-          _showSnackBar('購入処理でエラーが発生しました。');
         }
       });
 
@@ -103,12 +110,11 @@ class DonationDialogState extends ConsumerState<DonationDialog> {
       if (!mounted) return;
 
       if (response.error != null) {
-        debugPrint('Product query error: ${response.error}');
+        _reportIssue('Product query error: ${response.error}');
         setState(() {
           _isStoreAvailable = false;
           _isLoadingProducts = false;
         });
-        _showSnackBar('商品情報の取得に失敗しました。');
         return;
       }
 
@@ -123,17 +129,16 @@ class DonationDialogState extends ConsumerState<DonationDialog> {
       });
 
       if (response.notFoundIDs.isNotEmpty) {
-        debugPrint('Not found product ids: ${response.notFoundIDs}');
+        _reportIssue('Not found product ids: ${response.notFoundIDs}');
       }
     } catch (e, stackTrace) {
-      debugPrint('Failed to initialize in-app purchases: $e\n$stackTrace');
+      _reportIssue('Failed to initialize in-app purchases: $e\n$stackTrace');
       if (!mounted) return;
       setState(() {
         _isStoreAvailable = false;
         _isLoadingProducts = false;
         _processingProductId = null;
       });
-      _showSnackBar('購入機能の初期化に失敗しました。');
     }
   }
 
@@ -143,11 +148,13 @@ class DonationDialogState extends ConsumerState<DonationDialog> {
         continue;
       }
 
-      if (purchase.status == PurchaseStatus.purchased ||
-          purchase.status == PurchaseStatus.restored) {
-        _showSnackBar('ご支援ありがとうございます！');
+      if (purchase.status == PurchaseStatus.purchased) {
+        _showThanksDialogForProduct(purchase.productID);
       } else if (purchase.status == PurchaseStatus.error) {
-        _showSnackBar('購入がキャンセルまたは失敗しました。');
+        _reportIssue(
+          'Purchase error for ${purchase.productID}: ${purchase.error}',
+          userMessage: '購入がキャンセルまたは失敗しました。',
+        );
       }
 
       if (purchase.pendingCompletePurchase) {
@@ -166,13 +173,19 @@ class DonationDialogState extends ConsumerState<DonationDialog> {
     }
 
     if (!_isStoreAvailable) {
-      _showSnackBar('現在購入を利用できません。');
+      _reportIssue(
+        'Attempted purchase while store unavailable.',
+        userMessage: '現在購入を利用できません。',
+      );
       return;
     }
 
     final product = _products[productId];
     if (product == null) {
-      _showSnackBar('商品情報が見つかりませんでした。');
+      _reportIssue(
+        'Product details missing for productId=$productId',
+        userMessage: '商品情報が見つかりませんでした。',
+      );
       return;
     }
 
@@ -187,15 +200,52 @@ class DonationDialogState extends ConsumerState<DonationDialog> {
 
       if (!success && mounted) {
         setState(() => _processingProductId = null);
-        _showSnackBar('購入処理を開始できませんでした。');
+        _reportIssue(
+          'buyConsumable returned false for productId=$productId',
+          userMessage: '購入処理を開始できませんでした。',
+        );
       }
     } catch (e, stackTrace) {
-      debugPrint('Failed to start purchase: $e\n$stackTrace');
+      _reportIssue(
+        'Failed to start purchase for productId=$productId: $e\n$stackTrace',
+        userMessage: '購入に失敗しました。',
+      );
       if (mounted) {
         setState(() => _processingProductId = null);
-        _showSnackBar('購入に失敗しました。');
       }
     }
+  }
+
+  void _showThanksDialogForProduct(String productId) {
+    if (!mounted) return;
+
+    Widget? buildDialog() {
+      switch (productId) {
+        case 'app.web.mrCollection.coffee.tip.small':
+          return const DonationThanksSmallDialog();
+        case 'app.web.mrCollection.coffee.tip.medium':
+          return const DonationThanksMediumDialog();
+        case 'app.web.mrCollection.coffee.tip.large':
+          return const DonationThanksLargeDialog();
+        default:
+          return null;
+      }
+    }
+
+    final dialog = buildDialog();
+    if (dialog == null) {
+      _reportIssue('No thanks dialog mapped for productId=$productId');
+      return;
+    }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      showDialog<void>(
+        context: context,
+        useRootNavigator: true,
+        builder: (_) => dialog,
+      );
+    });
   }
 
   void _showSnackBar(String message) {
@@ -206,6 +256,13 @@ class DonationDialogState extends ConsumerState<DonationDialog> {
         SnackBar(content: Text(message)),
       );
     });
+  }
+
+  void _reportIssue(String debugMessage, {String? userMessage}) {
+    debugPrint(debugMessage);
+    if (userMessage != null) {
+      _showSnackBar(userMessage);
+    }
   }
 
   @override
