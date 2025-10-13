@@ -43,31 +43,35 @@ android {
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 25
         targetSdk = 35
-        versionCode = 11
-        versionName = "1.1.0"
+        versionCode = 230
+        versionName = "2.3.0"
     }
 
+    fun requireProp(p: Properties, key: String): String =
+        p.getProperty(key) ?: error("Missing '$key' in key.properties")
+
     signingConfigs {
+        if (!keystorePropertiesFile.exists()) {
+            error("key.properties not found at: ${keystorePropertiesFile.absolutePath}")
+        }
         create("release") {
-            keyAlias = keystoreProperties["keyAlias"] as String
-            keyPassword = keystoreProperties["keyPassword"] as String
-            storeFile = file(keystoreProperties["storeFile"] as String)
-            storePassword = keystoreProperties["storePassword"] as String
+            keyAlias = requireProp(keystoreProperties, "keyAlias")
+            keyPassword = requireProp(keystoreProperties, "keyPassword")
+            storeFile = file(requireProp(keystoreProperties, "storeFile"))
+            storePassword = requireProp(keystoreProperties, "storePassword")
         }
     }
 
     buildTypes {
-    release {
-        // TODO: Add your own signing config for the release build.
-        // Signing with the debug keys for now, so `flutter run --release` works.
-        signingConfig = signingConfigs.getByName("release")
-        isMinifyEnabled = false
-        isShrinkResources = false
-        //TODO: Androidリリース後に広告搭載する時に使う
-    //            proguardFiles(
-    //                getDefaultProguardFile("proguard-android-optimize.txt"),
-    //                "proguard-rules.pro"
-    //            )
+        release {
+            if (keystorePropertiesFile.exists()) {
+                signingConfig = signingConfigs.getByName("release")
+            } else {
+                // ファイルが無ければデバッグ鍵で署名 or 未設定（CI 用にエラーにしたい場合は throw でもOK）
+                signingConfig = signingConfigs.getByName("debug")
+            }
+            isMinifyEnabled = false
+            isShrinkResources = false
         }
     }
 }
