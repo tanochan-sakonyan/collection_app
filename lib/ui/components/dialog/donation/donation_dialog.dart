@@ -6,9 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
-import 'package:mr_collection/ui/components/dialog/donation/donation_thanks_large_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/donation/donation_thanks_medium_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/donation/donation_thanks_small_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/donation/donation_thanks_dialog.dart';
 
 class _DonationOption {
   const _DonationOption({
@@ -219,14 +217,44 @@ class DonationDialogState extends ConsumerState<DonationDialog> {
   void _showThanksDialogForProduct(String productId) {
     if (!mounted) return;
 
-    Widget? buildDialog() {
+    DonationThanksDialog? buildDialog() {
       switch (productId) {
         case 'app.web.mrCollection.coffee.tip.small':
-          return const DonationThanksSmallDialog();
+          return const DonationThanksDialog(
+            title: 'ご支援ありがとうございます！',
+            messageLines: [
+              'ごちそうさまです！',
+              'カフェモカでほっと一息ついて、',
+              'また開発がんばります！',
+              '応援してくれてありがとう🙌',
+            ],
+            assetPath: 'assets/icons/ic_coffee.svg',
+            assetWidth: 120,
+          );
         case 'app.web.mrCollection.coffee.tip.medium':
-          return const DonationThanksMediumDialog();
+          return const DonationThanksDialog(
+            title: 'ご支援ありがとうございます！',
+            messageLines: [
+              'ごちそうさまです！',
+              '抹茶フラッペでリフレッシュして、',
+              '次のアイデアにつなげます！',
+              '応援してくれてありがとう🙌',
+            ],
+            assetPath: 'assets/icons/ic_frappe.svg',
+            assetWidth: 120,
+          );
         case 'app.web.mrCollection.coffee.tip.large':
-          return const DonationThanksLargeDialog();
+          return const DonationThanksDialog(
+            title: 'ご支援ありがとうございます！',
+            messageLines: [
+              'ごちそうさまです！',
+              'ドーナツで当分補給ばっちり！',
+              '集中モードに入ります！',
+              '応援してくれてありがとう🙌',
+            ],
+            assetPath: 'assets/icons/ic_sweets.svg',
+            assetWidth: 120,
+          );
         default:
           return null;
       }

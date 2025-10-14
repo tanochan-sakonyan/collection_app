@@ -9,9 +9,7 @@ import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/auth/delete_account_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/auth/logout_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/donation/donation_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/donation/donation_thanks_large_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/donation/donation_thanks_medium_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/donation/donation_thanks_small_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/donation/donation_thanks_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/paypay_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/questionnaire_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_and_suggest_official_line_dialog.dart';
@@ -192,7 +190,17 @@ class TanochanDrawerState extends State<TanochanDrawer>
                 onTap: () {
                   showDialog(
                     context: context,
-                    builder: (_) => const DonationThanksSmallDialog(),
+                    builder: (_) => const DonationThanksDialog(
+                      title: 'ご支援ありがとうございます！',
+                      messageLines: [
+                        'ごちそうさまです！',
+                        'カフェモカでほっと一息ついて、',
+                        'また開発がんばります！',
+                        '応援してくれてありがとう🙌',
+                      ],
+                      assetPath: 'assets/icons/ic_coffee.svg',
+                      assetWidth: 120,
+                    ),
                   );
                 },
               ),
@@ -202,9 +210,18 @@ class TanochanDrawerState extends State<TanochanDrawer>
                 icon: SvgPicture.asset("assets/icons/drawer_coffee.svg"),
                 onTap: () {
                   showDialog(
-                    context: context,
-                    builder: (_) => const DonationThanksMediumDialog(),
-                  );
+                      context: context,
+                      builder: (_) => const DonationThanksDialog(
+                            title: 'ご支援ありがとうございます！',
+                            messageLines: [
+                              'ごちそうさまです！',
+                              '抹茶フラッペでリフレッシュして、',
+                              '次のアイデアにつなげます！',
+                              '応援してくれてありがとう🙌',
+                            ],
+                            assetPath: 'assets/icons/ic_frappe.svg',
+                            assetWidth: 120,
+                          ));
                 },
               ),
               _buildMenuItem(
@@ -214,7 +231,17 @@ class TanochanDrawerState extends State<TanochanDrawer>
                 onTap: () {
                   showDialog(
                     context: context,
-                    builder: (_) => const DonationThanksLargeDialog(),
+                    builder: (_) => const DonationThanksDialog(
+                      title: 'ご支援ありがとうございます！',
+                      messageLines: [
+                        'ごちそうさまです！',
+                        'ドーナツで当分補給ばっちり！',
+                        '集中モードに入ります！',
+                        '応援してくれてありがとう🙌',
+                      ],
+                      assetPath: 'assets/icons/ic_sweets.svg',
+                      assetWidth: 120,
+                    ),
                   );
                 },
               ),
