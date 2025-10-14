@@ -36,7 +36,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     bool isChecked = ref.watch(checkboxProvider);
     final isProcessLoading = ref.watch(loginLoadingProvider);
 
-    Future<void> _updateCurrentLoginMedia(String media) async {
+    Future<void> updateCurrentLoginMedia(String media) async {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('currentLoginMedia', media);
       debugPrint('currentLoginMedia: $media');
@@ -98,7 +98,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               if (mounted && user != null) {
                                 debugPrint(
                                     '既存LINEユーザーでHomeScreenに遷移します。user: $user');
-                                _updateCurrentLoginMedia('line');
+                                updateCurrentLoginMedia('line');
                                 setState(() => isLoading = true);
                                 Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
@@ -134,7 +134,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               if (mounted && user != null) {
                                 debugPrint(
                                     'LoginScreenからHomeScreenに遷移します。user: $user');
-                                _updateCurrentLoginMedia('line');
+                                updateCurrentLoginMedia('line');
                                 setState(() => isLoading = true);
                                 Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
@@ -217,7 +217,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       .fetchUserById(userId);
                                   final user = ref.read(userProvider);
                                   if (mounted && user != null) {
-                                    _updateCurrentLoginMedia('apple');
+                                    updateCurrentLoginMedia('apple');
                                     setState(() => isLoading = true);
                                     Navigator.of(context).pushReplacement(
                                       MaterialPageRoute(
@@ -287,7 +287,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       if (mounted) {
                                         debugPrint(
                                             'Appleサインイン成功。HomeScreenへ遷移します。user: $user');
-                                        _updateCurrentLoginMedia('apple');
+                                        updateCurrentLoginMedia('apple');
                                         setState(() => isLoading = true);
                                         Navigator.of(context).pushReplacement(
                                           MaterialPageRoute(
@@ -350,8 +350,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             ),
                             const SizedBox(width: 50),
                             Text(
-                              S.of(context)!.signInWithApple ??
-                                  "Sign in with Apple",
+                              S.of(context)!.signInWithApple,
                               style: GoogleFonts.notoSansJp(
                                   color: Colors.white,
                                   fontSize: 16,
@@ -375,9 +374,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       Text.rich(
                         TextSpan(
                           children: [
-                            TextSpan(
-                                text: S.of(context)!.termsAndPrivacyIntro ??
-                                    "I agree to the \n"),
+                            TextSpan(text: S.of(context)!.termsAndPrivacyIntro),
                             WidgetSpan(
                               alignment: PlaceholderAlignment.baseline,
                               baseline: TextBaseline.alphabetic,
@@ -389,8 +386,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                           const TermsOfServiceScreen()),
                                 ),
                                 child: Text(
-                                  S.of(context)!.termsOfService ??
-                                      "Terms Of Service", // "Terms of Service"
+                                  S
+                                      .of(context)!
+                                      .termsOfService, // "Terms of Service"
                                   style: const TextStyle(
                                       fontSize: 14, color: Colors.blue),
                                 ),
@@ -408,8 +406,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                           const PrivacyPolicyScreen()),
                                 ),
                                 child: Text(
-                                  S.of(context)!.privacyPolicy ??
-                                      "Privacy Policy",
+                                  S.of(context)!.privacyPolicy,
                                   style: const TextStyle(
                                       fontSize: 14, color: Colors.blue),
                                 ),
