@@ -179,7 +179,7 @@ class TanochanDrawerState extends State<TanochanDrawer>
                 onTap: () {
                   showDialog(
                     context: context,
-                    builder: (_) => DonationDialog(),
+                    builder: (_) => const DonationDialog(),
                   );
                 },
               ),
