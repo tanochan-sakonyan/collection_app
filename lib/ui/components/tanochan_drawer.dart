@@ -1,4 +1,5 @@
 // lib/custom_drawer.dart
+import 'dart:io' show Platform;
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -171,18 +172,20 @@ class TanochanDrawerState extends State<TanochanDrawer>
                   );
                 },
               ),
-              const SizedBox(height: 20),
-              _buildMenuItem(
-                context,
-                text: "コーヒー1杯をご馳走する",
-                icon: SvgPicture.asset("assets/icons/drawer_coffee.svg"),
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (_) => const DonationDialog(),
-                  );
-                },
-              ),
+              if (!Platform.isAndroid) ...[
+                const SizedBox(height: 20),
+                _buildMenuItem(
+                  context,
+                  text: "コーヒー1杯をご馳走する",
+                  icon: SvgPicture.asset("assets/icons/drawer_coffee.svg"),
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (_) => const DonationDialog(),
+                    );
+                  },
+                ),
+              ],
               const SizedBox(height: 14),
               const Divider(
                 indent: 20,
