@@ -1,0 +1,87 @@
+{
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
+  "identifier" : "5C539E0D",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "6.99",
+      "familyShareable" : false,
+      "internalID" : "6753738230",
+      "localizations" : [
+        {
+          "description" : "スイーツセット一つ分のご支援",
+          "displayName" : "コーヒーチップ(L)",
+          "locale" : "ja"
+        }
+      ],
+      "productID" : "app.web.mrCollection.coffee.tip.large",
+      "referenceName" : "Coffee Tip Large（1200円）",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "2.99",
+      "familyShareable" : false,
+      "internalID" : "6753738111",
+      "localizations" : [
+        {
+          "description" : "フラッペ1杯分のご支援",
+          "displayName" : "コーヒーチップ(M)",
+          "locale" : "ja"
+        }
+      ],
+      "productID" : "app.web.mrCollection.coffee.tip.medium",
+      "referenceName" : "Coffee Tip Medium（550円）",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "0.99",
+      "familyShareable" : false,
+      "internalID" : "6748682094",
+      "localizations" : [
+        {
+          "description" : "1杯分のご支援",
+          "displayName" : "コーヒーチップ(S)",
+          "locale" : "ja"
+        }
+      ],
+      "productID" : "app.web.mrCollection.coffee.tip.small",
+      "referenceName" : "Coffee Tip Small（120円）",
+      "type" : "Consumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "6738720079",
+    "_askToBuyEnabled" : false,
+    "_billingGracePeriodEnabled" : false,
+    "_billingIssuesEnabled" : false,
+    "_developerTeamID" : "V376S99FXD",
+    "_disableDialogs" : false,
+    "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 782116557.170542,
+    "_locale" : "en_US",
+    "_renewalBillingIssuesEnabled" : false,
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+
+    ],
+    "_timeRate" : 0
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

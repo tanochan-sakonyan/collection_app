@@ -78,21 +78,26 @@ class DonationDialogState extends ConsumerState<DonationDialog> {
   }
 
   Future<void> _initializeStore() async {
+    debugPrint('[IAP] _initializeStore start');
     try {
       final available = await _inAppPurchase.isAvailable();
+      debugPrint('[IAP] isAvailable -> $available mounted=$mounted');
       if (!mounted) return;
       if (!available) {
         setState(() {
           _isStoreAvailable = false;
           _isLoadingProducts = false;
         });
+        debugPrint('[IAP] Store not available');
         _reportIssue('In-app purchase store not available.');
         return;
       }
 
+      debugPrint('[IAP] Subscribing to purchaseStream');
       _purchaseSubscription ??= _inAppPurchase.purchaseStream
           .listen(_handlePurchaseUpdates,
               onError: (Object error, StackTrace stackTrace) {
+        debugPrint('[IAP] purchaseStream onError: $error');
         _reportIssue(
           'Purchase stream error: $error',
           userMessage: '購入処理でエラーが発生しました。',
@@ -104,10 +109,13 @@ class DonationDialogState extends ConsumerState<DonationDialog> {
 
       final response =
           await _inAppPurchase.queryProductDetails(_donationProductIds);
+      debugPrint(
+          '[IAP] queryProductDetails requested for: ${_donationProductIds.toList()}');
 
       if (!mounted) return;
 
       if (response.error != null) {
+        debugPrint('[IAP] queryProductDetails error: ${response.error}');
         _reportIssue('Product query error: ${response.error}');
         setState(() {
           _isStoreAvailable = false;
@@ -125,11 +133,15 @@ class DonationDialogState extends ConsumerState<DonationDialog> {
         _isStoreAvailable = true;
         _isLoadingProducts = false;
       });
+      debugPrint(
+          '[IAP] queryProductDetails success. products=${_products.keys.toList()} notFound=${response.notFoundIDs}');
 
       if (response.notFoundIDs.isNotEmpty) {
         _reportIssue('Not found product ids: ${response.notFoundIDs}');
       }
+      debugPrint('[IAP] _initializeStore done');
     } catch (e, stackTrace) {
+      debugPrint('[IAP] _initializeStore exception: $e\n$stackTrace');
       _reportIssue('Failed to initialize in-app purchases: $e\n$stackTrace');
       if (!mounted) return;
       setState(() {
@@ -140,37 +152,82 @@ class DonationDialogState extends ConsumerState<DonationDialog> {
     }
   }
 
-  void _handlePurchaseUpdates(List<PurchaseDetails> purchases) {
+  void _handlePurchaseUpdates(List<PurchaseDetails> purchases) async {
+    debugPrint(
+        '[IAP] _handlePurchaseUpdates called. count=${purchases.length} mounted=$mounted');
     for (final purchase in purchases) {
-      if (!_donationProductIds.contains(purchase.productID)) {
+      final pid = purchase.productID;
+      final inTarget = _donationProductIds.contains(pid);
+      debugPrint(
+          '[IAP] purchase: id=$pid status=${purchase.status} pending=${purchase.pendingCompletePurchase} inTarget=$inTarget error=${purchase.error?.message} code=${purchase.error?.code}');
+
+      if (!inTarget) {
+        debugPrint('[IAP] Skip non-donation product: $pid');
         continue;
       }
 
-      if (purchase.status == PurchaseStatus.purchased) {
-        _showThanksDialogForProduct(purchase.productID);
-      } else if (purchase.status == PurchaseStatus.error) {
-        _reportIssue(
-          'Purchase error for ${purchase.productID}: ${purchase.error}',
-          userMessage: '購入がキャンセルまたは失敗しました。',
-        );
+      final isCurrent = _processingProductId == pid;
+
+      switch (purchase.status) {
+        case PurchaseStatus.purchased:
+          debugPrint('[IAP] status=purchased -> show thanks');
+          _showThanksDialogForProduct(pid);
+          break;
+
+        case PurchaseStatus.restored:
+          if (isCurrent) {
+            debugPrint(
+                '[IAP] status=restored for current pid -> treat as success and show thanks');
+            _showThanksDialogForProduct(pid);
+          } else {
+            debugPrint(
+                '[IAP] status=restored for NON-current pid -> skip (likely historical restore)');
+          }
+          break;
+
+        case PurchaseStatus.error:
+          debugPrint('[IAP] status=error -> report');
+          _reportIssue(
+            'Purchase error for $pid: ${purchase.error}',
+            userMessage: '購入がキャンセルまたは失敗しました。',
+          );
+          break;
+
+        case PurchaseStatus.pending:
+          debugPrint('[IAP] status=pending');
+          break;
+
+        default:
+          debugPrint('[IAP] status=${purchase.status} (unhandled)');
+          break;
       }
 
       if (purchase.pendingCompletePurchase) {
-        _inAppPurchase.completePurchase(purchase);
+        try {
+          debugPrint('[IAP] Completing purchase for $pid');
+          await _inAppPurchase.completePurchase(purchase);
+        } catch (e, st) {
+          debugPrint('[IAP] completePurchase failed: $e\n$st');
+        }
       }
 
-      if (mounted && _processingProductId == purchase.productID) {
+      if (mounted && _processingProductId == pid) {
+        debugPrint('[IAP] Clear processing flag for $pid');
         setState(() => _processingProductId = null);
       }
     }
   }
 
   Future<void> _startPurchase(String productId) async {
+    debugPrint(
+        '[IAP] _startPurchase called for $productId processing=$_processingProductId isStoreAvailable=$_isStoreAvailable');
     if (_processingProductId != null) {
+      debugPrint('[IAP] Another purchase is in progress.');
       return;
     }
 
     if (!_isStoreAvailable) {
+      debugPrint('[IAP] Attempted purchase while store unavailable');
       _reportIssue(
         'Attempted purchase while store unavailable.',
         userMessage: '現在購入を利用できません。',
@@ -179,6 +236,8 @@ class DonationDialogState extends ConsumerState<DonationDialog> {
     }
 
     final product = _products[productId];
+    debugPrint(
+        '[IAP] Resolved product: ${product?.id} price=${product?.price}');
     if (product == null) {
       _reportIssue(
         'Product details missing for productId=$productId',
@@ -191,10 +250,13 @@ class DonationDialogState extends ConsumerState<DonationDialog> {
 
     try {
       final purchaseParam = PurchaseParam(productDetails: product);
+      debugPrint(
+          '[IAP] Calling buyConsumable(autoConsume=true) for $productId');
       final success = await _inAppPurchase.buyConsumable(
         purchaseParam: purchaseParam,
         autoConsume: true,
       );
+      debugPrint('[IAP] buyConsumable returned: $success');
 
       if (!success && mounted) {
         setState(() => _processingProductId = null);
@@ -204,6 +266,8 @@ class DonationDialogState extends ConsumerState<DonationDialog> {
         );
       }
     } catch (e, stackTrace) {
+      debugPrint(
+          '[IAP] Exception in _startPurchase($productId): $e\n$stackTrace');
       _reportIssue(
         'Failed to start purchase for productId=$productId: $e\n$stackTrace',
         userMessage: '購入に失敗しました。',
@@ -215,64 +279,106 @@ class DonationDialogState extends ConsumerState<DonationDialog> {
   }
 
   void _showThanksDialogForProduct(String productId) {
-    if (!mounted) return;
+    // Entry log
+    debugPrint(
+        '[Donation] _showThanksDialogForProduct called. productId=$productId mounted=$mounted');
 
-    DonationThanksDialog? buildDialog() {
-      switch (productId) {
-        case 'app.web.mrCollection.coffee.tip.small':
-          return const DonationThanksDialog(
-            title: 'ご支援ありがとうございます！',
-            messageLines: [
-              'ごちそうさまです！',
-              'カフェモカでほっと一息ついて、',
-              'また開発がんばります！',
-              '応援してくれてありがとう🙌',
-            ],
-            assetPath: 'assets/icons/ic_coffee.svg',
-            assetWidth: 120,
-          );
-        case 'app.web.mrCollection.coffee.tip.medium':
-          return const DonationThanksDialog(
-            title: 'ご支援ありがとうございます！',
-            messageLines: [
-              'ごちそうさまです！',
-              '抹茶フラッペでリフレッシュして、',
-              '次のアイデアにつなげます！',
-              '応援してくれてありがとう🙌',
-            ],
-            assetPath: 'assets/icons/ic_frappe.svg',
-            assetWidth: 120,
-          );
-        case 'app.web.mrCollection.coffee.tip.large':
-          return const DonationThanksDialog(
-            title: 'ご支援ありがとうございます！',
-            messageLines: [
-              'ごちそうさまです！',
-              'ドーナツで当分補給ばっちり！',
-              '集中モードに入ります！',
-              '応援してくれてありがとう🙌',
-            ],
-            assetPath: 'assets/icons/ic_sweets.svg',
-            assetWidth: 120,
-          );
-        default:
-          return null;
-      }
-    }
-
-    final dialog = buildDialog();
-    if (dialog == null) {
-      _reportIssue('No thanks dialog mapped for productId=$productId');
+    if (!mounted) {
+      debugPrint('[Donation] Aborted: widget not mounted.');
       return;
     }
 
+    // Map productId -> dialog with detailed logging
+    DonationThanksDialog? dialog;
+    switch (productId) {
+      case 'app.web.mrCollection.coffee.tip.small':
+        debugPrint('[Donation] Dialog mapping: SMALL');
+        dialog = const DonationThanksDialog(
+          title: 'ご支援ありがとうございます！',
+          messageLines: [
+            'ごちそうさまです！',
+            'カフェモカでほっと一息ついて、',
+            'また開発がんばります！',
+            '応援してくれてありがとう🙌',
+          ],
+          assetPath: 'assets/icons/ic_coffee.svg',
+          assetWidth: 120,
+        );
+        break;
+      case 'app.web.mrCollection.coffee.tip.medium':
+        debugPrint('[Donation] Dialog mapping: MEDIUM');
+        dialog = const DonationThanksDialog(
+          title: 'ご支援ありがとうございます！',
+          messageLines: [
+            'ごちそうさまです！',
+            '抹茶フラッペでリフレッシュして、',
+            '次のアイデアにつなげます！',
+            '応援してくれてありがとう🙌',
+          ],
+          assetPath: 'assets/icons/ic_frappe.svg',
+          assetWidth: 120,
+        );
+        break;
+      case 'app.web.mrCollection.coffee.tip.large':
+        debugPrint('[Donation] Dialog mapping: LARGE');
+        dialog = const DonationThanksDialog(
+          title: 'ご支援ありがとうございます！',
+          messageLines: [
+            'ごちそうさまです！',
+            'ドーナツで当分補給ばっちり！',
+            '集中モードに入ります！',
+            '応援してくれてありがとう🙌',
+          ],
+          assetPath: 'assets/icons/ic_sweets.svg',
+          assetWidth: 120,
+        );
+        break;
+      default:
+        debugPrint(
+            '[Donation] No dialog mapping found for productId=$productId');
+        _reportIssue('No thanks dialog mapped for productId=$productId');
+        return;
+    }
+
+    // Context / Navigator diagnostics
+    final ctx = context;
+    final nav = Navigator.maybeOf(ctx);
+    final rootNav = Navigator.maybeOf(ctx, rootNavigator: true);
+    debugPrint(
+        '[Donation] Context info: context.hash=${ctx.hashCode} hasNavigator=${nav != null} hasRootNavigator=${rootNav != null}');
+
+    // Schedule microtask + post-frame to avoid build-time showDialog
+    scheduleMicrotask(() {
+      debugPrint(
+          '[Donation] Microtask queued before showing dialog for productId=$productId');
+    });
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      showDialog<void>(
-        context: context,
-        useRootNavigator: true,
-        builder: (_) => dialog,
-      );
+      if (!mounted) {
+        debugPrint('[Donation] PostFrame: widget unmounted. Skip showDialog.');
+        return;
+      }
+      try {
+        debugPrint(
+            '[Donation] Attempting to show ThanksDialog (useRootNavigator=true).');
+        showDialog<void>(
+          context: ctx,
+          useRootNavigator: true,
+          barrierDismissible: true,
+          builder: (dialogCtx) {
+            debugPrint(
+                '[Donation] Dialog builder invoked. dialogCtx.hash=${dialogCtx.hashCode}');
+            return dialog!;
+          },
+        ).then((_) {
+          debugPrint('[Donation] ThanksDialog closed for productId=$productId');
+        }).catchError((e, st) {
+          debugPrint('[Donation] showDialog Future error: $e\n$st');
+        });
+      } catch (e, st) {
+        debugPrint('[Donation] Exception while calling showDialog: $e\n$st');
+        _showSnackBar('サンクスダイアログの表示に失敗しました。');
+      }
     });
   }
 
