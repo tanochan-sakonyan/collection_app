@@ -183,68 +183,6 @@ class TanochanDrawerState extends State<TanochanDrawer>
                   );
                 },
               ),
-              _buildMenuItem(
-                context,
-                text: "Small",
-                icon: SvgPicture.asset("assets/icons/drawer_coffee.svg"),
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (_) => const DonationThanksDialog(
-                      title: 'ご支援ありがとうございます！',
-                      messageLines: [
-                        'ごちそうさまです！',
-                        'カフェモカでほっと一息ついて、',
-                        'また開発がんばります！',
-                        '応援してくれてありがとう🙌',
-                      ],
-                      assetPath: 'assets/icons/ic_coffee.svg',
-                      assetWidth: 120,
-                    ),
-                  );
-                },
-              ),
-              _buildMenuItem(
-                context,
-                text: "Medium",
-                icon: SvgPicture.asset("assets/icons/drawer_coffee.svg"),
-                onTap: () {
-                  showDialog(
-                      context: context,
-                      builder: (_) => const DonationThanksDialog(
-                            title: 'ご支援ありがとうございます！',
-                            messageLines: [
-                              'ごちそうさまです！',
-                              '抹茶フラッペでリフレッシュして、',
-                              '次のアイデアにつなげます！',
-                              '応援してくれてありがとう🙌',
-                            ],
-                            assetPath: 'assets/icons/ic_frappe.svg',
-                            assetWidth: 120,
-                          ));
-                },
-              ),
-              _buildMenuItem(
-                context,
-                text: "Large",
-                icon: SvgPicture.asset("assets/icons/drawer_coffee.svg"),
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (_) => const DonationThanksDialog(
-                      title: 'ご支援ありがとうございます！',
-                      messageLines: [
-                        'ごちそうさまです！',
-                        'ドーナツで当分補給ばっちり！',
-                        '集中モードに入ります！',
-                        '応援してくれてありがとう🙌',
-                      ],
-                      assetPath: 'assets/icons/ic_sweets.svg',
-                      assetWidth: 120,
-                    ),
-                  );
-                },
-              ),
               const SizedBox(height: 14),
               const Divider(
                 indent: 20,
