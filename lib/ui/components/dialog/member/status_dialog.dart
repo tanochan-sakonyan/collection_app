@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/ui/components/dialog/guide/paypay_status_explanation_dialog.dart';
 
 class StatusDialog extends StatelessWidget {
   final String userId;
@@ -31,10 +33,10 @@ class StatusDialog extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.only(
-            top: 48,
+            top: 32,
             left: 42,
             right: 42,
-            bottom: 40,
+            bottom: 20,
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -107,6 +109,28 @@ class StatusDialog extends StatelessWidget {
                   color: Colors.black,
                 ),
               ),
+              const SizedBox(height: 28),
+              GestureDetector(
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (_) => const PayPayStatusExplanationDialog());
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    SvgPicture.asset(
+                      "assets/icons/question_circle.svg",
+                      width: 20,
+                      height: 20,
+                      color: Colors.grey,
+                    ),
+                    const SizedBox(width: 4),
+                    Text("PayPayで支払い済みとは？",
+                        style: GoogleFonts.notoSansJp(fontSize: 10))
+                  ],
+                ),
+              )
             ],
           ),
         ),
