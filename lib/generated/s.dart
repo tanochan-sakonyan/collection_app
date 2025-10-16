@@ -418,7 +418,7 @@ abstract class S {
   /// No description provided for @confirmTransferFromEvent.
   ///
   /// In ja, this message translates to:
-  /// **'このメンバーを引継ぎますか？'**
+  /// **'のメンバーを引継ぎますか？'**
   String get confirmTransferFromEvent;
 
   /// No description provided for @transferThisMember.

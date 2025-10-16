@@ -169,7 +169,7 @@ class SJa extends S {
   String get selectEventToTransfer => 'メンバーを引継ぎたい\nイベントを選択してください';
 
   @override
-  String get confirmTransferFromEvent => 'このメンバーを引継ぎますか？';
+  String get confirmTransferFromEvent => 'のメンバーを引継ぎますか？';
 
   @override
   String get transferThisMember => 'このメンバーを引継ぐ';

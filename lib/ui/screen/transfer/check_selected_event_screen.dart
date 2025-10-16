@@ -59,8 +59,7 @@ class CheckSelectedEventScreenState
           ),
           const SizedBox(height: 32),
           Text(
-            S.of(context)!.confirmTransferFromEvent ??
-                "Do you want to transfer members from this event?",
+            "「$eventName」${S.of(context)!.confirmTransferFromEvent}",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
