@@ -5,7 +5,7 @@ import 'package:mr_collection/data/model/freezed/line_group.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/ui/components/dialog/event/add_event_name_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/invite_official_account_to_line_group_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/line/invite_official_account_to_line_group_dialog.dart';
 import 'check_selected_line_group_screen.dart';
 import 'package:mr_collection/generated/s.dart';
 

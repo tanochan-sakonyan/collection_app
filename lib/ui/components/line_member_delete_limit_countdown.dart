@@ -7,7 +7,7 @@ import 'package:mr_collection/data/model/freezed/line_group.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'countdown_timer.dart';
-import 'dialog/line_group_update_countdown_dialog.dart';
+import 'dialog/line/line_group_update_countdown_dialog.dart';
 
 class LineMemberDeleteLimitCountdown extends ConsumerWidget {
   final Event currentEvent;

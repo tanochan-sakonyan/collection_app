@@ -4,8 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
-import 'package:mr_collection/ui/components/dialog/line_message_complete_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/line_message_failed_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/line/line_message_complete_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/line/line_message_failed_dialog.dart';
 import 'package:mr_collection/ui/screen/home_screen.dart';
 import 'package:mr_collection/generated/s.dart';
 
