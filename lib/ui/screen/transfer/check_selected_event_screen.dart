@@ -73,7 +73,7 @@ class CheckSelectedEventScreenState
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white,
-                border: Border.all(color: Colors.black),
+                border: Border.all(color: const Color(0xFF75DCC6)),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: SizedBox(
@@ -83,13 +83,13 @@ class CheckSelectedEventScreenState
                     children: [
                       Container(
                         decoration: const BoxDecoration(
-                          color: Color(0xFFE8E8E8),
+                          color: Color(0xFF75DCC6),
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(12),
                             topRight: Radius.circular(12),
                           ),
                           border: Border(
-                            bottom: BorderSide(color: Colors.black),
+                            bottom: BorderSide(color: Color(0xFF75DCC6)),
                           ),
                         ),
                         height: 32,
