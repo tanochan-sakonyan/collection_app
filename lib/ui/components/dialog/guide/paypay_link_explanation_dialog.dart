@@ -6,12 +6,6 @@ class PayPayLinkExplanationDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final titleStyle = GoogleFonts.notoSansJp(
-      fontSize: 18,
-      fontWeight: FontWeight.w600,
-      color: Colors.black,
-    );
-
     final bodyStyle = GoogleFonts.notoSansJp(
       fontSize: 14,
       fontWeight: FontWeight.w400,
