@@ -196,7 +196,7 @@ abstract class S {
   /// No description provided for @paypayDialogMessage1.
   ///
   /// In ja, this message translates to:
-  /// **'PayPayリンクを入力してください。'**
+  /// **'PayPayリンクを\n入力してください。'**
   String get paypayDialogMessage1;
 
   /// No description provided for @paypayDialogMessage2.

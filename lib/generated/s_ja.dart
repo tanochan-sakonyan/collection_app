@@ -57,7 +57,7 @@ class SJa extends S {
   String get paypay => 'PayPayリンクを登録';
 
   @override
-  String get paypayDialogMessage1 => 'PayPayリンクを入力してください。';
+  String get paypayDialogMessage1 => 'PayPayリンクを\n入力してください。';
 
   @override
   String get paypayDialogMessage2 => '受け取りリンクを入力';

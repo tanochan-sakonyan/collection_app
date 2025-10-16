@@ -16,7 +16,7 @@
   "update_2": "アップデートをお待ちください。",
   "setting": "設定",
   "paypay": "PayPayリンクを登録",
-  "paypayDialogMessage1": "PayPayリンクを入力してください。",
+  "paypayDialogMessage1": "PayPayリンクを\n入力してください。",
   "paypayDialogMessage2": "受け取りリンクを入力",
   "paypayDialogMessage3": "反映まで3~5ほどかかる場合があります。",
   "paypayDialogSuccessMessage": "PayPayリンクを送信しました。",
