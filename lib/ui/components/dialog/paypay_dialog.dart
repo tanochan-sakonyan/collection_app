@@ -5,6 +5,7 @@ import 'package:mr_collection/provider/user_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/ui/components/dialog/guide/paypay_link_explanation_dialog.dart';
 
 class PayPayDialog extends ConsumerStatefulWidget {
   const PayPayDialog({super.key});
@@ -137,7 +138,9 @@ class PayPayDialogState extends ConsumerState<PayPayDialog> {
               const SizedBox(height: 16),
               GestureDetector(
                 onTap: () {
-                  // TODO
+                  showDialog(
+                      context: context,
+                      builder: (_) => const PayPayLinkExplanationDialog());
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
