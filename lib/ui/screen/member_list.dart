@@ -693,6 +693,12 @@ class _MemberListState extends ConsumerState<MemberList> with TickerProviderStat
     switch (status) {
       case PaymentStatus.paid:
         return const Icon(Icons.check, color: Color(0xFF35C759));
+      case PaymentStatus.paypay:
+        return Image.asset(
+          'assets/icons/ic_paypay.png',
+          width: 24,
+          height: 24,
+        );
       case PaymentStatus.unpaid:
         return const Icon(Icons.close, color: Colors.red);
       case PaymentStatus.absence:

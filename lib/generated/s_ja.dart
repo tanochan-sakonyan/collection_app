@@ -36,6 +36,9 @@ class SJa extends S {
   String get status_absence => '欠席';
 
   @override
+  String get status_paypay => 'PayPayで支払い済み';
+
+  @override
   String get person => '人';
 
   @override

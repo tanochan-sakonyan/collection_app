@@ -36,6 +36,9 @@ class SEn extends S {
   String get status_absence => 'Absence';
 
   @override
+  String get status_paypay => 'Paid via PayPay';
+
+  @override
   String get person => '';
 
   @override

@@ -24,7 +24,7 @@ class StatusDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Container(
         width: 280,
-        height: 352,
+        height: 420,
         decoration: BoxDecoration(
           color: const Color(0xFFFFFFFF),
           borderRadius: BorderRadius.circular(20),
@@ -50,8 +50,10 @@ class StatusDialog extends StatelessWidget {
               _buildStatusButton(
                 context,
                 label: S.of(context)!.status_paid,
-                icon: Icons.check,
-                iconColor: const Color(0xFF35C759),
+                trailingIcon: const Icon(
+                  Icons.check,
+                  color: Color(0xFF35C759),
+                ),
                 status: 1,
                 labelStyle: GoogleFonts.notoSansJp(
                   fontSize: 14,
@@ -59,12 +61,30 @@ class StatusDialog extends StatelessWidget {
                   color: Colors.black,
                 ),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 20),
+              _buildStatusButton(
+                context,
+                label: S.of(context)!.status_paypay,
+                trailingIcon: const Image(
+                  image: AssetImage('assets/icons/ic_paypay.png'),
+                  width: 24,
+                  height: 24,
+                ),
+                status: 4,
+                labelStyle: GoogleFonts.notoSansJp(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black,
+                ),
+              ),
+              const SizedBox(height: 20),
               _buildStatusButton(
                 context,
                 label: S.of(context)!.status_unpaid,
-                icon: Icons.close,
-                iconColor: Colors.red,
+                trailingIcon: const Icon(
+                  Icons.close,
+                  color: Colors.red,
+                ),
                 status: 2,
                 labelStyle: GoogleFonts.notoSansJp(
                   fontSize: 14,
@@ -72,12 +92,14 @@ class StatusDialog extends StatelessWidget {
                   color: Colors.black,
                 ),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 20),
               _buildStatusButton(
                 context,
                 label: S.of(context)!.status_absence,
-                icon: Icons.remove,
-                iconColor: const Color(0xFFC0C0C0),
+                trailingIcon: const Icon(
+                  Icons.remove,
+                  color: Color(0xFFC0C0C0),
+                ),
                 status: 3,
                 labelStyle: GoogleFonts.notoSansJp(
                   fontSize: 14,
@@ -95,8 +117,7 @@ class StatusDialog extends StatelessWidget {
   Widget _buildStatusButton(
     BuildContext context, {
     required String label,
-    required IconData icon,
-    required Color iconColor,
+    required Widget trailingIcon,
     required int status,
     TextStyle? labelStyle,
   }) {
@@ -120,16 +141,20 @@ class StatusDialog extends StatelessWidget {
               vertical: 12.0,
               horizontal: 16.0,
             ),
-            child: Stack(
+            child: Row(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Text(label, style: const TextStyle(fontSize: 16))],
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      label,
+                      style: labelStyle ??
+                          const TextStyle(fontSize: 16, height: 1.2),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [Icon(icon, color: iconColor)],
-                ),
+                const SizedBox(width: 8),
+                trailingIcon,
               ],
             ),
           ),
