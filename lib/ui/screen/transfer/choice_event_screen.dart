@@ -69,7 +69,7 @@ class ChoiceEventScreenState extends ConsumerState<ChoiceEventScreen> {
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
-                  color: const Color(0xFF8E8E93),
+                  color: const Color(0xFF75DCC6),
                 ),
           ),
           const SizedBox(height: 32),

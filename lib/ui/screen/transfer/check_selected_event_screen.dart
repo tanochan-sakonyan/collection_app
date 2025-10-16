@@ -54,13 +54,12 @@ class CheckSelectedEventScreenState
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
-                  color: const Color(0xFF8E8E93),
+                  color: const Color(0xFF75DCC6),
                 ),
           ),
           const SizedBox(height: 32),
           Text(
-            S.of(context)!.confirmTransferFromEvent ??
-                "Do you want to transfer members from this event?",
+            "「$eventName」${S.of(context)!.confirmTransferFromEvent}",
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
@@ -74,7 +73,7 @@ class CheckSelectedEventScreenState
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white,
-                border: Border.all(color: Colors.black),
+                border: Border.all(color: const Color(0xFF75DCC6)),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: SizedBox(
@@ -84,13 +83,13 @@ class CheckSelectedEventScreenState
                     children: [
                       Container(
                         decoration: const BoxDecoration(
-                          color: Color(0xFFE8E8E8),
+                          color: Color(0xFF75DCC6),
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(12),
                             topRight: Radius.circular(12),
                           ),
                           border: Border(
-                            bottom: BorderSide(color: Colors.black),
+                            bottom: BorderSide(color: Color(0xFF75DCC6)),
                           ),
                         ),
                         height: 32,
