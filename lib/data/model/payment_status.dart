@@ -7,4 +7,6 @@ enum PaymentStatus {
   unpaid,
   @JsonValue(3)
   absence,
+  @JsonValue(4)
+  paypay,
 }

@@ -151,6 +151,12 @@ abstract class S {
   /// **'欠席'**
   String get status_absence;
 
+  /// No description provided for @status_paypay.
+  ///
+  /// In ja, this message translates to:
+  /// **'PayPayで\n支払い済み'**
+  String get status_paypay;
+
   /// No description provided for @person.
   ///
   /// In ja, this message translates to:
@@ -190,7 +196,7 @@ abstract class S {
   /// No description provided for @paypayDialogMessage1.
   ///
   /// In ja, this message translates to:
-  /// **'PayPayリンクを入力してください。'**
+  /// **'PayPayリンクを\n入力してください。'**
   String get paypayDialogMessage1;
 
   /// No description provided for @paypayDialogMessage2.

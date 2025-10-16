@@ -116,6 +116,7 @@ flutter:
     - assets/icons/ic_empty_clipboard.svg
     - assets/icons/ic_question_circle.svg
     - assets/icons/ic_settings_circle.svg
+    - assets/icons/ic_paypay.png
 
   fonts:
     - family: Montserrat

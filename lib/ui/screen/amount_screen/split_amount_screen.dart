@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/provider/user_provider.dart';
-import 'package:mr_collection/ui/components/dialog/amount_guide_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/guide/amount_guide_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/role_setup_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/member_role_edit_dialog.dart';
 import 'package:mr_collection/generated/s.dart';
@@ -839,11 +839,15 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                 ),
                 const SizedBox(width: 4),
                 IconButton(
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    hoverColor: Colors.transparent,
+                    focusColor: Colors.transparent,
                     onPressed: () => _showGuideDialog(),
                     icon: SvgPicture.asset(
                       'assets/icons/question_circle.svg',
-                      width: 24,
-                      height: 24,
+                      width: 32,
+                      height: 32,
                     )),
                 const Spacer(flex: 8),
               ],

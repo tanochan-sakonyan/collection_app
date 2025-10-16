@@ -164,8 +164,8 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
-  Future<String?> createEventAndGetMembersFromLine(String userId, String groupId,
-      String eventName, List<LineGroupMember> members) async {
+  Future<String?> createEventAndGetMembersFromLine(String userId,
+      String groupId, String eventName, List<LineGroupMember> members) async {
     try {
       final newEvent = await eventRepository.createEventAndGetMembersFromLine(
           userId, groupId, eventName, members);
@@ -435,9 +435,10 @@ class UserNotifier extends StateNotifier<User?> {
         return 0;
       case PaymentStatus.paid:
         return 1;
-      case PaymentStatus.absence:
-      default:
+      case PaymentStatus.paypay:
         return 2;
+      case PaymentStatus.absence:
+        return 3;
     }
   }
 

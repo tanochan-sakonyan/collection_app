@@ -36,6 +36,9 @@ class SJa extends S {
   String get status_absence => '欠席';
 
   @override
+  String get status_paypay => 'PayPayで\n支払い済み';
+
+  @override
   String get person => '人';
 
   @override
@@ -54,7 +57,7 @@ class SJa extends S {
   String get paypay => 'PayPayリンクを登録';
 
   @override
-  String get paypayDialogMessage1 => 'PayPayリンクを入力してください。';
+  String get paypayDialogMessage1 => 'PayPayリンクを\n入力してください。';
 
   @override
   String get paypayDialogMessage2 => '受け取りリンクを入力';
