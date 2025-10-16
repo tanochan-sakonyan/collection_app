@@ -839,11 +839,15 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                 ),
                 const SizedBox(width: 4),
                 IconButton(
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    hoverColor: Colors.transparent,
+                    focusColor: Colors.transparent,
                     onPressed: () => _showGuideDialog(),
                     icon: SvgPicture.asset(
                       'assets/icons/question_circle.svg',
-                      width: 24,
-                      height: 24,
+                      width: 32,
+                      height: 32,
                     )),
                 const Spacer(flex: 8),
               ],

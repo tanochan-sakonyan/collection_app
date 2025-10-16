@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
@@ -61,7 +62,7 @@ class PayPayDialogState extends ConsumerState<PayPayDialog> {
         padding: const EdgeInsets.all(24),
         child: SizedBox(
           width: 320,
-          height: 216,
+          height: 230,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -133,6 +134,26 @@ class PayPayDialogState extends ConsumerState<PayPayDialog> {
                   ),
                 ),
               ),
+              const SizedBox(height: 16),
+              GestureDetector(
+                onTap: () {
+                  // TODO
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    SvgPicture.asset(
+                      "assets/icons/question_circle.svg",
+                      width: 20,
+                      height: 20,
+                      color: Colors.grey,
+                    ),
+                    const SizedBox(width: 4),
+                    Text("PayPayリンクとは？",
+                        style: GoogleFonts.notoSansJp(fontSize: 12))
+                  ],
+                ),
+              )
             ],
           ),
         ),
