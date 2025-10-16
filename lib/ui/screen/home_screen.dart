@@ -456,6 +456,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                 tabTitles.isEmpty
                     ? const SizedBox(width: 24)
                     : IconButton(
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        hoverColor: Colors.transparent,
+                        focusColor: Colors.transparent,
                         onPressed: () {
                           _resetTutorial();
                           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -463,16 +467,20 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                           });
                         },
                         icon: SvgPicture.asset(
-                          'assets/icons/question_circle.svg',
-                          width: 38,
-                          height: 38,
+                          'assets/icons/ic_question_circle.svg',
+                          width: 36,
+                          height: 36,
                         ),
                       ),
                 IconButton(
+                  splashColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  hoverColor: Colors.transparent,
+                  focusColor: Colors.transparent,
                   icon: SvgPicture.asset(
-                    'assets/icons/settings.svg',
-                    width: screenWidth * 0.07,
-                    height: screenWidth * 0.07,
+                    'assets/icons/ic_settings_circle.svg',
+                    width: 36,
+                    height: 36,
                   ),
                   onPressed: () {
                     _scaffoldKey.currentState?.openDrawer();
