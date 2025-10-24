@@ -10,7 +10,7 @@ Android、iOS 関連のネイティブコードを触る際には、ios,android 
 
 - 依存解決: `flutter pub get`
 - Lint/Typecheck: `flutter analyze`
-- 単体テスト: テストは実装していません。
+- テスト: テストは実装していません。
 - 実装の最後に、静的エラーが出ていないことを確認すること。
 
 ## コーディング規約（要点）
