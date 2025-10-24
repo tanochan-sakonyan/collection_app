@@ -2,20 +2,28 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mr_collection/data/model/freezed/member.dart';
+import 'package:mr_collection/utils/authenticated_request.dart';
 
 class MemberRepository {
   final String baseUrl;
+  final AuthenticatedRequestHelper _authHelper;
 
-  MemberRepository({required this.baseUrl});
+  MemberRepository({required this.baseUrl})
+      : _authHelper = AuthenticatedRequestHelper(
+          baseUrl: baseUrl,
+          contextLabel: 'MemberRepository',
+        );
 
   Future<List<Member>> createMembers(
       String userId, String eventId, List<String> newMemberNames) async {
     final url =
         Uri.parse('$baseUrl/users/$userId/events/$eventId/members/bulk');
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'newMemberNames': newMemberNames}),
+    final response = await _authHelper.sendWithAuth(
+      (token) => http.post(
+        url,
+        headers: _headersWithToken(token, json: true),
+        body: jsonEncode({'newMemberNames': newMemberNames}),
+      ),
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -40,15 +48,18 @@ class MemberRepository {
         '$baseUrl/users/$userId/events/$eventId/members/$memberId/status');
 
     final requestBody = jsonEncode({'status': status});
-    debugPrint('リクエストURL: $url');
-    debugPrint('リクエストヘッダー: ${{'Content-Type': 'application/json'}}');
-    debugPrint('リクエストボディ: $requestBody');
+    final response = await _authHelper.sendWithAuth((token) {
+      final headers = _headersWithToken(token, json: true);
+      debugPrint('リクエストURL: $url');
+      debugPrint('リクエストヘッダー: $headers');
+      debugPrint('リクエストボディ: $requestBody');
 
-    final response = await http.put(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'status': status}),
-    );
+      return http.put(
+        url,
+        headers: headers,
+        body: requestBody,
+      );
+    });
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       final data = jsonDecode(response.body);
@@ -68,9 +79,13 @@ class MemberRepository {
     debugPrint("Repository内でinputMembersMoney関数が呼ばれました");
     final url =
         Uri.parse('$baseUrl/users/$userId/events/$eventId/members/money-bulk');
-    final response = await http.put(url,
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'members': membersMoneyList}));
+    final response = await _authHelper.sendWithAuth(
+      (token) => http.put(
+        url,
+        headers: _headersWithToken(token, json: true),
+        body: jsonEncode({'members': membersMoneyList}),
+      ),
+    );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       final data = jsonDecode(response.body) as Map<String, dynamic>;
@@ -87,12 +102,14 @@ class MemberRepository {
   Future<bool> deleteMember(
       String userId, String eventId, String memberId) async {
     final url = Uri.parse('$baseUrl/users/$userId/events/$eventId/members');
-    final response = await http.delete(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'memberIdList': [memberId]
-      }),
+    final response = await _authHelper.sendWithAuth(
+      (token) => http.delete(
+        url,
+        headers: _headersWithToken(token, json: true),
+        body: jsonEncode({
+          'memberIdList': [memberId]
+        }),
+      ),
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -110,10 +127,12 @@ class MemberRepository {
       String newMemberName) async {
     final url =
         Uri.parse('$baseUrl/users/$userId/events/$eventId/members/$memberId');
-    final response = await http.put(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'newMemberName': newMemberName}),
+    final response = await _authHelper.sendWithAuth(
+      (token) => http.put(
+        url,
+        headers: _headersWithToken(token, json: true),
+        body: jsonEncode({'newMemberName': newMemberName}),
+      ),
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -122,5 +141,18 @@ class MemberRepository {
     } else {
       throw Exception('メンバーの追加に失敗しました');
     }
+  }
+
+  // Authorizationヘッダーを付与したヘッダーを組み立てる
+  Map<String, String> _headersWithToken(String? accessToken,
+      {bool json = false}) {
+    final headers = <String, String>{};
+    if (json) {
+      headers['Content-Type'] = 'application/json';
+    }
+    if (accessToken != null && accessToken.isNotEmpty) {
+      headers['Authorization'] = 'Bearer $accessToken';
+    }
+    return headers;
   }
 }

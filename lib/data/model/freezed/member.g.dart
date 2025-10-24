@@ -29,4 +29,5 @@ const _$PaymentStatusEnumMap = {
   PaymentStatus.paid: 1,
   PaymentStatus.unpaid: 2,
   PaymentStatus.absence: 3,
+  PaymentStatus.paypay: 4,
 };

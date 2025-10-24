@@ -176,7 +176,7 @@ class TanochanDrawerState extends State<TanochanDrawer>
                 const SizedBox(height: 20),
                 _buildMenuItem(
                   context,
-                  text: "コーヒー1杯をご馳走する",
+                  text: "開発者に支援をする",
                   icon: SvgPicture.asset("assets/icons/drawer_coffee.svg"),
                   onTap: () {
                     showDialog(

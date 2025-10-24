@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
-import 'package:mr_collection/ui/components/dialog/suggest_send_message_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/line/suggest_send_message_dialog.dart';
 
 class FloatingActionButtonOff extends StatelessWidget {
   final int index;
