@@ -88,7 +88,7 @@ class UserNotifier extends StateNotifier<User?> {
       state = user;
       return user;
     } catch (e) {
-      debugPrint('ユーザー情報の取得の際にエラーが発生しました。: $e');
+      debugPrint('LINEユーザー情報の取得の際にエラーが発生しました。: $e');
       state = null;
       return null;
     }
