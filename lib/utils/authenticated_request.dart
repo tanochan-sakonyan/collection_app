@@ -10,12 +10,15 @@ typedef AuthenticatedRequestCallback = Future<http.Response> Function(
 class AuthenticatedRequestHelper {
   final String baseUrl;
   final String contextLabel;
+  final http.Client _client;
 
-  const AuthenticatedRequestHelper({
+  AuthenticatedRequestHelper({
     required this.baseUrl,
     this.contextLabel = '',
-  });
+    http.Client? client,
+  }) : _client = client ?? http.Client();
 
+  // 認証付きでHTTPリクエストを送り、必要ならトークンを更新する
   Future<http.Response> sendWithAuth(
     AuthenticatedRequestCallback request, {
     bool requireAuth = true,
@@ -53,7 +56,7 @@ class AuthenticatedRequestHelper {
 
   Future<String?> _refreshAccessToken(String refreshToken) async {
     final url = Uri.parse('$baseUrl/auth/refresh');
-    final response = await http.post(
+    final response = await _client.post(
       url,
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'refresh_token': refreshToken}),
