@@ -244,6 +244,7 @@ class EventRepository {
     var accessToken = await TokenStorage.getAccessToken();
 
     if (accessToken == null && refreshToken != null) {
+      debugPrint('EventRepository: アクセストークンが見つからないためリフレッシュします。');
       accessToken = await _refreshAccessToken(refreshToken);
     }
 
@@ -265,6 +266,7 @@ class EventRepository {
       throw const RefreshTokenExpiredException('リフレッシュトークンが存在しません');
     }
 
+    debugPrint('EventRepository: アクセストークン期限切れを検知。リフレッシュします。');
     final newAccessToken = await _refreshAccessToken(refreshToken);
     if (newAccessToken == null) {
       throw const RefreshTokenExpiredException('リフレッシュトークンが失効しています');
@@ -308,6 +310,8 @@ class EventRepository {
         accessToken: newAccessToken,
         refreshToken: newRefreshToken,
       );
+
+      debugPrint('EventRepository: リフレッシュトークンでアクセストークンを更新しました。');
 
       return newAccessToken;
     } catch (e) {
