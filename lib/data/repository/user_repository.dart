@@ -1,15 +1,17 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:mr_collection/data/exception/auth_exception.dart';
 import 'package:mr_collection/data/model/freezed/user.dart';
 import 'package:mr_collection/data/model/freezed/line_group.dart';
 import 'package:mr_collection/utils/token_storage.dart';
+import 'package:mr_collection/utils/authenticated_request.dart';
 
 class UserRepository {
   final String baseUrl;
+  final AuthenticatedRequestHelper _authHelper;
 
-  UserRepository({required this.baseUrl});
+  UserRepository({required this.baseUrl})
+      : _authHelper = AuthenticatedRequestHelper(baseUrl: baseUrl);
 
   // ユーザー情報をBEに登録する
   // TODO: 今後アクセストークンを送る必要はない。
@@ -19,7 +21,7 @@ class UserRepository {
     debugPrint('registerUser関数が呼ばれました。アクセストークン: $accessToken');
     final url = Uri.parse('$baseUrl/users/test');
 
-    final response = await _sendWithAuth(
+    final response = await _authHelper.sendWithAuth(
       (token) => http.post(
         url,
         headers: _headersWithToken(token, json: true),
@@ -58,7 +60,7 @@ class UserRepository {
   Future<User?> registerLineUser(String accessToken) async {
     final url = Uri.parse('$baseUrl/users');
 
-    final response = await _sendWithAuth(
+    final response = await _authHelper.sendWithAuth(
       (token) => http.post(
         url,
         headers: _headersWithToken(token, json: true),
@@ -99,7 +101,7 @@ class UserRepository {
     debugPrint('fetchUserById関数が呼ばれました。');
     final url = Uri.parse('$baseUrl/users/$userId');
 
-    final response = await _sendWithAuth(
+    final response = await _authHelper.sendWithAuth(
       (token) => http.get(
         url,
         headers: _headersWithToken(token),
@@ -138,7 +140,7 @@ class UserRepository {
     debugPrint('fetchLineUserById関数が呼ばれました。');
     final url = Uri.parse('$baseUrl/users/$userId?lineToken=$lineAccessToken');
 
-    final response = await _sendWithAuth(
+    final response = await _authHelper.sendWithAuth(
       (token) => http.get(
         url,
         headers: _headersWithToken(token),
@@ -177,7 +179,7 @@ class UserRepository {
   Future<User?> deleteUser(String userId) async {
     final url = Uri.parse('$baseUrl/users/$userId');
 
-    final response = await _sendWithAuth(
+    final response = await _authHelper.sendWithAuth(
       (token) => http.delete(
         url,
         headers: _headersWithToken(token, json: true),
@@ -210,7 +212,7 @@ class UserRepository {
   Future<List<LineGroup>> getLineGroups(String userId) async {
     final url = Uri.parse('$baseUrl/users/$userId/line-groups');
 
-    final response = await _sendWithAuth(
+    final response = await _authHelper.sendWithAuth(
       (token) => http.get(
         url,
         headers: _headersWithToken(token),
@@ -250,7 +252,7 @@ class UserRepository {
     debugPrint('refreshLineGroupMember関数が呼ばれました。');
     final url = Uri.parse('$baseUrl/users/$userId/line-groups/$groupId');
 
-    final response = await _sendWithAuth(
+    final response = await _authHelper.sendWithAuth(
       (token) => http.get(
         url,
         headers: _headersWithToken(token),
@@ -287,7 +289,7 @@ class UserRepository {
 
   Future<User> sendPaypayLink(String? userId, String paypayLink) async {
     final url = Uri.parse('$baseUrl/users/$userId/paypay-link');
-    final response = await _sendWithAuth(
+    final response = await _authHelper.sendWithAuth(
       (token) => http.post(
         url,
         headers: _headersWithToken(token, json: true),
@@ -313,103 +315,6 @@ class UserRepository {
       headers['Authorization'] = 'Bearer $accessToken';
     }
     return headers;
-  }
-
-  // トークン付きでAPIを呼び出し、期限切れなら更新して再送する
-  Future<http.Response> _sendWithAuth(
-    Future<http.Response> Function(String? accessToken) request, {
-    bool requireAuth = true,
-  }) async {
-    final refreshToken = await TokenStorage.getRefreshToken();
-    var accessToken = await TokenStorage.getAccessToken();
-
-    if (accessToken == null && refreshToken != null) {
-      debugPrint('アクセストークンが見つからないため、リフレッシュトークンで更新します。');
-      accessToken = await _refreshAccessToken(refreshToken);
-    }
-
-    if (accessToken == null && requireAuth) {
-      throw const RefreshTokenExpiredException('認証情報が見つかりません');
-    }
-
-    final response = await request(accessToken);
-    if (response.statusCode != 401 || refreshToken == null) {
-      return response;
-    }
-
-    final message = _extractMessage(response.body);
-    if (message != 'Token has expired!') {
-      return response;
-    }
-
-    debugPrint('アクセストークンの期限切れを検知しました。リフレッシュトークンで再取得します。');
-    final newAccessToken = await _refreshAccessToken(refreshToken);
-    if (newAccessToken == null) {
-      throw const RefreshTokenExpiredException('リフレッシュトークンが失効しています');
-    }
-
-    return request(newAccessToken);
-  }
-
-  // リフレッシュトークンからアクセストークンを再取得する
-  Future<String?> _refreshAccessToken(String refreshToken) async {
-    final url = Uri.parse('$baseUrl/auth/refresh');
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'refresh_token': refreshToken}),
-    );
-
-    if (response.statusCode != 200) {
-      debugPrint('アクセストークンの更新に失敗しました: ${response.statusCode}');
-      return null;
-    }
-
-    try {
-      final data = jsonDecode(response.body);
-      if (data is! Map<String, dynamic>) {
-        debugPrint('アクセストークン更新レスポンスの形式が不正です: ${response.body}');
-        return null;
-      }
-
-      final newAccessToken =
-          (data['access_token'] ?? data['accessToken']) as String?;
-      final newRefreshToken =
-          (data['refresh_token'] ?? data['refreshToken']) as String? ??
-              refreshToken;
-
-      if (newAccessToken == null || newAccessToken.isEmpty) {
-        debugPrint('新しいアクセストークンが取得できませんでした');
-        return null;
-      }
-
-      await TokenStorage.saveTokens(
-        accessToken: newAccessToken,
-        refreshToken: newRefreshToken,
-      );
-      debugPrint('リフレッシュトークンでアクセストークンを再取得しました。');
-
-      return newAccessToken;
-    } catch (e) {
-      debugPrint('アクセストークン更新のレスポンス解析に失敗しました: $e');
-      return null;
-    }
-  }
-
-  // エラーレスポンスからメッセージを抽出する
-  String? _extractMessage(String body) {
-    try {
-      final decoded = jsonDecode(body);
-      if (decoded is Map<String, dynamic>) {
-        final message = decoded['message'];
-        if (message is String) {
-          return message;
-        }
-      }
-    } catch (_) {
-      // no-op
-    }
-    return null;
   }
 
   // ユーザーログイン、登録時に、BEからのレスポンスからaccessTokenとrefreshTokenを見つけて、保存する関数

@@ -1,19 +1,23 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:mr_collection/data/exception/auth_exception.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/line_group_member.dart';
-import 'package:mr_collection/utils/token_storage.dart';
+import 'package:mr_collection/utils/authenticated_request.dart';
 
 class EventRepository {
   final String baseUrl;
+  final AuthenticatedRequestHelper _authHelper;
 
-  EventRepository({required this.baseUrl});
+  EventRepository({required this.baseUrl})
+      : _authHelper = AuthenticatedRequestHelper(
+          baseUrl: baseUrl,
+          contextLabel: 'EventRepository',
+        );
 
   Future<Event> createEvent(String eventName, String userId) async {
     final url = Uri.parse('$baseUrl/users/$userId/events');
-    final response = await _sendWithAuth((token) {
+    final response = await _authHelper.sendWithAuth((token) {
       return _postEvent(
         url: url,
         accessToken: token,
@@ -34,13 +38,10 @@ class EventRepository {
   Future<Event> editEventName(
       String userId, String eventId, String newEventName) async {
     final url = Uri.parse('$baseUrl/users/$userId/events/$eventId');
-    final response = await _sendWithAuth((token) {
+    final response = await _authHelper.sendWithAuth((token) {
       return http.put(
         url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
+        headers: _headersWithToken(token),
         body: jsonEncode({'newEventName': newEventName}),
       );
     });
@@ -57,13 +58,10 @@ class EventRepository {
   Future<Event> createEventAndTransferMembers(
       String eventId, String eventName, String userId) async {
     final url = Uri.parse('$baseUrl/users/$userId/events/clone');
-    final response = await _sendWithAuth((token) {
+    final response = await _authHelper.sendWithAuth((token) {
       return http.post(
         url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
+        headers: _headersWithToken(token),
         body: jsonEncode({'fromEventId': eventId, 'eventName': eventName}),
       );
     });
@@ -94,13 +92,10 @@ class EventRepository {
         .toList();
 
     final url = Uri.parse('$baseUrl/users/$userId/line-groups');
-    final response = await _sendWithAuth((token) {
+    final response = await _authHelper.sendWithAuth((token) {
       return http.post(
         url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
+        headers: _headersWithToken(token),
         body: jsonEncode({
           'groupId': groupId,
           'eventName': eventName,
@@ -130,13 +125,10 @@ class EventRepository {
       String userId, String eventId, int totalMoney) async {
     debugPrint("Repository内でinputTotalMoney関数が呼ばれました。");
     final url = Uri.parse('$baseUrl/users/$userId/events/$eventId/money');
-    final response = await _sendWithAuth((token) {
+    final response = await _authHelper.sendWithAuth((token) {
       return http.put(
         url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
+        headers: _headersWithToken(token),
         body: jsonEncode({'totalMoney': totalMoney}),
       );
     });
@@ -152,13 +144,10 @@ class EventRepository {
 
   Future<Map<String, bool>> deleteEvent(String userId, String eventId) async {
     final url = Uri.parse('$baseUrl/users/$userId/events');
-    final response = await _sendWithAuth((token) {
+    final response = await _authHelper.sendWithAuth((token) {
       return http.delete(
         url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
+        headers: _headersWithToken(token),
         body: jsonEncode({
           'eventIdList': [eventId]
         }),
@@ -178,13 +167,10 @@ class EventRepository {
   Future<bool> sendMessage(
       String userId, String eventId, String message) async {
     final url = Uri.parse('$baseUrl/users/$userId/events/$eventId/message');
-    final response = await _sendWithAuth((token) {
+    final response = await _authHelper.sendWithAuth((token) {
       return http.post(
         url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
+        headers: _headersWithToken(token),
         body: jsonEncode({'message': message}),
       );
     });
@@ -200,13 +186,10 @@ class EventRepository {
 
   Future<Event> addNote(String userId, String eventId, String memo) async {
     final url = Uri.parse('$baseUrl/users/$userId/events/$eventId/memo');
-    final response = await _sendWithAuth((token) {
+    final response = await _authHelper.sendWithAuth((token) {
       return http.put(
         url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
+        headers: _headersWithToken(token),
         body: jsonEncode({'memo': memo}),
       );
     });
@@ -223,124 +206,21 @@ class EventRepository {
   // トークンを付けてイベント作成リクエストを投げる
   Future<http.Response> _postEvent({
     required Uri url,
-    required String accessToken,
+    required String? accessToken,
     required String eventName,
     required String userId,
   }) {
-    final headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $accessToken',
-    };
-
+    final headers = _headersWithToken(accessToken);
     final body = jsonEncode({'eventName': eventName, 'userId': userId});
 
     return http.post(url, headers: headers, body: body);
   }
 
-  // トークン付きでAPIを呼び、期限切れなら更新して再試行する
-  Future<http.Response> _sendWithAuth(
-      Future<http.Response> Function(String accessToken) request) async {
-    final refreshToken = await TokenStorage.getRefreshToken();
-    var accessToken = await TokenStorage.getAccessToken();
-
-    if (accessToken == null && refreshToken != null) {
-      debugPrint('EventRepository: アクセストークンが見つからないためリフレッシュします。');
-      accessToken = await _refreshAccessToken(refreshToken);
+  Map<String, String> _headersWithToken(String? accessToken) {
+    final headers = {'Content-Type': 'application/json'};
+    if (accessToken != null && accessToken.isNotEmpty) {
+      headers['Authorization'] = 'Bearer $accessToken';
     }
-
-    if (accessToken == null) {
-      throw const RefreshTokenExpiredException('認証情報が見つかりません');
-    }
-
-    final response = await request(accessToken);
-    if (response.statusCode != 401) {
-      return response;
-    }
-
-    final message = _extractMessage(response.body);
-    if (message != 'Token has expired!') {
-      return response;
-    }
-
-    if (refreshToken == null) {
-      throw const RefreshTokenExpiredException('リフレッシュトークンが存在しません');
-    }
-
-    debugPrint('EventRepository: アクセストークン期限切れを検知。リフレッシュします。');
-    final newAccessToken = await _refreshAccessToken(refreshToken);
-    if (newAccessToken == null) {
-      throw const RefreshTokenExpiredException('リフレッシュトークンが失効しています');
-    }
-
-    return request(newAccessToken);
-  }
-
-  Future<String?> _refreshAccessToken(String refreshToken) async {
-    final url = Uri.parse('$baseUrl/auth/refresh');
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'refresh_token': refreshToken}),
-    );
-
-    if (response.statusCode != 200) {
-      debugPrint('アクセストークンの更新に失敗しました: ${response.statusCode}');
-      return null;
-    }
-
-    try {
-      final data = jsonDecode(response.body);
-      if (data is! Map<String, dynamic>) {
-        debugPrint('アクセストークン更新レスポンスの形式が不正です: ${response.body}');
-        return null;
-      }
-
-      final newAccessToken =
-          _readToken(data, 'access_token') ?? _readToken(data, 'accessToken');
-      final newRefreshToken = _readToken(data, 'refresh_token') ??
-          _readToken(data, 'refreshToken') ??
-          refreshToken;
-
-      if (newAccessToken == null || newAccessToken.isEmpty) {
-        debugPrint('新しいアクセストークンが取得できませんでした');
-        return null;
-      }
-
-      await TokenStorage.saveTokens(
-        accessToken: newAccessToken,
-        refreshToken: newRefreshToken,
-      );
-
-      debugPrint('EventRepository: リフレッシュトークンでアクセストークンを更新しました。');
-
-      return newAccessToken;
-    } catch (e) {
-      debugPrint('アクセストークン更新のレスポンス解析に失敗しました: $e');
-      return null;
-    }
-  }
-
-  // BEから401が返ってきたときに、accessTokenが期限切れなのかどうかを、メッセージを切り分けて分析するための関数
-  String? _extractMessage(String body) {
-    try {
-      final decoded = jsonDecode(body);
-      if (decoded is Map<String, dynamic>) {
-        final message = decoded['message'];
-        if (message is String) {
-          return message;
-        }
-      }
-    } catch (_) {
-      // no-op
-    }
-    return null;
-  }
-
-  String? _readToken(Map<String, dynamic> data, String key) {
-    final value = data[key];
-    if (value is String) {
-      return value;
-    }
-    return null;
+    return headers;
   }
 }
