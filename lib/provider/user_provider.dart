@@ -12,6 +12,7 @@ import 'package:mr_collection/provider/member_repository_provider.dart';
 import 'package:mr_collection/services/user_service.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
+import 'package:mr_collection/data/exception/auth_exception.dart';
 import 'package:mr_collection/data/model/freezed/line_group.dart';
 
 final userProvider = StateNotifierProvider<UserNotifier, User?>((ref) {
@@ -123,6 +124,9 @@ class UserNotifier extends StateNotifier<User?> {
       state = updatedUser;
       return newEvent.eventId;
     } catch (e) {
+      if (e is AuthException) {
+        rethrow;
+      }
       debugPrint('イベントの作成中にエラーが発生しました: $e');
       return null;
     }
@@ -164,8 +168,8 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
-  Future<String?> createEventAndGetMembersFromLine(String userId, String groupId,
-      String eventName, List<LineGroupMember> members) async {
+  Future<String?> createEventAndGetMembersFromLine(String userId,
+      String groupId, String eventName, List<LineGroupMember> members) async {
     try {
       final newEvent = await eventRepository.createEventAndGetMembersFromLine(
           userId, groupId, eventName, members);

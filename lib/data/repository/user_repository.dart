@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:mr_collection/data/model/freezed/user.dart';
 import 'package:mr_collection/data/model/freezed/line_group.dart';
+import 'package:mr_collection/utils/token_storage.dart';
 
 class UserRepository {
   final String baseUrl;
@@ -29,7 +30,8 @@ class UserRepository {
     if (response.statusCode == 201 || response.statusCode == 200) {
       try {
         final data = jsonDecode(response.body);
-        final user = User.fromJson(data);
+        await _persistTokensFromResponse(data);
+        final user = User.fromJson(_extractUserData(data));
         return user;
       } catch (e, stackTrace) {
         debugPrint('JSONデコード中にエラー: $e');
@@ -64,7 +66,8 @@ class UserRepository {
     if (response.statusCode == 201 || response.statusCode == 200) {
       try {
         final data = jsonDecode(response.body);
-        final user = User.fromJson(data);
+        await _persistTokensFromResponse(data);
+        final user = User.fromJson(_extractUserData(data));
         return user;
       } catch (e, stackTrace) {
         debugPrint('JSONデコード中にエラー: $e');
@@ -79,7 +82,7 @@ class UserRepository {
             'エラー: $errorMessage (ステータスコード: ${response.statusCode})');
       } catch (e) {
         throw Exception(
-            'その他のエラー：ユーザー情報の登録(LINE利用)に失敗しました (ステータスコード: ${response.statusCode})');
+            'その他のエラー：ユーザー情報の登録(LINE利用)に失敗しました (ステータスコード: ${response.statusCode}),エラー：$e');
       }
     }
   }
@@ -99,8 +102,8 @@ class UserRepository {
     if (response.statusCode == 200) {
       try {
         final data = jsonDecode(response.body);
-
-        final user = User.fromJson(data);
+        await _persistTokensFromResponse(data);
+        final user = User.fromJson(_extractUserData(data));
         return user;
       } catch (e, stackTrace) {
         debugPrint('JSONデコード中にエラー: $e');
@@ -134,8 +137,8 @@ class UserRepository {
     if (response.statusCode == 200) {
       try {
         final data = jsonDecode(response.body);
-
-        final user = User.fromJson(data);
+        await _persistTokensFromResponse(data);
+        final user = User.fromJson(_extractUserData(data));
         return user;
       } catch (e, stackTrace) {
         debugPrint('JSONデコード中にエラー: $e');
@@ -151,7 +154,7 @@ class UserRepository {
             'エラー: $errorMessage (ステータスコード: ${response.statusCode})');
       } catch (e) {
         throw Exception(
-            'その他のエラー：LINE_IDでのユーザー情報の取得に失敗しました (ステータスコード: ${response.statusCode})');
+            'その他のエラー：LINE_IDでのユーザー情報の取得に失敗しました (ステータスコード: ${response.statusCode})\n メッセージ：$e');
       }
     }
   }
@@ -268,5 +271,37 @@ class UserRepository {
     } else {
       throw Exception('PayPayリンクの送信に失敗しました');
     }
+  }
+
+  // ユーザーログイン、登録時に、BEからのレスポンスからaccessTokenとrefreshTokenを見つけて、保存する関数
+  Future<void> _persistTokensFromResponse(dynamic data) async {
+    if (data is! Map<String, dynamic>) return;
+
+    final accessToken = data['access_token'] as String?;
+    final refreshToken = data['refresh_token'] as String?;
+
+    if (accessToken != null && accessToken.isNotEmpty &&
+        refreshToken != null && refreshToken.isNotEmpty) {
+      await TokenStorage.saveTokens(
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+      );
+    }
+  }
+
+  Map<String, dynamic> _extractUserData(dynamic data) {
+    if (data is Map<String, dynamic>) {
+      final events = data['events'];
+      return {
+        'user_id': data['user_id'],
+        'apple_id': data['apple_id'],
+        'line_id': data['line_id'],
+        'paypay_url': data['paypay_url'],
+        'belonging_line_group_ids': data['belonging_line_group_ids'],
+        'events': events is List ? events : [],
+      };
+    }
+
+    throw Exception('ユーザーデータの形式が不正です');
   }
 }
