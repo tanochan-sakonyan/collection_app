@@ -12,6 +12,7 @@ import 'package:mr_collection/provider/member_repository_provider.dart';
 import 'package:mr_collection/services/user_service.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
+import 'package:mr_collection/data/exception/auth_exception.dart';
 import 'package:mr_collection/data/model/freezed/line_group.dart';
 
 final userProvider = StateNotifierProvider<UserNotifier, User?>((ref) {
@@ -87,7 +88,7 @@ class UserNotifier extends StateNotifier<User?> {
       state = user;
       return user;
     } catch (e) {
-      debugPrint('ユーザー情報の取得の際にエラーが発生しました。: $e');
+      debugPrint('LINEユーザー情報の取得の際にエラーが発生しました。: $e');
       state = null;
       return null;
     }
@@ -123,6 +124,9 @@ class UserNotifier extends StateNotifier<User?> {
       state = updatedUser;
       return newEvent.eventId;
     } catch (e) {
+      if (e is AuthException) {
+        rethrow;
+      }
       debugPrint('イベントの作成中にエラーが発生しました: $e');
       return null;
     }

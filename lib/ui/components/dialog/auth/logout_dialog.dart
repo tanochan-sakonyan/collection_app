@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_line_sdk/flutter_line_sdk.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mr_collection/ui/screen/login_screen.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/services/auth_service.dart';
 
 class LogoutDialog extends StatelessWidget {
   const LogoutDialog({
@@ -65,7 +64,7 @@ class LogoutDialog extends StatelessWidget {
                   height: 36,
                   width: 107,
                   child: ElevatedButton(
-                    onPressed: () => _signOut(context),
+                    onPressed: () => AuthService.signOut(context),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFF2F2F2),
                       elevation: 2,
@@ -91,14 +90,4 @@ class LogoutDialog extends StatelessWidget {
       ),
     );
   }
-}
-
-final _lineSdk = LineSDK.instance;
-Future<void> _signOut(context) async {
-  await _lineSdk.logout();
-  Navigator.of(context).pushReplacement(
-    MaterialPageRoute(
-      builder: (context) => const LoginScreen(),
-    ),
-  );
 }

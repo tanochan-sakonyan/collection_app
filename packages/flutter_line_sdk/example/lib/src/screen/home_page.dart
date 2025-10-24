@@ -2,9 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_line_sdk/flutter_line_sdk.dart';
-
-import '../theme.dart';
-import '../widget/user_info_widget.dart';
+import 'package:flutter_line_sdk_example/src/theme.dart';
+import 'package:flutter_line_sdk_example/src/widget/user_info_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
