@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
-import 'package:mr_collection/utils/authenticated_request.dart';
-import 'package:mr_collection/utils/token_storage.dart';
+import 'package:mr_collection/modules/features/utils/authenticated_request.dart';
+import 'package:mr_collection/modules/features/utils/token_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
