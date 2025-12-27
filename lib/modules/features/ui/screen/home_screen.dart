@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ import 'package:mr_collection/modules/features/ui/components/tanochan_drawer.dar
 import 'package:mr_collection/modules/features/data/model/freezed/event.dart';
 import 'package:mr_collection/modules/features/data/model/freezed/user.dart';
 import 'package:mr_collection/modules/features/ui/tutorial/tutorial_targets.dart';
+import 'package:mr_collection/modules/shukinkun_ads/application/ads_trigger_notifier.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:mr_collection/modules/features/ui/components/event_zero_components.dart';
@@ -37,6 +39,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 class HomeScreenState extends ConsumerState<HomeScreen>
     with TickerProviderStateMixin {
   late TabController tabController;
+  ProviderSubscription<User?>? _adsUserSubscription;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<String> _tabTitles = [];
   int _currentTabIndex = 0;
@@ -58,6 +61,17 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   @override
   void initState() {
     super.initState();
+    _adsUserSubscription =
+        ref.listenManual<User?>(userProvider, (previous, next) {
+      if (next == null) {
+        return;
+      }
+      unawaited(
+        ref
+            .read(shukinkunAdsTriggerProvider.notifier)
+            .checkEvents(next.events),
+      );
+    });
     _initKeys();
     _tabTitles = ref.read(tabTitlesProvider);
     tabController = TabController(length: _tabTitles.length, vsync: this);
@@ -194,6 +208,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   @override
   void dispose() {
     tabController.dispose();
+    _adsUserSubscription?.close();
     _banner?.dispose();
     super.dispose();
   }

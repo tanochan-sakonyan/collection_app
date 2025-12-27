@@ -18,6 +18,7 @@
     "adjustables",
     "admob",
     "cupertino",
+    "geolocator",
     "herokuapp",
     "Ikeo",
     "Kanta",
@@ -31,10 +32,12 @@
     "roboto",
     "Shukin",
     "shukinkun",
+    "storekit",
     "Superellipse",
     "Tanochan",
     "tanotyan",
     "Unagami",
-    "vsync"
+    "vsync",
+    "wkwebview"
   ]
 }
