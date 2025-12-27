@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_line_sdk/flutter_line_sdk.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mr_collection/constants/base_url.dart';
 import 'package:mr_collection/provider/login_loading_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/auth/login_error_dialog.dart';
@@ -16,6 +17,7 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'dart:convert';
 import 'dart:io' show Platform;
 
 final checkboxProvider = StateProvider<bool>((ref) => false);
@@ -249,16 +251,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                           ? Uri.parse(
                                               'https://${Uri.base.host}/')
                                           : Uri.parse(
-                                              'https://shukinkun-49fb12fd2191.herokuapp.com/auth/apple/callback',
+                                              '${baseUrl}auth/apple/callback',
                                             ),
                                     ),
                                   );
 
                                   debugPrint("Appleサインイン認証情報: $credential");
 
-                                  final url = Uri.https(
-                                      'shukinkun-49fb12fd2191.herokuapp.com',
-                                      '/auth/apple');
+                                  final url = Uri.https('${baseUrl}auth/apple');
 
                                   final response = await http.get(
                                     url,
@@ -266,10 +266,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       'Content-Type': 'application/json'
                                     },
                                   );
-
-                                  ref
-                                      .read(loginLoadingProvider.notifier)
-                                      .state = true;
 
                                   if (response.statusCode == 200 ||
                                       response.statusCode == 201) {
@@ -301,7 +297,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     }
                                   } else {
                                     debugPrint(
-                                        'Appleサインインエンドポイントエラー: ${response.statusCode}');
+                                        'Appleサインインエンドポイントエラー: ${response.statusCode} ${response.body}');
                                     if (mounted) {
                                       showDialog(
                                           context: context,
