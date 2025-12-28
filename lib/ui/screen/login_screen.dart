@@ -36,6 +36,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     bool isChecked = ref.watch(checkboxProvider);
     final isProcessLoading = ref.watch(loginLoadingProvider);
+    final screenSize = MediaQuery.of(context).size;
+    final imageWidth = screenSize.width * 0.9;
 
     Future<void> updateCurrentLoginMedia(String media) async {
       final prefs = await SharedPreferences.getInstance();
@@ -55,13 +57,84 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 100),
+                  Image.asset(
+                    'assets/images/login_screen_image.png',
+                    width: imageWidth,
+                    fit: BoxFit.cover,
+                  ),
+                  const SizedBox(height: 30),
                   Text(
                     S.of(context)!.shukinkun,
-                    style: GoogleFonts.roboto(
-                        fontSize: 32, fontWeight: FontWeight.bold),
+                    style: GoogleFonts.notoSansJp(
+                        fontSize: 32, fontWeight: FontWeight.w800),
                   ),
-                  const SizedBox(height: 100),
+                  const SizedBox(height: 70),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Checkbox(
+                        value: isChecked,
+                        onChanged: (bool? value) {
+                          ref.read(checkboxProvider.notifier).state = value!;
+                        },
+                        activeColor: Colors.black,
+                      ),
+                      Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(text: S.of(context)!.termsAndPrivacyIntro),
+                            WidgetSpan(
+                              alignment: PlaceholderAlignment.baseline,
+                              baseline: TextBaseline.alphabetic,
+                              child: GestureDetector(
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const TermsOfServiceScreen()),
+                                ),
+                                child: Text(
+                                  S
+                                      .of(context)!
+                                      .termsOfService, // "Terms of Service"
+                                  style: const TextStyle(
+                                      fontSize: 14, color: Colors.blue),
+                                ),
+                              ),
+                            ),
+                            TextSpan(text: S.of(context)!.and),
+                            WidgetSpan(
+                              alignment: PlaceholderAlignment.baseline,
+                              baseline: TextBaseline.alphabetic,
+                              child: GestureDetector(
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const PrivacyPolicyScreen()),
+                                ),
+                                child: Text(
+                                  S.of(context)!.privacyPolicy,
+                                  style: const TextStyle(
+                                      fontSize: 14, color: Colors.blue),
+                                ),
+                              ),
+                            ),
+                            TextSpan(
+                                text: S.of(context)!.termsAndPrivacySuffix),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Text("LINEでのログインがおすすめ！",
+                      style: GoogleFonts.notoSansJp(
+                          color: Colors.black,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center),
+                  const SizedBox(height: 12),
                   SizedBox(
                     width: 300,
                     height: 60,
@@ -264,8 +337,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   if (user != null) {
                                     final prefs =
                                         await SharedPreferences.getInstance();
-                                    prefs.setString(
-                                        'appleUserId', user.userId);
+                                    prefs.setString('appleUserId', user.userId);
                                     prefs.setBool('isAppleLoggedIn', true);
 
                                     if (mounted) {
@@ -341,64 +413,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                     ),
                   const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Checkbox(
-                        value: isChecked,
-                        onChanged: (bool? value) {
-                          ref.read(checkboxProvider.notifier).state = value!;
-                        },
-                        activeColor: Colors.black,
-                      ),
-                      Text.rich(
-                        TextSpan(
-                          children: [
-                            TextSpan(text: S.of(context)!.termsAndPrivacyIntro),
-                            WidgetSpan(
-                              alignment: PlaceholderAlignment.baseline,
-                              baseline: TextBaseline.alphabetic,
-                              child: GestureDetector(
-                                onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const TermsOfServiceScreen()),
-                                ),
-                                child: Text(
-                                  S
-                                      .of(context)!
-                                      .termsOfService, // "Terms of Service"
-                                  style: const TextStyle(
-                                      fontSize: 14, color: Colors.blue),
-                                ),
-                              ),
-                            ),
-                            TextSpan(text: S.of(context)!.and),
-                            WidgetSpan(
-                              alignment: PlaceholderAlignment.baseline,
-                              baseline: TextBaseline.alphabetic,
-                              child: GestureDetector(
-                                onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const PrivacyPolicyScreen()),
-                                ),
-                                child: Text(
-                                  S.of(context)!.privacyPolicy,
-                                  style: const TextStyle(
-                                      fontSize: 14, color: Colors.blue),
-                                ),
-                              ),
-                            ),
-                            TextSpan(
-                                text: S.of(context)!.termsAndPrivacySuffix),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
                 ],
               ),
             ),
