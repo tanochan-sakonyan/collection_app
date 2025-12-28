@@ -147,7 +147,13 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                 return Container(
                   color: themeColor.color,
                   child: Center(
-                      child: SvgPicture.asset('assets/icons/reverse_icon.svg')),
+                    child: SvgPicture.asset(
+                      'assets/icons/reverse_icon.svg',
+                      theme: SvgTheme(
+                        currentColor: themeColor.color,
+                      ),
+                    ),
+                  ),
                 );
               } else if (snapshot.hasError) {
                 return Center(child: Text('エラーが発生しました: ${snapshot.error}'));
@@ -166,8 +172,13 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                         return Container(
                           color: themeColor.color,
                           child: Center(
-                              child: SvgPicture.asset(
-                                  'assets/icons/reverse_icon.svg')),
+                            child: SvgPicture.asset(
+                              'assets/icons/reverse_icon.svg',
+                              theme: SvgTheme(
+                                currentColor: themeColor.color,
+                              ),
+                            ),
+                          ),
                         );
                       } else if (userIdSnapshot.hasError) {
                         return Center(
@@ -184,8 +195,13 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                                 return Container(
                                   color: themeColor.color,
                                   child: Center(
-                                      child: SvgPicture.asset(
-                                          'assets/icons/reverse_icon.svg')),
+                                    child: SvgPicture.asset(
+                                      'assets/icons/reverse_icon.svg',
+                                      theme: SvgTheme(
+                                        currentColor: themeColor.color,
+                                      ),
+                                    ),
+                                  ),
                                 );
                               } else if (userSnapshot.hasError) {
                                 return Center(
@@ -219,8 +235,13 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                         return Container(
                           color: themeColor.color,
                           child: Center(
-                              child: SvgPicture.asset(
-                                  'assets/icons/reverse_icon.svg')),
+                            child: SvgPicture.asset(
+                              'assets/icons/reverse_icon.svg',
+                              theme: SvgTheme(
+                                currentColor: themeColor.color,
+                              ),
+                            ),
+                          ),
                         );
                       } else if (userIdSnapshot.hasError) {
                         return Center(
@@ -239,8 +260,13 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                                 return Container(
                                   color: themeColor.color,
                                   child: Center(
-                                      child: SvgPicture.asset(
-                                          'assets/icons/reverse_icon.svg')),
+                                    child: SvgPicture.asset(
+                                      'assets/icons/reverse_icon.svg',
+                                      theme: SvgTheme(
+                                        currentColor: themeColor.color,
+                                      ),
+                                    ),
+                                  ),
                                 );
                               } else if (userSnapshot.hasError) {
                                 return Center(

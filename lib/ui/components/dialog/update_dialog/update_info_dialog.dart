@@ -49,6 +49,9 @@ class UpdateInfoDialog extends StatelessWidget {
                     width: 88,
                     height: 88,
                     fit: BoxFit.cover,
+                    theme: SvgTheme(
+                      currentColor: Theme.of(context).primaryColor,
+                    ),
                   ),
                 ),
                 const Positioned(
