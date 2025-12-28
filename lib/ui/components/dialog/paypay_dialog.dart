@@ -146,7 +146,7 @@ class PayPayDialogState extends ConsumerState<PayPayDialog> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     SvgPicture.asset(
-                      "assets/icons/question_circle.svg",
+                      "assets/icons/ic_question_circle.svg",
                       width: 20,
                       height: 20,
                       color: Colors.grey,

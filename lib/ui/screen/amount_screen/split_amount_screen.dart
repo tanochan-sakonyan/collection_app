@@ -847,9 +847,13 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                     focusColor: Colors.transparent,
                     onPressed: () => _showGuideDialog(),
                     icon: SvgPicture.asset(
-                      'assets/icons/question_circle.svg',
+                      'assets/icons/ic_question_circle.svg',
                       width: 32,
                       height: 32,
+                      colorFilter: ColorFilter.mode(
+                        Theme.of(context).primaryColor,
+                        BlendMode.srcIn,
+                      ),
                     )),
                 const Spacer(flex: 8),
               ],

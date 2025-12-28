@@ -82,7 +82,7 @@ class SelectLineGroupScreen extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 SvgPicture.asset(
-                  'assets/icons/question_circle.svg',
+                  'assets/icons/ic_question_circle.svg',
                   width: 24,
                   height: 24,
                   colorFilter: const ColorFilter.mode(

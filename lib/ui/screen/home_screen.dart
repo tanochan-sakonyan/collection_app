@@ -478,11 +478,14 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                   highlightColor: Colors.transparent,
                   hoverColor: Colors.transparent,
                   focusColor: Colors.transparent,
-                  color: Theme.of(context).primaryColor,
                   icon: SvgPicture.asset(
                     'assets/icons/ic_settings.svg',
                     width: 24,
                     height: 24,
+                    colorFilter: ColorFilter.mode(
+                      Theme.of(context).primaryColor,
+                      BlendMode.srcIn,
+                    ),
                   ),
                   onPressed: () {
                     _scaffoldKey.currentState?.openDrawer();
