@@ -471,6 +471,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                           'assets/icons/ic_question_circle.svg',
                           width: 36,
                           height: 36,
+                          colorFilter: ColorFilter.mode(
+                            Theme.of(context).primaryColor,
+                            BlendMode.srcIn,
+                          ),
                         ),
                       ),
                 IconButton(
