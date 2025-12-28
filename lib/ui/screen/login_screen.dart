@@ -14,7 +14,6 @@ import 'package:mr_collection/ui/screen/privacy_policy_screen.dart';
 import 'package:mr_collection/ui/screen/terms_of_service_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'dart:convert';
@@ -258,46 +257,31 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                                   debugPrint("Appleサインイン認証情報: $credential");
 
-                                  final url = Uri.https('${baseUrl}auth/apple');
+                                  final user = await ref
+                                      .read(userProvider.notifier)
+                                      .registerAppleUser();
 
-                                  final response = await http.get(
-                                    url,
-                                    headers: {
-                                      'Content-Type': 'application/json'
-                                    },
-                                  );
+                                  if (user != null) {
+                                    final prefs =
+                                        await SharedPreferences.getInstance();
+                                    prefs.setString(
+                                        'appleUserId', user.userId);
+                                    prefs.setBool('isAppleLoggedIn', true);
 
-                                  if (response.statusCode == 200 ||
-                                      response.statusCode == 201) {
-                                    final user = await ref
-                                        .read(userProvider.notifier)
-                                        .registerUser(response.body);
-
-                                    if (user != null) {
-                                      final prefs =
-                                          await SharedPreferences.getInstance();
-                                      prefs.setString(
-                                          'appleUserId', user.userId);
-                                      prefs.setBool('isAppleLoggedIn', true);
-
-                                      if (mounted) {
-                                        debugPrint(
-                                            'Appleサインイン成功。HomeScreenへ遷移します。user: $user');
-                                        updateCurrentLoginMedia('apple');
-                                        setState(() => isLoading = true);
-                                        Navigator.of(context).pushReplacement(
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                HomeScreen(user: user),
-                                          ),
-                                        );
-                                      }
-                                    } else {
-                                      debugPrint('ユーザー情報がnullです');
+                                    if (mounted) {
+                                      debugPrint(
+                                          'Appleサインイン成功。HomeScreenへ遷移します。user: $user');
+                                      updateCurrentLoginMedia('apple');
+                                      setState(() => isLoading = true);
+                                      Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              HomeScreen(user: user),
+                                        ),
+                                      );
                                     }
                                   } else {
-                                    debugPrint(
-                                        'Appleサインインエンドポイントエラー: ${response.statusCode} ${response.body}');
+                                    debugPrint('ユーザー情報がnullです');
                                     if (mounted) {
                                       showDialog(
                                           context: context,
