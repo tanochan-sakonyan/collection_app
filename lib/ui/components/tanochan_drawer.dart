@@ -13,6 +13,7 @@ import 'package:mr_collection/ui/components/dialog/donation/donation_dialog.dart
 import 'package:mr_collection/ui/components/dialog/donation/donation_thanks_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/paypay_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/questionnaire_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/theme/theme_color_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_and_suggest_official_line_dialog.dart';
 import 'package:mr_collection/ui/screen/privacy_policy_screen.dart';
 import 'package:mr_collection/ui/screen/terms_of_service_screen.dart';
@@ -97,19 +98,18 @@ class TanochanDrawerState extends State<TanochanDrawer>
                 color: Colors.grey,
                 thickness: 1,
               ),
-              // const SizedBox(height: 20),
-              // _buildMenuItem(
-              //   context,
-              //   text: "テーマカラーの変更",
-              //   icon: SvgPicture.asset("assets/icons/drawer_star.svg"),
-              //   onTap: () {
-              //     Navigator.push(
-              //       context,
-              //       MaterialPageRoute(
-              //           builder: (context) => const TermsOfServiceScreen()),
-              //     );
-              //   },
-              // ),
+              const SizedBox(height: 20),
+              _buildMenuItem(
+                context,
+                text: 'テーマカラーの変更',
+                icon: SvgPicture.asset("assets/icons/drawer_star.svg"),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (_) => const ThemeColorDialog(),
+                  );
+                },
+              ),
               const SizedBox(height: 14),
               _buildMenuItem(
                 context,

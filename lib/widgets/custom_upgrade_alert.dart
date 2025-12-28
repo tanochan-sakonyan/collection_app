@@ -157,7 +157,7 @@ class _CustomUpgradeAlertState extends State<CustomUpgradeAlert> {
                 minimumSize: const Size(120, 36),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                backgroundColor: const Color(0xFF75DCC6),
+                backgroundColor: Theme.of(context).primaryColor,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),

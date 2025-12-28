@@ -48,6 +48,7 @@ class _RoleAssignmentDialogState extends State<RoleAssignmentDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = Theme.of(context).primaryColor;
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
@@ -100,7 +101,7 @@ class _RoleAssignmentDialogState extends State<RoleAssignmentDialog> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFF75DCC6),
+                                  color: primaryColor,
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Text(
@@ -122,7 +123,7 @@ class _RoleAssignmentDialogState extends State<RoleAssignmentDialog> {
                                       : 'assets/icons/ic_check_circle_off.svg',
                                   width: 24,
                                   height: 24,
-                                  color: const Color(0xFF75DCC6),
+                                  color: primaryColor,
                                 ),
                               ),
                         title: Text(
@@ -159,7 +160,7 @@ class _RoleAssignmentDialogState extends State<RoleAssignmentDialog> {
                   Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF75DCC6),
+                  backgroundColor: primaryColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),

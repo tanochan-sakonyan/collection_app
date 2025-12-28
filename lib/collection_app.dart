@@ -5,6 +5,7 @@ import 'package:flutter_line_sdk/flutter_line_sdk.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/data/model/freezed/user.dart';
+import 'package:mr_collection/provider/theme_color_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mr_collection/ui/screen/home_screen.dart';
@@ -66,6 +67,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
 
   @override
   Widget build(BuildContext context) {
+    final themeColor = ref.watch(themeColorProvider);
     final textTheme = Theme.of(context).textTheme.apply(
       fontFamily: 'Montserrat',
       fontFamilyFallback: ['Noto Sans JP'],
@@ -80,12 +82,13 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
         theme: ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.white,
+            seedColor: themeColor.color,
           ),
           brightness: Brightness.light,
           fontFamily: 'Montserrat',
           fontFamilyFallback: const ['Noto Sans JP'],
           textTheme: textTheme,
+          primaryColor: themeColor.color,
           primaryTextTheme: textTheme,
           tabBarTheme: const TabBarThemeData(
             indicator: BoxDecoration(),
@@ -111,7 +114,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
           ),
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF75DCC6),
+              backgroundColor: themeColor.color,
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -142,7 +145,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Container(
-                  color: const Color(0xFF75DCC6),
+                  color: themeColor.color,
                   child: Center(
                       child: SvgPicture.asset('assets/icons/reverse_icon.svg')),
                 );
@@ -161,7 +164,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                       if (userIdSnapshot.connectionState ==
                           ConnectionState.waiting) {
                         return Container(
-                          color: const Color(0xFF75DCC6),
+                          color: themeColor.color,
                           child: Center(
                               child: SvgPicture.asset(
                                   'assets/icons/reverse_icon.svg')),
@@ -179,7 +182,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                               if (userSnapshot.connectionState ==
                                   ConnectionState.waiting) {
                                 return Container(
-                                  color: const Color(0xFF75DCC6),
+                                  color: themeColor.color,
                                   child: Center(
                                       child: SvgPicture.asset(
                                           'assets/icons/reverse_icon.svg')),
@@ -214,7 +217,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                       if (userIdSnapshot.connectionState ==
                           ConnectionState.waiting) {
                         return Container(
-                          color: const Color(0xFF75DCC6),
+                          color: themeColor.color,
                           child: Center(
                               child: SvgPicture.asset(
                                   'assets/icons/reverse_icon.svg')),
@@ -234,7 +237,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp> {
                               if (userSnapshot.connectionState ==
                                   ConnectionState.waiting) {
                                 return Container(
-                                  color: const Color(0xFF75DCC6),
+                                  color: themeColor.color,
                                   child: Center(
                                       child: SvgPicture.asset(
                                           'assets/icons/reverse_icon.svg')),

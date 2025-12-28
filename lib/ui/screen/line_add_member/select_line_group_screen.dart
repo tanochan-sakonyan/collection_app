@@ -33,6 +33,7 @@ class SelectLineGroupScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = Theme.of(context).primaryColor;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -50,7 +51,7 @@ class SelectLineGroupScreen extends StatelessWidget {
               Text(
                 S.of(context)!.back,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: const Color(0xFF76DCC6),
+                    color: primaryColor,
                     fontSize: 15,
                     fontWeight: FontWeight.w500),
               ),

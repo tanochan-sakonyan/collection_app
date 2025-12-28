@@ -323,7 +323,9 @@ class _AddEventNameDialogState extends ConsumerState<AddEventNameDialog> {
                                         _isButtonEnabled ? _choiceEvent : null,
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: _isTransferMode
-                                          ? const Color(0xFF76DCC6)
+                                          ? Theme.of(context)
+                                              .colorScheme
+                                              .primary
                                           : const Color(0xFFECECEC),
                                       elevation: 2,
                                       shape: const StadiumBorder(),

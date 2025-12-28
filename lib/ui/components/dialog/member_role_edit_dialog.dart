@@ -32,6 +32,7 @@ class _MemberRoleEditDialogState extends State<MemberRoleEditDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = Theme.of(context).primaryColor;
     return Dialog(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
@@ -88,8 +89,8 @@ class _MemberRoleEditDialogState extends State<MemberRoleEditDialog> {
                             'assets/icons/ic_next.svg',
                             width: 16,
                             height: 16,
-                            colorFilter: const ColorFilter.mode(
-                              Color(0xFF75DCC6),
+                            colorFilter: ColorFilter.mode(
+                              primaryColor,
                               BlendMode.srcIn,
                             ),
                           ),
@@ -135,8 +136,8 @@ class _MemberRoleEditDialogState extends State<MemberRoleEditDialog> {
                           'assets/icons/ic_next.svg',
                           width: 16,
                           height: 16,
-                          colorFilter: const ColorFilter.mode(
-                            Color(0xFF75DCC6),
+                          colorFilter: ColorFilter.mode(
+                            primaryColor,
                             BlendMode.srcIn,
                           ),
                         ),

@@ -229,7 +229,7 @@ class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
               Text(
                 S.of(context)!.back,
                 style: GoogleFonts.notoSansJp(
-                    color: const Color(0xFF76DCC6),
+                    color: Theme.of(context).primaryColor,
                     fontSize: 15,
                     fontWeight: FontWeight.w500),
               ),
@@ -279,7 +279,7 @@ class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
               height: 44,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF75DCC6),
+                  backgroundColor: Theme.of(context).primaryColor,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12)),
                 ),

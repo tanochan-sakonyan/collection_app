@@ -33,6 +33,7 @@ class ChoiceEventScreenState extends ConsumerState<ChoiceEventScreen> {
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
     final events = user?.events ?? <Event>[];
+    final primaryColor = Theme.of(context).primaryColor;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -51,7 +52,7 @@ class ChoiceEventScreenState extends ConsumerState<ChoiceEventScreen> {
               Text(
                 S.of(context)!.back,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: const Color(0xFF76DCC6),
+                    color: primaryColor,
                     fontSize: 15,
                     fontWeight: FontWeight.w500),
               ),
@@ -69,7 +70,7 @@ class ChoiceEventScreenState extends ConsumerState<ChoiceEventScreen> {
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
-                  color: const Color(0xFF75DCC6),
+                  color: primaryColor,
                 ),
           ),
           const SizedBox(height: 32),

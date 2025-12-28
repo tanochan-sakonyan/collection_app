@@ -363,7 +363,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                   },
                             style: ElevatedButton.styleFrom(
                               minimumSize: const Size(double.infinity, 22),
-                              backgroundColor: const Color(0xFF76DCC6),
+                              backgroundColor:
+                                  Theme.of(context).primaryColor,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
@@ -393,6 +394,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
+    final primaryColor = Theme.of(context).primaryColor;
 
     if (user == null) {
       return const Scaffold(
@@ -502,8 +504,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                     children: [
                       const SizedBox(width: 36),
                       Container(
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF76DCC6),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
                           shape: BoxShape.circle,
                         ),
                         child: IconButton(
@@ -631,13 +633,13 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                           horizontal: 16, vertical: 4),
                                       decoration: BoxDecoration(
                                         color: isSelected
-                                            ? const Color(0xFF76DCC6)
+                                            ? primaryColor
                                             : Colors.white,
                                         borderRadius:
                                             BorderRadius.circular(999),
                                         border: Border.all(
                                           color: isSelected
-                                              ? const Color(0xFF76DCC6)
+                                              ? primaryColor
                                               : Colors.grey.shade400,
                                           width: 1,
                                         ),

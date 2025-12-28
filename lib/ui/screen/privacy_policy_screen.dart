@@ -17,10 +17,11 @@ class PrivacyPolicyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = Theme.of(context).primaryColor;
     return Scaffold(
-      backgroundColor: const Color(0xFF76DCC6),
+      backgroundColor: primaryColor,
       appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 173, 252, 235),
+          backgroundColor: primaryColor.withOpacity(0.5),
           title: Text(S.of(context)!.privacyPolicy)),
       body: SingleChildScrollView(
         child: Padding(

@@ -18,6 +18,7 @@ class CheckSelectedEventScreenState
   Widget build(BuildContext context) {
     final event = widget.selectedEvent;
     final eventName = event.eventName;
+    final primaryColor = Theme.of(context).primaryColor;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -36,7 +37,7 @@ class CheckSelectedEventScreenState
               Text(
                 S.of(context)!.back,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: const Color(0xFF76DCC6),
+                    color: primaryColor,
                     fontSize: 15,
                     fontWeight: FontWeight.w500),
               ),
@@ -54,7 +55,7 @@ class CheckSelectedEventScreenState
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
-                  color: const Color(0xFF75DCC6),
+                  color: primaryColor,
                 ),
           ),
           const SizedBox(height: 32),
@@ -73,7 +74,7 @@ class CheckSelectedEventScreenState
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white,
-                border: Border.all(color: const Color(0xFF75DCC6)),
+                border: Border.all(color: primaryColor),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: SizedBox(
@@ -82,14 +83,14 @@ class CheckSelectedEventScreenState
                   child: Column(
                     children: [
                       Container(
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF75DCC6),
-                          borderRadius: BorderRadius.only(
+                        decoration: BoxDecoration(
+                          color: primaryColor,
+                          borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(12),
                             topRight: Radius.circular(12),
                           ),
                           border: Border(
-                            bottom: BorderSide(color: Color(0xFF75DCC6)),
+                            bottom: BorderSide(color: primaryColor),
                           ),
                         ),
                         height: 32,
@@ -167,7 +168,7 @@ class CheckSelectedEventScreenState
                 Navigator.of(context).pop(event);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF76DCC6),
+                backgroundColor: primaryColor,
                 elevation: 2,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
