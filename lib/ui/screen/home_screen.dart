@@ -656,11 +656,13 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                               .textTheme
                                               .bodyMedium
                                               ?.copyWith(
-                                                fontSize: 14,
-                                                color: isSelected
-                                                    ? Colors.white
-                                                    : tabTextColor,
-                                              )),
+                                                  fontSize: 14,
+                                                  color: isSelected
+                                                      ? Colors.white
+                                                      : tabTextColor,
+                                                  fontWeight: isSelected
+                                                      ? FontWeight.bold
+                                                      : FontWeight.w400)),
                                     ),
                                   ),
                                 ),
