@@ -363,8 +363,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                   },
                             style: ElevatedButton.styleFrom(
                               minimumSize: const Size(double.infinity, 22),
-                              backgroundColor:
-                                  Theme.of(context).primaryColor,
+                              backgroundColor: Theme.of(context).primaryColor,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
@@ -479,10 +478,11 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                   highlightColor: Colors.transparent,
                   hoverColor: Colors.transparent,
                   focusColor: Colors.transparent,
+                  color: Theme.of(context).primaryColor,
                   icon: SvgPicture.asset(
-                    'assets/icons/ic_settings_circle.svg',
-                    width: 36,
-                    height: 36,
+                    'assets/icons/ic_settings.svg',
+                    width: 24,
+                    height: 24,
                   ),
                   onPressed: () {
                     _scaffoldKey.currentState?.openDrawer();

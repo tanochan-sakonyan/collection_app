@@ -64,7 +64,7 @@ flutter:
     - assets/icons/reverse_icon.svg
     - assets/icons/filter.svg
     - assets/icons/circle_plus.svg
-    - assets/icons/settings.svg
+    - assets/icons/ic_settings.svg
     - assets/icons/flag.svg
     - assets/icons/sad_face.svg
     - assets/icons/close_circle.svg
@@ -78,7 +78,7 @@ flutter:
     - assets/icons/user-add.svg
     - assets/icons/chat_bubble.svg
     - assets/icons/yen.svg
-    - assets/icons/question_circle.svg
+    - assets/icons/ic_question_circle.svg
     - assets/icons/suggest_official_line.svg
     - assets/icons/ic_check_badge_green.svg
     - assets/icons/ic_check_circle_teal.svg
@@ -113,8 +113,6 @@ flutter:
     - assets/icons/ic_smile_bubble.svg
     - assets/icons/ic_download_file.svg
     - assets/icons/ic_empty_clipboard.svg
-    - assets/icons/ic_question_circle.svg
-    - assets/icons/ic_settings_circle.svg
     - assets/icons/ic_paypay.png
     - assets/images/img_add_from_line.png
     - assets/images/login_screen_image.png
