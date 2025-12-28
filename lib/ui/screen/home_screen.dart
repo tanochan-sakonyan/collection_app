@@ -325,10 +325,30 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                           controller: controller,
                           maxLines: 8,
                           minLines: 8,
+                          cursorColor: Theme.of(context).primaryColor,
                           decoration: InputDecoration(
                             hintText: S.of(context)!.memoPlaceholder,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                color:
+                                    Theme.of(context).primaryColor.withOpacity(
+                                  0.6,
+                                ),
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                width: 2,
+                                color: Theme.of(context).primaryColor,
+                              ),
                             ),
                           ),
                         ),
