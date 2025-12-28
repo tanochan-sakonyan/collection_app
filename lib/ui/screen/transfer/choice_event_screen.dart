@@ -110,7 +110,13 @@ class ChoiceEventScreenState extends ConsumerState<ChoiceEventScreen> {
                         trailing: SizedBox(
                           width: 16,
                           height: 16,
-                          child: SvgPicture.asset('assets/icons/ic_next.svg'),
+                          child: SvgPicture.asset(
+                            'assets/icons/ic_next.svg',
+                            colorFilter: ColorFilter.mode(
+                              Theme.of(context).primaryColor,
+                              BlendMode.srcIn,
+                            ),
+                          ),
                         ),
                         onTap: () => _checkSelectedEvent(event)),
                   ),
