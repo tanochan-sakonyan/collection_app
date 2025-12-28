@@ -98,7 +98,7 @@ class TanochanDrawerState extends State<TanochanDrawer>
                 color: Colors.grey,
                 thickness: 1,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 14),
               _buildMenuItem(
                 context,
                 text: 'テーマカラーの変更',
@@ -110,7 +110,7 @@ class TanochanDrawerState extends State<TanochanDrawer>
                   );
                 },
               ),
-              const SizedBox(height: 14),
+              const SizedBox(height: 20),
               _buildMenuItem(
                 context,
                 text: S.of(context)!.questionnaire,

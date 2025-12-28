@@ -36,7 +36,7 @@ class ThemeColorDialog extends ConsumerWidget {
               const Text(
                 'テーマカラー',
                 style: TextStyle(
-                  fontSize: 28,
+                  fontSize: 20,
                   fontWeight: FontWeight.w800,
                   color: Colors.black,
                 ),
