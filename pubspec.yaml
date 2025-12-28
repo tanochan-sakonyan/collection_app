@@ -109,7 +109,6 @@ flutter:
     - assets/icons/drawer_coffee.svg
     - assets/icons/icon.png
     - assets/icons/line_official_badge.png
-    - assets/images/img_add_from_line.png
     - assets/icons/ic_clipboard_list.svg
     - assets/icons/ic_smile_bubble.svg
     - assets/icons/ic_download_file.svg
@@ -117,6 +116,9 @@ flutter:
     - assets/icons/ic_question_circle.svg
     - assets/icons/ic_settings_circle.svg
     - assets/icons/ic_paypay.png
+    - assets/images/img_add_from_line.png
+    - assets/images/login_screen_image.png
+
 
   fonts:
     - family: Montserrat

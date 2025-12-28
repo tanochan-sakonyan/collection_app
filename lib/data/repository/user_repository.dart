@@ -13,12 +13,33 @@ class UserRepository {
   UserRepository({required this.baseUrl})
       : _authHelper = AuthenticatedRequestHelper(baseUrl: baseUrl);
 
-  // ユーザー情報をBEに登録する
-  // TODO: 今後アクセストークンを送る必要はない。
-  // LINEのアクセストークンはregisterLineUser関数で
-  // AppleのアクセストークンはregisterAppleUser関数で送ってユーザー登録する。
-  Future<User?> registerUser(String accessToken) async {
-    debugPrint('registerUser関数が呼ばれました。アクセストークン: $accessToken');
+  // Appleユーザーを暫定エンドポイント経由で登録する
+  Future<User?> registerAppleUser() async {
+    final url = Uri.parse('${baseUrl}auth/apple');
+
+    final response = await http.get(
+      url,
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return _registerAppleUserFromTestEndpoint();
+    } else {
+      try {
+        final errorData = jsonDecode(response.body);
+        final errorMessage = errorData['message'] ?? 'Apple認証に失敗しました';
+        throw Exception(
+            'エラー: $errorMessage (ステータスコード: ${response.statusCode})');
+      } catch (e) {
+        throw Exception(
+            'その他のエラー：Apple認証に失敗しました (ステータスコード: ${response.statusCode})');
+      }
+    }
+  }
+
+  // Apple登録後にユーザー情報を作成する
+  Future<User?> _registerAppleUserFromTestEndpoint() async {
+    debugPrint('registerAppleUserFromTestEndpointが呼ばれました。');
     final url = Uri.parse('$baseUrl/users/test');
 
     final response = await _authHelper.sendWithAuth(

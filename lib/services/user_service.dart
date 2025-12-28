@@ -7,8 +7,9 @@ class UserService {
 
   UserService(this.userRepository);
 
-  Future<User?> registerUser(String accessToken) async {
-    return userRepository.registerUser(accessToken);
+  // Appleログインの登録処理を委譲する
+  Future<User?> registerAppleUser() async {
+    return userRepository.registerAppleUser();
   }
 
   Future<User?> registerLineUser(String accessToken) async {
