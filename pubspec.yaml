@@ -81,7 +81,7 @@ flutter:
     - assets/icons/ic_question_circle.svg
     - assets/icons/suggest_official_line.svg
     - assets/icons/ic_check_badge_green.svg
-    - assets/icons/ic_check_circle_teal.svg
+    - assets/icons/ic_check_circle.svg
     - assets/icons/ic_check_circle_off.svg
     - assets/icons/ic_amount.svg
     - assets/icons/ic_lock_open.svg

@@ -82,8 +82,8 @@ class _RoleAssignmentDialogState extends State<RoleAssignmentDialog> {
                   final isAbsent = member.status == PaymentStatus.absence;
 
                   final existingRole = widget.memberRoles[member.memberId];
-                  final hasExistingRole = existingRole != null &&
-                      existingRole.isNotEmpty;
+                  final hasExistingRole =
+                      existingRole != null && existingRole.isNotEmpty;
                   final isCurrentRole = existingRole == widget.roleName;
 
                   return Column(
@@ -119,20 +119,25 @@ class _RoleAssignmentDialogState extends State<RoleAssignmentDialog> {
                                     : () => _toggleMember(member),
                                 child: SvgPicture.asset(
                                   isSelected && !isAbsent
-                                      ? 'assets/icons/ic_check_circle_teal.svg'
+                                      ? 'assets/icons/ic_check_circle.svg'
                                       : 'assets/icons/ic_check_circle_off.svg',
                                   width: 24,
                                   height: 24,
-                                  color: primaryColor,
+                                  theme: isSelected && !isAbsent
+                                      ? SvgTheme(
+                                          currentColor: primaryColor,
+                                        )
+                                      : null,
                                 ),
                               ),
                         title: Text(
                           member.memberName,
                           style: GoogleFonts.notoSansJp(
                             fontSize: 16,
-                            color: isAbsent || (hasExistingRole && !isCurrentRole)
-                                ? Colors.grey
-                                : Colors.black,
+                            color:
+                                isAbsent || (hasExistingRole && !isCurrentRole)
+                                    ? Colors.grey
+                                    : Colors.black,
                           ),
                         ),
                         onTap: isAbsent || (hasExistingRole && !isCurrentRole)

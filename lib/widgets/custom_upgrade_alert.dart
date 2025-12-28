@@ -117,9 +117,13 @@ class _CustomUpgradeAlertState extends State<CustomUpgradeAlert> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SvgPicture.asset(
-                                'assets/icons/ic_check_circle_teal.svg',
+                                'assets/icons/ic_check_circle.svg',
                                 width: 22,
                                 height: 22,
+                                theme: SvgTheme(
+                                  currentColor:
+                                      Theme.of(context).primaryColor,
+                                ),
                               ),
                               const SizedBox(width: 4),
                               Expanded(
