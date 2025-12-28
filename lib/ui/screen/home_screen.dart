@@ -325,10 +325,30 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                           controller: controller,
                           maxLines: 8,
                           minLines: 8,
+                          cursorColor: Theme.of(context).primaryColor,
                           decoration: InputDecoration(
                             hintText: S.of(context)!.memoPlaceholder,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                color:
+                                    Theme.of(context).primaryColor.withOpacity(
+                                  0.6,
+                                ),
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                width: 2,
+                                color: Theme.of(context).primaryColor,
+                              ),
                             ),
                           ),
                         ),
@@ -363,7 +383,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                   },
                             style: ElevatedButton.styleFrom(
                               minimumSize: const Size(double.infinity, 22),
-                              backgroundColor: const Color(0xFF76DCC6),
+                              backgroundColor: Theme.of(context).primaryColor,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
@@ -393,6 +413,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
+    final primaryColor = Theme.of(context).primaryColor;
 
     if (user == null) {
       return const Scaffold(
@@ -470,6 +491,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                           'assets/icons/ic_question_circle.svg',
                           width: 36,
                           height: 36,
+                          colorFilter: ColorFilter.mode(
+                            Theme.of(context).primaryColor,
+                            BlendMode.srcIn,
+                          ),
                         ),
                       ),
                 IconButton(
@@ -478,9 +503,13 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                   hoverColor: Colors.transparent,
                   focusColor: Colors.transparent,
                   icon: SvgPicture.asset(
-                    'assets/icons/ic_settings_circle.svg',
-                    width: 36,
-                    height: 36,
+                    'assets/icons/ic_settings.svg',
+                    width: 24,
+                    height: 24,
+                    colorFilter: ColorFilter.mode(
+                      Theme.of(context).primaryColor,
+                      BlendMode.srcIn,
+                    ),
                   ),
                   onPressed: () {
                     _scaffoldKey.currentState?.openDrawer();
@@ -502,8 +531,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                     children: [
                       const SizedBox(width: 36),
                       Container(
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF76DCC6),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
                           shape: BoxShape.circle,
                         ),
                         child: IconButton(
@@ -631,13 +660,13 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                           horizontal: 16, vertical: 4),
                                       decoration: BoxDecoration(
                                         color: isSelected
-                                            ? const Color(0xFF76DCC6)
+                                            ? primaryColor
                                             : Colors.white,
                                         borderRadius:
                                             BorderRadius.circular(999),
                                         border: Border.all(
                                           color: isSelected
-                                              ? const Color(0xFF76DCC6)
+                                              ? primaryColor
                                               : Colors.grey.shade400,
                                           width: 1,
                                         ),
@@ -647,11 +676,13 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                               .textTheme
                                               .bodyMedium
                                               ?.copyWith(
-                                                fontSize: 14,
-                                                color: isSelected
-                                                    ? Colors.white
-                                                    : tabTextColor,
-                                              )),
+                                                  fontSize: 14,
+                                                  color: isSelected
+                                                      ? Colors.white
+                                                      : tabTextColor,
+                                                  fontWeight: isSelected
+                                                      ? FontWeight.bold
+                                                      : FontWeight.w400)),
                                     ),
                                   ),
                                 ),

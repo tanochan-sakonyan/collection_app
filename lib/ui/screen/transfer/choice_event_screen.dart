@@ -33,6 +33,7 @@ class ChoiceEventScreenState extends ConsumerState<ChoiceEventScreen> {
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
     final events = user?.events ?? <Event>[];
+    final primaryColor = Theme.of(context).primaryColor;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -47,11 +48,15 @@ class ChoiceEventScreenState extends ConsumerState<ChoiceEventScreen> {
                 'assets/icons/ic_back.svg',
                 width: 44,
                 height: 44,
+                colorFilter: ColorFilter.mode(
+                  Theme.of(context).primaryColor,
+                  BlendMode.srcIn,
+                ),
               ),
               Text(
                 S.of(context)!.back,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: const Color(0xFF76DCC6),
+                    color: primaryColor,
                     fontSize: 15,
                     fontWeight: FontWeight.w500),
               ),
@@ -69,7 +74,7 @@ class ChoiceEventScreenState extends ConsumerState<ChoiceEventScreen> {
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
-                  color: const Color(0xFF75DCC6),
+                  color: primaryColor,
                 ),
           ),
           const SizedBox(height: 32),
@@ -105,7 +110,13 @@ class ChoiceEventScreenState extends ConsumerState<ChoiceEventScreen> {
                         trailing: SizedBox(
                           width: 16,
                           height: 16,
-                          child: SvgPicture.asset('assets/icons/ic_next.svg'),
+                          child: SvgPicture.asset(
+                            'assets/icons/ic_next.svg',
+                            colorFilter: ColorFilter.mode(
+                              Theme.of(context).primaryColor,
+                              BlendMode.srcIn,
+                            ),
+                          ),
                         ),
                         onTap: () => _checkSelectedEvent(event)),
                   ),

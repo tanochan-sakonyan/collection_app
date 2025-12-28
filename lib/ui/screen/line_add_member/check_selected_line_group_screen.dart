@@ -33,6 +33,8 @@ class CheckSelectedLineGroupScreenState
       );
     }).toList();
 
+    final primaryColor = Theme.of(context).primaryColor;
+
     return CircleIndicator(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -47,11 +49,15 @@ class CheckSelectedLineGroupScreenState
                   'assets/icons/ic_back.svg',
                   width: 44,
                   height: 44,
+                  colorFilter: ColorFilter.mode(
+                    Theme.of(context).primaryColor,
+                    BlendMode.srcIn,
+                  ),
                 ),
                 Text(
                   S.of(context)!.back,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: const Color(0xFF76DCC6),
+                      color: primaryColor,
                       fontSize: 15,
                       fontWeight: FontWeight.w500),
                 ),
@@ -190,7 +196,7 @@ class CheckSelectedLineGroupScreenState
                         Navigator.pop(context, lineGroup);
                       },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF76DCC6),
+                  backgroundColor: primaryColor,
                   elevation: 2,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),

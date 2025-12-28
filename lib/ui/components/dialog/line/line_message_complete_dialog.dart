@@ -59,13 +59,16 @@ class _LineMessageCompleteDialogState extends State<LineMessageCompleteDialog> {
                 alignment: Alignment.center,
                 children: [
                   ClipOval(
-                    child: SvgPicture.asset(
-                      'assets/icons/reverse_icon.svg',
-                      width: 88,
-                      height: 88,
-                      fit: BoxFit.cover,
+                  child: SvgPicture.asset(
+                    'assets/icons/reverse_icon.svg',
+                    width: 88,
+                    height: 88,
+                    fit: BoxFit.cover,
+                    theme: SvgTheme(
+                      currentColor: Theme.of(context).primaryColor,
                     ),
                   ),
+                ),
                   const Positioned(
                     left: 4,
                     bottom: 8,

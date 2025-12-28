@@ -93,6 +93,7 @@ class _MemberListState extends ConsumerState<MemberList> with TickerProviderStat
     final members = widget.members ?? [];
     final isAmountLoading = ref.watch(amountLoadingProvider(widget.eventId));
     final slidableKeys = List.generate(members.length, (_) => GlobalKey());
+    final primaryColor = Theme.of(context).primaryColor;
 
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
@@ -109,19 +110,23 @@ class _MemberListState extends ConsumerState<MemberList> with TickerProviderStat
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  border: Border.all(color: Color(0xFF76DCC6)),
+                  border: Border.all(color: Theme.of(context).primaryColor),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Column(
                   children: [
                     Container(
-                      decoration: const BoxDecoration(
-                        color: Color(0xFF76DCC6),
-                        borderRadius: BorderRadius.only(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor,
+                        borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(11),
                           topRight: Radius.circular(11),
                         ),
-                        border: Border(bottom: BorderSide(color: Color(0xFF76DCC6))),
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
                       ),
                       height: 32,
                       child: Row(
@@ -388,7 +393,11 @@ class _MemberListState extends ConsumerState<MemberList> with TickerProviderStat
                         ),
                       ),
                     ),
-                    const Divider(color: Color(0xFF76DCC6), thickness: 1, height: 1),
+                    Divider(
+                      color: primaryColor,
+                      thickness: 1,
+                      height: 1,
+                    ),
                     SizedBox(
                       height: 44,
                       child: Row(
@@ -472,7 +481,7 @@ class _MemberListState extends ConsumerState<MemberList> with TickerProviderStat
                 width: 324,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF75DCC6),
+                    backgroundColor: primaryColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -652,7 +661,7 @@ class _MemberListState extends ConsumerState<MemberList> with TickerProviderStat
         width: MediaQuery.of(context).size.width * 0.17,
         padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 4),
         decoration: BoxDecoration(
-          color: const Color(0xFF75DCC6),
+          color: Theme.of(context).primaryColor,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Text(

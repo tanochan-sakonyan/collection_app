@@ -64,7 +64,7 @@
 //                 children: [
 //                   const SizedBox(width: 30),
 //                   SvgPicture.asset(
-//                     'assets/icons/ic_check_circle_teal.svg',
+//                     'assets/icons/ic_check_circle.svg',
 //                     width: 24,
 //                     height: 24,
 //                   ),
@@ -83,7 +83,7 @@
 //                 children: [
 //                   const SizedBox(width: 30),
 //                   SvgPicture.asset(
-//                     'assets/icons/ic_check_circle_teal.svg',
+//                     'assets/icons/ic_check_circle.svg',
 //                     width: 24,
 //                     height: 24,
 //                   ),
@@ -102,7 +102,7 @@
 //                 children: [
 //                   const SizedBox(width: 30),
 //                   SvgPicture.asset(
-//                     'assets/icons/ic_check_circle_teal.svg',
+//                     'assets/icons/ic_check_circle.svg',
 //                     width: 24,
 //                     height: 24,
 //                   ),

@@ -33,6 +33,7 @@ class SelectLineGroupScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = Theme.of(context).primaryColor;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -46,11 +47,15 @@ class SelectLineGroupScreen extends StatelessWidget {
                 'assets/icons/ic_back.svg',
                 width: 44,
                 height: 44,
+                colorFilter: ColorFilter.mode(
+                  Theme.of(context).primaryColor,
+                  BlendMode.srcIn,
+                ),
               ),
               Text(
                 S.of(context)!.back,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: const Color(0xFF76DCC6),
+                    color: primaryColor,
                     fontSize: 15,
                     fontWeight: FontWeight.w500),
               ),
@@ -81,7 +86,7 @@ class SelectLineGroupScreen extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 SvgPicture.asset(
-                  'assets/icons/question_circle.svg',
+                  'assets/icons/ic_question_circle.svg',
                   width: 24,
                   height: 24,
                   colorFilter: const ColorFilter.mode(
@@ -140,7 +145,13 @@ class SelectLineGroupScreen extends StatelessWidget {
                         trailing: SizedBox(
                           width: 16,
                           height: 16,
-                          child: SvgPicture.asset('assets/icons/ic_next.svg'),
+                          child: SvgPicture.asset(
+                            'assets/icons/ic_next.svg',
+                            colorFilter: ColorFilter.mode(
+                              Theme.of(context).primaryColor,
+                              BlendMode.srcIn,
+                            ),
+                          ),
                         ),
                         onTap: () =>
                             _checkSelectedLineGroup(context, lineGroup)),

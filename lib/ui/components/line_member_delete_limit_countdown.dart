@@ -79,6 +79,9 @@ class LineMemberDeleteLimitCountdown extends ConsumerWidget {
                     'assets/icons/ic_update.svg',
                     width: 32,
                     height: 32,
+                    theme: SvgTheme(
+                      currentColor: Theme.of(context).primaryColor,
+                    ),
                   ),
                   const SizedBox(width: 36),
                 ]

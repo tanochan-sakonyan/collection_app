@@ -23,6 +23,7 @@ class FloatingActionButtonOn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = Theme.of(context).primaryColor;
     return LiquidGlass(
       shape: const LiquidOval(),
       settings: const LiquidGlassSettings(
@@ -35,7 +36,7 @@ class FloatingActionButtonOn extends StatelessWidget {
       ),
       child: FloatingActionButton(
         key: fabKeys[index],
-        backgroundColor: const Color(0xFF76DCC6),
+        backgroundColor: primaryColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(48),
         ),
@@ -77,8 +78,8 @@ class FloatingActionButtonOn extends StatelessWidget {
                 'assets/icons/yen.svg',
                 width: 16,
                 height: 16,
-                colorFilter: const ColorFilter.mode(
-                  Color(0xFF75DCC6),
+                colorFilter: ColorFilter.mode(
+                  primaryColor,
                   BlendMode.srcIn,
                 ),
               ),

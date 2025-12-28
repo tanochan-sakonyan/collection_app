@@ -198,12 +198,13 @@ class _MockPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = Theme.of(context).primaryColor;
     return SizedBox(
       width: 127,
       height: 25,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: selected ? const Color(0xFF75DCC6) : Colors.white,
+          color: selected ? primaryColor : Colors.white,
           borderRadius: BorderRadius.circular(48),
           boxShadow: selected
               ? []
@@ -311,6 +312,7 @@ class _CheckLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = Theme.of(context).primaryColor;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
       child: Row(
@@ -318,9 +320,9 @@ class _CheckLine extends StatelessWidget {
           Container(
             width: 24,
             height: 24,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Color(0xFF75DCC6),
+              color: primaryColor,
             ),
             child: const Icon(Icons.check, size: 16, color: Colors.white),
           ),

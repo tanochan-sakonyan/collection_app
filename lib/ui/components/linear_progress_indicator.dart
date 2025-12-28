@@ -38,11 +38,11 @@ class _LinearMeterLoadingOverlayState extends State<LinearMeterLoadingOverlay>
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
+                  Text(
                     "Loading...",
                     style: TextStyle(
                       fontSize: 16,
-                      color: Color(0xFF76DCC6),
+                      color: Theme.of(context).primaryColor,
                       decoration: TextDecoration.none,
                     ),
                   ),
@@ -53,7 +53,8 @@ class _LinearMeterLoadingOverlayState extends State<LinearMeterLoadingOverlay>
                       value: progress,
                       minHeight: 2,
                       backgroundColor: Colors.transparent,
-                      valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF04E0B8)),
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          Theme.of(context).primaryColor),
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),

@@ -18,6 +18,7 @@ class LineMessageConfirmDialog extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isLoading = ref.watch(loadingProvider);
+    final primaryColor = Theme.of(context).primaryColor;
     return CircleIndicator(
       child: Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -70,9 +71,8 @@ class LineMessageConfirmDialog extends ConsumerWidget {
                       child: OutlinedButton(
                         onPressed: () => Navigator.pop(context, false),
                         style: OutlinedButton.styleFrom(
-                          side: const BorderSide(
-                              color: Color(0xFF75DCC6), width: 1),
-                          foregroundColor: const Color(0xFF75DCC6),
+                          side: BorderSide(color: primaryColor, width: 1),
+                          foregroundColor: primaryColor,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12)),
                           backgroundColor: Colors.white,
@@ -83,7 +83,7 @@ class LineMessageConfirmDialog extends ConsumerWidget {
                           style: GoogleFonts.notoSansJp(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
-                            color: const Color(0xFF75DCC6),
+                            color: primaryColor,
                           ),
                         ),
                       ),
@@ -128,7 +128,7 @@ class LineMessageConfirmDialog extends ConsumerWidget {
                                 }
                               },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF75DCC6),
+                          backgroundColor: primaryColor,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12)),
                           padding: const EdgeInsets.symmetric(vertical: 12),

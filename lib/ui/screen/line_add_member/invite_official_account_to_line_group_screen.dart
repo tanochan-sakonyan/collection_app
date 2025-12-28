@@ -27,6 +27,7 @@ class CheckSelectedLineGroupScreenState
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = Theme.of(context).primaryColor;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -40,11 +41,15 @@ class CheckSelectedLineGroupScreenState
                 'assets/icons/ic_back.svg',
                 width: 44,
                 height: 44,
+                colorFilter: ColorFilter.mode(
+                  Theme.of(context).primaryColor,
+                  BlendMode.srcIn,
+                ),
               ),
               Text(
                 S.of(context)!.back,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: const Color(0xFF76DCC6),
+                    color: primaryColor,
                     fontSize: 15,
                     fontWeight: FontWeight.w500),
               ),

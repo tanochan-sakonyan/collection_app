@@ -26,13 +26,14 @@ class _TabPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = Theme.of(context).primaryColor;
     return Expanded(
       child: SizedBox(
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 180),
           height: 28,
           decoration: BoxDecoration(
-            color: selected ? const Color(0xFF75DCC6) : Colors.white,
+            color: selected ? primaryColor : Colors.white,
             borderRadius: BorderRadius.circular(48),
             boxShadow: selected
                 ? []
@@ -547,6 +548,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
   }
 
   Widget _buildRoleTab() {
+    final primaryColor = Theme.of(context).primaryColor;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 28),
       child: Column(
@@ -590,7 +592,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                 child: Text(
                   S.of(context)!.inputRole,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: const Color(0xFF75DCC6),
+                        color: primaryColor,
                         fontSize: 16,
                         fontWeight: FontWeight.w800,
                       ),
@@ -627,7 +629,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 4, vertical: 4),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFF75DCC6),
+                                    color: primaryColor,
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
@@ -705,8 +707,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                 ),
                 child: Text(S.of(context)!.modifyRole,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xFF75DCC6))),
+                        fontWeight: FontWeight.w700, color: primaryColor)),
               ),
             ),
             const SizedBox(height: 24),
@@ -788,6 +789,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
         widget.members.where((m) => m.status != PaymentStatus.absence).length;
     final evenShare =
         activeCount == 0 ? 0 : (widget.amount / activeCount).ceil();
+    final primaryColor = Theme.of(context).primaryColor;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -802,11 +804,15 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                 'assets/icons/ic_back.svg',
                 width: 44,
                 height: 44,
+                colorFilter: ColorFilter.mode(
+                  Theme.of(context).primaryColor,
+                  BlendMode.srcIn,
+                ),
               ),
               Text(
                 S.of(context)!.back,
                 style: GoogleFonts.notoSansJp(
-                    color: const Color(0xFF76DCC6),
+                    color: primaryColor,
                     fontSize: 15,
                     fontWeight: FontWeight.w500),
               ),
@@ -845,9 +851,13 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                     focusColor: Colors.transparent,
                     onPressed: () => _showGuideDialog(),
                     icon: SvgPicture.asset(
-                      'assets/icons/question_circle.svg',
+                      'assets/icons/ic_question_circle.svg',
                       width: 32,
                       height: 32,
+                      colorFilter: ColorFilter.mode(
+                        Theme.of(context).primaryColor,
+                        BlendMode.srcIn,
+                      ),
                     )),
                 const Spacer(flex: 8),
               ],
@@ -1124,7 +1134,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
               style: ElevatedButton.styleFrom(
                 backgroundColor: _currentTab == 2 && _roles.isEmpty
                     ? Colors.grey
-                    : const Color(0xFF75DCC6),
+                    : primaryColor,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
               ),

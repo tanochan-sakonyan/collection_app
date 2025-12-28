@@ -50,7 +50,7 @@ class QuestionnaireDialog extends StatelessWidget {
               height: 48,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF76DCC6),
+                  backgroundColor: Theme.of(context).primaryColor,
                   shadowColor: Colors.transparent,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(32),

@@ -196,72 +196,76 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
 
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(S.of(context)!.roleSetup),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: roleController,
-              decoration: InputDecoration(
-                hintText: S.of(context)!.roleNameInput,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(6),
-                  borderSide: const BorderSide(color: Color(0xFFE5E5E5)),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(6),
-                  borderSide: const BorderSide(color: Color(0xFFE5E5E5)),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(6),
-                  borderSide: const BorderSide(color: Color(0xFF75DCC6)),
+      builder: (context) {
+        final primaryColor = Theme.of(context).primaryColor;
+        return AlertDialog(
+          title: Text(S.of(context)!.roleSetup),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: roleController,
+                decoration: InputDecoration(
+                  hintText: S.of(context)!.roleNameInput,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(6),
+                    borderSide: const BorderSide(color: Color(0xFFE5E5E5)),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(6),
+                    borderSide: const BorderSide(color: Color(0xFFE5E5E5)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(6),
+                    borderSide: BorderSide(color: primaryColor),
+                  ),
                 ),
               ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: amountController,
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
+                decoration: InputDecoration(
+                  hintText: S.of(context)!.enterAmount,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(6),
+                    borderSide: const BorderSide(color: Color(0xFFE5E5E5)),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(6),
+                    borderSide: const BorderSide(color: Color(0xFFE5E5E5)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(6),
+                    borderSide: BorderSide(color: primaryColor),
+                  ),
+                  suffixText: '円',
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(S.of(context)!.cancel),
             ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: amountController,
-              keyboardType: TextInputType.number,
-              inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,
-              ],
-              decoration: InputDecoration(
-                hintText: S.of(context)!.enterAmount,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(6),
-                  borderSide: const BorderSide(color: Color(0xFFE5E5E5)),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(6),
-                  borderSide: const BorderSide(color: Color(0xFFE5E5E5)),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(6),
-                  borderSide: const BorderSide(color: Color(0xFF75DCC6)),
-                ),
-                suffixText: '円',
-              ),
+            TextButton(
+              onPressed: () {
+                if (roleController.text.isNotEmpty &&
+                    amountController.text.isNotEmpty) {
+                  _addRole(
+                      roleController.text, int.parse(amountController.text));
+                  Navigator.pop(context);
+                }
+              },
+              child: Text(S.of(context)!.confirm),
             ),
           ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(S.of(context)!.cancel),
-          ),
-          TextButton(
-            onPressed: () {
-              if (roleController.text.isNotEmpty &&
-                  amountController.text.isNotEmpty) {
-                _addRole(roleController.text, int.parse(amountController.text));
-                Navigator.pop(context);
-              }
-            },
-            child: Text(S.of(context)!.confirm),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -272,6 +276,7 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
   }
 
   Widget _buildNewRoleListTile() {
+    final primaryColor = Theme.of(context).primaryColor;
     return Column(
       children: [
         Container(
@@ -359,8 +364,8 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
                           'assets/icons/ic_next.svg',
                           width: 14,
                           height: 14,
-                          colorFilter: const ColorFilter.mode(
-                            Color(0xFF75DCC6),
+                          colorFilter: ColorFilter.mode(
+                            primaryColor,
                             BlendMode.srcIn,
                           ),
                         ),
@@ -440,6 +445,7 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = Theme.of(context).primaryColor;
     _initializeDefaultRoles();
 
     return Dialog(
@@ -628,8 +634,8 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
                                           'assets/icons/ic_next.svg',
                                           width: 14,
                                           height: 14,
-                                          colorFilter: const ColorFilter.mode(
-                                            Color(0xFF75DCC6),
+                                          colorFilter: ColorFilter.mode(
+                                            primaryColor,
                                             BlendMode.srcIn,
                                           ),
                                         ),
@@ -658,7 +664,8 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
                 child: ElevatedButton(
                   onPressed: () {
                     // 新しい役割の追加を確定
-                    if (_isAddingNewRole && _newRoleNameController.text.isNotEmpty) {
+                    if (_isAddingNewRole &&
+                        _newRoleNameController.text.isNotEmpty) {
                       // 金額が空の場合はデフォルト値を設定
                       if (_newRoleAmountController.text.isEmpty) {
                         _newRoleAmountController.text = '0';
@@ -669,7 +676,7 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
                     Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF75DCC6),
+                    backgroundColor: primaryColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),

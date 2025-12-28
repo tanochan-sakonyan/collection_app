@@ -143,10 +143,15 @@ class _UnpaidMessageBottomSheetState
                   onTap: () => _onCheckChanged(context, !_includePaypayLink),
                   child: SvgPicture.asset(
                     _includePaypayLink
-                        ? 'assets/icons/ic_check_circle_teal.svg'
+                        ? 'assets/icons/ic_check_circle.svg'
                         : 'assets/icons/ic_check_circle_off.svg',
                     width: 24,
                     height: 24,
+                    theme: _includePaypayLink
+                        ? SvgTheme(
+                            currentColor: Theme.of(context).primaryColor,
+                          )
+                        : null,
                   ),
                 ),
                 const SizedBox(width: 4),
@@ -175,7 +180,7 @@ class _UnpaidMessageBottomSheetState
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF75DCC6),
+                  backgroundColor: Theme.of(context).primaryColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),

@@ -49,6 +49,9 @@ class UpdateInfoDialog extends StatelessWidget {
                     width: 88,
                     height: 88,
                     fit: BoxFit.cover,
+                    theme: SvgTheme(
+                      currentColor: Theme.of(context).primaryColor,
+                    ),
                   ),
                 ),
                 const Positioned(
@@ -79,9 +82,12 @@ class UpdateInfoDialog extends StatelessWidget {
                 children: [
                   const SizedBox(width: 10),
                   SvgPicture.asset(
-                    'assets/icons/ic_check_circle_teal.svg',
+                    'assets/icons/ic_check_circle.svg',
                     width: 24,
                     height: 24,
+                    theme: SvgTheme(
+                      currentColor: Theme.of(context).primaryColor,
+                    ),
                   ),
                   const SizedBox(width: 8),
                   Text(
@@ -99,9 +105,12 @@ class UpdateInfoDialog extends StatelessWidget {
                       children: [
                         const SizedBox(width: 10),
                         SvgPicture.asset(
-                          'assets/icons/ic_check_circle_teal.svg',
+                          'assets/icons/ic_check_circle.svg',
                           width: 24,
                           height: 24,
+                          theme: SvgTheme(
+                            currentColor: Theme.of(context).primaryColor,
+                          ),
                         ),
                         const SizedBox(width: 8),
                         Text(
@@ -121,9 +130,12 @@ class UpdateInfoDialog extends StatelessWidget {
                       children: [
                         const SizedBox(width: 10),
                         SvgPicture.asset(
-                          'assets/icons/ic_check_circle_teal.svg',
+                          'assets/icons/ic_check_circle.svg',
                           width: 24,
                           height: 24,
+                          theme: SvgTheme(
+                            currentColor: Theme.of(context).primaryColor,
+                          ),
                         ),
                         const SizedBox(width: 8),
                         Text(

@@ -104,7 +104,7 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
           padding: const EdgeInsets.all(20),
           child: Container(
             color: const Color(0xFFFFFFFF),
-            height: 355,
+            height: 255,
             width: 320,
             child: Column(
               children: [
@@ -135,7 +135,7 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
                 const SizedBox(height: 4),
                 SizedBox(
                   width: 272,
-                  height: 220,
+                  height: 120,
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     decoration: BoxDecoration(
@@ -145,6 +145,7 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
                     ),
                     child: TextField(
                       controller: _controller,
+                      cursorColor: Theme.of(context).primaryColor,
                       keyboardType: TextInputType.multiline,
                       maxLines: 10,
                       decoration: InputDecoration(
@@ -192,7 +193,6 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
                     ),
                     child: Text(
                       S.of(context)!.confirm,
-
                       style: const TextStyle(
                         color: Colors.black,
                         fontSize: 14.0,
