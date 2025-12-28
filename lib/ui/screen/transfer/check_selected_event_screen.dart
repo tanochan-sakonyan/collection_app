@@ -33,6 +33,10 @@ class CheckSelectedEventScreenState
                 'assets/icons/ic_back.svg',
                 width: 44,
                 height: 44,
+                colorFilter: ColorFilter.mode(
+                  Theme.of(context).primaryColor,
+                  BlendMode.srcIn,
+                ),
               ),
               Text(
                 S.of(context)!.back,
