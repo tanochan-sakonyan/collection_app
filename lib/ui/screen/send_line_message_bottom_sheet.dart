@@ -28,11 +28,13 @@ class _UnpaidMessageBottomSheetState
     extends ConsumerState<LineMessageBottomSheet> {
   late TextEditingController _controller;
   bool _includePaypayLink = false;
+  late final ScrollController _textScrollController;
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController(text: _generateDefaultMessage());
+    _textScrollController = ScrollController();
   }
 
   String _generateDefaultMessage() {
@@ -86,8 +88,17 @@ class _UnpaidMessageBottomSheetState
   }
 
   @override
+  void dispose() {
+    // Dispose controllers to avoid leaks.
+    _controller.dispose();
+    _textScrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
+    final primaryColor = Theme.of(context).primaryColor;
 
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.87,
@@ -110,28 +121,39 @@ class _UnpaidMessageBottomSheetState
             const SizedBox(height: 16),
             SizedBox(
               height: 200,
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: const Color(0xFF179394),
-                    width: 1.5,
-                  ),
-                  borderRadius: BorderRadius.circular(8),
-                  color: Colors.grey[100],
-                ),
-                child: Scrollbar(
-                  child: SingleChildScrollView(
-                    child: TextField(
-                      controller: _controller,
-                      autofocus: true,
-                      maxLines: null,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(16),
+              child: Scrollbar(
+                controller: _textScrollController,
+                child: TextField(
+                  controller: _controller,
+                  scrollController: _textScrollController,
+                  autofocus: true,
+                  maxLines: null,
+                  cursorColor: primaryColor,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.grey[100],
+                    contentPadding: const EdgeInsets.all(16),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(
+                        color: primaryColor,
                       ),
-                      style: GoogleFonts.notoSansJp(fontSize: 16),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(
+                        color: primaryColor.withOpacity(0.6),
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(
+                        width: 2,
+                        color: primaryColor,
+                      ),
                     ),
                   ),
+                  style: GoogleFonts.notoSansJp(fontSize: 16),
                 ),
               ),
             ),
