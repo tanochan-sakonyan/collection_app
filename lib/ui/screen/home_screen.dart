@@ -339,8 +339,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                               borderSide: BorderSide(
                                 color:
                                     Theme.of(context).primaryColor.withOpacity(
-                                  0.6,
-                                ),
+                                          0.6,
+                                        ),
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
@@ -676,7 +676,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                               .textTheme
                                               .bodyMedium
                                               ?.copyWith(
-                                                  fontSize: 14,
+                                                  fontSize: 12,
                                                   color: isSelected
                                                       ? Colors.white
                                                       : tabTextColor,

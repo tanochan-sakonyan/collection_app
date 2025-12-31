@@ -551,169 +551,176 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
     final primaryColor = Theme.of(context).primaryColor;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 28),
-      child: Column(
-        children: [
-          const SizedBox(height: 20),
-          // 説明文（役割がない場合のみ表示）
-          if (_roles.isEmpty) ...[
-            Container(
-              padding: const EdgeInsets.all(16),
+      child: _roles.isEmpty
+          ? SingleChildScrollView(
               child: Column(
                 children: [
-                  Text(
-                    S.of(context)!.roleBasedAmountSetting,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black,
+                  const SizedBox(height: 20),
+                  // 説明文（役割がない場合のみ表示）
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        Text(
+                          S.of(context)!.roleBasedAmountSetting,
+                          style:
+                              Theme.of(context).textTheme.titleLarge?.copyWith(
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black,
+                                  ),
+                          textAlign: TextAlign.center,
                         ),
-                    textAlign: TextAlign.center,
+                        const SizedBox(height: 20),
+                        Text.rich(
+                          _buildRoleDescriptionTextSpan(context),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 20),
-                  Text.rich(
-                    _buildRoleDescriptionTextSpan(context),
-                    textAlign: TextAlign.center,
+                  SizedBox(
+                    width: 164,
+                    height: 48,
+                    child: ElevatedButton(
+                      onPressed: () => _showRoleSetupDialog(),
+                      style: ElevatedButton.styleFrom(
+                        elevation: 0,
+                        backgroundColor: const Color(0xFFF2F2F2),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(36),
+                        ),
+                      ),
+                      child: Text(
+                        S.of(context)!.inputRole,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              color: primaryColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w800,
+                            ),
+                      ),
+                    ),
                   ),
                 ],
               ),
-            ),
-            const SizedBox(height: 80),
-            SizedBox(
-              width: 164,
-              height: 48,
-              child: ElevatedButton(
-                onPressed: () => _showRoleSetupDialog(),
-                style: ElevatedButton.styleFrom(
-                  elevation: 0,
-                  backgroundColor: const Color(0xFFF2F2F2),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(36),
-                  ),
-                ),
-                child: Text(
-                  S.of(context)!.inputRole,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: primaryColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w800,
-                      ),
-                ),
-              ),
-            ),
-          ],
-          // メンバーリスト（役割が設定された場合のみ表示）
-          if (_roles.isNotEmpty) ...[
-            Expanded(
-              child: ListView.builder(
-                itemCount: widget.members.length,
-                itemBuilder: (context, i) {
-                  final member = widget.members[i];
-                  final memberRole = _memberRoles[member.memberId];
-                  final roleAmount = _getRoleAmount(memberRole);
+            )
+          : Column(
+              children: [
+                const SizedBox(height: 20),
+                // メンバーリスト（役割が設定された場合のみ表示）
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: widget.members.length,
+                    itemBuilder: (context, i) {
+                      final member = widget.members[i];
+                      final memberRole = _memberRoles[member.memberId];
+                      final roleAmount = _getRoleAmount(memberRole);
 
-                  return Column(
-                    children: [
-                      ListTile(
-                        visualDensity: const VisualDensity(
-                          horizontal: 0,
-                          vertical: -2,
-                        ),
-                        dense: true,
-                        contentPadding:
-                            const EdgeInsets.only(left: 16, right: 16, top: 8),
-                        leading: GestureDetector(
-                          onTap: () => _showMemberRoleEditDialog(member),
-                          child: memberRole != null && memberRole.isNotEmpty
-                              ? Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.17,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 4, vertical: 4),
-                                  decoration: BoxDecoration(
-                                    color: primaryColor,
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Text(
-                                    memberRole,
-                                    style: GoogleFonts.notoSansJp(
-                                      fontSize: 12,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w500,
+                      return Column(
+                        children: [
+                          ListTile(
+                            visualDensity: const VisualDensity(
+                              horizontal: 0,
+                              vertical: -2,
+                            ),
+                            dense: true,
+                            contentPadding: const EdgeInsets.only(
+                                left: 16, right: 16, top: 8),
+                            leading: GestureDetector(
+                              onTap: () => _showMemberRoleEditDialog(member),
+                              child: memberRole != null && memberRole.isNotEmpty
+                                  ? Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.17,
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 4, vertical: 4),
+                                      decoration: BoxDecoration(
+                                        color: primaryColor,
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Text(
+                                        memberRole,
+                                        style: GoogleFonts.notoSansJp(
+                                          fontSize: 12,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    )
+                                  : Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.17,
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8, vertical: 4),
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey.shade400,
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Text(
+                                        S.of(context)!.noRole,
+                                        style: GoogleFonts.notoSansJp(
+                                          fontSize: 12,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
                                     ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                )
-                              : Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.17,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8, vertical: 4),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.shade400,
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Text(
-                                    S.of(context)!.noRole,
-                                    style: GoogleFonts.notoSansJp(
-                                      fontSize: 12,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                        ),
-                        title: Text(
-                          member.memberName,
-                          style: GoogleFonts.notoSansJp(
-                            fontSize: 16,
-                            color: member.status == PaymentStatus.absence
-                                ? const Color(0xFFC0C0C0)
-                                : Colors.black,
+                            ),
+                            title: Text(
+                              member.memberName,
+                              style: GoogleFonts.notoSansJp(
+                                fontSize: 16,
+                                color: member.status == PaymentStatus.absence
+                                    ? const Color(0xFFC0C0C0)
+                                    : Colors.black,
+                              ),
+                            ),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(_numFmt.format(roleAmount),
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge),
+                                const SizedBox(width: 8),
+                                Text(S.of(context)!.currencyUnit,
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium),
+                              ],
+                            ),
                           ),
-                        ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(_numFmt.format(roleAmount),
-                                style: Theme.of(context).textTheme.bodyLarge),
-                            const SizedBox(width: 8),
-                            Text(S.of(context)!.currencyUnit,
-                                style: Theme.of(context).textTheme.bodyMedium),
-                          ],
-                        ),
-                      ),
-                      const Divider(
-                        height: 1,
-                        color: Color(0xFFE8E8E8),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 20),
-            // 役割を修正ボタン
-            SizedBox(
-              width: 112,
-              height: 29,
-              child: ElevatedButton(
-                onPressed: _showRoleSetupDialog,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFF2F2F2),
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(36),
+                          const Divider(
+                            height: 1,
+                            color: Color(0xFFE8E8E8),
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 ),
-                child: Text(S.of(context)!.modifyRole,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.w700, color: primaryColor)),
-              ),
+                const SizedBox(height: 20),
+                // 役割を修正ボタン
+                SizedBox(
+                  width: 112,
+                  height: 29,
+                  child: ElevatedButton(
+                    onPressed: _showRoleSetupDialog,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFF2F2F2),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(36),
+                      ),
+                    ),
+                    child: Text(S.of(context)!.modifyRole,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            fontWeight: FontWeight.w700, color: primaryColor)),
+                  ),
+                ),
+                const SizedBox(height: 24),
+              ],
             ),
-            const SizedBox(height: 24),
-          ],
-        ],
-      ),
     );
   }
 

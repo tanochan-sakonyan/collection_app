@@ -10,7 +10,6 @@ import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/auth/delete_account_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/auth/logout_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/donation/donation_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/donation/donation_thanks_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/paypay_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/questionnaire_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/theme/theme_color_dialog.dart';
@@ -50,7 +49,7 @@ class TanochanDrawerState extends State<TanochanDrawer>
         backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
         width: MediaQuery.of(context).size.width * 0.71,
-        child: Center(
+        child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
