@@ -139,7 +139,7 @@ class _DeleteAccountDialogState extends ConsumerState<DeleteAccountDialog> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 28),
+                  const SizedBox(width: 20),
                   SizedBox(
                     height: 36,
                     width: 107,

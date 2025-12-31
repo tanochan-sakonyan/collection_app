@@ -455,7 +455,7 @@ class DonationDialogState extends ConsumerState<DonationDialog> {
         processing: _processingProductId == option.productId,
       ));
       if (i < _donationOptions.length - 1) {
-        widgets.add(const SizedBox(width: 8));
+        widgets.add(const SizedBox(width: 6));
       }
     }
     return widgets;
@@ -484,7 +484,7 @@ class _DonationCard extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         opacity: isEnabled ? 1 : 0.5,
         child: Container(
-          width: 90,
+          width: 84,
           height: 120,
           decoration: BoxDecoration(
             color: Colors.white,

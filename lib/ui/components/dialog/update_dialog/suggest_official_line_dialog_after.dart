@@ -75,7 +75,7 @@ class SuggestOfficialLineDialogAfter extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    'LINEグループからメンバーを一括追加',
+                    'メンバーを一括追加',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
