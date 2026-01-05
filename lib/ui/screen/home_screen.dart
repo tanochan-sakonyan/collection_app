@@ -14,6 +14,7 @@ import 'package:mr_collection/ui/components/button/floating_action_button_off.da
 import 'package:mr_collection/ui/components/button/floating_action_button_on.dart';
 import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
 import 'package:mr_collection/ui/components/dialog/event/add_event_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/event/delete_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/event/edit_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/terms_privacy_update_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_and_suggest_official_line_dialog.dart';
@@ -378,6 +379,43 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     }
   }
 
+  // Shows delete dialog for the currently selected event tab.
+  void _showDeleteDialogForCurrentEvent() {
+    if (_tabTitles.isEmpty || _currentTabIndex >= _tabTitles.length) {
+      return;
+    }
+    final currentEventId = _tabTitles[_currentTabIndex];
+    if (currentEventId.isEmpty) {
+      return;
+    }
+
+    final user = ref.read(userProvider);
+    final currentEvent = user?.events.firstWhere(
+      (event) => event.eventId == currentEventId,
+      orElse: () => const Event(
+        eventId: "",
+        eventName: "",
+        members: [],
+        memo: "",
+        totalMoney: 0,
+        lineGroupId: null,
+        lineMembersFetchedAt: null,
+      ),
+    );
+    final currentEventName = currentEvent?.eventName ?? "";
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return DeleteEventDialog(
+          userId: ref.read(userProvider)!.userId,
+          eventId: currentEventId,
+          eventName: currentEventName,
+        );
+      },
+    );
+  }
+
   void _animateTabControllerTo(int index) {
     if (!mounted || tabController.length == 0) {
       return;
@@ -486,13 +524,23 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         }
         _onReorderTabs(oldIndex, targetIndex);
       },
-      itemCount: _tabTitles.length + 1,
+      itemCount: _tabTitles.length + 2,
       itemBuilder: (context, index) {
         if (index == _tabTitles.length) {
           return Container(
             key: const ValueKey('add_event_tab_button'),
             padding: const EdgeInsets.symmetric(horizontal: 3),
             child: _buildAddEventTabButton(
+              screenHeight: screenHeight,
+              primaryColor: primaryColor,
+            ),
+          );
+        }
+        if (index == _tabTitles.length + 1) {
+          return Container(
+            key: const ValueKey('delete_event_tab_button'),
+            padding: const EdgeInsets.symmetric(horizontal: 3),
+            child: _buildDeleteEventTabButton(
               screenHeight: screenHeight,
               primaryColor: primaryColor,
             ),
@@ -598,6 +646,33 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         child: Center(
           child: SvgPicture.asset(
             'assets/icons/plus.svg',
+            width: screenHeight * 0.02,
+            height: screenHeight * 0.02,
+            colorFilter: ColorFilter.mode(primaryColor, BlendMode.srcIn),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Builds the delete-event button shown next to the plus button.
+  Widget _buildDeleteEventTabButton({
+    required double screenHeight,
+    required Color primaryColor,
+  }) {
+    return GestureDetector(
+      onTap: _showDeleteDialogForCurrentEvent,
+      child: Container(
+        height: screenHeight * 0.04,
+        width: screenHeight * 0.04,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(color: primaryColor, width: 1),
+        ),
+        child: Center(
+          child: SvgPicture.asset(
+            'assets/icons/delete.svg',
             width: screenHeight * 0.02,
             height: screenHeight * 0.02,
             colorFilter: ColorFilter.mode(primaryColor, BlendMode.srcIn),
