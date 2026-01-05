@@ -2,7 +2,7 @@
   "@@locale": "en",
   "shukinkun": "Shukinkun",
   "member": "Member",
-  "paymentStatus": "Payment Status",
+  "sort": "Sort",
   "addMembers": "Add Members",
   "unpaid": "Unpaid",
   "paid": "Paid",

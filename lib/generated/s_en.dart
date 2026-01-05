@@ -15,7 +15,7 @@ class SEn extends S {
   String get member => 'Member';
 
   @override
-  String get paymentStatus => 'Payment Status';
+  String get sort => 'Sort';
 
   @override
   String get addMembers => 'Add Members';

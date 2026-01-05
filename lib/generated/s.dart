@@ -109,11 +109,11 @@ abstract class S {
   /// **'メンバー'**
   String get member;
 
-  /// No description provided for @paymentStatus.
+  /// No description provided for @sort.
   ///
   /// In ja, this message translates to:
-  /// **'支払い状況'**
-  String get paymentStatus;
+  /// **'並び替え'**
+  String get sort;
 
   /// No description provided for @addMembers.
   ///

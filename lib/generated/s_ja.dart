@@ -15,7 +15,7 @@ class SJa extends S {
   String get member => 'メンバー';
 
   @override
-  String get paymentStatus => '支払い状況';
+  String get sort => '並び替え';
 
   @override
   String get addMembers => 'メンバー追加';

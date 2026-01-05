@@ -121,27 +121,27 @@ class _MemberListState extends ConsumerState<MemberList>
                         height: 32,
                         child: Row(
                           children: [
-                            const SizedBox(width: 24),
+                            const SizedBox(width: 32),
                             Text(
                               S.of(context)!.member,
                               style: Theme.of(
                                 context,
                               ).textTheme.bodySmall?.copyWith(
                                     fontSize: 12,
-                                    fontWeight: FontWeight.w500,
+                                    fontWeight: FontWeight.bold,
                                     color: Colors.black,
                                   ),
                             ),
                             const Spacer(),
                             Text(
-                              S.of(context)!.paymentStatus,
+                              S.of(context)!.sort,
                               style: GoogleFonts.notoSansJp(
                                 fontSize: 12,
-                                fontWeight: FontWeight.w400,
+                                fontWeight: FontWeight.bold,
                                 color: Colors.black,
                               ),
                             ),
-                            const SizedBox(width: 3),
+                            const SizedBox(width: 2),
                             GestureDetector(
                               key: widget.sortKey,
                               onTap: () {

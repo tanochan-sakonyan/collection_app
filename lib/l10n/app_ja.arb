@@ -2,7 +2,7 @@
   "@@locale": "ja",
   "shukinkun": "集金くん",
   "member": "メンバー",
-  "paymentStatus": "支払い状況",
+  "sort": "並び替え",
   "addMembers": "メンバー追加",
   "unpaid": "未払い",
   "paid": "支払済",
