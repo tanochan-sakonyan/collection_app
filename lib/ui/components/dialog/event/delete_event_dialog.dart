@@ -8,9 +8,11 @@ import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
 class DeleteEventDialog extends ConsumerStatefulWidget {
   final String userId;
   final String eventId;
+  final String eventName;
   const DeleteEventDialog({
     required this.userId,
     required this.eventId,
+    required this.eventName,
     super.key,
   });
 
@@ -59,8 +61,8 @@ class _DeleteEventDialogState extends ConsumerState<DeleteEventDialog> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                S.of(context)!.confirmDeleteEvent ??
-                    "Delete this event?", //TODO：イベント名を取得して表示
+                "イベント「${widget.eventName}」を\n削除しますか？",
+                textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.w500,
                       fontSize: 16,
