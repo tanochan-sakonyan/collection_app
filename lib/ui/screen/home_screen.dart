@@ -51,6 +51,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   ProviderSubscription<List<String>>? _tabTitlesSubscription;
   String? _pendingFocusedEventId;
   final Map<String, GlobalKey> _tabItemKeys = {};
+  final Set<String> _dismissedDuplicateWarningEventIds = {};
 
   final GlobalKey eventAddKey = GlobalKey();
   final GlobalKey leftTabKey = GlobalKey();
@@ -915,6 +916,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     final Event? currentEvent =
         user?.events.firstWhereOrNull((e) => e.eventId == currentEventId);
     final duplicateMemberNames = _findDuplicatedMemberNames(currentEvent);
+    final bool shouldShowDuplicateWarning = duplicateMemberNames.isNotEmpty &&
+        currentEventId.isNotEmpty &&
+        !_dismissedDuplicateWarningEventIds.contains(currentEventId);
 
     debugPrint('currentEvent: $currentEvent');
     debugPrint('lineGroupId: ${currentEvent?.lineGroupId}');
@@ -1024,10 +1028,19 @@ class HomeScreenState extends ConsumerState<HomeScreen>
               LineMemberDeleteLimitCountdown(
                   currentEvent: currentEvent, currentEventId: currentEventId),
             const SizedBox(height: 6),
-            if (duplicateMemberNames.isNotEmpty)
+            if (shouldShowDuplicateWarning)
               DuplicateMemberWarning(
                 duplicateNames: duplicateMemberNames,
+                onClose: () {
+                  if (currentEventId.isEmpty) {
+                    return;
+                  }
+                  setState(() {
+                    _dismissedDuplicateWarningEventIds.add(currentEventId);
+                  });
+                },
               ),
+            if (shouldShowDuplicateWarning) const SizedBox(height: 6),
             Expanded(
               child: tabTitles.isEmpty
                   ? const EventZeroComponents()

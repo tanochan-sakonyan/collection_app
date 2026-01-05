@@ -385,7 +385,7 @@ class SJa extends S {
 
   @override
   String duplicateMemberWarningMessage(Object names) {
-    return '以下のメンバー名が重複しています: $names';
+    return '次のメンバーが重複しています: $names';
   }
 
   @override

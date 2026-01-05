@@ -838,7 +838,7 @@ abstract class S {
   /// No description provided for @duplicateMemberWarningMessage.
   ///
   /// In ja, this message translates to:
-  /// **'以下のメンバー名が重複しています: {names}'**
+  /// **'次のメンバーが重複しています: {names}'**
   String duplicateMemberWarningMessage(Object names);
 
   /// No description provided for @lineGroupExpireTitle.

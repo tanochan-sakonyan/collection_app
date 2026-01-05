@@ -124,7 +124,7 @@
   "autoDeleteMemberCountdown": "メンバー自動削除まで ",
   "memberDeletedAfter24h": "24時間が経過したため\nメンバー情報が削除されました",
   "duplicateMemberWarningTitle": "同じ名前のメンバーがいます",
-  "duplicateMemberWarningMessage": "以下のメンバー名が重複しています: {names}",
+  "duplicateMemberWarningMessage": "次のメンバーが重複しています: {names}",
   "@duplicateMemberWarningMessage": {
     "placeholders": {
       "names": {}
