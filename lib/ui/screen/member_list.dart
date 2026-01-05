@@ -10,12 +10,11 @@ import 'package:mr_collection/provider/amount_loading_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/member/add_member_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/member/delete_member_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/member/edit_member_name_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/member/status_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:mr_collection/ui/screen/amount_screen/input_amount_screen.dart';
-import 'package:mr_collection/ui/screen/send_line_message_bottom_sheet.dart';
-import '../components/dialog/member/edit_member_name_dialog.dart';
 import 'package:mr_collection/generated/s.dart';
 
 class MemberList extends ConsumerStatefulWidget {
@@ -81,15 +80,6 @@ class _MemberListState extends ConsumerState<MemberList>
 
   @override
   Widget build(BuildContext context) {
-    // TODO: 未払い、支払い済は、一旦コメントアウト
-    // final int? attendanceCount =
-    //     members?.where((member) => member.status == PaymentStatus.paid).length;
-    // final int? unpaidCount = members
-    //     ?.where((member) => member.status == PaymentStatus.unpaid)
-    //     .length;
-    //
-    // const double iconSize = 30.0;
-
     final members = widget.members ?? [];
     final isAmountLoading = ref.watch(amountLoadingProvider(widget.eventId));
     final slidableKeys = List.generate(members.length, (_) => GlobalKey());
@@ -102,7 +92,7 @@ class _MemberListState extends ConsumerState<MemberList>
         FocusScope.of(context).unfocus();
       },
       child: Padding(
-        padding: const EdgeInsets.only(top: 8, left: 29, right: 29),
+        padding: const EdgeInsets.only(top: 8, left: 24, right: 24),
         child: Stack(
           children: [
             Column(
