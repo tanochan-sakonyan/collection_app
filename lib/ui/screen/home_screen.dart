@@ -767,7 +767,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                             S.of(context)!.note,
                                             style: const TextStyle(
                                                 fontSize: 16,
-                                                color: Colors.black87),
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black),
                                           ),
                                           const SizedBox(height: 12),
                                           Expanded(
