@@ -499,7 +499,6 @@ class _MemberListState extends ConsumerState<MemberList>
                 const SizedBox(height: 12),
                 SizedBox(
                   height: 40,
-                  width: 324,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: primaryColor,
