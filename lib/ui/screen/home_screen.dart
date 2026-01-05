@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +14,6 @@ import 'package:mr_collection/ui/components/button/floating_action_button_off.da
 import 'package:mr_collection/ui/components/button/floating_action_button_on.dart';
 import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
 import 'package:mr_collection/ui/components/dialog/event/add_event_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/event/delete_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/event/edit_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/terms_privacy_update_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_and_suggest_official_line_dialog.dart';
@@ -44,6 +45,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   bool _isBannerLoaded = false;
   static const int _maxBannerLoadAttempts = 3;
   int _bannerLoadAttempts = 0;
+  static const String _tabOrderPrefsKey = 'tab_order_event_ids';
+  ProviderSubscription<List<String>>? _tabTitlesSubscription;
+  String? _pendingFocusedEventId;
 
   final GlobalKey eventAddKey = GlobalKey();
   final GlobalKey leftTabKey = GlobalKey();
@@ -58,8 +62,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   @override
   void initState() {
     super.initState();
-    _initKeys();
     _tabTitles = ref.read(tabTitlesProvider);
+    _initKeys(_tabTitles.length);
     tabController = TabController(length: _tabTitles.length, vsync: this);
 
     tabController.addListener(() {
@@ -71,6 +75,26 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       }
     });
 
+    tabController.animation?.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        if (tabController.index != _currentTabIndex) {
+          setState(() {
+            _currentTabIndex = tabController.index;
+            _saveTabIndex(_currentTabIndex);
+          });
+        }
+      }
+    });
+
+    _tabTitlesSubscription = ref.listenManual<List<String>>(
+      tabTitlesProvider,
+      (previous, next) {
+        _handleTabTitlesUpdate(next);
+      },
+      fireImmediately: false,
+    );
+
+    unawaited(_loadSavedTabOrder());
     _loadSavedTabIndex();
     _checkAndShowPrivacyPolicyUpdate();
 
@@ -114,8 +138,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     _banner = banner;
   }
 
-  void _initKeys() {
-    final len = ref.read(tabTitlesProvider).length;
+  void _initKeys([int? explicitLength]) {
+    final len = explicitLength ?? _tabTitles.length;
     _memberAddKeys = List.generate(len, (_) => GlobalKey());
     _slidableKeys = List.generate(len, (_) => GlobalKey());
     _sortKeys = List.generate(len, (_) => GlobalKey());
@@ -193,6 +217,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
 
   @override
   void dispose() {
+    _tabTitlesSubscription?.close();
     tabController.dispose();
     _banner?.dispose();
     super.dispose();
@@ -201,7 +226,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   void _updateTabController(int newLength) {
     tabController.dispose();
     tabController = TabController(length: newLength, vsync: this);
-    _initKeys();
+    _initKeys(newLength);
     tabController.addListener(() {
       if (tabController.index != _currentTabIndex &&
           !tabController.indexIsChanging) {
@@ -221,6 +246,323 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         }
       }
     });
+  }
+
+  // Applies provider updates to the current tab order while keeping manual sorting intact.
+  void _handleTabTitlesUpdate(List<String> providerTitles) {
+    final merged = _mergeTabTitles(providerTitles);
+    final bool didOrderChange = !listEquals(merged, _tabTitles);
+    final bool didLengthChange = providerTitles.length != tabController.length;
+    if (!didOrderChange && !didLengthChange) {
+      return;
+    }
+
+    final String? activeEventId =
+        _tabTitles.isNotEmpty && _currentTabIndex < _tabTitles.length
+            ? _tabTitles[_currentTabIndex]
+            : null;
+
+    setState(() {
+      _tabTitles = merged;
+      if (didLengthChange) {
+        _updateTabController(_tabTitles.length);
+      }
+
+      if (_tabTitles.isEmpty) {
+        _currentTabIndex = 0;
+        _pendingFocusedEventId = null;
+        return;
+      }
+
+      if (_pendingFocusedEventId != null &&
+          _tabTitles.contains(_pendingFocusedEventId)) {
+        _currentTabIndex = _tabTitles.indexOf(_pendingFocusedEventId!);
+        _pendingFocusedEventId = null;
+      } else if (activeEventId != null) {
+        final updatedIndex = _tabTitles.indexOf(activeEventId);
+        _currentTabIndex =
+            updatedIndex != -1 ? updatedIndex : _tabTitles.length - 1;
+      } else if (_currentTabIndex >= _tabTitles.length) {
+        _currentTabIndex = _tabTitles.length - 1;
+      }
+    });
+
+    if (_tabTitles.isNotEmpty) {
+      tabController.animateTo(_currentTabIndex);
+    }
+    _saveTabIndex(_currentTabIndex);
+    unawaited(_saveTabOrder());
+  }
+
+  // Generates the merged tab order using the current arrangement as primary.
+  List<String> _mergeTabTitles(List<String> providerTitles) {
+    final retained =
+        _tabTitles.where((id) => providerTitles.contains(id)).toList();
+    final additions = providerTitles
+        .where((id) => !retained.contains(id))
+        .toList(growable: false);
+    return [...retained, ...additions];
+  }
+
+  // Loads the saved tab order from shared preferences on startup.
+  Future<void> _loadSavedTabOrder() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedOrder = prefs.getStringList(_tabOrderPrefsKey);
+    if (savedOrder == null || savedOrder.isEmpty || _tabTitles.isEmpty) {
+      return;
+    }
+
+    final ordered = <String>[
+      ...savedOrder.where((id) => _tabTitles.contains(id)),
+      ..._tabTitles.where((id) => !savedOrder.contains(id)),
+    ];
+
+    if (listEquals(ordered, _tabTitles)) {
+      return;
+    }
+
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _tabTitles = ordered;
+      if (_currentTabIndex >= _tabTitles.length) {
+        _currentTabIndex = _tabTitles.length - 1;
+      }
+    });
+
+    if (_tabTitles.isNotEmpty) {
+      tabController.animateTo(_currentTabIndex);
+      _saveTabIndex(_currentTabIndex);
+    }
+  }
+
+  // Persists the manually arranged tab order.
+  Future<void> _saveTabOrder() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList(_tabOrderPrefsKey, _tabTitles);
+  }
+
+  // Ensures we focus on a specific event tab as soon as it exists.
+  void _queueFocusOnEvent(String eventId) {
+    if (_tabTitles.contains(eventId)) {
+      final index = _tabTitles.indexOf(eventId);
+      setState(() {
+        _currentTabIndex = index;
+      });
+      tabController.animateTo(index);
+      _saveTabIndex(index);
+    } else {
+      _pendingFocusedEventId = eventId;
+    }
+  }
+
+  Future<void> _showAddEventDialog() async {
+    final String? createdEventId = await showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return AddEventDialog(
+          userId: ref.read(userProvider)!.userId,
+        );
+      },
+    );
+
+    if (createdEventId != null) {
+      _queueFocusOnEvent(createdEventId);
+    }
+  }
+
+  // Handles chip drag-and-drop ordering.
+  void _onReorderTabs(int oldIndex, int newIndex) {
+    if (_tabTitles.isEmpty) {
+      return;
+    }
+
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+
+    int safeIndex = _currentTabIndex;
+    if (safeIndex < 0) {
+      safeIndex = 0;
+    } else if (safeIndex >= _tabTitles.length) {
+      safeIndex = _tabTitles.length - 1;
+    }
+    _currentTabIndex = safeIndex;
+    final String activeEventId = _tabTitles[safeIndex];
+
+    setState(() {
+      final moved = _tabTitles.removeAt(oldIndex);
+      _tabTitles.insert(newIndex, moved);
+      final updatedIndex = _tabTitles.indexOf(activeEventId);
+      if (updatedIndex != -1) {
+        _currentTabIndex = updatedIndex;
+      }
+    });
+
+    tabController.animateTo(_currentTabIndex);
+    _saveTabIndex(_currentTabIndex);
+    unawaited(_saveTabOrder());
+  }
+
+  // Builds the draggable tab chips shown in the app bar.
+  Widget _buildReorderableTabs({
+    required BuildContext context,
+    required User user,
+    required double screenHeight,
+    required Color primaryColor,
+  }) {
+    if (_tabTitles.isEmpty) {
+      return ListView(
+        scrollDirection: Axis.horizontal,
+        padding: EdgeInsets.zero,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 3),
+            child: _buildAddEventTabButton(
+              screenHeight: screenHeight,
+              primaryColor: primaryColor,
+            ),
+          ),
+        ],
+      );
+    }
+
+    return ReorderableListView.builder(
+      key: const PageStorageKey('home_tab_list'),
+      scrollDirection: Axis.horizontal,
+      shrinkWrap: true,
+      padding: EdgeInsets.zero,
+      physics: const BouncingScrollPhysics(),
+      buildDefaultDragHandles: false,
+      onReorder: (oldIndex, newIndex) {
+        final maxIndex = _tabTitles.length;
+        if (oldIndex >= maxIndex) {
+          return;
+        }
+        var targetIndex = newIndex;
+        if (targetIndex > maxIndex) {
+          targetIndex = maxIndex;
+        }
+        _onReorderTabs(oldIndex, targetIndex);
+      },
+      itemCount: _tabTitles.length + 1,
+      itemBuilder: (context, index) {
+        if (index == _tabTitles.length) {
+          return Container(
+            key: const ValueKey('add_event_tab_button'),
+            padding: const EdgeInsets.symmetric(horizontal: 3),
+            child: _buildAddEventTabButton(
+              screenHeight: screenHeight,
+              primaryColor: primaryColor,
+            ),
+          );
+        }
+        final eventId = _tabTitles[index];
+        final bool isSelected = index == _currentTabIndex;
+        final event = user.events.firstWhere(
+          (e) => e.eventId == eventId,
+          orElse: () => const Event(
+            eventId: "",
+            eventName: "",
+            members: [],
+            memo: "",
+            totalMoney: 0,
+            lineGroupId: null,
+            lineMembersFetchedAt: null,
+          ),
+        );
+        final bool isFullyPaid = event.members.isNotEmpty &&
+            event.members
+                .every((member) => member.status != PaymentStatus.unpaid);
+
+        final Color tabTextColor = isFullyPaid
+            ? const Color(0xFF35C759)
+            : Theme.of(context).textTheme.bodySmall?.color ?? Colors.black;
+
+        return Container(
+          key: ValueKey(eventId),
+          padding: const EdgeInsets.symmetric(horizontal: 3),
+          child: ReorderableDelayedDragStartListener(
+            index: index,
+            child: GestureDetector(
+              key: index == 0 ? leftTabKey : null,
+              onTap: () {
+                if (index == _currentTabIndex) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return EditEventDialog(
+                        userId: ref.read(userProvider)!.userId,
+                        eventId: eventId,
+                        currentEventName: event.eventName,
+                      );
+                    },
+                  );
+                } else {
+                  setState(() => _currentTabIndex = index);
+                  tabController.animateTo(index);
+                }
+              },
+              child: SizedBox(
+                height: screenHeight * 0.04,
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: isSelected ? primaryColor : Colors.white,
+                    borderRadius: BorderRadius.circular(999),
+                    border: Border.all(
+                      color: isSelected ? primaryColor : Colors.grey.shade400,
+                      width: 1,
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      event.eventName,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontSize: 12,
+                            color: isSelected ? Colors.white : tabTextColor,
+                            fontWeight:
+                                isSelected ? FontWeight.bold : FontWeight.w400,
+                          ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildAddEventTabButton({
+    required double screenHeight,
+    required Color primaryColor,
+  }) {
+    return GestureDetector(
+      key: eventAddKey,
+      onTap: _showAddEventDialog,
+      child: Container(
+        height: screenHeight * 0.04,
+        width: screenHeight * 0.04,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(color: primaryColor, width: 1),
+        ),
+        child: Center(
+          child: SvgPicture.asset(
+            'assets/icons/plus.svg',
+            width: screenHeight * 0.02,
+            height: screenHeight * 0.02,
+            colorFilter: ColorFilter.mode(primaryColor, BlendMode.srcIn),
+          ),
+        ),
+      ),
+    );
   }
 
   Future<void> _saveTabIndex(int index) async {
@@ -426,7 +768,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       );
     }
 
-    final tabTitles = ref.watch(tabTitlesProvider);
+    final tabTitles = _tabTitles;
     final String currentEventId =
         tabTitles.isNotEmpty && _currentTabIndex < tabTitles.length
             ? tabTitles[_currentTabIndex]
@@ -443,24 +785,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         currentEvent.lineGroupId!.isNotEmpty;
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-
-    if (tabTitles.length != tabController.length) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
-          setState(() {
-            _updateTabController(tabTitles.length);
-            _tabTitles = tabTitles;
-            if (_currentTabIndex >= tabTitles.length) {
-              _currentTabIndex = tabTitles.isEmpty ? 0 : tabTitles.length - 1;
-            }
-            tabController.animateTo(_currentTabIndex);
-            _saveTabIndex(_currentTabIndex);
-          });
-        }
-      });
-    } else {
-      _tabTitles = tabTitles;
-    }
 
     return WillPopScope(
       onWillPop: () async => false,
@@ -530,167 +854,21 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                   child: Row(
                     children: [
                       const SizedBox(width: 36),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          shape: BoxShape.circle,
-                        ),
-                        child: IconButton(
-                          key: eventAddKey,
-                          icon: SvgPicture.asset('assets/icons/plus.svg',
-                              width: screenWidth * 0.07,
-                              height: screenWidth * 0.07,
-                              colorFilter: const ColorFilter.mode(
-                                  Colors.white, BlendMode.srcIn)),
-                          onPressed: () async {
-                            final String? createdEventId =
-                                await showDialog<String>(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AddEventDialog(
-                                  userId: ref.read(userProvider)!.userId,
-                                );
-                              },
-                            );
-
-                            if (createdEventId != null) {
-                              WidgetsBinding.instance.addPostFrameCallback((_) {
-                                final updatedTabTitles =
-                                    ref.read(tabTitlesProvider);
-                                final eventIndex =
-                                    updatedTabTitles.indexOf(createdEventId);
-                                if (eventIndex != -1) {
-                                  setState(() {
-                                    _currentTabIndex = eventIndex;
-                                    _saveTabIndex(_currentTabIndex);
-                                  });
-                                  tabController.animateTo(eventIndex);
-                                }
-                              });
-                            }
-                          },
-                        ),
-                        // TODO リリース初期段階では、一括削除機能のボタンは非表示
-                        // IconButton(
-                        //   onPressed: () {
-                        //     // TODO 一括削除処理
-                        //   },
-                        //   icon: SvgPicture.asset('assets/icons/delete.svg'),
-                        // ),
-                        // const SizedBox(width: 8),
-                      ),
                       Expanded(
                         child: Align(
                           alignment: Alignment.centerLeft,
-                          child: TabBar(
-                            isScrollable: true,
-                            controller: tabController,
-                            tabAlignment: TabAlignment.start,
-                            labelPadding: EdgeInsets.zero,
-                            indicatorPadding: EdgeInsets.zero,
-                            indicator: const BoxDecoration(),
-                            indicatorColor: Colors.transparent,
-                            dividerColor: Colors.transparent,
-                            tabs: tabTitles.asMap().entries.map((entry) {
-                              final index = entry.key;
-                              final eventId = entry.value;
-                              final bool isSelected = index == _currentTabIndex;
-                              final event = user!.events.firstWhere(
-                                (e) => e.eventId == eventId,
-                                orElse: () => const Event(
-                                  eventId: "",
-                                  eventName: "",
-                                  members: [],
-                                  memo: "",
-                                  totalMoney: 0,
-                                  lineGroupId: null,
-                                  lineMembersFetchedAt: null,
-                                ),
-                              );
-                              final bool isFullyPaid = event
-                                      .members.isNotEmpty &&
-                                  event.members.every((member) =>
-                                      member.status != PaymentStatus.unpaid);
-
-                              final Color tabTextColor = isFullyPaid
-                                  ? const Color(0xFF35C759)
-                                  : Theme.of(context)
-                                          .textTheme
-                                          .bodySmall
-                                          ?.color ??
-                                      Colors.black;
-
-                              final bool isFirstTab = (index == 0);
-
-                              return GestureDetector(
-                                key: isFirstTab ? leftTabKey : null,
-                                onTap: () {
-                                  if (index == _currentTabIndex) {
-                                    showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return EditEventDialog(
-                                              userId: ref
-                                                  .read(userProvider)!
-                                                  .userId,
-                                              eventId: eventId,
-                                              currentEventName:
-                                                  event.eventName);
-                                        });
-                                  } else {
-                                    setState(() => _currentTabIndex = index);
-                                    tabController.animateTo(index);
-                                  }
-                                },
-                                onLongPress: () => showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return DeleteEventDialog(
-                                      userId: ref.read(userProvider)!.userId,
-                                      eventId: eventId,
-                                    );
-                                  },
-                                ),
-                                child: Container(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 3),
-                                  child: Tab(
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 16, vertical: 4),
-                                      decoration: BoxDecoration(
-                                        color: isSelected
-                                            ? primaryColor
-                                            : Colors.white,
-                                        borderRadius:
-                                            BorderRadius.circular(999),
-                                        border: Border.all(
-                                          color: isSelected
-                                              ? primaryColor
-                                              : Colors.grey.shade400,
-                                          width: 1,
-                                        ),
-                                      ),
-                                      child: Text(event.eventName,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium
-                                              ?.copyWith(
-                                                  fontSize: 12,
-                                                  color: isSelected
-                                                      ? Colors.white
-                                                      : tabTextColor,
-                                                  fontWeight: isSelected
-                                                      ? FontWeight.bold
-                                                      : FontWeight.w400)),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }).toList(),
+                          child: SizedBox(
+                            height: screenHeight * 0.04,
+                            child: _buildReorderableTabs(
+                              context: context,
+                              user: user,
+                              screenHeight: screenHeight,
+                              primaryColor: primaryColor,
+                            ),
                           ),
                         ),
                       ),
+                      const SizedBox(width: 36),
                     ],
                   ),
                 ),
