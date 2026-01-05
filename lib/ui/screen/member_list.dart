@@ -529,18 +529,12 @@ class _MemberListState extends ConsumerState<MemberList>
                         ),
                       );
                     },
-                    child: (widget.event.totalMoney != null)
-                        ? Text(
-                            "合計 ${widget.event.totalMoney.toString()} ${S.of(context)!.currencyUnit}",
-                            style:
-                                Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700,
-                                      color: Colors.white,
-                                    ),
-                          )
-                        : Text(
-                            S.of(context)!.settlePayment,
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            widget.event.members.length.toString() +
+                                S.of(context)!.person,
                             style:
                                 Theme.of(context).textTheme.bodyLarge?.copyWith(
                                       fontSize: 20,
@@ -548,6 +542,31 @@ class _MemberListState extends ConsumerState<MemberList>
                                       color: Colors.white,
                                     ),
                           ),
+                          const SizedBox(width: 12),
+                          (widget.event.totalMoney != null)
+                              ? Text(
+                                  "合計 ${widget.event.totalMoney.toString()} ${S.of(context)!.currencyUnit}",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.copyWith(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.white,
+                                      ),
+                                )
+                              : Text(
+                                  S.of(context)!.settlePayment,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.copyWith(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.white,
+                                      ),
+                                ),
+                        ]),
                   ),
                 ),
               ],

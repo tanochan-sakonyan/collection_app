@@ -10,6 +10,7 @@
   "status_unpaid": "Unpaid",
   "status_absence": "Absence",
   "status_paypay": "Paid via PayPay",
+  "person": "",
   "settlePayment": "Total amount: --- USD",
   "update_1": "We're currently developing LINE integration.",
   "update_2": " Please wait for a future update.",
