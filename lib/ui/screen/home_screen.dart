@@ -48,6 +48,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   static const String _tabOrderPrefsKey = 'tab_order_event_ids';
   ProviderSubscription<List<String>>? _tabTitlesSubscription;
   String? _pendingFocusedEventId;
+  final Map<String, GlobalKey> _tabItemKeys = {};
 
   final GlobalKey eventAddKey = GlobalKey();
   final GlobalKey leftTabKey = GlobalKey();
@@ -72,6 +73,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           _currentTabIndex = tabController.index;
           _saveTabIndex(_currentTabIndex);
         });
+        _scrollCurrentTabIntoView();
       }
     });
 
@@ -82,6 +84,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
             _currentTabIndex = tabController.index;
             _saveTabIndex(_currentTabIndex);
           });
+          _scrollCurrentTabIntoView();
         }
       }
     });
@@ -234,6 +237,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           _currentTabIndex = tabController.index;
           _saveTabIndex(_currentTabIndex);
         });
+        _scrollCurrentTabIntoView();
       }
     });
     tabController.animation?.addStatusListener((status) {
@@ -243,6 +247,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
             _currentTabIndex = tabController.index;
             _saveTabIndex(_currentTabIndex);
           });
+          _scrollCurrentTabIntoView();
         }
       }
     });
@@ -288,7 +293,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     });
 
     if (_tabTitles.isNotEmpty) {
-      tabController.animateTo(_currentTabIndex);
+      _animateTabControllerTo(_currentTabIndex);
     }
     _saveTabIndex(_currentTabIndex);
     unawaited(_saveTabOrder());
@@ -333,7 +338,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     });
 
     if (_tabTitles.isNotEmpty) {
-      tabController.animateTo(_currentTabIndex);
+      _animateTabControllerTo(_currentTabIndex);
       _saveTabIndex(_currentTabIndex);
     }
   }
@@ -351,7 +356,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       setState(() {
         _currentTabIndex = index;
       });
-      tabController.animateTo(index);
+      _animateTabControllerTo(index);
       _saveTabIndex(index);
     } else {
       _pendingFocusedEventId = eventId;
@@ -371,6 +376,40 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     if (createdEventId != null) {
       _queueFocusOnEvent(createdEventId);
     }
+  }
+
+  void _animateTabControllerTo(int index) {
+    if (!mounted || tabController.length == 0) {
+      return;
+    }
+    if (index < 0 || index >= tabController.length) {
+      return;
+    }
+    tabController.animateTo(index);
+    _scrollCurrentTabIntoView();
+  }
+
+  void _scrollCurrentTabIntoView() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      BuildContext? targetContext;
+      if (_tabTitles.isNotEmpty && _currentTabIndex < _tabTitles.length) {
+        final key = _tabItemKeys[_tabTitles[_currentTabIndex]];
+        targetContext = key?.currentContext;
+      } else {
+        targetContext = eventAddKey.currentContext;
+      }
+
+      if (targetContext != null) {
+        Scrollable.ensureVisible(
+          targetContext,
+          duration: const Duration(milliseconds: 300),
+          alignment: 0.5,
+          curve: Curves.easeInOut,
+          alignmentPolicy: ScrollPositionAlignmentPolicy.explicit,
+        );
+      }
+    });
   }
 
   // Handles chip drag-and-drop ordering.
@@ -401,7 +440,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       }
     });
 
-    tabController.animateTo(_currentTabIndex);
+    _animateTabControllerTo(_currentTabIndex);
     _saveTabIndex(_currentTabIndex);
     unawaited(_saveTabOrder());
   }
@@ -461,6 +500,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         }
         final eventId = _tabTitles[index];
         final bool isSelected = index == _currentTabIndex;
+        final tabKey = _tabItemKeys.putIfAbsent(
+            eventId, () => GlobalKey(debugLabel: eventId));
         final event = user.events.firstWhere(
           (e) => e.eventId == eventId,
           orElse: () => const Event(
@@ -502,12 +543,13 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                   );
                 } else {
                   setState(() => _currentTabIndex = index);
-                  tabController.animateTo(index);
+                  _animateTabControllerTo(index);
                 }
               },
               child: SizedBox(
                 height: screenHeight * 0.04,
                 child: Container(
+                  key: tabKey,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                   decoration: BoxDecoration(
@@ -575,7 +617,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     final savedIndex = prefs.getInt('lastTabIndex') ?? 0;
     if (mounted && savedIndex < tabController.length) {
       _currentTabIndex = savedIndex;
-      tabController.animateTo(savedIndex);
+      _animateTabControllerTo(savedIndex);
     }
   }
 
