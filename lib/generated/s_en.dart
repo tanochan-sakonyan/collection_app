@@ -395,6 +395,14 @@ class SEn extends S {
       'Member information \nhas been deleted after 24 hours.';
 
   @override
+  String get duplicateMemberWarningTitle => 'Duplicate member names detected';
+
+  @override
+  String duplicateMemberWarningMessage(Object names) {
+    return 'The following names appear multiple times: $names';
+  }
+
+  @override
   String get lineGroupExpireTitle => 'Member info will expire soon';
 
   @override

@@ -381,6 +381,14 @@ class SJa extends S {
   String get memberDeletedAfter24h => '24時間が経過したため\nメンバー情報が削除されました';
 
   @override
+  String get duplicateMemberWarningTitle => '同じ名前のメンバーがいます';
+
+  @override
+  String duplicateMemberWarningMessage(Object names) {
+    return '以下のメンバー名が重複しています: $names';
+  }
+
+  @override
   String get lineGroupExpireTitle => 'メンバー情報有効期限が\nもうすぐ切れます';
 
   @override

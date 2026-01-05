@@ -829,6 +829,18 @@ abstract class S {
   /// **'24時間が経過したため\nメンバー情報が削除されました'**
   String get memberDeletedAfter24h;
 
+  /// No description provided for @duplicateMemberWarningTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'同じ名前のメンバーがいます'**
+  String get duplicateMemberWarningTitle;
+
+  /// No description provided for @duplicateMemberWarningMessage.
+  ///
+  /// In ja, this message translates to:
+  /// **'以下のメンバー名が重複しています: {names}'**
+  String duplicateMemberWarningMessage(Object names);
+
   /// No description provided for @lineGroupExpireTitle.
   ///
   /// In ja, this message translates to:

@@ -123,6 +123,13 @@
   "selectLineGroupNote": "*Member information obtained from the LINE group will be deleted after 24 hours.\nPlease reacquire before 24 hours have passed.\nPayment statuses will be retained when reacquiring.",
   "autoDeleteMemberCountdown": "Auto member deletion in ",
   "memberDeletedAfter24h": "Member information \nhas been deleted after 24 hours.",
+  "duplicateMemberWarningTitle": "Duplicate member names detected",
+  "duplicateMemberWarningMessage": "The following names appear multiple times: {names}",
+  "@duplicateMemberWarningMessage": {
+    "placeholders": {
+      "names": {}
+    }
+  },
   "lineGroupExpireTitle": "Member info will expire soon",
   "lineGroupExpireDesc": "According to LINE's terms of use, after the member info expires,\nmember and payment status information will be deleted.\nPlease reacquire to reset the expiration date.",
   "doNotRefresh": "Don't refresh",

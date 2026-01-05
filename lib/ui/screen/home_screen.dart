@@ -24,6 +24,7 @@ import 'package:mr_collection/ui/components/tanochan_drawer.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/user.dart';
 import 'package:mr_collection/ui/tutorial/tutorial_targets.dart';
+import 'package:mr_collection/ui/components/duplicate_member_warning.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:mr_collection/ui/components/event_zero_components.dart';
@@ -217,6 +218,27 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   void _resetTutorial() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isTutorialShown120', false);
+  }
+
+  // Detects duplicate member names within a specific event.
+  List<String> _findDuplicatedMemberNames(Event? event) {
+    if (event == null || event.members.isEmpty) {
+      return [];
+    }
+
+    final Map<String, int> nameCount = {};
+    for (final member in event.members) {
+      final trimmed = member.memberName.trim();
+      if (trimmed.isEmpty) {
+        continue;
+      }
+      nameCount.update(trimmed, (value) => value + 1, ifAbsent: () => 1);
+    }
+
+    return nameCount.entries
+        .where((entry) => entry.value > 1)
+        .map((entry) => entry.key)
+        .toList();
   }
 
   @override
@@ -892,6 +914,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
             : "";
     final Event? currentEvent =
         user?.events.firstWhereOrNull((e) => e.eventId == currentEventId);
+    final duplicateMemberNames = _findDuplicatedMemberNames(currentEvent);
 
     debugPrint('currentEvent: $currentEvent');
     debugPrint('lineGroupId: ${currentEvent?.lineGroupId}');
@@ -1000,6 +1023,11 @@ class HomeScreenState extends ConsumerState<HomeScreen>
             if (isLineConnected)
               LineMemberDeleteLimitCountdown(
                   currentEvent: currentEvent, currentEventId: currentEventId),
+            const SizedBox(height: 6),
+            if (duplicateMemberNames.isNotEmpty)
+              DuplicateMemberWarning(
+                duplicateNames: duplicateMemberNames,
+              ),
             Expanded(
               child: tabTitles.isEmpty
                   ? const EventZeroComponents()
@@ -1053,7 +1081,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                       width: double.infinity,
                                       color: Colors.white,
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 24, vertical: 24),
+                                          horizontal: 24, vertical: 6),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -1065,7 +1093,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.black),
                                           ),
-                                          const SizedBox(height: 12),
+                                          const SizedBox(height: 4),
                                           Expanded(
                                             child: SingleChildScrollView(
                                               child: (event.memo?.isNotEmpty ==
