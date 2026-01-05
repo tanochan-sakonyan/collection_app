@@ -78,6 +78,16 @@ class _MemberListState extends ConsumerState<MemberList>
     }
   }
 
+  // Handles member reordering triggered via long-press drag.
+  void _onReorderMember(int oldIndex, int newIndex) {
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+    ref
+        .read(userProvider.notifier)
+        .reorderMembers(widget.eventId, oldIndex, newIndex);
+  }
+
   @override
   Widget build(BuildContext context) {
     final members = widget.members ?? [];
@@ -177,26 +187,30 @@ class _MemberListState extends ConsumerState<MemberList>
                                   ),
                                 )
                               : SlidableAutoCloseBehavior(
-                                  child: ListView.builder(
-                                    itemCount: widget.members?.length,
+                                  child: ReorderableListView.builder(
+                                    key: ValueKey('member_list_${widget.eventId}'),
+                                    buildDefaultDragHandles: false,
+                                    padding: EdgeInsets.zero,
+                                    itemCount: members.length,
+                                    onReorder: _onReorderMember,
                                     itemBuilder: (context, index) {
-                                      final member = widget.members?[index];
-                                      if (member == null) {
-                                        return const SizedBox();
-                                      }
-                                      return Padding(
-                                        padding: const EdgeInsets.only(
-                                          left: 16,
-                                          right: 16,
-                                        ),
-                                        child: Column(
-                                          children: [
-                                            Slidable(
-                                              key: slidableKeys[index],
-                                              endActionPane: ActionPane(
-                                                motion: const ScrollMotion(),
-                                                extentRatio: 0.60,
-                                                children: [
+                                      final member = members[index];
+                                      return ReorderableDelayedDragStartListener(
+                                        key: ValueKey(member.memberId),
+                                        index: index,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                            left: 16,
+                                            right: 16,
+                                          ),
+                                          child: Column(
+                                            children: [
+                                              Slidable(
+                                                key: slidableKeys[index],
+                                                endActionPane: ActionPane(
+                                                  motion: const ScrollMotion(),
+                                                  extentRatio: 0.60,
+                                                  children: [
                                                   CustomSlidableAction(
                                                     onPressed: (context) {
                                                       closeAllSlidables(
@@ -400,13 +414,14 @@ class _MemberListState extends ConsumerState<MemberList>
                                                   },
                                                 ),
                                               ),
-                                            ),
-                                            const Divider(
-                                              thickness: 1,
-                                              height: 1,
-                                              color: Color(0xFFE8E8E8),
-                                            ),
-                                          ],
+                                              ),
+                                              const Divider(
+                                                thickness: 1,
+                                                height: 1,
+                                                color: Color(0xFFE8E8E8),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       );
                                     },

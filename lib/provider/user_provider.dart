@@ -424,6 +424,36 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
+  // Reorders members locally to match the drag-and-drop order.
+  void reorderMembers(String eventId, int oldIndex, int newIndex) {
+    if (state == null) return;
+
+    final updatedEvents = state!.events.map((event) {
+      if (event.eventId != eventId) {
+        return event;
+      }
+
+      final members = List<Member>.from(event.members);
+      if (oldIndex < 0 || oldIndex >= members.length) {
+        return event;
+      }
+
+      var targetIndex = newIndex;
+      if (targetIndex < 0) {
+        targetIndex = 0;
+      }
+      if (targetIndex > members.length) {
+        targetIndex = members.length;
+      }
+
+      final movedMember = members.removeAt(oldIndex);
+      members.insert(targetIndex, movedMember);
+      return event.copyWith(members: members);
+    }).toList();
+
+    state = state!.copyWith(events: updatedEvents);
+  }
+
   Future<void> clearMembersOfEvent(String eventId) async {
     state = state!.copyWith(
       events: state!.events
