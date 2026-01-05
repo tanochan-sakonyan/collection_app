@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -45,6 +47,9 @@ class MemberList extends ConsumerStatefulWidget {
 class _MemberListState extends ConsumerState<MemberList>
     with TickerProviderStateMixin {
   late final List<GlobalKey> slidableKeys;
+  bool _isBulkEditMode = false;
+  final Set<String> _selectedMemberIds = <String>{};
+  bool _isBulkActionInProgress = false;
 
   @override
   void initState() {
@@ -60,6 +65,336 @@ class _MemberListState extends ConsumerState<MemberList>
         Slidable.of(ctx)?.close();
       }
     }
+  }
+
+  bool get _hasBulkSelection => _selectedMemberIds.isNotEmpty;
+
+  void _toggleBulkEditMode() {
+    _safeSetState(() {
+      _isBulkEditMode = !_isBulkEditMode;
+      if (!_isBulkEditMode) {
+        _selectedMemberIds.clear();
+      }
+    });
+  }
+
+  void _onMemberChecked(String memberId, bool? checked) {
+    final bool isChecked = checked ?? false;
+    _safeSetState(() {
+      if (isChecked) {
+        _selectedMemberIds.add(memberId);
+      } else {
+        _selectedMemberIds.remove(memberId);
+      }
+    });
+  }
+
+  void _safeSetState(VoidCallback fn) {
+    if (!mounted) return;
+    super.setState(fn);
+  }
+
+  Future<void> _showBulkStatusDialog() async {
+    if (!_hasBulkSelection || _isBulkActionInProgress) return;
+    final user = ref.read(userProvider);
+    if (user == null) return;
+
+    final members = widget.members ?? [];
+    Member? firstSelected;
+    for (final member in members) {
+      if (_selectedMemberIds.contains(member.memberId)) {
+        firstSelected = member;
+        break;
+      }
+    }
+    if (firstSelected == null) return;
+    final Member selectedMember = firstSelected;
+
+    final displayName = _selectedMemberIds.length > 1
+        ? '${selectedMember.memberName} (+${_selectedMemberIds.length - 1})'
+        : selectedMember.memberName;
+
+    await showDialog(
+      context: context,
+      builder: (_) => StatusDialog(
+        userId: user.userId,
+        eventId: widget.eventId,
+        memberId: selectedMember.memberId,
+        member: displayName,
+        onStatusChange: (
+          String userId,
+          String eventId,
+          String memberId,
+          int status,
+        ) async {
+          await _performBulkStatusUpdate(status);
+        },
+      ),
+    );
+  }
+
+  Future<void> _performBulkStatusUpdate(int status) async {
+    final user = ref.read(userProvider);
+    if (user == null || !_hasBulkSelection || !mounted) return;
+
+    _safeSetState(() => _isBulkActionInProgress = true);
+    try {
+      await ref.read(userProvider.notifier).bulkUpdateMemberStatus(
+            user.userId,
+            widget.eventId,
+            _selectedMemberIds.toList(),
+            status,
+          );
+      if (!mounted) return;
+      _safeSetState(() {
+        _isBulkEditMode = false;
+        _selectedMemberIds.clear();
+      });
+    } catch (error) {
+      debugPrint('一括ステータス更新中にエラーが発生しました: $error');
+    } finally {
+      _safeSetState(() => _isBulkActionInProgress = false);
+    }
+  }
+
+  Future<void> _showBulkDeleteDialog() async {
+    if (!_hasBulkSelection || _isBulkActionInProgress) return;
+    final user = ref.read(userProvider);
+    if (user == null) return;
+
+    final firstId = _selectedMemberIds.first;
+
+    final message = S.of(context)!.bulkDeleteConfirm(_selectedMemberIds.length);
+
+    await showDialog(
+      context: context,
+      builder: (_) => DeleteMemberDialog(
+        userId: user.userId,
+        eventId: widget.eventId,
+        memberId: firstId,
+        message: message,
+        onConfirm: () async {
+          await _performBulkDelete();
+        },
+      ),
+    );
+  }
+
+  Future<void> _performBulkDelete() async {
+    final user = ref.read(userProvider);
+    if (user == null || !_hasBulkSelection) return;
+
+    if (!mounted) return;
+    _safeSetState(() => _isBulkActionInProgress = true);
+    try {
+      await ref.read(userProvider.notifier).deleteMembers(
+            user.userId,
+            widget.eventId,
+            _selectedMemberIds.toList(),
+          );
+      if (!mounted) return;
+      _safeSetState(() {
+        _selectedMemberIds.clear();
+        _isBulkEditMode = false;
+      });
+    } catch (error) {
+      debugPrint('一括削除中にエラーが発生しました: $error');
+    } finally {
+      _safeSetState(() => _isBulkActionInProgress = false);
+    }
+  }
+
+  Widget _buildMemberTile(Member member, int index, bool isAmountLoading,
+      List<Member> members, List<GlobalKey> slidableKeys) {
+    final bool isSelected = _selectedMemberIds.contains(member.memberId);
+    final Widget? roleBadge = _buildRoleBadge(context, member, members);
+
+    Widget? leadingWidget;
+    if (_isBulkEditMode) {
+      leadingWidget = Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Checkbox(
+            value: isSelected,
+            onChanged: _isBulkActionInProgress
+                ? null
+                : (value) => _onMemberChecked(member.memberId, value),
+          ),
+          if (roleBadge != null) ...[
+            const SizedBox(width: 8),
+            Flexible(child: roleBadge),
+          ],
+        ],
+      );
+    } else {
+      leadingWidget = roleBadge;
+    }
+
+    Widget buildListTile() {
+      return ListTile(
+        minTileHeight: 44,
+        contentPadding:
+            _isBulkEditMode ? const EdgeInsets.symmetric(horizontal: 8) : null,
+        leading: leadingWidget,
+        title: (member.memberName.isNotEmpty)
+            ? Text(
+                member.memberName,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: member.status == PaymentStatus.absence
+                          ? Colors.grey
+                          : Colors.black,
+                    ),
+              )
+            : null,
+        subtitle: isAmountLoading
+            ? const Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SpinKitThreeBounce(color: Colors.black, size: 15),
+                ],
+              )
+            : (member.memberMoney != null)
+                ? Text(
+                    '${member.memberMoney} ${S.of(context)!.currencyUnit}',
+                    style: TextStyle(
+                      color: member.status == PaymentStatus.absence
+                          ? Colors.grey
+                          : Colors.black,
+                    ),
+                  )
+                : Text(
+                    '--- ${S.of(context)!.currencyUnit}',
+                    style: TextStyle(
+                      color: member.status == PaymentStatus.absence
+                          ? Colors.grey
+                          : Colors.black,
+                      fontSize: 12,
+                    ),
+                  ),
+        trailing: _buildStatusIcon(member.status),
+        onTap: () {
+          if (_isBulkEditMode) {
+            _onMemberChecked(member.memberId, !isSelected);
+            return;
+          }
+          showDialog(
+            context: context,
+            builder: (context) => StatusDialog(
+              userId: ref.read(userProvider)!.userId,
+              eventId: widget.eventId.toString(),
+              memberId: member.memberId,
+              member: member.memberName,
+              onStatusChange: (
+                String userId,
+                String eventId,
+                String memberId,
+                int status,
+              ) {
+                _updateMemberStatus(
+                  ref,
+                  userId,
+                  eventId,
+                  memberId,
+                  status,
+                );
+              },
+            ),
+          );
+        },
+      );
+    }
+
+    final tileContent = Container(
+      key: ValueKey(member.memberId),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        children: [
+          if (_isBulkEditMode)
+            buildListTile()
+          else
+            Slidable(
+              key: slidableKeys[index],
+              endActionPane: ActionPane(
+                motion: const ScrollMotion(),
+                extentRatio: 0.60,
+                children: [
+                  CustomSlidableAction(
+                    onPressed: (context) {
+                      closeAllSlidables(slidableKeys);
+                      showDialog(
+                        context: context,
+                        builder: (context) => EditMemberNameDialog(
+                          userId: ref.read(userProvider)!.userId,
+                          eventId: widget.eventId,
+                          memberId: member.memberId,
+                          currentName: member.memberName,
+                        ),
+                      );
+                    },
+                    backgroundColor: Colors.grey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 4),
+                        AutoSizeText(
+                          S.of(context)!.edit,
+                          maxLines: 1,
+                          style: GoogleFonts.inter(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  CustomSlidableAction(
+                    onPressed: (context) {
+                      closeAllSlidables(slidableKeys);
+                      showDialog(
+                        context: context,
+                        builder: (context) => DeleteMemberDialog(
+                          userId: ref.read(userProvider)!.userId,
+                          eventId: widget.eventId,
+                          memberId: member.memberId,
+                        ),
+                      );
+                    },
+                    backgroundColor: Colors.red,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 4),
+                        AutoSizeText(
+                          S.of(context)!.delete,
+                          maxLines: 1,
+                          style: GoogleFonts.inter(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              child: buildListTile(),
+            ),
+          const Divider(
+            thickness: 1,
+            height: 1,
+            color: Color(0xFFE8E8E8),
+          ),
+        ],
+      ),
+    );
+
+    return tileContent;
   }
 
   Future<void> _updateMemberStatus(
@@ -187,263 +522,43 @@ class _MemberListState extends ConsumerState<MemberList>
                                   ),
                                 )
                               : SlidableAutoCloseBehavior(
-                                  child: ReorderableListView.builder(
-                                    key: ValueKey(
-                                        'member_list_${widget.eventId}'),
-                                    buildDefaultDragHandles: false,
-                                    padding: EdgeInsets.zero,
-                                    itemCount: members.length,
-                                    onReorder: _onReorderMember,
-                                    itemBuilder: (context, index) {
-                                      final member = members[index];
-                                      return ReorderableDelayedDragStartListener(
-                                        key: ValueKey(member.memberId),
-                                        index: index,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                            left: 16,
-                                            right: 16,
-                                          ),
-                                          child: Column(
-                                            children: [
-                                              Slidable(
-                                                key: slidableKeys[index],
-                                                endActionPane: ActionPane(
-                                                  motion: const ScrollMotion(),
-                                                  extentRatio: 0.60,
-                                                  children: [
-                                                    CustomSlidableAction(
-                                                      onPressed: (context) {
-                                                        closeAllSlidables(
-                                                            slidableKeys);
-                                                        showDialog(
-                                                          context: context,
-                                                          builder: (
-                                                            context,
-                                                          ) =>
-                                                              EditMemberNameDialog(
-                                                            userId: ref
-                                                                .read(
-                                                                  userProvider,
-                                                                )!
-                                                                .userId,
-                                                            eventId:
-                                                                widget.eventId,
-                                                            memberId:
-                                                                member.memberId,
-                                                            currentName: member
-                                                                .memberName,
-                                                          ),
-                                                        );
-                                                      },
-                                                      backgroundColor:
-                                                          Colors.grey,
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          const SizedBox(
-                                                              height: 4),
-                                                          AutoSizeText(
-                                                            S.of(context)!.edit,
-                                                            maxLines: 1,
-                                                            style: GoogleFonts
-                                                                .inter(
-                                                              fontSize: 14,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                              color:
-                                                                  Colors.white,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    CustomSlidableAction(
-                                                      onPressed: (context) {
-                                                        closeAllSlidables(
-                                                            slidableKeys);
-                                                        showDialog(
-                                                          context: context,
-                                                          builder: (
-                                                            context,
-                                                          ) =>
-                                                              DeleteMemberDialog(
-                                                            userId: ref
-                                                                .read(
-                                                                  userProvider,
-                                                                )!
-                                                                .userId,
-                                                            eventId:
-                                                                widget.eventId,
-                                                            memberId:
-                                                                member.memberId,
-                                                          ),
-                                                        );
-                                                      },
-                                                      backgroundColor:
-                                                          Colors.red,
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          const SizedBox(
-                                                              height: 4),
-                                                          AutoSizeText(
-                                                            S
-                                                                .of(context)!
-                                                                .delete,
-                                                            maxLines: 1,
-                                                            style: GoogleFonts
-                                                                .inter(
-                                                              fontSize: 14,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                              color:
-                                                                  Colors.white,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                child: Container(
-                                                  key: (index == 0)
-                                                      ? widget.slidableKey
-                                                      : null,
-                                                  child: ListTile(
-                                                    minTileHeight: 44,
-                                                    leading: _buildRoleBadge(
-                                                        context,
-                                                        member,
-                                                        members),
-                                                    title: (member.memberName
-                                                            .isNotEmpty)
-                                                        ? Text(
-                                                            member.memberName,
-                                                            maxLines: 1,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            style: Theme.of(
-                                                              context,
-                                                            )
-                                                                .textTheme
-                                                                .bodyMedium
-                                                                ?.copyWith(
-                                                                  fontSize: 14,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  color: member
-                                                                              .status ==
-                                                                          PaymentStatus
-                                                                              .absence
-                                                                      ? Colors
-                                                                          .grey
-                                                                      : Colors
-                                                                          .black,
-                                                                ),
-                                                          )
-                                                        : null,
-                                                    subtitle: isAmountLoading
-                                                        ? const Row(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              SpinKitThreeBounce(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  size: 15),
-                                                            ],
-                                                          )
-                                                        : (member.memberMoney !=
-                                                                null)
-                                                            ? Text(
-                                                                "${member.memberMoney} ${S.of(context)!.currencyUnit}",
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: member
-                                                                              .status ==
-                                                                          PaymentStatus
-                                                                              .absence
-                                                                      ? Colors
-                                                                          .grey
-                                                                      : Colors
-                                                                          .black,
-                                                                ),
-                                                              )
-                                                            : Text(
-                                                                "--- ${S.of(context)!.currencyUnit}",
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: member
-                                                                              .status ==
-                                                                          PaymentStatus
-                                                                              .absence
-                                                                      ? Colors
-                                                                          .grey
-                                                                      : Colors
-                                                                          .black,
-                                                                  fontSize: 12,
-                                                                ),
-                                                              ),
-                                                    trailing: _buildStatusIcon(
-                                                      member.status,
-                                                    ),
-                                                    onTap: () {
-                                                      showDialog(
-                                                        context: context,
-                                                        builder: (context) =>
-                                                            StatusDialog(
-                                                          userId: ref
-                                                              .read(
-                                                                  userProvider)!
-                                                              .userId,
-                                                          eventId: widget
-                                                              .eventId
-                                                              .toString(),
-                                                          memberId:
-                                                              member.memberId,
-                                                          member:
-                                                              member.memberName,
-                                                          onStatusChange: (
-                                                            String userId,
-                                                            String eventId,
-                                                            String memberId,
-                                                            int status,
-                                                          ) {
-                                                            _updateMemberStatus(
-                                                              ref,
-                                                              userId,
-                                                              eventId,
-                                                              memberId,
-                                                              status,
-                                                            );
-                                                          },
-                                                        ),
-                                                      );
-                                                    },
-                                                  ),
-                                                ),
+                                  child: _isBulkEditMode
+                                      ? ListView.builder(
+                                          itemCount: members.length,
+                                          padding: EdgeInsets.zero,
+                                          itemBuilder: (context, index) {
+                                            return _buildMemberTile(
+                                              members[index],
+                                              index,
+                                              isAmountLoading,
+                                              members,
+                                              slidableKeys,
+                                            );
+                                          },
+                                        )
+                                      : ReorderableListView.builder(
+                                          key: ValueKey(
+                                              'member_list_${widget.eventId}'),
+                                          buildDefaultDragHandles: false,
+                                          padding: EdgeInsets.zero,
+                                          physics: const BouncingScrollPhysics(),
+                                          itemCount: members.length,
+                                          onReorder: _onReorderMember,
+                                          itemBuilder: (context, index) {
+                                            return ReorderableDelayedDragStartListener(
+                                              key: ValueKey(
+                                                  members[index].memberId),
+                                              index: index,
+                                              child: _buildMemberTile(
+                                                members[index],
+                                                index,
+                                                isAmountLoading,
+                                                members,
+                                                slidableKeys,
                                               ),
-                                              const Divider(
-                                                thickness: 1,
-                                                height: 1,
-                                                color: Color(0xFFE8E8E8),
-                                              ),
-                                            ],
-                                          ),
+                                            );
+                                          },
                                         ),
-                                      );
-                                    },
-                                  ),
                                 ),
                         ),
                       ),
@@ -455,30 +570,33 @@ class _MemberListState extends ConsumerState<MemberList>
                       SizedBox(
                         height: 44,
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment
-                              .center, //TODO リリース初期段階では中央に一つのボタンを配置
                           children: [
-                            // const SizedBox(width: 53),
-                            // ElevatedButton(
-                            //   onPressed: () {},
-                            //   style: ElevatedButton.styleFrom(
-                            //     elevation: 0,
-                            //     side: const BorderSide(
-                            //       color: Colors.black,
-                            //       width: 1.0,
-                            //     ),
-                            //     shape: RoundedRectangleBorder(
-                            //       borderRadius: BorderRadius.circular(20),
-                            //     ),
-                            //     minimumSize: const Size(12, 24),
-                            //     backgroundColor: Colors.white,
-                            //   ),
-                            //   child: Text(
-                            //     '一括編集',
-                            //     style: Theme.of(context).textTheme.labelSmall,
-                            //   ),
-                            // ),
-                            // const SizedBox(width: 100),
+                            const SizedBox(width: 16),
+                            ElevatedButton(
+                              onPressed: _isBulkActionInProgress
+                                  ? null
+                                  : _toggleBulkEditMode,
+                              style: ElevatedButton.styleFrom(
+                                elevation: 0,
+                                side: const BorderSide(
+                                  color: Colors.black,
+                                  width: 1.0,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                minimumSize: const Size(12, 24),
+                                backgroundColor: Colors.white,
+                                foregroundColor: Colors.black,
+                              ),
+                              child: Text(
+                                _isBulkEditMode
+                                    ? S.of(context)!.cancel
+                                    : S.of(context)!.bulkEdit,
+                                style: Theme.of(context).textTheme.labelSmall,
+                              ),
+                            ),
+                            const Spacer(),
                             TextButton(
                               onPressed: () {
                                 closeAllSlidables(slidableKeys);
@@ -521,11 +639,11 @@ class _MemberListState extends ConsumerState<MemberList>
                                 ],
                               ),
                             ),
-
-                            // const SizedBox(width: 30),
+                            const SizedBox(width: 16),
                           ],
                         ),
                       ),
+                      if (_isBulkEditMode) _buildBulkActionBar(context),
                     ],
                   ),
                 ),
@@ -590,6 +708,58 @@ class _MemberListState extends ConsumerState<MemberList>
                                 ),
                         ]),
                   ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBulkActionBar(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xFFE0E0E0)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              S.of(context)!
+                  .bulkSelectionCount(_selectedMemberIds.length),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 12,
+              runSpacing: 8,
+              children: [
+                OutlinedButton.icon(
+                  onPressed: (!_hasBulkSelection || _isBulkActionInProgress)
+                      ? null
+                      : _showBulkStatusDialog,
+                  icon: const Icon(Icons.assignment_turned_in_outlined),
+                  label: Text(S.of(context)!.bulkStatusChange),
+                ),
+                OutlinedButton.icon(
+                  onPressed: (!_hasBulkSelection || _isBulkActionInProgress)
+                      ? null
+                      : _showBulkDeleteDialog,
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.red,
+                    side: const BorderSide(color: Colors.red),
+                  ),
+                  icon: const Icon(Icons.delete_outline),
+                  label: Text(S.of(context)!.delete),
                 ),
               ],
             ),

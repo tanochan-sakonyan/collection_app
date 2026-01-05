@@ -829,6 +829,30 @@ abstract class S {
   /// **'24時間が経過したため\nメンバー情報が削除されました'**
   String get memberDeletedAfter24h;
 
+  /// No description provided for @bulkEdit.
+  ///
+  /// In ja, this message translates to:
+  /// **'一括編集'**
+  String get bulkEdit;
+
+  /// No description provided for @bulkStatusChange.
+  ///
+  /// In ja, this message translates to:
+  /// **'ステータス変更'**
+  String get bulkStatusChange;
+
+  /// No description provided for @bulkSelectionCount.
+  ///
+  /// In ja, this message translates to:
+  /// **'選択中: {count}人'**
+  String bulkSelectionCount(int count);
+
+  /// No description provided for @bulkDeleteConfirm.
+  ///
+  /// In ja, this message translates to:
+  /// **'選択した{count}人を削除しますか？'**
+  String bulkDeleteConfirm(int count);
+
   /// No description provided for @duplicateMemberWarningTitle.
   ///
   /// In ja, this message translates to:

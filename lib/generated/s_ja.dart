@@ -381,6 +381,22 @@ class SJa extends S {
   String get memberDeletedAfter24h => '24時間が経過したため\nメンバー情報が削除されました';
 
   @override
+  String get bulkEdit => '一括編集';
+
+  @override
+  String get bulkStatusChange => 'ステータス変更';
+
+  @override
+  String bulkSelectionCount(int count) {
+    return '選択中: $count人';
+  }
+
+  @override
+  String bulkDeleteConfirm(int count) {
+    return '選択した$count人を削除しますか？';
+  }
+
+  @override
   String get duplicateMemberWarningTitle => '同じ名前のメンバーがいます';
 
   @override

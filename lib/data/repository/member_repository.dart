@@ -101,13 +101,18 @@ class MemberRepository {
   // メンバーを単体で削除する場合
   Future<bool> deleteMember(
       String userId, String eventId, String memberId) async {
+    return deleteMembers(userId, eventId, [memberId]);
+  }
+
+  Future<bool> deleteMembers(
+      String userId, String eventId, List<String> memberIds) async {
     final url = Uri.parse('$baseUrl/users/$userId/events/$eventId/members');
     final response = await _authHelper.sendWithAuth(
       (token) => http.delete(
         url,
         headers: _headersWithToken(token, json: true),
         body: jsonEncode({
-          'memberIdList': [memberId]
+          'memberIdList': memberIds,
         }),
       ),
     );

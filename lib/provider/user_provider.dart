@@ -372,6 +372,39 @@ class UserNotifier extends StateNotifier<User?> {
     }
   }
 
+  Future<void> bulkUpdateMemberStatus(String userId, String eventId,
+      List<String> memberIds, int newStatus) async {
+    if (state == null || memberIds.isEmpty) return;
+
+    try {
+      final Map<String, Member> updatedMembers = {};
+      for (final memberId in memberIds) {
+        final updatedMember = await memberRepository.updateMemberStatus(
+            userId, eventId, memberId, newStatus);
+        updatedMembers[memberId] = updatedMember;
+      }
+
+      final updatedUser = state?.copyWith(
+        events: state?.events.map((event) {
+              if (event.eventId == eventId) {
+                return event.copyWith(
+                  members: event.members.map((member) {
+                    return updatedMembers[member.memberId] ?? member;
+                  }).toList(),
+                );
+              }
+              return event;
+            }).toList() ??
+            [],
+      );
+
+      state = updatedUser;
+    } catch (e) {
+      debugPrint('メンバーの一括ステータス更新中にエラーが発生しました: $e');
+      rethrow;
+    }
+  }
+
   Future<void> inputMembersMoney(String userId, String eventId,
       List<Map<String, dynamic>> membersMoneyList, WidgetRef ref) async {
     ref.read(amountLoadingProvider(eventId).notifier).state = true;
@@ -421,6 +454,34 @@ class UserNotifier extends StateNotifier<User?> {
       debugPrint('メンバーの削除に成功しました: $memberId');
     } catch (e) {
       debugPrint('メンバーの削除中にエラーが発生しました: $e');
+    }
+  }
+
+  Future<void> deleteMembers(
+      String userId, String eventId, List<String> memberIds) async {
+    if (state == null || memberIds.isEmpty) return;
+
+    try {
+      final isDeleted =
+          await memberRepository.deleteMembers(userId, eventId, memberIds);
+      if (!isDeleted) {
+        throw Exception('メンバーの削除に失敗しました');
+      }
+
+      final updatedEvents = state?.events.map((event) {
+            if (event.eventId != eventId) return event;
+            final updatedMembers = event.members
+                .where((member) => !memberIds.contains(member.memberId))
+                .toList();
+            return event.copyWith(members: updatedMembers);
+          }).toList() ??
+          [];
+
+      state = state?.copyWith(events: updatedEvents);
+      debugPrint('メンバーの一括削除に成功しました: $memberIds');
+    } catch (e) {
+      debugPrint('メンバーの一括削除中にエラーが発生しました: $e');
+      rethrow;
     }
   }
 
