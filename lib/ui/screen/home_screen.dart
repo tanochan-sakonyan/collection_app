@@ -931,98 +931,98 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     final screenHeight = MediaQuery.of(context).size.height;
 
     return WillPopScope(
-        onWillPop: () async => false,
-        child: Scaffold(
-          key: _scaffoldKey,
+      onWillPop: () async => false,
+      child: Scaffold(
+        key: _scaffoldKey,
+        backgroundColor: Colors.white,
+        drawerScrimColor: Colors.transparent,
+        appBar: AppBar(
+          surfaceTintColor: Colors.transparent,
+          scrolledUnderElevation: 0,
           backgroundColor: Colors.white,
-          drawerScrimColor: Colors.transparent,
-          appBar: AppBar(
-            surfaceTintColor: Colors.transparent,
-            scrolledUnderElevation: 0,
-            backgroundColor: Colors.white,
-            automaticallyImplyLeading: false,
-            actions: [
-              Row(
-                children: [
-                  tabTitles.isEmpty
-                      ? const SizedBox(width: 24)
-                      : IconButton(
-                          splashColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          hoverColor: Colors.transparent,
-                          focusColor: Colors.transparent,
-                          onPressed: () {
-                            _resetTutorial();
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                              _showTutorial();
-                            });
-                          },
-                          icon: SvgPicture.asset(
-                            'assets/icons/ic_question_circle.svg',
-                            width: 36,
-                            height: 36,
-                            colorFilter: ColorFilter.mode(
-                              Theme.of(context).primaryColor,
-                              BlendMode.srcIn,
-                            ),
+          automaticallyImplyLeading: false,
+          actions: [
+            Row(
+              children: [
+                tabTitles.isEmpty
+                    ? const SizedBox(width: 24)
+                    : IconButton(
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        hoverColor: Colors.transparent,
+                        focusColor: Colors.transparent,
+                        onPressed: () {
+                          _resetTutorial();
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            _showTutorial();
+                          });
+                        },
+                        icon: SvgPicture.asset(
+                          'assets/icons/ic_question_circle.svg',
+                          width: 36,
+                          height: 36,
+                          colorFilter: ColorFilter.mode(
+                            Theme.of(context).primaryColor,
+                            BlendMode.srcIn,
                           ),
                         ),
-                  IconButton(
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
-                    focusColor: Colors.transparent,
-                    icon: SvgPicture.asset(
-                      'assets/icons/ic_settings.svg',
-                      width: 24,
-                      height: 24,
-                      colorFilter: ColorFilter.mode(
-                        Theme.of(context).primaryColor,
-                        BlendMode.srcIn,
                       ),
+                IconButton(
+                  splashColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  hoverColor: Colors.transparent,
+                  focusColor: Colors.transparent,
+                  icon: SvgPicture.asset(
+                    'assets/icons/ic_settings.svg',
+                    width: 24,
+                    height: 24,
+                    colorFilter: ColorFilter.mode(
+                      Theme.of(context).primaryColor,
+                      BlendMode.srcIn,
                     ),
-                    onPressed: () {
-                      _scaffoldKey.currentState?.openDrawer();
-                    },
                   ),
-                  SizedBox(
-                    width: screenWidth * 0.04,
-                  ),
-                ],
-              ),
-            ],
-            bottom: PreferredSize(
-              preferredSize: Size.fromHeight(screenHeight * 0.04),
-              child: Stack(
-                children: [
-                  SizedBox(
-                    height: screenHeight * 0.04,
-                    child: Row(
-                      children: [
-                        const SizedBox(width: 36),
-                        Expanded(
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: SizedBox(
-                              height: screenHeight * 0.04,
-                              child: _buildReorderableTabs(
-                                context: context,
-                                user: user,
-                                screenHeight: screenHeight,
-                                primaryColor: primaryColor,
-                              ),
+                  onPressed: () {
+                    _scaffoldKey.currentState?.openDrawer();
+                  },
+                ),
+                SizedBox(
+                  width: screenWidth * 0.04,
+                ),
+              ],
+            ),
+          ],
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(screenHeight * 0.04),
+            child: Stack(
+              children: [
+                SizedBox(
+                  height: screenHeight * 0.04,
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 36),
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: SizedBox(
+                            height: screenHeight * 0.04,
+                            child: _buildReorderableTabs(
+                              context: context,
+                              user: user,
+                              screenHeight: screenHeight,
+                              primaryColor: primaryColor,
                             ),
                           ),
                         ),
-                        const SizedBox(width: 36),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(width: 36),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-          drawer: const TanochanDrawer(),
+        ),
+        drawer: const TanochanDrawer(),
         body: Column(
           children: [
             Expanded(
@@ -1065,130 +1065,126 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                         children: tabTitles.asMap().entries.map((entry) {
                           final index = entry.key;
                           final eventId = entry.value;
-                            final event = user!.events.firstWhere(
-                              (e) => e.eventId == eventId,
-                              orElse: () => const Event(
-                                eventId: "",
-                                eventName: "",
-                                lineGroupId: null,
-                                lineMembersFetchedAt: null,
-                                members: [],
-                                memo: "",
-                                totalMoney: 0,
-                              ),
-                            );
-                            final bool isEventConnected =
-                                event.lineGroupId != null &&
-                                    event.lineGroupId!.isNotEmpty;
-                            return Stack(
-                              children: [
-                                CustomScrollView(
-                                  slivers: [
-                                    SliverToBoxAdapter(
-                                      child: MemberList(
-                                        event: event,
-                                        members: event.eventId != ""
-                                            ? event.members
-                                            : [],
-                                        eventId: event.eventId != ""
-                                            ? event.eventId
-                                            : "",
-                                        eventName: event.eventName,
-                                        memberAddKey:
-                                            (_currentTabIndex == index)
-                                                ? _memberAddKeys[index]
-                                                : null,
-                                        slidableKey: (_currentTabIndex == index)
-                                            ? _slidableKeys[index]
-                                            : null,
-                                        sortKey: (_currentTabIndex == index)
-                                            ? _sortKeys[index]
-                                            : null,
-                                      ),
+                          final event = user!.events.firstWhere(
+                            (e) => e.eventId == eventId,
+                            orElse: () => const Event(
+                              eventId: "",
+                              eventName: "",
+                              lineGroupId: null,
+                              lineMembersFetchedAt: null,
+                              members: [],
+                              memo: "",
+                              totalMoney: 0,
+                            ),
+                          );
+                          final bool isEventConnected =
+                              event.lineGroupId != null &&
+                                  event.lineGroupId!.isNotEmpty;
+                          return Stack(
+                            children: [
+                              CustomScrollView(
+                                slivers: [
+                                  SliverToBoxAdapter(
+                                    child: MemberList(
+                                      event: event,
+                                      members: event.eventId != ""
+                                          ? event.members
+                                          : [],
+                                      eventId: event.eventId != ""
+                                          ? event.eventId
+                                          : "",
+                                      eventName: event.eventName,
+                                      memberAddKey: (_currentTabIndex == index)
+                                          ? _memberAddKeys[index]
+                                          : null,
+                                      slidableKey: (_currentTabIndex == index)
+                                          ? _slidableKeys[index]
+                                          : null,
+                                      sortKey: (_currentTabIndex == index)
+                                          ? _sortKeys[index]
+                                          : null,
                                     ),
-                                    SliverFillRemaining(
-                                      hasScrollBody: false,
-                                      child: GestureDetector(
-                                        onTap: () => _showEditNoteBottomSheet(
-                                            context, event),
-                                        child: Container(
-                                          width: double.infinity,
-                                          color: Colors.white,
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 24, vertical: 6),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                S.of(context)!.note,
-                                                style: const TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.black,
-                                                ),
+                                  ),
+                                  SliverFillRemaining(
+                                    hasScrollBody: false,
+                                    child: GestureDetector(
+                                      onTap: () => _showEditNoteBottomSheet(
+                                          context, event),
+                                      child: Container(
+                                        width: double.infinity,
+                                        color: Colors.white,
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 24, vertical: 16),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              S.of(context)!.note,
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
                                               ),
-                                              const SizedBox(height: 4),
-                                              Expanded(
-                                                child: SingleChildScrollView(
-                                                  child: (event.memo
-                                                              ?.isNotEmpty ==
-                                                          true)
-                                                      ? Text(
-                                                          event.memo!,
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 16,
-                                                            color:
-                                                                Colors.black87,
-                                                          ),
-                                                        )
-                                                      : Text(
-                                                          S
-                                                                  .of(context)
-                                                                  ?.memoPlaceholder ??
-                                                              "You can enter a note",
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 16,
-                                                            color: Colors.grey,
-                                                            letterSpacing: 0.5,
-                                                          ),
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Expanded(
+                                              child: SingleChildScrollView(
+                                                child: (event
+                                                            .memo?.isNotEmpty ==
+                                                        true)
+                                                    ? Text(
+                                                        event.memo!,
+                                                        style: const TextStyle(
+                                                          fontSize: 16,
+                                                          color: Colors.black87,
                                                         ),
-                                                ),
+                                                      )
+                                                    : Text(
+                                                        S
+                                                                .of(context)
+                                                                ?.memoPlaceholder ??
+                                                            "You can enter a note",
+                                                        style: const TextStyle(
+                                                          fontSize: 16,
+                                                          color: Colors.grey,
+                                                          letterSpacing: 0.5,
+                                                        ),
+                                                      ),
                                               ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
-                                  ],
-                                ),
-                                Positioned(
-                                  right: 28,
-                                  bottom: 120,
-                                  child: SizedBox(
-                                    height: 60,
-                                    width: 60,
-                                    child: isEventConnected
-                                        ? FloatingActionButtonOn(
-                                            index: index,
-                                            fabKeys: fabKeys,
-                                            tabController: tabController,
-                                            event: event,
-                                          )
-                                        : FloatingActionButtonOff(
-                                            index: index,
-                                            fabKeys: fabKeys,
-                                            tabController: tabController,
-                                            event: event,
-                                          ),
                                   ),
+                                ],
+                              ),
+                              Positioned(
+                                right: 28,
+                                bottom: 120,
+                                child: SizedBox(
+                                  height: 60,
+                                  width: 60,
+                                  child: isEventConnected
+                                      ? FloatingActionButtonOn(
+                                          index: index,
+                                          fabKeys: fabKeys,
+                                          tabController: tabController,
+                                          event: event,
+                                        )
+                                      : FloatingActionButtonOff(
+                                          index: index,
+                                          fabKeys: fabKeys,
+                                          tabController: tabController,
+                                          event: event,
+                                        ),
                                 ),
-                              ],
-                            );
-                          }).toList(),
-                        ),
+                              ),
+                            ],
+                          );
+                        }).toList(),
+                      ),
               ),
             ),
             if (_isBannerLoaded && _banner != null)
