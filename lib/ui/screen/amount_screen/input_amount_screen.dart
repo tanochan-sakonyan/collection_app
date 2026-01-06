@@ -249,9 +249,9 @@ class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
             const SizedBox(height: 60),
             Text(
               widget.eventName,
-              style: GoogleFonts.inter(
+              style: GoogleFonts.notoSansJp(
                 fontSize: 24,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.bold,
                 color: Colors.grey,
               ),
             ),
