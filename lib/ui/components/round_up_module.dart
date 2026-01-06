@@ -80,6 +80,11 @@ class RoundUpModule extends StatelessWidget {
             Checkbox(
               value: isSelected,
               onChanged: (_) => onOptionChanged(option),
+              fillColor: WidgetStateProperty.resolveWith((states) {
+                if (states.contains(WidgetState.selected)) {
+                  return Theme.of(context).primaryColor;
+                }
+              }),
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
             Text(

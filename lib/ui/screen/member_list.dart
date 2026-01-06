@@ -267,51 +267,63 @@ class _MemberListState extends ConsumerState<MemberList>
                                         ?.copyWith(color: Colors.grey),
                                   ),
                                 )
-                          : ListView.builder(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 8),
-                              itemCount: members.length,
-                              itemBuilder: (context, index) {
-                                final member = members[index];
-                                final isSelected = _selectedMemberIds
-                                    .contains(member.memberId);
-                                return Column(
-                                  children: [
-                                    InkWell(
-                                      onTap: _isBulkActionInProgress
-                                          ? null
-                                          : () => updateSelection(
-                                                member.memberId,
-                                                !isSelected,
-                                              ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 16, vertical: 8),
-                                        child: Row(
-                                          children: [
-                                            Checkbox(
-                                              value: isSelected,
-                                              onChanged: _isBulkActionInProgress
-                                                  ? null
-                                                  : (value) => updateSelection(
-                                                        member.memberId,
-                                                        value ?? false,
-                                                      ),
-                                            ),
-                                            const SizedBox(width: 12),
-                                            Expanded(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    member.memberName.isNotEmpty
-                                                        ? member.memberName
-                                                        : S
-                                                            .of(sheetContext)!
-                                                            .member,
-                                                    style:
-                                                        Theme.of(sheetContext)
+                              : ListView.builder(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 8),
+                                  itemCount: members.length,
+                                  itemBuilder: (context, index) {
+                                    final member = members[index];
+                                    final isSelected = _selectedMemberIds
+                                        .contains(member.memberId);
+                                    return Column(
+                                      children: [
+                                        InkWell(
+                                          onTap: _isBulkActionInProgress
+                                              ? null
+                                              : () => updateSelection(
+                                                    member.memberId,
+                                                    !isSelected,
+                                                  ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 16, vertical: 8),
+                                            child: Row(
+                                              children: [
+                                                Checkbox(
+                                                  value: isSelected,
+                                                  fillColor: WidgetStateProperty
+                                                      .resolveWith((states) {
+                                                    if (states.contains(
+                                                        WidgetState.selected)) {
+                                                      return Theme.of(context)
+                                                          .primaryColor;
+                                                    }
+                                                  }),
+                                                  onChanged:
+                                                      _isBulkActionInProgress
+                                                          ? null
+                                                          : (value) =>
+                                                              updateSelection(
+                                                                member.memberId,
+                                                                value ?? false,
+                                                              ),
+                                                ),
+                                                const SizedBox(width: 12),
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        member.memberName
+                                                                .isNotEmpty
+                                                            ? member.memberName
+                                                            : S
+                                                                .of(sheetContext)!
+                                                                .member,
+                                                        style: Theme.of(
+                                                                sheetContext)
                                                             .textTheme
                                                             .bodyMedium
                                                             ?.copyWith(
@@ -319,31 +331,31 @@ class _MemberListState extends ConsumerState<MemberList>
                                                                   FontWeight
                                                                       .w600,
                                                             ),
-                                                  ),
-                                                  if (member.memberMoney !=
-                                                      null)
-                                                    Text(
-                                                      '${member.memberMoney} ${S.of(sheetContext)!.currencyUnit}',
-                                                      style:
-                                                          Theme.of(sheetContext)
+                                                      ),
+                                                      if (member.memberMoney !=
+                                                          null)
+                                                        Text(
+                                                          '${member.memberMoney} ${S.of(sheetContext)!.currencyUnit}',
+                                                          style: Theme.of(
+                                                                  sheetContext)
                                                               .textTheme
                                                               .bodySmall,
-                                                    ),
-                                                ],
-                                              ),
+                                                        ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 12),
+                                                _buildStatusIcon(member.status),
+                                                const SizedBox(width: 40),
+                                              ],
                                             ),
-                                            const SizedBox(width: 12),
-                                            _buildStatusIcon(member.status),
-                                            const SizedBox(width: 40),
-                                          ],
+                                          ),
                                         ),
-                                      ),
-                                    ),
-                                    const Divider(height: 1),
-                                  ],
-                                );
-                              },
-                            ),
+                                        const Divider(height: 1),
+                                      ],
+                                    );
+                                  },
+                                ),
                         ),
                         Padding(
                           padding: EdgeInsets.fromLTRB(
