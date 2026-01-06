@@ -64,8 +64,8 @@ class RoleAdjustTab extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: onOpenRoleSetup,
                   style: ElevatedButton.styleFrom(
-                    elevation: 0,
-                    backgroundColor: const Color(0xFFF2F2F2),
+                    elevation: 2,
+                    backgroundColor: primaryColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(36),
                     ),
@@ -73,7 +73,7 @@ class RoleAdjustTab extends StatelessWidget {
                   child: Text(
                     S.of(context)!.inputRole,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: primaryColor,
+                          color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w800,
                         ),
@@ -185,7 +185,7 @@ class RoleAdjustTab extends StatelessWidget {
             child: ElevatedButton(
               onPressed: onOpenRoleSetup,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFF2F2F2),
+                backgroundColor: primaryColor,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(36),
@@ -194,7 +194,7 @@ class RoleAdjustTab extends StatelessWidget {
               child: Text(
                 S.of(context)!.modifyRole,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontWeight: FontWeight.w700, color: primaryColor),
+                    fontWeight: FontWeight.w700, color: Colors.white),
               ),
             ),
           ),
