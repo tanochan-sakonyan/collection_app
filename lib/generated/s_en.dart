@@ -15,7 +15,7 @@ class SEn extends S {
   String get member => 'Member';
 
   @override
-  String get paymentStatus => 'Payment Status';
+  String get sort => 'Sort';
 
   @override
   String get addMembers => 'Add Members';
@@ -393,6 +393,30 @@ class SEn extends S {
   @override
   String get memberDeletedAfter24h =>
       'Member information \nhas been deleted after 24 hours.';
+
+  @override
+  String get bulkEdit => 'Bulk edit';
+
+  @override
+  String get bulkStatusChange => 'Change status';
+
+  @override
+  String bulkSelectionCount(int count) {
+    return '$count members selected';
+  }
+
+  @override
+  String bulkDeleteConfirm(int count) {
+    return 'Delete $count selected members?';
+  }
+
+  @override
+  String get duplicateMemberWarningTitle => 'Duplicate member names detected';
+
+  @override
+  String duplicateMemberWarningMessage(Object names) {
+    return 'The following names appear multiple times: $names';
+  }
 
   @override
   String get lineGroupExpireTitle => 'Member info will expire soon';

@@ -109,11 +109,11 @@ abstract class S {
   /// **'メンバー'**
   String get member;
 
-  /// No description provided for @paymentStatus.
+  /// No description provided for @sort.
   ///
   /// In ja, this message translates to:
-  /// **'支払い状況'**
-  String get paymentStatus;
+  /// **'並び替え'**
+  String get sort;
 
   /// No description provided for @addMembers.
   ///
@@ -166,7 +166,7 @@ abstract class S {
   /// No description provided for @settlePayment.
   ///
   /// In ja, this message translates to:
-  /// **'合計 ーーー円'**
+  /// **'合計 ---円'**
   String get settlePayment;
 
   /// No description provided for @update_1.
@@ -828,6 +828,42 @@ abstract class S {
   /// In ja, this message translates to:
   /// **'24時間が経過したため\nメンバー情報が削除されました'**
   String get memberDeletedAfter24h;
+
+  /// No description provided for @bulkEdit.
+  ///
+  /// In ja, this message translates to:
+  /// **'一括編集'**
+  String get bulkEdit;
+
+  /// No description provided for @bulkStatusChange.
+  ///
+  /// In ja, this message translates to:
+  /// **'ステータス変更'**
+  String get bulkStatusChange;
+
+  /// No description provided for @bulkSelectionCount.
+  ///
+  /// In ja, this message translates to:
+  /// **'選択中: {count}人'**
+  String bulkSelectionCount(int count);
+
+  /// No description provided for @bulkDeleteConfirm.
+  ///
+  /// In ja, this message translates to:
+  /// **'選択した{count}人を削除しますか？'**
+  String bulkDeleteConfirm(int count);
+
+  /// No description provided for @duplicateMemberWarningTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'同じ名前のメンバーがいます'**
+  String get duplicateMemberWarningTitle;
+
+  /// No description provided for @duplicateMemberWarningMessage.
+  ///
+  /// In ja, this message translates to:
+  /// **'次のメンバーが重複しています: {names}'**
+  String duplicateMemberWarningMessage(Object names);
 
   /// No description provided for @lineGroupExpireTitle.
   ///

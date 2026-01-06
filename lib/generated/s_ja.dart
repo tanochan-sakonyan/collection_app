@@ -15,7 +15,7 @@ class SJa extends S {
   String get member => 'メンバー';
 
   @override
-  String get paymentStatus => '支払い状況';
+  String get sort => '並び替え';
 
   @override
   String get addMembers => 'メンバー追加';
@@ -42,7 +42,7 @@ class SJa extends S {
   String get person => '人';
 
   @override
-  String get settlePayment => '合計 ーーー円';
+  String get settlePayment => '合計 ---円';
 
   @override
   String get update_1 => 'LINEとの連携機能を現在開発中です。';
@@ -379,6 +379,30 @@ class SJa extends S {
 
   @override
   String get memberDeletedAfter24h => '24時間が経過したため\nメンバー情報が削除されました';
+
+  @override
+  String get bulkEdit => '一括編集';
+
+  @override
+  String get bulkStatusChange => 'ステータス変更';
+
+  @override
+  String bulkSelectionCount(int count) {
+    return '選択中: $count人';
+  }
+
+  @override
+  String bulkDeleteConfirm(int count) {
+    return '選択した$count人を削除しますか？';
+  }
+
+  @override
+  String get duplicateMemberWarningTitle => '同じ名前のメンバーがいます';
+
+  @override
+  String duplicateMemberWarningMessage(Object names) {
+    return '次のメンバーが重複しています: $names';
+  }
 
   @override
   String get lineGroupExpireTitle => 'メンバー情報有効期限が\nもうすぐ切れます';
