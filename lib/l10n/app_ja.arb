@@ -123,6 +123,24 @@
   "selectLineGroupNote": "※LINEグループから取得したメンバー情報は24時間で消去されるため、\n24時間が経過する前に再取得をするようお願いいたします。\n再取得の際、支払い状況は引き継がれます。",
   "autoDeleteMemberCountdown": "メンバー自動削除まで ",
   "memberDeletedAfter24h": "24時間が経過したため\nメンバー情報が削除されました",
+  "bulkEdit": "一括編集",
+  "bulkStatusChange": "ステータス変更",
+  "bulkSelectionCount": "選択中: {count}人",
+  "@bulkSelectionCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bulkDeleteConfirm": "選択した{count}人を削除しますか？",
+  "@bulkDeleteConfirm": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "duplicateMemberWarningTitle": "同じ名前のメンバーがいます",
   "duplicateMemberWarningMessage": "次のメンバーが重複しています: {names}",
   "@duplicateMemberWarningMessage": {

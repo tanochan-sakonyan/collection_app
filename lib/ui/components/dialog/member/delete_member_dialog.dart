@@ -9,10 +9,14 @@ class DeleteMemberDialog extends ConsumerStatefulWidget {
   final String userId;
   final String eventId;
   final String memberId;
+  final Future<void> Function()? onConfirm;
+  final String? message;
   const DeleteMemberDialog({
     required this.userId,
     required this.eventId,
     required this.memberId,
+    this.onConfirm,
+    this.message,
     super.key,
   });
 
@@ -33,9 +37,13 @@ class _DeleteMemberDialogState extends ConsumerState<DeleteMemberDialog> {
     ref.read(loadingProvider.notifier).state = true;
 
     try {
-      await ref
-          .read(userProvider.notifier)
-          .deleteMember(widget.userId, widget.eventId, widget.memberId);
+      if (widget.onConfirm != null) {
+        await widget.onConfirm!();
+      } else {
+        await ref
+            .read(userProvider.notifier)
+            .deleteMember(widget.userId, widget.eventId, widget.memberId);
+      }
       Navigator.of(context).pop();
     } catch (error) {
       debugPrint('メンバー削除に失敗しました: $error');
@@ -67,7 +75,7 @@ class _DeleteMemberDialogState extends ConsumerState<DeleteMemberDialog> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                S.of(context)!.confirmDeleteMember,
+                widget.message ?? S.of(context)!.confirmDeleteMember,
                 style: GoogleFonts.notoSansJp(
                   fontWeight: FontWeight.w400,
                   fontSize: 13,

@@ -395,6 +395,22 @@ class SEn extends S {
       'Member information \nhas been deleted after 24 hours.';
 
   @override
+  String get bulkEdit => 'Bulk edit';
+
+  @override
+  String get bulkStatusChange => 'Change status';
+
+  @override
+  String bulkSelectionCount(int count) {
+    return '$count members selected';
+  }
+
+  @override
+  String bulkDeleteConfirm(int count) {
+    return 'Delete $count selected members?';
+  }
+
+  @override
   String get duplicateMemberWarningTitle => 'Duplicate member names detected';
 
   @override

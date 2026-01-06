@@ -114,6 +114,7 @@ flutter:
     - assets/icons/ic_download_file.svg
     - assets/icons/ic_empty_clipboard.svg
     - assets/icons/ic_paypay.png
+    - assets/icons/ic_bulk_delete.svg
     - assets/images/img_add_from_line.png
     - assets/images/login_screen_image.png
 

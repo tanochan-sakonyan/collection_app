@@ -937,6 +937,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         backgroundColor: Colors.white,
         drawerScrimColor: Colors.transparent,
         appBar: AppBar(
+          surfaceTintColor: Colors.transparent,
+          scrolledUnderElevation: 0,
           backgroundColor: Colors.white,
           automaticallyImplyLeading: false,
           actions: [
@@ -1023,128 +1025,148 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         drawer: const TanochanDrawer(),
         body: Column(
           children: [
-            const SizedBox(height: 6),
-            if (isLineConnected)
-              LineMemberDeleteLimitCountdown(
-                  currentEvent: currentEvent, currentEventId: currentEventId),
-            const SizedBox(height: 6),
-            if (shouldShowDuplicateWarning)
-              DuplicateMemberWarning(
-                duplicateNames: duplicateMemberNames,
-                onClose: () {
-                  if (currentEventId.isEmpty) {
-                    return;
-                  }
-                  setState(() {
-                    _dismissedDuplicateWarningEventIds.add(currentEventId);
-                  });
-                },
-              ),
-            if (shouldShowDuplicateWarning) const SizedBox(height: 6),
             Expanded(
-              child: tabTitles.isEmpty
-                  ? const EventZeroComponents()
-                  : TabBarView(
-                      controller: tabController,
-                      children: tabTitles.asMap().entries.map((entry) {
-                        final index = entry.key;
-                        final eventId = entry.value;
-                        final event = user!.events.firstWhere(
-                          (e) => e.eventId == eventId,
-                          orElse: () => const Event(
-                            eventId: "",
-                            eventName: "",
-                            lineGroupId: null,
-                            lineMembersFetchedAt: null,
-                            members: [],
-                            memo: "",
-                            totalMoney: 0,
-                          ),
-                        );
-                        final bool isEventConnected =
-                            event.lineGroupId != null &&
-                                event.lineGroupId!.isNotEmpty;
-                        return Stack(
-                          children: [
-                            Column(
-                              children: [
-                                MemberList(
-                                  event: event,
-                                  members:
-                                      event.eventId != "" ? event.members : [],
-                                  eventId:
-                                      event.eventId != "" ? event.eventId : "",
-                                  eventName: event.eventName,
-                                  memberAddKey: (_currentTabIndex == index)
-                                      ? _memberAddKeys[index]
-                                      : null,
-                                  slidableKey: (_currentTabIndex == index)
-                                      ? _slidableKeys[index]
-                                      : null,
-                                  sortKey: (_currentTabIndex == index)
-                                      ? _sortKeys[index]
-                                      : null,
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: GestureDetector(
-                                    onTap: () => _showEditNoteBottomSheet(
-                                        context, event),
-                                    child: Container(
-                                      width: double.infinity,
-                                      color: Colors.white,
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 24, vertical: 6),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            S.of(context)!.note,
-                                            style: const TextStyle(
+              child: NestedScrollView(
+                physics: const ClampingScrollPhysics(),
+                headerSliverBuilder: (context, innerBoxIsScrolled) {
+                  return [
+                    const SliverToBoxAdapter(child: SizedBox(height: 6)),
+                    if (isLineConnected)
+                      SliverToBoxAdapter(
+                        child: LineMemberDeleteLimitCountdown(
+                          currentEvent: currentEvent,
+                          currentEventId: currentEventId,
+                        ),
+                      ),
+                    const SliverToBoxAdapter(child: SizedBox(height: 6)),
+                    if (shouldShowDuplicateWarning)
+                      SliverToBoxAdapter(
+                        child: DuplicateMemberWarning(
+                          duplicateNames: duplicateMemberNames,
+                          onClose: () {
+                            if (currentEventId.isEmpty) {
+                              return;
+                            }
+                            setState(() {
+                              _dismissedDuplicateWarningEventIds
+                                  .add(currentEventId);
+                            });
+                          },
+                        ),
+                      ),
+                    if (shouldShowDuplicateWarning)
+                      const SliverToBoxAdapter(child: SizedBox(height: 6)),
+                  ];
+                },
+                body: tabTitles.isEmpty
+                    ? const EventZeroComponents()
+                    : TabBarView(
+                        controller: tabController,
+                        children: tabTitles.asMap().entries.map((entry) {
+                          final index = entry.key;
+                          final eventId = entry.value;
+                          final event = user!.events.firstWhere(
+                            (e) => e.eventId == eventId,
+                            orElse: () => const Event(
+                              eventId: "",
+                              eventName: "",
+                              lineGroupId: null,
+                              lineMembersFetchedAt: null,
+                              members: [],
+                              memo: "",
+                              totalMoney: 0,
+                            ),
+                          );
+                          final bool isEventConnected =
+                              event.lineGroupId != null &&
+                                  event.lineGroupId!.isNotEmpty;
+                          return Stack(
+                            children: [
+                              CustomScrollView(
+                                slivers: [
+                                  SliverToBoxAdapter(
+                                    child: MemberList(
+                                      event: event,
+                                      members: event.eventId != ""
+                                          ? event.members
+                                          : [],
+                                      eventId: event.eventId != ""
+                                          ? event.eventId
+                                          : "",
+                                      eventName: event.eventName,
+                                      memberAddKey: (_currentTabIndex == index)
+                                          ? _memberAddKeys[index]
+                                          : null,
+                                      slidableKey: (_currentTabIndex == index)
+                                          ? _slidableKeys[index]
+                                          : null,
+                                      sortKey: (_currentTabIndex == index)
+                                          ? _sortKeys[index]
+                                          : null,
+                                    ),
+                                  ),
+                                  SliverFillRemaining(
+                                    hasScrollBody: false,
+                                    child: GestureDetector(
+                                      onTap: () => _showEditNoteBottomSheet(
+                                          context, event),
+                                      child: Container(
+                                        width: double.infinity,
+                                        color: Colors.white,
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 24, vertical: 16),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              S.of(context)!.note,
+                                              style: const TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,
-                                                color: Colors.black),
-                                          ),
-                                          const SizedBox(height: 4),
-                                          Expanded(
-                                            child: SingleChildScrollView(
-                                              child: (event.memo?.isNotEmpty ==
-                                                      true)
-                                                  ? Text(
-                                                      event.memo!,
-                                                      style: const TextStyle(
-                                                          fontSize: 16,
-                                                          color:
-                                                              Colors.black87),
-                                                    )
-                                                  : Text(
-                                                      S
-                                                              .of(context)
-                                                              ?.memoPlaceholder ??
-                                                          "You can enter a note",
-                                                      style: const TextStyle(
-                                                        fontSize: 16,
-                                                        color: Colors.grey,
-                                                        letterSpacing: 0.5,
-                                                      ),
-                                                    ),
+                                                color: Colors.black,
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                            const SizedBox(height: 4),
+                                            Expanded(
+                                              child: SingleChildScrollView(
+                                                child: (event
+                                                            .memo?.isNotEmpty ==
+                                                        true)
+                                                    ? Text(
+                                                        event.memo!,
+                                                        style: const TextStyle(
+                                                          fontSize: 16,
+                                                          color: Colors.black87,
+                                                        ),
+                                                      )
+                                                    : Text(
+                                                        S
+                                                                .of(context)
+                                                                ?.memoPlaceholder ??
+                                                            "You can enter a note",
+                                                        style: const TextStyle(
+                                                          fontSize: 16,
+                                                          color: Colors.grey,
+                                                          letterSpacing: 0.5,
+                                                        ),
+                                                      ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            Positioned(
-                              right: 28,
-                              bottom: 120,
-                              child: SizedBox(
+                                ],
+                              ),
+                              Positioned(
+                                right: 28,
+                                bottom: 120,
+                                child: SizedBox(
                                   height: 60,
                                   width: 60,
-                                  child: (isEventConnected)
+                                  child: isEventConnected
                                       ? FloatingActionButtonOn(
                                           index: index,
                                           fabKeys: fabKeys,
@@ -1156,12 +1178,14 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                           fabKeys: fabKeys,
                                           tabController: tabController,
                                           event: event,
-                                        )),
-                            ),
-                          ],
-                        );
-                      }).toList(),
-                    ),
+                                        ),
+                                ),
+                              ),
+                            ],
+                          );
+                        }).toList(),
+                      ),
+              ),
             ),
             if (_isBannerLoaded && _banner != null)
               SafeArea(
