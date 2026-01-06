@@ -463,7 +463,7 @@ class _MemberListState extends ConsumerState<MemberList>
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontSize: 14,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.bold,
                       color: member.status == PaymentStatus.absence
                           ? Colors.grey
                           : Colors.black,
