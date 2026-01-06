@@ -42,10 +42,10 @@ class _UpdateInfoAndSuggestOfficialLineDialogState
                 onPageChanged: widget.onPageChanged,
                 children: const [
                   UpdateInfoDialog(
-                    version: "2.6.0",
-                    first: "テーマカラーが選べるように！",
-                    second: "認証エラー問題を解決",
-                    third: "ステータスにPayPayを追加",
+                    version: "2.7.0",
+                    first: "一括編集機能を実装",
+                    second: "メンバー・タブの並び替えが可能に",
+                    third: "同メンバーがいる場合に警告を表示",
                   ),
                   SuggestOfficialLineDialogAfter(),
                 ],
