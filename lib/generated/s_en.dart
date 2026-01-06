@@ -15,6 +15,9 @@ class SEn extends S {
   String get member => 'Member';
 
   @override
+  String get noMembers => 'There are no members.';
+
+  @override
   String get sort => 'Sort';
 
   @override

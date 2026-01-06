@@ -15,6 +15,9 @@ class SJa extends S {
   String get member => 'メンバー';
 
   @override
+  String get noMembers => 'メンバーがいません。';
+
+  @override
   String get sort => '並び替え';
 
   @override

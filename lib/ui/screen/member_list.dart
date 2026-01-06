@@ -260,7 +260,7 @@ class _MemberListState extends ConsumerState<MemberList>
                           child: members.isEmpty
                               ? Center(
                                   child: Text(
-                                    S.of(sheetContext)!.member,
+                                    S.of(sheetContext)!.noMembers,
                                     style: Theme.of(sheetContext)
                                         .textTheme
                                         .bodyMedium

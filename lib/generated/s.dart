@@ -109,6 +109,12 @@ abstract class S {
   /// **'メンバー'**
   String get member;
 
+  /// No description provided for @noMembers.
+  ///
+  /// In ja, this message translates to:
+  /// **'メンバーがいません。'**
+  String get noMembers;
+
   /// No description provided for @sort.
   ///
   /// In ja, this message translates to:
