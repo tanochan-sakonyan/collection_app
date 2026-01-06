@@ -228,24 +228,27 @@ class _MemberListState extends ConsumerState<MemberList>
                     child: Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                          padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
                           child: Row(
                             children: [
-                              TextButton(
+                              IconButton(
                                 onPressed: _isBulkActionInProgress
                                     ? null
                                     : () => Navigator.of(sheetContext).pop(),
-                                child: Text(S.of(sheetContext)!.cancel),
+                                icon: const Icon(
+                                  Icons.close,
+                                  size: 24,
+                                  color: Colors.black,
+                                ),
                               ),
-                              Expanded(
-                                child: Center(
-                                  child: Text(
-                                    S.of(sheetContext)!.bulkEdit,
-                                    style: Theme.of(sheetContext)
-                                        .textTheme
-                                        .titleMedium
-                                        ?.copyWith(fontWeight: FontWeight.bold),
-                                  ),
+                              const SizedBox(width: 20),
+                              Center(
+                                child: Text(
+                                  S.of(sheetContext)!.bulkEdit,
+                                  style: Theme.of(sheetContext)
+                                      .textTheme
+                                      .titleMedium
+                                      ?.copyWith(fontWeight: FontWeight.bold),
                                 ),
                               ),
                               const SizedBox(width: 64),
@@ -264,17 +267,17 @@ class _MemberListState extends ConsumerState<MemberList>
                                         ?.copyWith(color: Colors.grey),
                                   ),
                                 )
-                              : ListView.separated(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 8),
-                                  itemCount: members.length,
-                                  separatorBuilder: (_, __) =>
-                                      const Divider(height: 1),
-                                  itemBuilder: (context, index) {
-                                    final member = members[index];
-                                    final isSelected = _selectedMemberIds
-                                        .contains(member.memberId);
-                                    return InkWell(
+                          : ListView.builder(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8),
+                              itemCount: members.length,
+                              itemBuilder: (context, index) {
+                                final member = members[index];
+                                final isSelected = _selectedMemberIds
+                                    .contains(member.memberId);
+                                return Column(
+                                  children: [
+                                    InkWell(
                                       onTap: _isBulkActionInProgress
                                           ? null
                                           : () => updateSelection(
@@ -329,12 +332,18 @@ class _MemberListState extends ConsumerState<MemberList>
                                                 ],
                                               ),
                                             ),
+                                            const SizedBox(width: 12),
+                                            _buildStatusIcon(member.status),
+                                            const SizedBox(width: 40),
                                           ],
                                         ),
                                       ),
-                                    );
-                                  },
-                                ),
+                                    ),
+                                    const Divider(height: 1),
+                                  ],
+                                );
+                              },
+                            ),
                         ),
                         Padding(
                           padding: EdgeInsets.fromLTRB(
