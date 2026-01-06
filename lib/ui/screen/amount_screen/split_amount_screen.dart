@@ -791,14 +791,18 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (_currentTab == 0 || _currentTab == 1 || _currentTab == 2)
+              if (_currentTab == 0 ||
+                  _currentTab == 1 ||
+                  (_currentTab == 2 && _roles.isNotEmpty))
                 RoundUpModule(
                   currencyUnit: currencyUnit,
                   selectedOption: _selectedRoundUpOption,
                   onOptionChanged: _handleRoundOptionSelected,
                   changeAmountText: formattedChange,
                 ),
-              if (_currentTab == 0 || _currentTab == 1 || _currentTab == 2)
+              if (_currentTab == 0 ||
+                  _currentTab == 1 ||
+                  (_currentTab == 2 && _roles.isNotEmpty))
                 const SizedBox(height: 16),
               SizedBox(
                 width: 120,
