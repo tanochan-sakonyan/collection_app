@@ -1000,7 +1000,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                   height: screenHeight * 0.04,
                   child: Row(
                     children: [
-                      const SizedBox(width: 36),
+                      const SizedBox(width: 24),
                       Expanded(
                         child: Align(
                           alignment: Alignment.centerLeft,
@@ -1015,7 +1015,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                           ),
                         ),
                       ),
-                      const SizedBox(width: 36),
+                      const SizedBox(width: 24),
                     ],
                   ),
                 ),
