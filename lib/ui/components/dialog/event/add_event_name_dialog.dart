@@ -10,6 +10,7 @@ import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/line_group.dart';
 import 'package:mr_collection/data/repository/event_repository.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/logging/analytics_logger.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/provider/pending_event_focus_provider.dart';
 import 'package:mr_collection/services/auth_service.dart';
@@ -202,6 +203,18 @@ class _AddEventNameDialogState extends ConsumerState<AddEventNameDialog> {
           break;
       }
       if (!mounted) return;
+      if (createdEventId != null) {
+        final modeName = switch (widget.mode) {
+          AddEventMode.transferMembers => 'transfer_members',
+          AddEventMode.fromLineGroup => 'from_line_group',
+          AddEventMode.empty => 'empty',
+        };
+        await AnalyticsLogger.logEventCreated(
+          userId: userId,
+          eventId: createdEventId,
+          mode: modeName,
+        );
+      }
       ref.read(pendingEventFocusProvider.notifier).state = createdEventId;
       Navigator.of(context).pop(createdEventId);
       Navigator.of(context).popUntil((route) => route.isFirst);
