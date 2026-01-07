@@ -39,13 +39,9 @@ class EventZeroComponents extends ConsumerWidget {
           const SizedBox(height: 40),
           ElevatedButton.icon(
             onPressed: () async {
-              final userId = ref.read(userProvider)?.userId;
-              if (userId != null) {
-                await AnalyticsLogger.logAddEventButtonPressed(
-                  userId: userId,
-                  source: 'event_zero',
-                );
-              }
+              await AnalyticsLogger.logAddEventButtonPressed(
+                source: 'event_zero',
+              );
               showDialog(
                 context: context,
                 builder: (_) => AddEventDialog(

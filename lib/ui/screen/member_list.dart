@@ -125,7 +125,6 @@ class _MemberListState extends ConsumerState<MemberList>
             status,
           );
       await AnalyticsLogger.logMemberStatusChanged(
-        userId: user.userId,
         eventId: widget.eventId,
         status: status,
         isBulk: true,
@@ -631,7 +630,6 @@ class _MemberListState extends ConsumerState<MemberList>
           .read(userProvider.notifier)
           .updateMemberStatus(userId, eventId, memberId, status!);
       await AnalyticsLogger.logMemberStatusChanged(
-        userId: userId,
         eventId: eventId,
         memberId: memberId,
         status: status,

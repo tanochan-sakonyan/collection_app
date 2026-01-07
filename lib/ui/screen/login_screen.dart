@@ -173,8 +173,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 debugPrint(
                                     '既存LINEユーザーでHomeScreenに遷移します。user: $user');
                                 updateCurrentLoginMedia('line');
+                                await AnalyticsLogger.setUserId(user.userId);
                                 await AnalyticsLogger.logLogin(
-                                  userId: user.userId,
                                   method: 'line',
                                   isNew: false,
                                 );
@@ -214,8 +214,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 debugPrint(
                                     'LoginScreenからHomeScreenに遷移します。user: $user');
                                 updateCurrentLoginMedia('line');
+                                await AnalyticsLogger.setUserId(user.userId);
                                 await AnalyticsLogger.logLogin(
-                                  userId: user.userId,
                                   method: 'line',
                                   isNew: true,
                                 );
@@ -302,8 +302,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   final user = ref.read(userProvider);
                                   if (mounted && user != null) {
                                     updateCurrentLoginMedia('apple');
+                                    await AnalyticsLogger.setUserId(user.userId);
                                     await AnalyticsLogger.logLogin(
-                                      userId: user.userId,
                                       method: 'apple',
                                       isNew: false,
                                     );
@@ -359,8 +359,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       debugPrint(
                                           'Appleサインイン成功。HomeScreenへ遷移します。user: $user');
                                       updateCurrentLoginMedia('apple');
+                                      await AnalyticsLogger.setUserId(user.userId);
                                       await AnalyticsLogger.logLogin(
-                                        userId: user.userId,
                                         method: 'apple',
                                         isNew: true,
                                       );

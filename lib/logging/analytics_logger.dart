@@ -2,9 +2,17 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 
 class AnalyticsLogger {
+  // ユーザーIDを設定する。
+  static Future<void> setUserId(String? userId) async {
+    try {
+      await FirebaseAnalytics.instance.setUserId(id: userId);
+    } catch (error) {
+      debugPrint('AnalyticsユーザーID設定に失敗しました: $error');
+    }
+  }
+
   // ステータス変更ログを送信する。
   static Future<void> logMemberStatusChanged({
-    required String userId,
     required String eventId,
     String? memberId,
     required int status,
@@ -12,7 +20,6 @@ class AnalyticsLogger {
     int? memberCount,
   }) async {
     final parameters = <String, Object>{
-      'user_id': userId,
       'event_id': eventId,
       'status': status, // 1: 支払い済み, 2: 未払い, 3: 欠席, 4; PayPayで支払い済み
       'is_bulk': isBulk ? 1 : 0,
@@ -35,12 +42,10 @@ class AnalyticsLogger {
 
   // イベント追加ログを送信する。
   static Future<void> logEventCreated({
-    required String userId,
     required String eventId,
     required String mode,
   }) async {
     final parameters = <String, Object>{
-      'user_id': userId,
       'event_id': eventId,
       'mode': mode,
     };
@@ -56,12 +61,10 @@ class AnalyticsLogger {
 
   // ログインログを送信する。
   static Future<void> logLogin({
-    required String userId,
     required String method,
     required bool isNew,
   }) async {
     final parameters = <String, Object>{
-      'user_id': userId,
       'method': method,
       'is_new': isNew ? 1 : 0,
     };
@@ -77,15 +80,11 @@ class AnalyticsLogger {
 
   // ログアウトログを送信する。
   static Future<void> logLogout({
-    String? userId,
     required String method,
   }) async {
     final parameters = <String, Object>{
       'method': method,
     };
-    if (userId != null && userId.isNotEmpty) {
-      parameters['user_id'] = userId;
-    }
     try {
       await FirebaseAnalytics.instance.logEvent(
         name: 'logout',
@@ -98,11 +97,9 @@ class AnalyticsLogger {
 
   // イベント追加ボタンのログを送信する。
   static Future<void> logAddEventButtonPressed({
-    required String userId,
     required String source,
   }) async {
     final parameters = <String, Object>{
-      'user_id': userId,
       'source': source,
     };
     try {

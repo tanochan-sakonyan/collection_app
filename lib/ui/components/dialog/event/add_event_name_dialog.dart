@@ -210,7 +210,6 @@ class _AddEventNameDialogState extends ConsumerState<AddEventNameDialog> {
           AddEventMode.empty => 'empty',
         };
         await AnalyticsLogger.logEventCreated(
-          userId: userId,
           eventId: createdEventId,
           mode: modeName,
         );

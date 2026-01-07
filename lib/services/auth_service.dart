@@ -20,14 +20,11 @@ class AuthService {
     final prefs = await SharedPreferences.getInstance();
     final currentLoginMedia = prefs.getString('currentLoginMedia');
     if (currentLoginMedia != null && currentLoginMedia.isNotEmpty) {
-      final userId = currentLoginMedia == 'line'
-          ? prefs.getString('lineUserId')
-          : prefs.getString('appleUserId');
       await AnalyticsLogger.logLogout(
-        userId: userId,
         method: currentLoginMedia,
       );
     }
+    await AnalyticsLogger.setUserId(null);
     await prefs.remove('currentLoginMedia');
     // ログアウトする場合はaccessTokenとrefreshTokenを削除
     await TokenStorage.clearTokens();

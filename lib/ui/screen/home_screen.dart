@@ -402,13 +402,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   Future<void> _showAddEventDialog() async {
-    final userId = ref.read(userProvider)?.userId;
-    if (userId != null) {
-      await AnalyticsLogger.logAddEventButtonPressed(
-        userId: userId,
-        source: 'home_tab',
-      );
-    }
+    await AnalyticsLogger.logAddEventButtonPressed(
+      source: 'home_tab',
+    );
     final String? createdEventId = await showDialog<String>(
       context: context,
       builder: (BuildContext context) {
