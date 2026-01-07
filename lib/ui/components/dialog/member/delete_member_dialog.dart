@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
+import 'package:mr_collection/logging/analytics_member_logger.dart';
 
 class DeleteMemberDialog extends ConsumerStatefulWidget {
   final String userId;
@@ -43,6 +44,11 @@ class _DeleteMemberDialogState extends ConsumerState<DeleteMemberDialog> {
         await ref
             .read(userProvider.notifier)
             .deleteMember(widget.userId, widget.eventId, widget.memberId);
+        await AnalyticsMemberLogger.logMemberDeleted(
+          eventId: widget.eventId,
+          memberId: widget.memberId,
+          isBulk: false,
+        );
       }
       Navigator.of(context).pop();
     } catch (error) {

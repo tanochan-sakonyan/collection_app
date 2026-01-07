@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/logging/analytics_line_logger.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class InviteOfficialAccountToLineGroupScreen extends ConsumerStatefulWidget {
@@ -13,6 +14,14 @@ class InviteOfficialAccountToLineGroupScreen extends ConsumerStatefulWidget {
 
 class CheckSelectedLineGroupScreenState
     extends ConsumerState<InviteOfficialAccountToLineGroupScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await AnalyticsLineLogger.logInviteOfficialAccountScreenViewed();
+    });
+  }
+
   Future<void> _launchLine() async {
     final uri = Uri.parse('https://lin.ee/cLwUgQtP');
     if (await canLaunchUrl(uri)) {
@@ -63,8 +72,7 @@ class CheckSelectedLineGroupScreenState
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            S.of(context)!.inviteOfficialAccountTitle ??
-                "Invite the official LINE account to the group",
+            S.of(context)!.inviteOfficialAccountTitle,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
@@ -74,8 +82,7 @@ class CheckSelectedLineGroupScreenState
           ),
           const SizedBox(height: 18),
           Text(
-            S.of(context)!.inviteOfficialAccountDesc1 ??
-                "You can only get members from LINE groups where 'Shuukin-kun' is invited.",
+            S.of(context)!.inviteOfficialAccountDesc1,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 11,
                   fontWeight: FontWeight.w500,
@@ -92,8 +99,7 @@ class CheckSelectedLineGroupScreenState
             ),
             const SizedBox(width: 12),
             Text(
-              S.of(context)!.inviteOfficialAccountStep1 ??
-                  "Add the official LINE account",
+              S.of(context)!.inviteOfficialAccountStep1,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
@@ -123,8 +129,7 @@ class CheckSelectedLineGroupScreenState
             ),
             const SizedBox(width: 12),
             Text(
-              S.of(context)!.inviteOfficialAccountStep2 ??
-                  "Invite the official LINE account\nto the group for collection",
+              S.of(context)!.inviteOfficialAccountStep2,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
@@ -135,8 +140,7 @@ class CheckSelectedLineGroupScreenState
           ]),
           const SizedBox(height: 24),
           Text(
-            S.of(context)!.inviteOfficialAccountNote1 ??
-                "‘Shuukin-kun’ will not send\npromotional messages in the group.",
+            S.of(context)!.inviteOfficialAccountNote1,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 11,
                   fontWeight: FontWeight.w500,

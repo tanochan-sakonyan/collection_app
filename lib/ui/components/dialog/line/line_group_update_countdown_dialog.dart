@@ -31,8 +31,7 @@ class LineGroupUpdateCountdownDialog extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              S.of(context)!.lineGroupExpireTitle ??
-                  "Member info will expire soon",
+              S.of(context)!.lineGroupExpireTitle,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.w700,
                     fontSize: 16,

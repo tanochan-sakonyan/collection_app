@@ -8,6 +8,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:mr_collection/ads/ad_helper.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
+import 'package:mr_collection/logging/analytics_ads_logger.dart';
+import 'package:mr_collection/logging/analytics_event_logger.dart';
+import 'package:mr_collection/logging/analytics_ui_logger.dart';
 import 'package:mr_collection/provider/tab_titles_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/button/floating_action_button_off.dart';
@@ -53,6 +56,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   String? _pendingFocusedEventId;
   final Map<String, GlobalKey> _tabItemKeys = {};
   final Set<String> _dismissedDuplicateWarningEventIds = {};
+  final Set<String> _loggedDuplicateWarningEventIds = {};
 
   final GlobalKey eventAddKey = GlobalKey();
   final GlobalKey leftTabKey = GlobalKey();
@@ -68,6 +72,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      unawaited(AnalyticsUiLogger.logHomeScreenViewed());
+    });
     _tabTitles = ref.read(tabTitlesProvider);
     _initKeys(_tabTitles.length);
     tabController = TabController(length: _tabTitles.length, vsync: this);
@@ -135,6 +142,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
             _isBannerLoaded = true;
             _bannerLoadAttempts = 0;
           });
+          unawaited(AnalyticsAdsLogger.logBannerAdShown());
         },
         onAdFailedToLoad: (ad, error) {
           debugPrint('Ad load failed: $error');
@@ -401,6 +409,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   Future<void> _showAddEventDialog() async {
+    await AnalyticsEventLogger.logAddEventButtonPressed(
+      source: 'home_tab',
+    );
     final String? createdEventId = await showDialog<String>(
       context: context,
       builder: (BuildContext context) {
@@ -549,6 +560,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       padding: EdgeInsets.zero,
       physics: const BouncingScrollPhysics(),
       buildDefaultDragHandles: false,
+      onReorderStart: (_) {
+        unawaited(AnalyticsUiLogger.logTabLongPressed());
+      },
       onReorder: (oldIndex, newIndex) {
         final maxIndex = _tabTitles.length;
         if (oldIndex >= maxIndex) {
@@ -785,6 +799,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   void _showEditNoteBottomSheet(BuildContext context, Event event) {
+    unawaited(AnalyticsUiLogger.logMemoBottomSheetOpened());
     final TextEditingController controller =
         TextEditingController(text: event.memo ?? "");
     showModalBottomSheet(
@@ -870,6 +885,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                               ref.read(userProvider)!.userId,
                                               event.eventId,
                                               newNote);
+                                      unawaited(AnalyticsUiLogger.logMemoSaved());
                                       Navigator.of(context).pop();
                                     } catch (e) {
                                       debugPrint('メモ保存に失敗: $e');
@@ -934,6 +950,13 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     final bool shouldShowDuplicateWarning = duplicateMemberNames.isNotEmpty &&
         currentEventId.isNotEmpty &&
         !_dismissedDuplicateWarningEventIds.contains(currentEventId);
+    if (shouldShowDuplicateWarning &&
+        !_loggedDuplicateWarningEventIds.contains(currentEventId)) {
+      _loggedDuplicateWarningEventIds.add(currentEventId);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        unawaited(AnalyticsUiLogger.logDuplicateMemberWarningShown());
+      });
+    }
 
     debugPrint('currentEvent: $currentEvent');
     debugPrint('lineGroupId: ${currentEvent?.lineGroupId}');
@@ -951,6 +974,13 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         key: _scaffoldKey,
         backgroundColor: Colors.white,
         drawerScrimColor: Colors.transparent,
+        onDrawerChanged: (isOpen) {
+          if (isOpen) {
+            unawaited(AnalyticsUiLogger.logDrawerOpened());
+          } else {
+            unawaited(AnalyticsUiLogger.logDrawerClosed());
+          }
+        },
         appBar: AppBar(
           surfaceTintColor: Colors.transparent,
           scrolledUnderElevation: 0,
@@ -967,6 +997,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                         hoverColor: Colors.transparent,
                         focusColor: Colors.transparent,
                         onPressed: () {
+                          unawaited(AnalyticsUiLogger.logHomeHelpPressed());
                           _resetTutorial();
                           WidgetsBinding.instance.addPostFrameCallback((_) {
                             _showTutorial();

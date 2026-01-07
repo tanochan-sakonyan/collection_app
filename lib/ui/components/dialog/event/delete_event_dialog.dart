@@ -4,6 +4,7 @@ import 'package:mr_collection/provider/user_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
+import 'package:mr_collection/logging/analytics_event_logger.dart';
 
 class DeleteEventDialog extends ConsumerStatefulWidget {
   final String userId;
@@ -34,6 +35,9 @@ class _DeleteEventDialogState extends ConsumerState<DeleteEventDialog> {
 
     try {
       await ref.read(userProvider.notifier).deleteEvent(userId, eventId);
+      await AnalyticsEventLogger.logEventDeleted(
+        eventId: eventId,
+      );
       Navigator.of(ref).pop();
     } catch (error) {
       debugPrint('イベントの削除に失敗しました: $error');

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:upgrader/upgrader.dart';
@@ -121,8 +120,7 @@ class _CustomUpgradeAlertState extends State<CustomUpgradeAlert> {
                                 width: 22,
                                 height: 22,
                                 theme: SvgTheme(
-                                  currentColor:
-                                      Theme.of(context).primaryColor,
+                                  currentColor: Theme.of(context).primaryColor,
                                 ),
                               ),
                               const SizedBox(width: 4),

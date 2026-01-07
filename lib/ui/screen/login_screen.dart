@@ -16,7 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/generated/s.dart';
-import 'dart:convert';
+import 'package:mr_collection/logging/analytics_auth_logger.dart';
 import 'dart:io' show Platform;
 
 final checkboxProvider = StateProvider<bool>((ref) => false);
@@ -173,6 +173,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 debugPrint(
                                     '既存LINEユーザーでHomeScreenに遷移します。user: $user');
                                 updateCurrentLoginMedia('line');
+                                await AnalyticsAuthLogger.setUserId(user.userId);
+                                await AnalyticsAuthLogger.logLogin(
+                                  method: 'line',
+                                  isNew: false,
+                                );
                                 setState(() => isLoading = true);
                                 Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
@@ -182,6 +187,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 );
                               }
                             } catch (e) {
+                              await AnalyticsAuthLogger.logLoginFailed(
+                                method: 'line',
+                              );
                               debugPrint('ユーザー情報の取得に失敗しました。: $e');
                             } finally {
                               ref.read(loginLoadingProvider.notifier).state =
@@ -209,6 +217,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 debugPrint(
                                     'LoginScreenからHomeScreenに遷移します。user: $user');
                                 updateCurrentLoginMedia('line');
+                                await AnalyticsAuthLogger.setUserId(user.userId);
+                                await AnalyticsAuthLogger.logLogin(
+                                  method: 'line',
+                                  isNew: true,
+                                );
                                 setState(() => isLoading = true);
                                 Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
@@ -219,6 +232,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               }
                             } on PlatformException catch (e) {
                               if (mounted) {
+                                await AnalyticsAuthLogger.logLoginFailed(
+                                  method: 'line',
+                                );
                                 debugPrint("エラーが発生: $e");
                                 showDialog(
                                     context: context,
@@ -292,6 +308,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   final user = ref.read(userProvider);
                                   if (mounted && user != null) {
                                     updateCurrentLoginMedia('apple');
+                                    await AnalyticsAuthLogger.setUserId(user.userId);
+                                    await AnalyticsAuthLogger.logLogin(
+                                      method: 'apple',
+                                      isNew: false,
+                                    );
                                     setState(() => isLoading = true);
                                     Navigator.of(context).pushReplacement(
                                       MaterialPageRoute(
@@ -301,6 +322,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     );
                                   }
                                 } catch (e) {
+                                  await AnalyticsAuthLogger.logLoginFailed(
+                                    method: 'apple',
+                                  );
                                   debugPrint('ユーザー情報の取得に失敗しました。: $e');
                                 } finally {
                                   ref
@@ -344,6 +368,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       debugPrint(
                                           'Appleサインイン成功。HomeScreenへ遷移します。user: $user');
                                       updateCurrentLoginMedia('apple');
+                                      await AnalyticsAuthLogger.setUserId(user.userId);
+                                      await AnalyticsAuthLogger.logLogin(
+                                        method: 'apple',
+                                        isNew: true,
+                                      );
                                       setState(() => isLoading = true);
                                       Navigator.of(context).pushReplacement(
                                         MaterialPageRoute(
@@ -363,6 +392,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   }
                                 } on PlatformException catch (e) {
                                   if (mounted) {
+                                    await AnalyticsAuthLogger.logLoginFailed(
+                                      method: 'apple',
+                                    );
                                     debugPrint("エラーが発生 :$e");
                                     showDialog(
                                         context: context,
@@ -370,6 +402,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                             const LoginErrorDialog());
                                   }
                                 } catch (e) {
+                                  await AnalyticsAuthLogger.logLoginFailed(
+                                    method: 'apple',
+                                  );
                                   debugPrint('Appleサインイン中にエラーが発生: $e');
                                   if (mounted) {
                                     showDialog(
