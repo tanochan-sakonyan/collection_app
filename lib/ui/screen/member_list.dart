@@ -518,8 +518,8 @@ class _MemberListState extends ConsumerState<MemberList>
                 String eventId,
                 String memberId,
                 int status,
-              ) {
-                _updateMemberStatus(
+              ) async {
+                await _updateMemberStatus(
                   ref,
                   userId,
                   eventId,

@@ -14,8 +14,8 @@ class AnalyticsLogger {
     final parameters = <String, Object>{
       'user_id': userId,
       'event_id': eventId,
-      'status': status,
-      'is_bulk': isBulk,
+      'status': status, // 1: 支払い済み, 2: 未払い, 3: 欠席, 4; PayPayで支払い済み
+      'is_bulk': isBulk ? 1 : 0,
     };
     if (memberId != null) {
       parameters['member_id'] = memberId;
@@ -25,7 +25,7 @@ class AnalyticsLogger {
     }
     try {
       await FirebaseAnalytics.instance.logEvent(
-        name: 'member_status_changed',
+        name: 'status_changed',
         parameters: parameters,
       );
     } catch (error) {
