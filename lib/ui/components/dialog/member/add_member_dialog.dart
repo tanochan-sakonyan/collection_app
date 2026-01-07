@@ -30,8 +30,7 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
           .where((e) => e.isNotEmpty);
       if (lines.any((n) => n.length > 9)) {
         setState(() {
-          _errorMessage = S.of(context)!.maxCharacterMessage_9 ??
-              "You can enter up to 9 characters.";
+          _errorMessage = S.of(context)!.maxCharacterMessage_9;
         });
       } else {
         setState(() {
@@ -59,8 +58,7 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
       setState(() => _errorMessage = S.of(context)!.enterMemberPrompt);
       return;
     } else if (memberNames.any((n) => n.length > 9)) {
-      setState(() => _errorMessage = S.of(context)!.maxCharacterMessage_9 ??
-          "You can enter up to 9 characters.");
+      setState(() => _errorMessage = S.of(context)!.maxCharacterMessage_9);
       return;
     } else {
       _errorMessage = null;

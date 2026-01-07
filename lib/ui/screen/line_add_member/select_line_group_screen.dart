@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/data/model/freezed/line_group.dart';
-import 'package:mr_collection/provider/user_provider.dart';
-import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/ui/components/dialog/event/add_event_name_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/line/invite_official_account_to_line_group_dialog.dart';
 import 'check_selected_line_group_screen.dart';
@@ -11,8 +8,7 @@ import 'package:mr_collection/generated/s.dart';
 
 class SelectLineGroupScreen extends StatelessWidget {
   final List<LineGroup> lineGroups;
-  const SelectLineGroupScreen({Key? key, required this.lineGroups})
-      : super(key: key);
+  const SelectLineGroupScreen({super.key, required this.lineGroups});
 
   Future<void> _checkSelectedLineGroup(
       BuildContext context, LineGroup lineGroup) async {
@@ -77,8 +73,7 @@ class SelectLineGroupScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  S.of(context)!.notDisplayedQuestion ??
-                      "LINE group not displayed?",
+                  S.of(context)!.notDisplayedQuestion,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: const Color(0xFF5C5C5C),
                       fontSize: 10,
@@ -102,8 +97,7 @@ class SelectLineGroupScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
           Text(
-            S.of(context)!.selectLineGroupTitle ??
-                "Add members from LINE group",
+            S.of(context)!.selectLineGroupTitle,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
@@ -114,8 +108,7 @@ class SelectLineGroupScreen extends StatelessWidget {
           ),
           const SizedBox(height: 32),
           Text(
-            S.of(context)!.selectLineGroupDesc1 ??
-                "Select the LINE group where you want to add members.",
+            S.of(context)!.selectLineGroupDesc1,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,

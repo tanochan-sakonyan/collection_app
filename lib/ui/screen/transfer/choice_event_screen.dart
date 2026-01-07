@@ -79,8 +79,7 @@ class ChoiceEventScreenState extends ConsumerState<ChoiceEventScreen> {
           ),
           const SizedBox(height: 32),
           Text(
-            S.of(context)!.selectEventToTransfer ??
-                "Please select the event from which you want to transfer members.",
+            S.of(context)!.selectEventToTransfer,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,

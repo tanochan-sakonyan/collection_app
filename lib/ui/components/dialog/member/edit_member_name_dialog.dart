@@ -37,8 +37,7 @@ class EditMemberNameDialogState extends ConsumerState<EditMemberNameDialog> {
       final text = _controller.text.trim();
       if (text.length > 9) {
         setState(() {
-          _errorMessage = S.of(context)!.maxCharacterMessage_9 ??
-              "You can enter up to 9 characters.";
+          _errorMessage = S.of(context)!.maxCharacterMessage_9;
         });
       } else {
         setState(() {

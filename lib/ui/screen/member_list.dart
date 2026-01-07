@@ -723,8 +723,7 @@ class _MemberListState extends ConsumerState<MemberList>
                                       .add(const Duration(hours: 24))))
                               ? Center(
                                   child: Text(
-                                    S.of(context)!.memberDeletedAfter24h ??
-                                        "Member information has been deleted after 24 hours.",
+                                    S.of(context)!.memberDeletedAfter24h,
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyMedium

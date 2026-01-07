@@ -16,7 +16,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/generated/s.dart';
-import 'dart:convert';
 import 'dart:io' show Platform;
 
 final checkboxProvider = StateProvider<bool>((ref) => false);
