@@ -204,28 +204,41 @@ class _AddEventNameDialogState extends ConsumerState<AddEventNameDialog> {
       }
       if (!mounted) return;
       if (createdEventId != null) {
-        final modeName = switch (widget.mode) {
-          AddEventMode.transferMembers => 'transfer_members',
-          AddEventMode.fromLineGroup => 'from_line_group',
-          AddEventMode.empty => 'empty',
-        };
         await AnalyticsLogger.logEventCreated(
           eventId: createdEventId,
-          mode: modeName,
+          mode: _currentAddEventModeName(),
         );
       }
       ref.read(pendingEventFocusProvider.notifier).state = createdEventId;
       Navigator.of(context).pop(createdEventId);
       Navigator.of(context).popUntil((route) => route.isFirst);
     } on AuthException catch (e) {
+      await AnalyticsLogger.logEventAddFailed(
+        mode: _currentAddEventModeName(),
+      );
       debugPrint('イベント作成失敗(認証エラー): $e');
       if (!mounted) return;
       await AuthService.signOut(context);
     } catch (e) {
+      await AnalyticsLogger.logEventAddFailed(
+        mode: _currentAddEventModeName(),
+      );
       debugPrint('イベント作成失敗: $e');
     } finally {
       ref.read(loadingProvider.notifier).state = false;
       if (mounted) setState(() => _isButtonEnabled = true);
+    }
+  }
+
+  // イベント作成モード名を返す。
+  String _currentAddEventModeName() {
+    switch (widget.mode) {
+      case AddEventMode.transferMembers:
+        return 'transfer_members';
+      case AddEventMode.fromLineGroup:
+        return 'from_line_group';
+      case AddEventMode.empty:
+        return 'empty';
     }
   }
 

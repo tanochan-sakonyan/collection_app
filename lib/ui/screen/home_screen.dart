@@ -140,6 +140,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
             _isBannerLoaded = true;
             _bannerLoadAttempts = 0;
           });
+          unawaited(AnalyticsLogger.logBannerAdShown());
         },
         onAdFailedToLoad: (ad, error) {
           debugPrint('Ad load failed: $error');
@@ -882,6 +883,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                               ref.read(userProvider)!.userId,
                                               event.eventId,
                                               newNote);
+                                      unawaited(AnalyticsLogger.logMemoSaved());
                                       Navigator.of(context).pop();
                                     } catch (e) {
                                       debugPrint('メモ保存に失敗: $e');

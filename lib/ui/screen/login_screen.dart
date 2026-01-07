@@ -187,6 +187,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 );
                               }
                             } catch (e) {
+                              await AnalyticsLogger.logLoginFailed(
+                                method: 'line',
+                              );
                               debugPrint('ユーザー情報の取得に失敗しました。: $e');
                             } finally {
                               ref.read(loginLoadingProvider.notifier).state =
@@ -229,6 +232,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               }
                             } on PlatformException catch (e) {
                               if (mounted) {
+                                await AnalyticsLogger.logLoginFailed(
+                                  method: 'line',
+                                );
                                 debugPrint("エラーが発生: $e");
                                 showDialog(
                                     context: context,
@@ -316,6 +322,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     );
                                   }
                                 } catch (e) {
+                                  await AnalyticsLogger.logLoginFailed(
+                                    method: 'apple',
+                                  );
                                   debugPrint('ユーザー情報の取得に失敗しました。: $e');
                                 } finally {
                                   ref
@@ -383,6 +392,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   }
                                 } on PlatformException catch (e) {
                                   if (mounted) {
+                                    await AnalyticsLogger.logLoginFailed(
+                                      method: 'apple',
+                                    );
                                     debugPrint("エラーが発生 :$e");
                                     showDialog(
                                         context: context,
@@ -390,6 +402,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                             const LoginErrorDialog());
                                   }
                                 } catch (e) {
+                                  await AnalyticsLogger.logLoginFailed(
+                                    method: 'apple',
+                                  );
                                   debugPrint('Appleサインイン中にエラーが発生: $e');
                                   if (mounted) {
                                     showDialog(

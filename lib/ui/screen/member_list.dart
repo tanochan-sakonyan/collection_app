@@ -136,6 +136,7 @@ class _MemberListState extends ConsumerState<MemberList>
       });
       onSuccess?.call();
     } catch (error) {
+      await AnalyticsLogger.logStatusChangeFailed(isBulk: true);
       debugPrint('一括ステータス更新中にエラーが発生しました: $error');
     } finally {
       _safeSetState(() => _isBulkActionInProgress = false);
@@ -645,6 +646,7 @@ class _MemberListState extends ConsumerState<MemberList>
         isBulk: false,
       );
     } catch (error) {
+      await AnalyticsLogger.logStatusChangeFailed(isBulk: false);
       debugPrint('ステータス更新中にエラーが発生しました。 $error');
     }
   }

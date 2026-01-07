@@ -592,6 +592,129 @@ class AnalyticsLogger {
     }
   }
 
+  // バナー広告表示ログを送信する。
+  static Future<void> logBannerAdShown() async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'banner_ad_shown',
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // インターステイシャル広告表示ログを送信する。
+  static Future<void> logInterstitialAdShown() async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'interstitial_ad_shown',
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // メモ保存ログを送信する。
+  static Future<void> logMemoSaved() async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'memo_saved',
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // ロール割設定確定ログを送信する。
+  static Future<void> logRoleSetupConfirmed({
+    required int roleCount,
+  }) async {
+    final parameters = <String, Object>{
+      'role_count': roleCount,
+    };
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'role_setup_confirmed',
+        parameters: parameters,
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // アプリ終了ログを送信する。
+  static Future<void> logAppTaskEnded() async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'app_task_ended',
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // メンバー追加失敗ログを送信する。
+  static Future<void> logMemberAddFailed() async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'member_add_failed',
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // イベント追加失敗ログを送信する。
+  static Future<void> logEventAddFailed({
+    required String mode,
+  }) async {
+    final parameters = <String, Object>{
+      'mode': mode,
+    };
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'event_add_failed',
+        parameters: parameters,
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // ステータス変更失敗ログを送信する。
+  static Future<void> logStatusChangeFailed({
+    required bool isBulk,
+  }) async {
+    final parameters = <String, Object>{
+      'is_bulk': isBulk ? 1 : 0,
+    };
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'status_change_failed',
+        parameters: parameters,
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // ログイン失敗ログを送信する。
+  static Future<void> logLoginFailed({
+    required String method,
+  }) async {
+    final parameters = <String, Object>{
+      'method': method,
+    };
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'login_failed',
+        parameters: parameters,
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
   // 合計金額入力ログを送信する。
   static Future<void> logTotalAmountEntered({
     required int memberCount,

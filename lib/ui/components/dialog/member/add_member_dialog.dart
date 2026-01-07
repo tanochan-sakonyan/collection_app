@@ -82,6 +82,7 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
       );
       if (mounted) Navigator.of(context).pop();
     } catch (e) {
+      await AnalyticsLogger.logMemberAddFailed();
       setState(() {
         _errorMessage = 'メンバーの追加に失敗しました';
       });

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -6,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
+import 'package:mr_collection/logging/analytics_logger.dart';
 import 'package:mr_collection/ui/components/dialog/role_assignment_dialog.dart';
 
 class RoleSetupDialog extends StatefulWidget {
@@ -584,6 +587,9 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
                       }
                       _confirmNewRole();
                     }
+                    unawaited(AnalyticsLogger.logRoleSetupConfirmed(
+                      roleCount: roles.length,
+                    ));
                     widget.onRoleConfirm(roles);
                     Navigator.pop(context);
                   },
