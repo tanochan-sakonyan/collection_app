@@ -44,7 +44,7 @@ class StatusDialog extends StatelessWidget {
               Text(
                 member,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
               ),
