@@ -53,4 +53,46 @@ class AnalyticsLogger {
       debugPrint('Analyticsログ送信に失敗しました: $error');
     }
   }
+
+  // ログインログを送信する。
+  static Future<void> logLogin({
+    required String userId,
+    required String method,
+    required bool isNew,
+  }) async {
+    final parameters = <String, Object>{
+      'user_id': userId,
+      'method': method,
+      'is_new': isNew ? 1 : 0,
+    };
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'login',
+        parameters: parameters,
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // ログアウトログを送信する。
+  static Future<void> logLogout({
+    String? userId,
+    required String method,
+  }) async {
+    final parameters = <String, Object>{
+      'method': method,
+    };
+    if (userId != null && userId.isNotEmpty) {
+      parameters['user_id'] = userId;
+    }
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'logout',
+        parameters: parameters,
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
 }

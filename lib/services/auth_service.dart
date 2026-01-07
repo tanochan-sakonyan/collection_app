@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_line_sdk/flutter_line_sdk.dart';
+import 'package:mr_collection/logging/analytics_logger.dart';
 import 'package:mr_collection/ui/screen/login_screen.dart';
 import 'package:mr_collection/utils/token_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,6 +18,16 @@ class AuthService {
     }
 
     final prefs = await SharedPreferences.getInstance();
+    final currentLoginMedia = prefs.getString('currentLoginMedia');
+    if (currentLoginMedia != null && currentLoginMedia.isNotEmpty) {
+      final userId = currentLoginMedia == 'line'
+          ? prefs.getString('lineUserId')
+          : prefs.getString('appleUserId');
+      await AnalyticsLogger.logLogout(
+        userId: userId,
+        method: currentLoginMedia,
+      );
+    }
     await prefs.remove('currentLoginMedia');
     // ログアウトする場合はaccessTokenとrefreshTokenを削除
     await TokenStorage.clearTokens();

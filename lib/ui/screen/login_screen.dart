@@ -16,6 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/logging/analytics_logger.dart';
 import 'dart:io' show Platform;
 
 final checkboxProvider = StateProvider<bool>((ref) => false);
@@ -172,6 +173,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 debugPrint(
                                     '既存LINEユーザーでHomeScreenに遷移します。user: $user');
                                 updateCurrentLoginMedia('line');
+                                await AnalyticsLogger.logLogin(
+                                  userId: user.userId,
+                                  method: 'line',
+                                  isNew: false,
+                                );
                                 setState(() => isLoading = true);
                                 Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
@@ -208,6 +214,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 debugPrint(
                                     'LoginScreenからHomeScreenに遷移します。user: $user');
                                 updateCurrentLoginMedia('line');
+                                await AnalyticsLogger.logLogin(
+                                  userId: user.userId,
+                                  method: 'line',
+                                  isNew: true,
+                                );
                                 setState(() => isLoading = true);
                                 Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
@@ -291,6 +302,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   final user = ref.read(userProvider);
                                   if (mounted && user != null) {
                                     updateCurrentLoginMedia('apple');
+                                    await AnalyticsLogger.logLogin(
+                                      userId: user.userId,
+                                      method: 'apple',
+                                      isNew: false,
+                                    );
                                     setState(() => isLoading = true);
                                     Navigator.of(context).pushReplacement(
                                       MaterialPageRoute(
@@ -343,6 +359,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       debugPrint(
                                           'Appleサインイン成功。HomeScreenへ遷移します。user: $user');
                                       updateCurrentLoginMedia('apple');
+                                      await AnalyticsLogger.logLogin(
+                                        userId: user.userId,
+                                        method: 'apple',
+                                        isNew: true,
+                                      );
                                       setState(() => isLoading = true);
                                       Navigator.of(context).pushReplacement(
                                         MaterialPageRoute(
