@@ -8,7 +8,7 @@ import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/line/line_message_confirm_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/paypay_dialog.dart';
 import 'package:mr_collection/generated/s.dart';
-import 'package:mr_collection/logging/analytics_logger.dart';
+import 'package:mr_collection/logging/analytics_message_logger.dart';
 
 class LineMessageBottomSheet extends ConsumerStatefulWidget {
   final Event event;
@@ -194,7 +194,7 @@ class _UnpaidMessageBottomSheetState
               child: ElevatedButton(
                 onPressed: () async {
                   if (_controller.text.trim().isEmpty) return;
-                  await AnalyticsLogger.logReminderMessageConfirmOpened();
+                  await AnalyticsMessageLogger.logReminderMessageConfirmOpened();
                   await showDialog(
                     context: context,
                     builder: (context) => LineMessageConfirmDialog(

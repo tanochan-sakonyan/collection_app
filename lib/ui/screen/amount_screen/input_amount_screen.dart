@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/generated/s.dart';
-import 'package:mr_collection/logging/analytics_logger.dart';
+import 'package:mr_collection/logging/analytics_amount_logger.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/member/member_empty_error_dialog.dart';
 import 'package:mr_collection/ui/screen/amount_screen/split_amount_screen.dart';
@@ -174,9 +174,9 @@ class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
     final activeCount = widget.members
         .where((m) => m.status != PaymentStatus.absence)
         .length;
-    AnalyticsLogger.logTotalAmountEntered(
+    AnalyticsAmountLogger.logTotalAmountEntered(
       memberCount: activeCount,
-      totalAmountBucket: AnalyticsLogger.bucketTotalAmount(_amount),
+      totalAmountBucket: AnalyticsAmountLogger.bucketTotalAmount(_amount),
     );
   }
 

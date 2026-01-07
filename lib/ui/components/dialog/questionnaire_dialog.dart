@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mr_collection/ui/components/webview/webview.dart';
 import 'package:mr_collection/generated/s.dart';
-import 'package:mr_collection/logging/analytics_logger.dart';
+import 'package:mr_collection/logging/analytics_ui_logger.dart';
 
 class QuestionnaireDialog extends StatelessWidget {
   const QuestionnaireDialog({super.key});
@@ -66,7 +66,7 @@ class QuestionnaireDialog extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  AnalyticsLogger.logSuggestionPressed();
+                  AnalyticsUiLogger.logSuggestionPressed();
                   Navigator.of(context).pop();
                   Navigator.of(context).push(
                     MaterialPageRoute(

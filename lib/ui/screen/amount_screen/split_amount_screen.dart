@@ -12,7 +12,7 @@ import 'package:mr_collection/ui/components/dialog/guide/amount_guide_dialog.dar
 import 'package:mr_collection/ui/components/dialog/role_setup_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/member_role_edit_dialog.dart';
 import 'package:mr_collection/generated/s.dart';
-import 'package:mr_collection/logging/analytics_logger.dart';
+import 'package:mr_collection/logging/analytics_amount_logger.dart';
 import 'package:mr_collection/ui/screen/amount_screen/tabs/adjust_amounts_tab.dart';
 import 'package:mr_collection/ui/screen/amount_screen/tabs/role_adjust_tab.dart';
 import 'package:mr_collection/ui/screen/amount_screen/tabs/split_equally_tab.dart';
@@ -208,12 +208,13 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
     final activeMembers =
         widget.members.where((m) => m.status != PaymentStatus.absence).toList();
     final memberCount = activeMembers.length;
-    final totalAmountBucket = AnalyticsLogger.bucketTotalAmount(widget.amount);
+    final totalAmountBucket =
+        AnalyticsAmountLogger.bucketTotalAmount(widget.amount);
     final int perPersonAverage = memberCount == 0
         ? 0
         : (widget.amount / memberCount).round();
     final perPersonBucket =
-        AnalyticsLogger.bucketPerPersonAmount(perPersonAverage);
+        AnalyticsAmountLogger.bucketPerPersonAmount(perPersonAverage);
     final weightType = _currentWeightType();
     final roleCount = _currentTab == 2 ? _roles.length : 0;
     final activeAmounts = activeMembers
@@ -237,7 +238,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
       await ref
           .read(userProvider.notifier)
           .inputMembersMoney(userId, eventId, membersMoneyList, ref);
-      await AnalyticsLogger.logIndividualAmountsCompleted(
+      await AnalyticsAmountLogger.logIndividualAmountsCompleted(
         memberCount: memberCount,
         totalAmountBucket: totalAmountBucket,
         perPersonBucket: perPersonBucket,
@@ -999,7 +1000,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
     setState(() {
       _selectedRoundUpOption = newValue;
     });
-    AnalyticsLogger.logRoundUpOptionPressed(
+    AnalyticsAmountLogger.logRoundUpOptionPressed(
       option: _roundUpOptionLabel(newValue),
     );
     if (_currentTab == 1 || _currentTab == 2) {
@@ -1054,6 +1055,6 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
       return '2.0+';
     }
     final ratio = maxAmount / minAmount;
-    return AnalyticsLogger.bucketRatio(ratio);
+    return AnalyticsAmountLogger.bucketRatio(ratio);
   }
 }

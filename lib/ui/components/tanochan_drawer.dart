@@ -19,7 +19,7 @@ import 'package:mr_collection/ui/screen/privacy_policy_screen.dart';
 import 'package:mr_collection/ui/screen/terms_of_service_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:mr_collection/generated/s.dart';
-import 'package:mr_collection/logging/analytics_logger.dart';
+import 'package:mr_collection/logging/analytics_ui_logger.dart';
 
 class TanochanDrawer extends StatefulWidget {
   const TanochanDrawer({super.key});
@@ -87,7 +87,7 @@ class TanochanDrawerState extends State<TanochanDrawer>
                 text: S.of(context)!.paypay,
                 icon: SvgPicture.asset("assets/icons/drawer_yen.svg"),
                 onTap: () {
-                  unawaited(AnalyticsLogger.logPayPayDialogOpened());
+                  unawaited(AnalyticsUiLogger.logPayPayDialogOpened());
                   showDialog(
                     context: context,
                     builder: (context) => const PayPayDialog(),
@@ -106,7 +106,7 @@ class TanochanDrawerState extends State<TanochanDrawer>
                 text: 'テーマカラーの変更',
                 icon: SvgPicture.asset("assets/icons/drawer_star.svg"),
                 onTap: () {
-                  unawaited(AnalyticsLogger.logThemeColorChangePressed());
+                  unawaited(AnalyticsUiLogger.logThemeColorChangePressed());
                   showDialog(
                     context: context,
                     builder: (_) => const ThemeColorDialog(),
@@ -119,7 +119,7 @@ class TanochanDrawerState extends State<TanochanDrawer>
                 text: S.of(context)!.questionnaire,
                 icon: SvgPicture.asset("assets/icons/drawer_envelope.svg"),
                 onTap: () {
-                  unawaited(AnalyticsLogger.logQuestionnairePressed());
+                  unawaited(AnalyticsUiLogger.logQuestionnairePressed());
                   showDialog(
                       context: context,
                       builder: (context) {
@@ -133,7 +133,7 @@ class TanochanDrawerState extends State<TanochanDrawer>
                 text: S.of(context)!.xLink,
                 icon: SvgPicture.asset("assets/icons/drawer_x.svg"),
                 onTap: () async {
-                  unawaited(AnalyticsLogger.logXLinkPressed());
+                  unawaited(AnalyticsUiLogger.logXLinkPressed());
                   const url = "https://x.com/shukinkun";
                   if (await canLaunchUrl(Uri.parse(url))) {
                     await launchUrl(Uri.parse(url),
@@ -151,7 +151,7 @@ class TanochanDrawerState extends State<TanochanDrawer>
                 text: S.of(context)!.officialSite,
                 icon: SvgPicture.asset("assets/icons/drawer_monitor.svg"),
                 onTap: () async {
-                  unawaited(AnalyticsLogger.logOfficialSitePressed());
+                  unawaited(AnalyticsUiLogger.logOfficialSitePressed());
                   const url = "https://tanochan.studio.site/";
                   if (await canLaunchUrl(Uri.parse(url))) {
                     await launchUrl(Uri.parse(url),
@@ -169,7 +169,7 @@ class TanochanDrawerState extends State<TanochanDrawer>
                 text: S.of(context)!.updateInformation,
                 icon: SvgPicture.asset("assets/icons/drawer_megaphone.svg"),
                 onTap: () {
-                  unawaited(AnalyticsLogger.logUpdateInfoPressed());
+                  unawaited(AnalyticsUiLogger.logUpdateInfoPressed());
                   showDialog(
                     context: context,
                     builder: (_) => UpdateInfoAndSuggestQuestionnaireDialog(
@@ -192,7 +192,7 @@ class TanochanDrawerState extends State<TanochanDrawer>
                       height: 22,
                       width: 22),
                   onTap: () {
-                    unawaited(AnalyticsLogger.logDonationPressed());
+                    unawaited(AnalyticsUiLogger.logDonationPressed());
                     showDialog(
                       context: context,
                       builder: (_) => const DonationDialog(),
@@ -212,7 +212,7 @@ class TanochanDrawerState extends State<TanochanDrawer>
                 text: S.of(context)!.termsOfService,
                 icon: SvgPicture.asset("assets/icons/drawer_file.svg"),
                 onTap: () {
-                  unawaited(AnalyticsLogger.logTermsPressed());
+                  unawaited(AnalyticsUiLogger.logTermsPressed());
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -225,7 +225,7 @@ class TanochanDrawerState extends State<TanochanDrawer>
                 context,
                 text: S.of(context)!.privacyPolicy,
                 onTap: () {
-                  unawaited(AnalyticsLogger.logPrivacyPressed());
+                  unawaited(AnalyticsUiLogger.logPrivacyPressed());
                   Navigator.push(
                     context,
                     MaterialPageRoute(

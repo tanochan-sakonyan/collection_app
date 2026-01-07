@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mr_collection/logging/analytics_logger.dart';
+import 'package:mr_collection/logging/analytics_member_logger.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
@@ -124,7 +124,7 @@ class _MemberListState extends ConsumerState<MemberList>
             _selectedMemberIds.toList(),
             status,
           );
-      await AnalyticsLogger.logMemberStatusChanged(
+      await AnalyticsMemberLogger.logMemberStatusChanged(
         eventId: widget.eventId,
         status: status,
         isBulk: true,
@@ -136,7 +136,7 @@ class _MemberListState extends ConsumerState<MemberList>
       });
       onSuccess?.call();
     } catch (error) {
-      await AnalyticsLogger.logStatusChangeFailed(isBulk: true);
+      await AnalyticsMemberLogger.logStatusChangeFailed(isBulk: true);
       debugPrint('一括ステータス更新中にエラーが発生しました: $error');
     } finally {
       _safeSetState(() => _isBulkActionInProgress = false);
@@ -162,7 +162,7 @@ class _MemberListState extends ConsumerState<MemberList>
         message: message,
         onConfirm: () async {
           await _performBulkDelete(onSuccess: onSuccess);
-          await AnalyticsLogger.logMemberDeleted(
+          await AnalyticsMemberLogger.logMemberDeleted(
             eventId: widget.eventId,
             isBulk: true,
             memberCount: bulkCount,
@@ -197,7 +197,7 @@ class _MemberListState extends ConsumerState<MemberList>
   }
 
   Future<void> _showBulkEditBottomSheet() async {
-    await AnalyticsLogger.logBulkEditOpened(
+    await AnalyticsMemberLogger.logBulkEditOpened(
       eventId: widget.eventId,
     );
     final members = widget.members ?? [];
@@ -639,14 +639,14 @@ class _MemberListState extends ConsumerState<MemberList>
       await ref
           .read(userProvider.notifier)
           .updateMemberStatus(userId, eventId, memberId, status!);
-      await AnalyticsLogger.logMemberStatusChanged(
+      await AnalyticsMemberLogger.logMemberStatusChanged(
         eventId: eventId,
         memberId: memberId,
         status: status,
         isBulk: false,
       );
     } catch (error) {
-      await AnalyticsLogger.logStatusChangeFailed(isBulk: false);
+      await AnalyticsMemberLogger.logStatusChangeFailed(isBulk: false);
       debugPrint('ステータス更新中にエラーが発生しました。 $error');
     }
   }
@@ -729,7 +729,7 @@ class _MemberListState extends ConsumerState<MemberList>
                             GestureDetector(
                               key: widget.sortKey,
                               onTap: () {
-                                AnalyticsLogger.logSortPressed();
+                                AnalyticsMemberLogger.logSortPressed();
                                 ref
                                     .read(userProvider.notifier)
                                     .sortingMembers(widget.eventId);
@@ -770,7 +770,7 @@ class _MemberListState extends ConsumerState<MemberList>
                                     itemCount: members.length,
                                     onReorder: _onReorderMember,
                                     onReorderStart: (_) {
-                                      AnalyticsLogger.logMemberLongPressed();
+                                      AnalyticsMemberLogger.logMemberLongPressed();
                                     },
                                     itemBuilder: (context, index) {
                                       return ReorderableDelayedDragStartListener(

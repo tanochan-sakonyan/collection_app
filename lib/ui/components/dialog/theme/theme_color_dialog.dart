@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mr_collection/logging/analytics_logger.dart';
+import 'package:mr_collection/logging/analytics_ui_logger.dart';
 import 'package:mr_collection/provider/theme_color_provider.dart';
 import 'package:mr_collection/theme/theme_color.dart';
 
@@ -54,7 +54,7 @@ class ThemeColorDialog extends ConsumerWidget {
                       option: option,
                       selected: isSelected,
                       onTap: () async {
-                        await AnalyticsLogger.logThemeColorSelected(
+                        await AnalyticsUiLogger.logThemeColorSelected(
                           colorKey: option.keyName,
                         );
                         await ref

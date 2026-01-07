@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mr_collection/logging/analytics_logger.dart';
+import 'package:mr_collection/logging/analytics_event_logger.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 
 import 'dialog/event/add_event_dialog.dart';
@@ -39,7 +39,7 @@ class EventZeroComponents extends ConsumerWidget {
           const SizedBox(height: 40),
           ElevatedButton.icon(
             onPressed: () async {
-              await AnalyticsLogger.logAddEventButtonPressed(
+              await AnalyticsEventLogger.logAddEventButtonPressed(
                 source: 'event_zero',
               );
               showDialog(

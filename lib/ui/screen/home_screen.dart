@@ -8,7 +8,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:mr_collection/ads/ad_helper.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
-import 'package:mr_collection/logging/analytics_logger.dart';
+import 'package:mr_collection/logging/analytics_ads_logger.dart';
+import 'package:mr_collection/logging/analytics_event_logger.dart';
+import 'package:mr_collection/logging/analytics_ui_logger.dart';
 import 'package:mr_collection/provider/tab_titles_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/button/floating_action_button_off.dart';
@@ -71,7 +73,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      unawaited(AnalyticsLogger.logHomeScreenViewed());
+      unawaited(AnalyticsUiLogger.logHomeScreenViewed());
     });
     _tabTitles = ref.read(tabTitlesProvider);
     _initKeys(_tabTitles.length);
@@ -140,7 +142,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
             _isBannerLoaded = true;
             _bannerLoadAttempts = 0;
           });
-          unawaited(AnalyticsLogger.logBannerAdShown());
+          unawaited(AnalyticsAdsLogger.logBannerAdShown());
         },
         onAdFailedToLoad: (ad, error) {
           debugPrint('Ad load failed: $error');
@@ -407,7 +409,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   Future<void> _showAddEventDialog() async {
-    await AnalyticsLogger.logAddEventButtonPressed(
+    await AnalyticsEventLogger.logAddEventButtonPressed(
       source: 'home_tab',
     );
     final String? createdEventId = await showDialog<String>(
@@ -559,7 +561,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       physics: const BouncingScrollPhysics(),
       buildDefaultDragHandles: false,
       onReorderStart: (_) {
-        unawaited(AnalyticsLogger.logTabLongPressed());
+        unawaited(AnalyticsUiLogger.logTabLongPressed());
       },
       onReorder: (oldIndex, newIndex) {
         final maxIndex = _tabTitles.length;
@@ -797,7 +799,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   void _showEditNoteBottomSheet(BuildContext context, Event event) {
-    unawaited(AnalyticsLogger.logMemoBottomSheetOpened());
+    unawaited(AnalyticsUiLogger.logMemoBottomSheetOpened());
     final TextEditingController controller =
         TextEditingController(text: event.memo ?? "");
     showModalBottomSheet(
@@ -883,7 +885,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                               ref.read(userProvider)!.userId,
                                               event.eventId,
                                               newNote);
-                                      unawaited(AnalyticsLogger.logMemoSaved());
+                                      unawaited(AnalyticsUiLogger.logMemoSaved());
                                       Navigator.of(context).pop();
                                     } catch (e) {
                                       debugPrint('メモ保存に失敗: $e');
@@ -952,7 +954,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         !_loggedDuplicateWarningEventIds.contains(currentEventId)) {
       _loggedDuplicateWarningEventIds.add(currentEventId);
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        unawaited(AnalyticsLogger.logDuplicateMemberWarningShown());
+        unawaited(AnalyticsUiLogger.logDuplicateMemberWarningShown());
       });
     }
 
@@ -974,9 +976,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         drawerScrimColor: Colors.transparent,
         onDrawerChanged: (isOpen) {
           if (isOpen) {
-            unawaited(AnalyticsLogger.logDrawerOpened());
+            unawaited(AnalyticsUiLogger.logDrawerOpened());
           } else {
-            unawaited(AnalyticsLogger.logDrawerClosed());
+            unawaited(AnalyticsUiLogger.logDrawerClosed());
           }
         },
         appBar: AppBar(
@@ -995,7 +997,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                         hoverColor: Colors.transparent,
                         focusColor: Colors.transparent,
                         onPressed: () {
-                          unawaited(AnalyticsLogger.logHomeHelpPressed());
+                          unawaited(AnalyticsUiLogger.logHomeHelpPressed());
                           _resetTutorial();
                           WidgetsBinding.instance.addPostFrameCallback((_) {
                             _showTutorial();

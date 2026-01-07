@@ -8,7 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
-import 'package:mr_collection/logging/analytics_logger.dart';
+import 'package:mr_collection/logging/analytics_amount_logger.dart';
 import 'package:mr_collection/ui/components/dialog/role_assignment_dialog.dart';
 
 class RoleSetupDialog extends StatefulWidget {
@@ -587,7 +587,7 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
                       }
                       _confirmNewRole();
                     }
-                    unawaited(AnalyticsLogger.logRoleSetupConfirmed(
+                    unawaited(AnalyticsAmountLogger.logRoleSetupConfirmed(
                       roleCount: roles.length,
                     ));
                     widget.onRoleConfirm(roles);

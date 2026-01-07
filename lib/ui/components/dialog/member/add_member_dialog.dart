@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
-import 'package:mr_collection/logging/analytics_logger.dart';
+import 'package:mr_collection/logging/analytics_member_logger.dart';
 
 class AddMemberDialog extends ConsumerStatefulWidget {
   final String userId;
@@ -76,13 +76,13 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
       await ref
           .read(userProvider.notifier)
           .createMembers(widget.userId, widget.eventId, rawText);
-      await AnalyticsLogger.logMemberAdded(
+      await AnalyticsMemberLogger.logMemberAdded(
         eventId: widget.eventId,
         memberCount: memberNames.length,
       );
       if (mounted) Navigator.of(context).pop();
     } catch (e) {
-      await AnalyticsLogger.logMemberAddFailed();
+      await AnalyticsMemberLogger.logMemberAddFailed();
       setState(() {
         _errorMessage = 'メンバーの追加に失敗しました';
       });

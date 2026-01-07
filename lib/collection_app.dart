@@ -6,7 +6,7 @@ import 'package:flutter_line_sdk/flutter_line_sdk.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/data/model/freezed/user.dart';
-import 'package:mr_collection/logging/analytics_logger.dart';
+import 'package:mr_collection/logging/analytics_app_logger.dart';
 import 'package:mr_collection/provider/theme_color_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -44,7 +44,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.detached) {
-      unawaited(AnalyticsLogger.logAppTaskEnded());
+      unawaited(AnalyticsAppLogger.logAppTaskEnded());
     }
   }
 

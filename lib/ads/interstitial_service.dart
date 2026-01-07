@@ -2,7 +2,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:mr_collection/logging/analytics_logger.dart';
+import 'package:mr_collection/logging/analytics_ads_logger.dart';
 import 'ad_helper.dart';
 
 class InterstitialService {
@@ -50,7 +50,7 @@ class InterstitialService {
         load();
       },
     );
-    AnalyticsLogger.logInterstitialAdShown();
+    AnalyticsAdsLogger.logInterstitialAdShown();
     _ad!.show();
     _ad = null;
   }
@@ -73,7 +73,7 @@ class InterstitialService {
         completer.complete();
       },
     );
-    AnalyticsLogger.logInterstitialAdShown();
+    AnalyticsAdsLogger.logInterstitialAdShown();
     _ad!.show();
     _ad = null;
 

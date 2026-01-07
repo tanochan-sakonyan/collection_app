@@ -7,7 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/ads/interstitial_singleton.dart';
 import 'package:mr_collection/constants/base_url.dart';
 import 'package:mr_collection/data/model/freezed/line_group.dart';
-import 'package:mr_collection/logging/analytics_logger.dart';
+import 'package:mr_collection/logging/analytics_line_logger.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/data/repository/event_repository.dart';
 import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
@@ -77,7 +77,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
 
   // メンバー引き継ぎ
   Future<void> _choiceEvent() async {
-    await AnalyticsLogger.logTransferMembersPressed();
+    await AnalyticsLineLogger.logTransferMembersPressed();
     final selectedEvent = await Navigator.of(context).push<Event>(
       MaterialPageRoute(
         builder: (_) => const ChoiceEventScreen(),
@@ -90,7 +90,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
 
   // LINEグループから追加
   Future<void> _selectLineGroup() async {
-    await AnalyticsLogger.logLineGroupAddPressed();
+    await AnalyticsLineLogger.logLineGroupAddPressed();
     final userId = ref.read(userProvider)?.userId;
     if (userId == null) return;
 

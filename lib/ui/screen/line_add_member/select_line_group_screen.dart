@@ -5,7 +5,7 @@ import 'package:mr_collection/ui/components/dialog/event/add_event_name_dialog.d
 import 'package:mr_collection/ui/components/dialog/line/invite_official_account_to_line_group_dialog.dart';
 import 'check_selected_line_group_screen.dart';
 import 'package:mr_collection/generated/s.dart';
-import 'package:mr_collection/logging/analytics_logger.dart';
+import 'package:mr_collection/logging/analytics_line_logger.dart';
 
 class SelectLineGroupScreen extends StatefulWidget {
   final List<LineGroup> lineGroups;
@@ -20,7 +20,7 @@ class _SelectLineGroupScreenState extends State<SelectLineGroupScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      AnalyticsLogger.logLineGroupAddScreenViewed();
+      AnalyticsLineLogger.logLineGroupAddScreenViewed();
     });
   }
 

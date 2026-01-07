@@ -8,7 +8,7 @@ import 'package:mr_collection/ui/components/dialog/line/line_message_complete_di
 import 'package:mr_collection/ui/components/dialog/line/line_message_failed_dialog.dart';
 import 'package:mr_collection/ui/screen/home_screen.dart';
 import 'package:mr_collection/generated/s.dart';
-import 'package:mr_collection/logging/analytics_logger.dart';
+import 'package:mr_collection/logging/analytics_message_logger.dart';
 
 class LineMessageConfirmDialog extends ConsumerWidget {
   final Event event;
@@ -112,7 +112,7 @@ class LineMessageConfirmDialog extends ConsumerWidget {
                                           userId, event.eventId, message);
 
                                   if (isSuccess) {
-                                    await AnalyticsLogger
+                                    await AnalyticsMessageLogger
                                         .logReminderMessageCompleted(
                                       includesPayPayLink: includePaypayLink,
                                     );

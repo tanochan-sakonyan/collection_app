@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mr_collection/logging/analytics_logger.dart';
+import 'package:mr_collection/logging/analytics_auth_logger.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/auth/delete_complete_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,7 +24,7 @@ class _DeleteAccountDialogState extends ConsumerState<DeleteAccountDialog> {
       await ref.read(userProvider.notifier).deleteUser(userId);
       final prefs = await SharedPreferences.getInstance();
       final method = prefs.getString('currentLoginMedia') ?? 'unknown';
-      await AnalyticsLogger.logAccountDeleted(method: method);
+      await AnalyticsAuthLogger.logAccountDeleted(method: method);
       showDialog(
         context: context,
         barrierDismissible: false,

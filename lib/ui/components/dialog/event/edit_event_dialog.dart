@@ -4,7 +4,7 @@ import 'package:mr_collection/provider/user_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
-import 'package:mr_collection/logging/analytics_logger.dart';
+import 'package:mr_collection/logging/analytics_event_logger.dart';
 
 class EditEventDialog extends ConsumerStatefulWidget {
   final String userId;
@@ -80,7 +80,7 @@ class EditEventDialogState extends ConsumerState<EditEventDialog> {
     try {
       await ref.read(userProvider.notifier).editEventName(
           widget.userId, widget.eventId, _controller.text.trim());
-      await AnalyticsLogger.logEventEdited(
+      await AnalyticsEventLogger.logEventEdited(
         eventId: widget.eventId,
       );
       if (mounted) {
