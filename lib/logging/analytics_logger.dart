@@ -11,6 +11,32 @@ class AnalyticsLogger {
     }
   }
 
+  // 画面表示ログを送信する。
+  static Future<void> logScreenView({
+    required String screenName,
+    required String screenClass,
+  }) async {
+    try {
+      await FirebaseAnalytics.instance.logScreenView(
+        screenName: screenName,
+        screenClass: screenClass,
+      );
+    } catch (error) {
+      debugPrint('Analytics画面ログ送信に失敗しました: $error');
+    }
+  }
+
+  // 公式LINE招待画面の表示ログを送信する。
+  static Future<void> logInviteOfficialAccountScreenViewed() async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'invite_official_account_screen_viewed',
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
   // ステータス変更ログを送信する。
   static Future<void> logMemberStatusChanged({
     required String eventId,
@@ -105,6 +131,40 @@ class AnalyticsLogger {
     try {
       await FirebaseAnalytics.instance.logEvent(
         name: 'add_event_button_pressed',
+        parameters: parameters,
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // イベント編集ログを送信する。
+  static Future<void> logEventEdited({
+    required String eventId,
+  }) async {
+    final parameters = <String, Object>{
+      'event_id': eventId,
+    };
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'event_edited',
+        parameters: parameters,
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // イベント削除ログを送信する。
+  static Future<void> logEventDeleted({
+    required String eventId,
+  }) async {
+    final parameters = <String, Object>{
+      'event_id': eventId,
+    };
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'event_deleted',
         parameters: parameters,
       );
     } catch (error) {
