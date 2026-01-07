@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
+import 'package:mr_collection/provider/pending_event_focus_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/guide/amount_guide_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/role_setup_dialog.dart';
@@ -817,15 +818,22 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                   ),
                   onPressed: _currentTab == 2 && _roles.isEmpty
                       ? null
-                      : () {
-                          _onConfirm(
+                      : () async {
+                          await _onConfirm(
                             userId,
                             widget.eventId,
                           );
+                          if (!mounted) {
+                            return;
+                          }
+                          ref.read(pendingEventFocusProvider.notifier).state =
+                              widget.eventId;
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const HomeScreen()));
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const HomeScreen(),
+                            ),
+                          );
                         },
                   child: Text(S.of(context)!.confirm,
                       style: GoogleFonts.inter(
