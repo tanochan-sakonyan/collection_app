@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/ui/components/dialog/questionnaire_dialog.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:mr_collection/generated/s.dart';
@@ -24,7 +25,11 @@ class _SuggestionWebViewState extends State<SuggestionWebView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(S.of(context)!.suggestFeature)),
+      appBar: AppBar(
+          title: Text(
+        S.of(context)!.suggestFeature,
+        style: GoogleFonts.notoSansJp(fontWeight: FontWeight.bold),
+      )),
       body: WebViewWidget(controller: _controller),
     );
   }

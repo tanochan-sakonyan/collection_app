@@ -107,6 +107,7 @@ flutter:
     - assets/icons/drawer_x.svg
     - assets/icons/drawer_monitor.svg
     - assets/icons/drawer_coffee.svg
+    - assets/icons/drawer_heart.svg
     - assets/icons/icon.png
     - assets/icons/line_official_badge.png
     - assets/icons/ic_clipboard_list.svg

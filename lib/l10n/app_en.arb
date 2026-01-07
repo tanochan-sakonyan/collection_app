@@ -2,6 +2,7 @@
   "@@locale": "en",
   "shukinkun": "Shukinkun",
   "member": "Member",
+  "noMembers": "There are no members.",
   "sort": "Sort",
   "addMembers": "Add Members",
   "unpaid": "Unpaid",

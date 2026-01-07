@@ -29,6 +29,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:mr_collection/ui/components/event_zero_components.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/provider/pending_event_focus_provider.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key, this.user});
@@ -62,6 +63,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
 
   late TutorialCoachMark tutorialCoachMark;
   List<TargetFocus> targets = [];
+  ProviderSubscription<String?>? _pendingFocusSubscription;
 
   @override
   void initState() {
@@ -69,6 +71,16 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     _tabTitles = ref.read(tabTitlesProvider);
     _initKeys(_tabTitles.length);
     tabController = TabController(length: _tabTitles.length, vsync: this);
+    _pendingFocusSubscription = ref.listenManual<String?>(
+      pendingEventFocusProvider,
+      (previous, next) {
+        if (next != null) {
+          _queueFocusOnEvent(next);
+          ref.read(pendingEventFocusProvider.notifier).state = null;
+        }
+      },
+      fireImmediately: true,
+    );
 
     tabController.addListener(() {
       if (tabController.index != _currentTabIndex) {
@@ -247,6 +259,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     _tabTitlesSubscription?.close();
     tabController.dispose();
     _banner?.dispose();
+    _pendingFocusSubscription?.close();
     super.dispose();
   }
 
@@ -753,17 +766,17 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   // 20260106追記。shownVersionFor270作成済み
   Future<void> _checkAndShowUpdateDialog() async {
     final prefs = await SharedPreferences.getInstance();
-    final shown = prefs.getBool('shownVersionFor270') ?? false;
+    final shown = prefs.getBool('shownVersionFor280') ?? false;
     debugPrint('shownVersion: $shown');
     if (!shown) {
       showDialog(
         context: context,
-        builder: (_) => UpdateInfoAndSuggestOfficialLineDialog(
+        builder: (_) => UpdateInfoAndSuggestQuestionnaireDialog(
           vsync: this,
           onPageChanged: (i) {},
         ),
       );
-      await prefs.setBool('shownVersionFor270', true);
+      await prefs.setBool('shownVersionFor280', true);
       debugPrint('Update dialog shown for version "true"');
     } else {
       debugPrint('すでに表示されています。');
@@ -1000,7 +1013,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                   height: screenHeight * 0.04,
                   child: Row(
                     children: [
-                      const SizedBox(width: 36),
+                      const SizedBox(width: 24),
                       Expanded(
                         child: Align(
                           alignment: Alignment.centerLeft,
@@ -1015,7 +1028,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                           ),
                         ),
                       ),
-                      const SizedBox(width: 36),
+                      const SizedBox(width: 24),
                     ],
                   ),
                 ),

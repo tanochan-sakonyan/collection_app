@@ -13,7 +13,8 @@ class QuestionnaireDialog extends StatelessWidget {
       insetPadding: const EdgeInsets.all(24),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
+        padding:
+            const EdgeInsets.only(top: 24, left: 24, right: 24, bottom: 32),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -26,18 +27,25 @@ class QuestionnaireDialog extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              S.of(context)!.questionnaireDescription ??
-                  "If there's a feature you'd like to see in Shukinkun, we'd love to hear your thoughts.",
+              "【集金くん】に追加してほしい\n機能があれば\nぜひご意見ください！",
               textAlign: TextAlign.center,
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium
                   ?.copyWith(fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 12),
             Text(
-              S.of(context)!.feedbackThanks ??
-                  "Your input will help us improve future versions.",
+              "匿名で提出できます。",
+              textAlign: TextAlign.center,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              "今後のアップデートの\n参考にさせていただきます。",
               textAlign: TextAlign.center,
               style: Theme.of(context)
                   .textTheme

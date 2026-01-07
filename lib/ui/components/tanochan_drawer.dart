@@ -164,7 +164,7 @@ class TanochanDrawerState extends State<TanochanDrawer>
                 onTap: () {
                   showDialog(
                     context: context,
-                    builder: (_) => UpdateInfoAndSuggestOfficialLineDialog(
+                    builder: (_) => UpdateInfoAndSuggestQuestionnaireDialog(
                       vsync: this,
                       onPageChanged: (i) {},
                     ),
@@ -176,7 +176,13 @@ class TanochanDrawerState extends State<TanochanDrawer>
                 _buildMenuItem(
                   context,
                   text: "開発者に支援をする",
-                  icon: SvgPicture.asset("assets/icons/drawer_coffee.svg"),
+                  icon: SvgPicture.asset("assets/icons/drawer_heart.svg",
+                      colorFilter: ColorFilter.mode(
+                        Theme.of(context).primaryColor,
+                        BlendMode.srcIn,
+                      ),
+                      height: 22,
+                      width: 22),
                   onTap: () {
                     showDialog(
                       context: context,

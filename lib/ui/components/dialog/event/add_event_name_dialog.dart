@@ -11,6 +11,7 @@ import 'package:mr_collection/data/model/freezed/line_group.dart';
 import 'package:mr_collection/data/repository/event_repository.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/provider/user_provider.dart';
+import 'package:mr_collection/provider/pending_event_focus_provider.dart';
 import 'package:mr_collection/services/auth_service.dart';
 import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
 import 'package:mr_collection/ui/screen/line_add_member/invite_official_account_to_line_group_screen.dart';
@@ -201,6 +202,7 @@ class _AddEventNameDialogState extends ConsumerState<AddEventNameDialog> {
           break;
       }
       if (!mounted) return;
+      ref.read(pendingEventFocusProvider.notifier).state = createdEventId;
       Navigator.of(context).pop(createdEventId);
       Navigator.of(context).popUntil((route) => route.isFirst);
     } on AuthException catch (e) {
