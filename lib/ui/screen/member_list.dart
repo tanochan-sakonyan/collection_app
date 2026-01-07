@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mr_collection/logging/analytics_logger.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
@@ -115,6 +116,7 @@ class _MemberListState extends ConsumerState<MemberList>
     if (user == null || !_hasBulkSelection || !mounted) return;
 
     _safeSetState(() => _isBulkActionInProgress = true);
+    final bulkCount = _selectedMemberIds.length;
     try {
       await ref.read(userProvider.notifier).bulkUpdateMemberStatus(
             user.userId,
@@ -122,6 +124,13 @@ class _MemberListState extends ConsumerState<MemberList>
             _selectedMemberIds.toList(),
             status,
           );
+      await AnalyticsLogger.logMemberStatusChanged(
+        userId: user.userId,
+        eventId: widget.eventId,
+        status: status,
+        isBulk: true,
+        memberCount: bulkCount,
+      );
       if (!mounted) return;
       _safeSetState(() {
         _selectedMemberIds.clear();
@@ -621,6 +630,13 @@ class _MemberListState extends ConsumerState<MemberList>
       await ref
           .read(userProvider.notifier)
           .updateMemberStatus(userId, eventId, memberId, status!);
+      await AnalyticsLogger.logMemberStatusChanged(
+        userId: userId,
+        eventId: eventId,
+        memberId: memberId,
+        status: status,
+        isBulk: false,
+      );
     } catch (error) {
       debugPrint('ステータス更新中にエラーが発生しました。 $error');
     }
