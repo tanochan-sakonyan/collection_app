@@ -12,6 +12,7 @@ import 'package:mr_collection/ui/components/dialog/guide/amount_guide_dialog.dar
 import 'package:mr_collection/ui/components/dialog/role_setup_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/member_role_edit_dialog.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/logging/analytics_logger.dart';
 import 'package:mr_collection/ui/screen/amount_screen/tabs/adjust_amounts_tab.dart';
 import 'package:mr_collection/ui/screen/amount_screen/tabs/role_adjust_tab.dart';
 import 'package:mr_collection/ui/screen/amount_screen/tabs/split_equally_tab.dart';
@@ -204,6 +205,25 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
     }
     debugPrint('送信する金額マップ: $amountMap');
 
+    final activeMembers =
+        widget.members.where((m) => m.status != PaymentStatus.absence).toList();
+    final memberCount = activeMembers.length;
+    final totalAmountBucket = AnalyticsLogger.bucketTotalAmount(widget.amount);
+    final int perPersonAverage = memberCount == 0
+        ? 0
+        : (widget.amount / memberCount).round();
+    final perPersonBucket =
+        AnalyticsLogger.bucketPerPersonAmount(perPersonAverage);
+    final weightType = _currentWeightType();
+    final roleCount = _currentTab == 2 ? _roles.length : 0;
+    final activeAmounts = activeMembers
+        .map((m) => amountMap[m.memberId] ?? 0)
+        .where((a) => a > 0)
+        .toList();
+    final maxMinRatioBucket = _calculateMaxMinRatioBucket(activeAmounts);
+    final roundUpOption = _currentRoundUpLabel();
+    final change = _calculateChangeAmountForCurrentTab();
+
     final List<Map<String, dynamic>> membersMoneyList = amountMap.entries
         .map((entry) => {
               'memberId': entry.key,
@@ -217,6 +237,16 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
       await ref
           .read(userProvider.notifier)
           .inputMembersMoney(userId, eventId, membersMoneyList, ref);
+      await AnalyticsLogger.logIndividualAmountsCompleted(
+        memberCount: memberCount,
+        totalAmountBucket: totalAmountBucket,
+        perPersonBucket: perPersonBucket,
+        weightType: weightType,
+        roleCount: roleCount,
+        maxMinRatioBucket: maxMinRatioBucket,
+        roundUpOption: roundUpOption,
+        change: change,
+      );
     } catch (e) {
       debugPrint('金額入力中にエラーが発生しました: $e');
       return;
@@ -972,5 +1002,50 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
     if (_currentTab == 1 || _currentTab == 2) {
       _recalculateAmounts();
     }
+  }
+
+  // タブごとの入力方式を返す。
+  String _currentWeightType() {
+    switch (_currentTab) {
+      case 0:
+        return 'equal';
+      case 1:
+        return 'adjust';
+      case 2:
+        return 'role';
+      default:
+        return 'unknown';
+    }
+  }
+
+  // 端数切り上げの選択状態を返す。
+  String _currentRoundUpLabel() {
+    switch (_selectedRoundUpOption) {
+      case RoundUpOption.none:
+        return 'none';
+      case RoundUpOption.ten:
+        return '10';
+      case RoundUpOption.fifty:
+        return '50';
+      case RoundUpOption.hundred:
+        return '100';
+      default:
+        return 'none';
+    }
+  }
+
+  // 最大最小比率のバケットを算出する。
+  String _calculateMaxMinRatioBucket(List<int> amounts) {
+    if (amounts.length <= 1) {
+      return '1.0';
+    }
+    final sorted = List<int>.from(amounts)..sort();
+    final minAmount = sorted.first;
+    final maxAmount = sorted.last;
+    if (minAmount <= 0) {
+      return '2.0+';
+    }
+    final ratio = maxAmount / minAmount;
+    return AnalyticsLogger.bucketRatio(ratio);
   }
 }

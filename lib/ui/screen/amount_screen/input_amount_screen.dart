@@ -4,7 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
+import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/logging/analytics_logger.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/member/member_empty_error_dialog.dart';
 import 'package:mr_collection/ui/screen/amount_screen/split_amount_screen.dart';
@@ -29,6 +31,7 @@ class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
 
   late TextEditingController _controller;
   late FocusNode _focusNode;
+  bool _hasCommittedAmount = false;
 
   int _amount = 10000;
 
@@ -43,6 +46,11 @@ class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
     super.initState();
     _controller = TextEditingController();
     _focusNode = FocusNode();
+    _focusNode.addListener(() {
+      if (!_focusNode.hasFocus && _isEditing) {
+        _commitAmountEditing();
+      }
+    });
 
     // 現在のイベントの既存金額を取得してデフォルト値として設定
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -124,7 +132,12 @@ class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
     });
   }
 
-  void _finishEditing() {
+  // 合計金額入力を確定する。
+  void _commitAmountEditing() {
+    if (_hasCommittedAmount) {
+      return;
+    }
+    _hasCommittedAmount = true;
     String text = _controller.text.replaceAll(',', '');
     if (text.isEmpty) {
       _amount = 0;
@@ -136,6 +149,7 @@ class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
       _isEditing = false;
     });
     _focusNode.unfocus();
+    _logTotalAmountEntered();
   }
 
   Future<void> _inputTotalMoney(
@@ -153,6 +167,17 @@ class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
     } catch (e) {
       debugPrint('Error inputting total money: $e');
     }
+  }
+
+  // 合計金額入力ログを送信する。
+  void _logTotalAmountEntered() {
+    final activeCount = widget.members
+        .where((m) => m.status != PaymentStatus.absence)
+        .length;
+    AnalyticsLogger.logTotalAmountEntered(
+      memberCount: activeCount,
+      totalAmountBucket: AnalyticsLogger.bucketTotalAmount(_amount),
+    );
   }
 
   @override
@@ -184,7 +209,7 @@ class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
               contentPadding: EdgeInsets.zero,
             ),
             inputFormatters: [_buildAmountFormatter()],
-            onSubmitted: (_) => _finishEditing(),
+            onSubmitted: (_) => _commitAmountEditing(),
           ),
         ),
       );
@@ -269,6 +294,7 @@ class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
                   setState(() {
                     _isEditing = true;
                     _controller.text = _formatWithCommas(_amount);
+                    _hasCommittedAmount = false;
                   });
                   Future.delayed(Duration.zero, () {
                     _focusNode.requestFocus();
@@ -288,7 +314,7 @@ class InputAmountScreenState extends ConsumerState<InputAmountScreen> {
                       borderRadius: BorderRadius.circular(12)),
                 ),
                 onPressed: () {
-                  if (_isEditing) _finishEditing();
+                  if (_isEditing) _commitAmountEditing();
                   _inputTotalMoney(
                     userId,
                     widget.eventId,
