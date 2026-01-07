@@ -171,4 +171,86 @@ class AnalyticsLogger {
       debugPrint('Analyticsログ送信に失敗しました: $error');
     }
   }
+
+  // メンバー追加ログを送信する。
+  static Future<void> logMemberAdded({
+    required String eventId,
+    required int memberCount,
+  }) async {
+    final parameters = <String, Object>{
+      'event_id': eventId,
+      'member_count': memberCount,
+    };
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'member_added',
+        parameters: parameters,
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // メンバー名編集ログを送信する。
+  static Future<void> logMemberNameEdited({
+    required String eventId,
+    required String memberId,
+  }) async {
+    final parameters = <String, Object>{
+      'event_id': eventId,
+      'member_id': memberId,
+    };
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'member_name_edited',
+        parameters: parameters,
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // メンバー削除ログを送信する。
+  static Future<void> logMemberDeleted({
+    required String eventId,
+    String? memberId,
+    required bool isBulk,
+    int? memberCount,
+  }) async {
+    final parameters = <String, Object>{
+      'event_id': eventId,
+      'is_bulk': isBulk ? 1 : 0,
+    };
+    if (memberId != null && memberId.isNotEmpty) {
+      parameters['member_id'] = memberId;
+    }
+    if (memberCount != null) {
+      parameters['member_count'] = memberCount;
+    }
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'member_deleted',
+        parameters: parameters,
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // 一括編集画面遷移ログを送信する。
+  static Future<void> logBulkEditOpened({
+    required String eventId,
+  }) async {
+    final parameters = <String, Object>{
+      'event_id': eventId,
+    };
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'bulk_edit_opened',
+        parameters: parameters,
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
 }

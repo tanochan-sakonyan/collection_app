@@ -148,6 +148,7 @@ class _MemberListState extends ConsumerState<MemberList>
     if (user == null) return;
 
     final firstId = _selectedMemberIds.first;
+    final bulkCount = _selectedMemberIds.length;
 
     final message = S.of(context)!.bulkDeleteConfirm(_selectedMemberIds.length);
 
@@ -160,6 +161,11 @@ class _MemberListState extends ConsumerState<MemberList>
         message: message,
         onConfirm: () async {
           await _performBulkDelete(onSuccess: onSuccess);
+          await AnalyticsLogger.logMemberDeleted(
+            eventId: widget.eventId,
+            isBulk: true,
+            memberCount: bulkCount,
+          );
         },
       ),
     );
@@ -190,6 +196,9 @@ class _MemberListState extends ConsumerState<MemberList>
   }
 
   Future<void> _showBulkEditBottomSheet() async {
+    await AnalyticsLogger.logBulkEditOpened(
+      eventId: widget.eventId,
+    );
     final members = widget.members ?? [];
     final mediaQuery = MediaQuery.of(context);
     final double screenHeight = mediaQuery.size.height;

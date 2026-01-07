@@ -4,6 +4,7 @@ import 'package:mr_collection/provider/user_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
+import 'package:mr_collection/logging/analytics_logger.dart';
 
 class EditMemberNameDialog extends ConsumerStatefulWidget {
   final String userId;
@@ -80,6 +81,10 @@ class EditMemberNameDialogState extends ConsumerState<EditMemberNameDialog> {
     try {
       await ref.read(userProvider.notifier).editMemberName(widget.userId,
           widget.eventId, widget.memberId, _controller.text.trim());
+      await AnalyticsLogger.logMemberNameEdited(
+        eventId: widget.eventId,
+        memberId: widget.memberId,
+      );
       Future.delayed(const Duration(seconds: 2), () {
         setState(() {
           _isButtonEnabled = true;
