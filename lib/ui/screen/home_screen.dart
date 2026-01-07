@@ -955,6 +955,13 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         key: _scaffoldKey,
         backgroundColor: Colors.white,
         drawerScrimColor: Colors.transparent,
+        onDrawerChanged: (isOpen) {
+          if (isOpen) {
+            unawaited(AnalyticsLogger.logDrawerOpened());
+          } else {
+            unawaited(AnalyticsLogger.logDrawerClosed());
+          }
+        },
         appBar: AppBar(
           surfaceTintColor: Colors.transparent,
           scrolledUnderElevation: 0,

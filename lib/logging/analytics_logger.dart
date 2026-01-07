@@ -253,4 +253,175 @@ class AnalyticsLogger {
       debugPrint('Analyticsログ送信に失敗しました: $error');
     }
   }
+
+  // ドロワー表示ログを送信する。
+  static Future<void> logDrawerOpened() async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'drawer_opened',
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // ドロワー閉鎖ログを送信する。
+  static Future<void> logDrawerClosed() async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'drawer_closed',
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // PayPay登録ボタン押下ログを送信する。
+  static Future<void> logPayPayRegisterPressed() async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'paypay_register_pressed',
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // PayPayダイアログ表示ログを送信する。
+  static Future<void> logPayPayDialogOpened() async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'paypay_dialog_opened',
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // PayPayリンク説明ボタン押下ログを送信する。
+  static Future<void> logPayPayHelpPressed() async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'paypay_help_pressed',
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // テーマカラー変更ボタン押下ログを送信する。
+  static Future<void> logThemeColorChangePressed() async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'theme_color_change_pressed',
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // テーマカラー選択ログを送信する。
+  static Future<void> logThemeColorSelected({
+    required String colorKey,
+  }) async {
+    final parameters = <String, Object>{
+      'color_key': colorKey,
+    };
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'theme_color_selected',
+        parameters: parameters,
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // アンケート表示ログを送信する。
+  static Future<void> logQuestionnairePressed() async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'questionnaire_dialog_pressed',
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // 機能提案ボタン押下ログを送信する。
+  static Future<void> logSuggestionPressed() async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'suggestion_pressed',
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // Xリンク押下ログを送信する。
+  static Future<void> logXLinkPressed() async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'x_link_pressed',
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // アップデート情報押下ログを送信する。
+  static Future<void> logUpdateInfoPressed() async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'update_info_pressed',
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // 開発者支援ボタン押下ログを送信する。
+  static Future<void> logDonationPressed() async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'donation_dialog_pressed',
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // 公式サイト押下ログを送信する。
+  static Future<void> logOfficialSitePressed() async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'official_site_pressed',
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // 利用規約押下ログを送信する。
+  static Future<void> logTermsPressed() async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'terms_pressed',
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // プライバシーポリシー押下ログを送信する。
+  static Future<void> logPrivacyPressed() async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'privacy_pressed',
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
 }

@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/ui/components/dialog/guide/paypay_link_explanation_dialog.dart';
+import 'package:mr_collection/logging/analytics_logger.dart';
 
 class PayPayDialog extends ConsumerStatefulWidget {
   const PayPayDialog({super.key});
@@ -18,6 +19,7 @@ class PayPayDialogState extends ConsumerState<PayPayDialog> {
   String? _errorMessage;
 
   Future<void> _sendPaypayLink(BuildContext context) async {
+    AnalyticsLogger.logPayPayRegisterPressed();
     final paypayLink = controller.text;
 
     if (paypayLink.isEmpty) {
@@ -138,6 +140,7 @@ class PayPayDialogState extends ConsumerState<PayPayDialog> {
               const SizedBox(height: 16),
               GestureDetector(
                 onTap: () {
+                  AnalyticsLogger.logPayPayHelpPressed();
                   showDialog(
                       context: context,
                       builder: (_) => const PayPayLinkExplanationDialog());
