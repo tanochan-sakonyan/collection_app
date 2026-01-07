@@ -727,6 +727,7 @@ class _MemberListState extends ConsumerState<MemberList>
                             GestureDetector(
                               key: widget.sortKey,
                               onTap: () {
+                                AnalyticsLogger.logSortPressed();
                                 ref
                                     .read(userProvider.notifier)
                                     .sortingMembers(widget.eventId);
@@ -766,6 +767,9 @@ class _MemberListState extends ConsumerState<MemberList>
                                     physics: const BouncingScrollPhysics(),
                                     itemCount: members.length,
                                     onReorder: _onReorderMember,
+                                    onReorderStart: (_) {
+                                      AnalyticsLogger.logMemberLongPressed();
+                                    },
                                     itemBuilder: (context, index) {
                                       return ReorderableDelayedDragStartListener(
                                         key: ValueKey(members[index].memberId),

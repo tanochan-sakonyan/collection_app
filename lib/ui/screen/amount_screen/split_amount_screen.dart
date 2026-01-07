@@ -999,6 +999,9 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
     setState(() {
       _selectedRoundUpOption = newValue;
     });
+    AnalyticsLogger.logRoundUpOptionPressed(
+      option: _roundUpOptionLabel(newValue),
+    );
     if (_currentTab == 1 || _currentTab == 2) {
       _recalculateAmounts();
     }
@@ -1020,7 +1023,12 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
 
   // 端数切り上げの選択状態を返す。
   String _currentRoundUpLabel() {
-    switch (_selectedRoundUpOption) {
+    return _roundUpOptionLabel(_selectedRoundUpOption);
+  }
+
+  // 端数切り上げの選択ラベルを返す。
+  String _roundUpOptionLabel(RoundUpOption option) {
+    switch (option) {
       case RoundUpOption.none:
         return 'none';
       case RoundUpOption.ten:

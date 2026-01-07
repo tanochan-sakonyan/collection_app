@@ -498,6 +498,100 @@ class AnalyticsLogger {
     }
   }
 
+  // Home画面表示ログを送信する。
+  static Future<void> logHomeScreenViewed() async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'home_screen_viewed',
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // メモ入力ボトムシート表示ログを送信する。
+  static Future<void> logMemoBottomSheetOpened() async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'memo_bottom_sheet_opened',
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // Home画面のヘルプボタン押下ログを送信する。
+  static Future<void> logHomeHelpPressed() async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'home_help_pressed',
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // 並び替えボタン押下ログを送信する。
+  static Future<void> logSortPressed() async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'sort_pressed',
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // タブ長押しログを送信する。
+  static Future<void> logTabLongPressed() async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'tab_long_pressed',
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // メンバー長押しログを送信する。
+  static Future<void> logMemberLongPressed() async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'member_long_pressed',
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // 重複メンバー警告表示ログを送信する。
+  static Future<void> logDuplicateMemberWarningShown() async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'duplicate_member_warning_shown',
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // 端数切り上げ選択ログを送信する。
+  static Future<void> logRoundUpOptionPressed({
+    required String option,
+  }) async {
+    final parameters = <String, Object>{
+      'option': option,
+    };
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'round_up_option_pressed',
+        parameters: parameters,
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
   // 合計金額入力ログを送信する。
   static Future<void> logTotalAmountEntered({
     required int memberCount,

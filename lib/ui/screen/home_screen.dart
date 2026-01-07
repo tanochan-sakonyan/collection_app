@@ -54,6 +54,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   String? _pendingFocusedEventId;
   final Map<String, GlobalKey> _tabItemKeys = {};
   final Set<String> _dismissedDuplicateWarningEventIds = {};
+  final Set<String> _loggedDuplicateWarningEventIds = {};
 
   final GlobalKey eventAddKey = GlobalKey();
   final GlobalKey leftTabKey = GlobalKey();
@@ -69,6 +70,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      unawaited(AnalyticsLogger.logHomeScreenViewed());
+    });
     _tabTitles = ref.read(tabTitlesProvider);
     _initKeys(_tabTitles.length);
     tabController = TabController(length: _tabTitles.length, vsync: this);
@@ -553,6 +557,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       padding: EdgeInsets.zero,
       physics: const BouncingScrollPhysics(),
       buildDefaultDragHandles: false,
+      onReorderStart: (_) {
+        unawaited(AnalyticsLogger.logTabLongPressed());
+      },
       onReorder: (oldIndex, newIndex) {
         final maxIndex = _tabTitles.length;
         if (oldIndex >= maxIndex) {
@@ -789,6 +796,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   void _showEditNoteBottomSheet(BuildContext context, Event event) {
+    unawaited(AnalyticsLogger.logMemoBottomSheetOpened());
     final TextEditingController controller =
         TextEditingController(text: event.memo ?? "");
     showModalBottomSheet(
@@ -938,6 +946,13 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     final bool shouldShowDuplicateWarning = duplicateMemberNames.isNotEmpty &&
         currentEventId.isNotEmpty &&
         !_dismissedDuplicateWarningEventIds.contains(currentEventId);
+    if (shouldShowDuplicateWarning &&
+        !_loggedDuplicateWarningEventIds.contains(currentEventId)) {
+      _loggedDuplicateWarningEventIds.add(currentEventId);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        unawaited(AnalyticsLogger.logDuplicateMemberWarningShown());
+      });
+    }
 
     debugPrint('currentEvent: $currentEvent');
     debugPrint('lineGroupId: ${currentEvent?.lineGroupId}');
@@ -978,6 +993,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                         hoverColor: Colors.transparent,
                         focusColor: Colors.transparent,
                         onPressed: () {
+                          unawaited(AnalyticsLogger.logHomeHelpPressed());
                           _resetTutorial();
                           WidgetsBinding.instance.addPostFrameCallback((_) {
                             _showTutorial();
