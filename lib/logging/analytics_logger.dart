@@ -95,4 +95,23 @@ class AnalyticsLogger {
       debugPrint('Analyticsログ送信に失敗しました: $error');
     }
   }
+
+  // イベント追加ボタンのログを送信する。
+  static Future<void> logAddEventButtonPressed({
+    required String userId,
+    required String source,
+  }) async {
+    final parameters = <String, Object>{
+      'user_id': userId,
+      'source': source,
+    };
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'add_event_button_pressed',
+        parameters: parameters,
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
 }

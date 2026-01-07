@@ -8,6 +8,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:mr_collection/ads/ad_helper.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
+import 'package:mr_collection/logging/analytics_logger.dart';
 import 'package:mr_collection/provider/tab_titles_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/button/floating_action_button_off.dart';
@@ -401,6 +402,13 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   Future<void> _showAddEventDialog() async {
+    final userId = ref.read(userProvider)?.userId;
+    if (userId != null) {
+      await AnalyticsLogger.logAddEventButtonPressed(
+        userId: userId,
+        source: 'home_tab',
+      );
+    }
     final String? createdEventId = await showDialog<String>(
       context: context,
       builder: (BuildContext context) {
