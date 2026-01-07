@@ -164,7 +164,7 @@ class TanochanDrawerState extends State<TanochanDrawer>
                 onTap: () {
                   showDialog(
                     context: context,
-                    builder: (_) => UpdateInfoAndSuggestOfficialLineDialog(
+                    builder: (_) => UpdateInfoAndSuggestQuestionnaireDialog(
                       vsync: this,
                       onPageChanged: (i) {},
                     ),

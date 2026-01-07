@@ -766,17 +766,17 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   // 20260106追記。shownVersionFor270作成済み
   Future<void> _checkAndShowUpdateDialog() async {
     final prefs = await SharedPreferences.getInstance();
-    final shown = prefs.getBool('shownVersionFor270') ?? false;
+    final shown = prefs.getBool('shownVersionFor280') ?? false;
     debugPrint('shownVersion: $shown');
     if (!shown) {
       showDialog(
         context: context,
-        builder: (_) => UpdateInfoAndSuggestOfficialLineDialog(
+        builder: (_) => UpdateInfoAndSuggestQuestionnaireDialog(
           vsync: this,
           onPageChanged: (i) {},
         ),
       );
-      await prefs.setBool('shownVersionFor270', true);
+      await prefs.setBool('shownVersionFor280', true);
       debugPrint('Update dialog shown for version "true"');
     } else {
       debugPrint('すでに表示されています。');
