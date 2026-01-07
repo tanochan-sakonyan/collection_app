@@ -425,6 +425,23 @@ class AnalyticsLogger {
     }
   }
 
+  // アカウント削除ログを送信する。
+  static Future<void> logAccountDeleted({
+    required String method,
+  }) async {
+    final parameters = <String, Object>{
+      'method': method,
+    };
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'account_deleted',
+        parameters: parameters,
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
   // 合計金額入力ログを送信する。
   static Future<void> logTotalAmountEntered({
     required int memberCount,
