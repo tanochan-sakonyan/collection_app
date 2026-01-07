@@ -5,6 +5,7 @@ import 'package:mr_collection/data/model/freezed/line_group.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/data/model/freezed/line_group_member.dart';
 import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
+import 'package:mr_collection/logging/analytics_logger.dart';
 
 class CheckSelectedLineGroupScreen extends ConsumerStatefulWidget {
   final LineGroup lineGroup;
@@ -184,6 +185,7 @@ class CheckSelectedLineGroupScreenState
                 onPressed: isLoading
                     ? null
                     : () async {
+                        AnalyticsLogger.logLineGroupCreateEventPressed();
                         // ここでLINEグループを受け取って1つ前の画面に戻る(_checkSelectedLineGroup)
                         Navigator.pop(context, lineGroup);
                       },

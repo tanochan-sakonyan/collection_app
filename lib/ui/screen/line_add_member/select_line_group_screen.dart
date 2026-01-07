@@ -5,10 +5,24 @@ import 'package:mr_collection/ui/components/dialog/event/add_event_name_dialog.d
 import 'package:mr_collection/ui/components/dialog/line/invite_official_account_to_line_group_dialog.dart';
 import 'check_selected_line_group_screen.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/logging/analytics_logger.dart';
 
-class SelectLineGroupScreen extends StatelessWidget {
+class SelectLineGroupScreen extends StatefulWidget {
   final List<LineGroup> lineGroups;
   const SelectLineGroupScreen({super.key, required this.lineGroups});
+
+  @override
+  State<SelectLineGroupScreen> createState() => _SelectLineGroupScreenState();
+}
+
+class _SelectLineGroupScreenState extends State<SelectLineGroupScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      AnalyticsLogger.logLineGroupAddScreenViewed();
+    });
+  }
 
   Future<void> _checkSelectedLineGroup(
       BuildContext context, LineGroup lineGroup) async {
@@ -30,6 +44,7 @@ class SelectLineGroupScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).primaryColor;
+    final lineGroups = widget.lineGroups;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(

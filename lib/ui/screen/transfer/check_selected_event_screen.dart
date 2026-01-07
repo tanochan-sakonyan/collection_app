@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/logging/analytics_logger.dart';
 
 class CheckSelectedEventScreen extends ConsumerStatefulWidget {
   final Event selectedEvent;
@@ -169,6 +170,7 @@ class CheckSelectedEventScreenState
             height: 40,
             child: ElevatedButton(
               onPressed: () {
+                AnalyticsLogger.logTransferThisMembersPressed();
                 Navigator.of(context).pop(event);
               },
               style: ElevatedButton.styleFrom(
