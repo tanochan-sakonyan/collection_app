@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
+import 'package:mr_collection/logging/analytics_member_logger.dart';
 
 class AddMemberDialog extends ConsumerStatefulWidget {
   final String userId;
@@ -30,8 +31,7 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
           .where((e) => e.isNotEmpty);
       if (lines.any((n) => n.length > 9)) {
         setState(() {
-          _errorMessage = S.of(context)!.maxCharacterMessage_9 ??
-              "You can enter up to 9 characters.";
+          _errorMessage = S.of(context)!.maxCharacterMessage_9;
         });
       } else {
         setState(() {
@@ -59,8 +59,7 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
       setState(() => _errorMessage = S.of(context)!.enterMemberPrompt);
       return;
     } else if (memberNames.any((n) => n.length > 9)) {
-      setState(() => _errorMessage = S.of(context)!.maxCharacterMessage_9 ??
-          "You can enter up to 9 characters.");
+      setState(() => _errorMessage = S.of(context)!.maxCharacterMessage_9);
       return;
     } else {
       _errorMessage = null;
@@ -77,8 +76,13 @@ class AddMemberDialogState extends ConsumerState<AddMemberDialog> {
       await ref
           .read(userProvider.notifier)
           .createMembers(widget.userId, widget.eventId, rawText);
+      await AnalyticsMemberLogger.logMemberAdded(
+        eventId: widget.eventId,
+        memberCount: memberNames.length,
+      );
       if (mounted) Navigator.of(context).pop();
     } catch (e) {
+      await AnalyticsMemberLogger.logMemberAddFailed();
       setState(() {
         _errorMessage = 'メンバーの追加に失敗しました';
       });

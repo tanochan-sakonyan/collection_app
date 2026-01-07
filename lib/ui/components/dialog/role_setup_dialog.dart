@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -6,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
+import 'package:mr_collection/logging/analytics_amount_logger.dart';
 import 'package:mr_collection/ui/components/dialog/role_assignment_dialog.dart';
 
 class RoleSetupDialog extends StatefulWidget {
@@ -183,92 +186,6 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
     }
   }
 
-  void _cancelEditRoleAmount() {
-    setState(() {
-      _editingRoleIndex = null;
-      _editRoleAmountController.clear();
-    });
-  }
-
-  void _showRoleInputDialog() {
-    final TextEditingController roleController = TextEditingController();
-    final TextEditingController amountController = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        final primaryColor = Theme.of(context).primaryColor;
-        return AlertDialog(
-          title: Text(S.of(context)!.roleSetup),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: roleController,
-                decoration: InputDecoration(
-                  hintText: S.of(context)!.roleNameInput,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6),
-                    borderSide: const BorderSide(color: Color(0xFFE5E5E5)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6),
-                    borderSide: const BorderSide(color: Color(0xFFE5E5E5)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6),
-                    borderSide: BorderSide(color: primaryColor),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: amountController,
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                ],
-                decoration: InputDecoration(
-                  hintText: S.of(context)!.enterAmount,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6),
-                    borderSide: const BorderSide(color: Color(0xFFE5E5E5)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6),
-                    borderSide: const BorderSide(color: Color(0xFFE5E5E5)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6),
-                    borderSide: BorderSide(color: primaryColor),
-                  ),
-                  suffixText: '円',
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(S.of(context)!.cancel),
-            ),
-            TextButton(
-              onPressed: () {
-                if (roleController.text.isNotEmpty &&
-                    amountController.text.isNotEmpty) {
-                  _addRole(
-                      roleController.text, int.parse(amountController.text));
-                  Navigator.pop(context);
-                }
-              },
-              child: Text(S.of(context)!.confirm),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   void _deleteRole(int index) {
     setState(() {
       roles.removeAt(index);
@@ -279,119 +196,117 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
     final primaryColor = Theme.of(context).primaryColor;
     return Column(
       children: [
-        Container(
-          child: ListTile(
-            visualDensity: const VisualDensity(
-              horizontal: 0,
-              vertical: -2,
-            ),
-            dense: true,
-            contentPadding: const EdgeInsets.only(left: 16, top: 2),
-            title: _isAddingNewRole
-                ? Row(
-                    children: [
-                      // 役割名入力フィールド
-                      Expanded(
-                        flex: 2,
-                        child: GestureDetector(
-                          onTap: () {
-                            // TextFieldのタップイベントを止める
-                          },
-                          child: TextField(
-                            controller: _newRoleNameController,
-                            focusNode: _newRoleNameFocusNode,
-                            decoration: const InputDecoration(
-                              hintText: '役割名',
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 4),
-                            ),
-                            style: Theme.of(context).textTheme.bodyMedium,
-                            onSubmitted: (_) {
-                              // 役割名が入力されている場合は金額フィールドにフォーカス
-                              if (_newRoleNameController.text.isNotEmpty) {
-                                _newRoleAmountFocusNode.requestFocus();
-                              }
-                            },
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      // 金額入力フィールド
-                      GestureDetector(
+        ListTile(
+          visualDensity: const VisualDensity(
+            horizontal: 0,
+            vertical: -2,
+          ),
+          dense: true,
+          contentPadding: const EdgeInsets.only(left: 16, top: 2),
+          title: _isAddingNewRole
+              ? Row(
+                  children: [
+                    // 役割名入力フィールド
+                    Expanded(
+                      flex: 2,
+                      child: GestureDetector(
                         onTap: () {
                           // TextFieldのタップイベントを止める
                         },
-                        child: Container(
-                          width: 68,
-                          height: 36,
-                          child: TextField(
-                            controller: _newRoleAmountController,
-                            focusNode: _newRoleAmountFocusNode,
-                            keyboardType: TextInputType.number,
-                            textAlign: TextAlign.right,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(6),
-                                borderSide:
-                                    const BorderSide(color: Color(0xFFC6C6C8)),
-                              ),
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 6, vertical: 4),
-                            ),
-                            style: Theme.of(context).textTheme.bodyLarge,
-                            onSubmitted: (_) {
-                              // Enterキーで明示的に確定する場合
-                              if (_newRoleNameController.text.isNotEmpty) {
-                                _confirmNewRole();
-                              }
-                            },
+                        child: TextField(
+                          controller: _newRoleNameController,
+                          focusNode: _newRoleNameFocusNode,
+                          decoration: const InputDecoration(
+                            hintText: '役割名',
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
                           ),
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          onSubmitted: (_) {
+                            // 役割名が入力されている場合は金額フィールドにフォーカス
+                            if (_newRoleNameController.text.isNotEmpty) {
+                              _newRoleAmountFocusNode.requestFocus();
+                            }
+                          },
                         ),
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        '円',
-                        style: GoogleFonts.notoSansJp(
-                          fontSize: 14,
-                          color: Colors.black,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      IconButton(
-                        onPressed: _confirmNewRole,
-                        icon: SvgPicture.asset(
-                          'assets/icons/ic_next.svg',
-                          width: 14,
-                          height: 14,
-                          colorFilter: ColorFilter.mode(
-                            primaryColor,
-                            BlendMode.srcIn,
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                : GestureDetector(
-                    onTap: _startAddingNewRole,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              S.of(context)!.roleNameInput,
-                              style: GoogleFonts.notoSansJp(
-                                fontSize: 14,
-                                color: const Color(0xFF999999),
-                              ),
-                            ),
-                          ),
-                        ],
                       ),
                     ),
+                    const SizedBox(width: 8),
+                    // 金額入力フィールド
+                    GestureDetector(
+                      onTap: () {
+                        // TextFieldのタップイベントを止める
+                      },
+                      child: SizedBox(
+                        width: 68,
+                        height: 36,
+                        child: TextField(
+                          controller: _newRoleAmountController,
+                          focusNode: _newRoleAmountFocusNode,
+                          keyboardType: TextInputType.number,
+                          textAlign: TextAlign.right,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(6),
+                              borderSide:
+                                  const BorderSide(color: Color(0xFFC6C6C8)),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 6, vertical: 4),
+                          ),
+                          style: Theme.of(context).textTheme.bodyLarge,
+                          onSubmitted: (_) {
+                            // Enterキーで明示的に確定する場合
+                            if (_newRoleNameController.text.isNotEmpty) {
+                              _confirmNewRole();
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      '円',
+                      style: GoogleFonts.notoSansJp(
+                        fontSize: 14,
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    IconButton(
+                      onPressed: _confirmNewRole,
+                      icon: SvgPicture.asset(
+                        'assets/icons/ic_next.svg',
+                        width: 14,
+                        height: 14,
+                        colorFilter: ColorFilter.mode(
+                          primaryColor,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              : GestureDetector(
+                  onTap: _startAddingNewRole,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            S.of(context)!.roleNameInput,
+                            style: GoogleFonts.notoSansJp(
+                              fontSize: 14,
+                              color: const Color(0xFF999999),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-          ),
+                ),
         ),
         const Divider(
           thickness: 1,
@@ -672,6 +587,9 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
                       }
                       _confirmNewRole();
                     }
+                    unawaited(AnalyticsAmountLogger.logRoleSetupConfirmed(
+                      roleCount: roles.length,
+                    ));
                     widget.onRoleConfirm(roles);
                     Navigator.pop(context);
                   },

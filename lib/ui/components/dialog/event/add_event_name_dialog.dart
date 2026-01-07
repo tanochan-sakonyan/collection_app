@@ -10,6 +10,7 @@ import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/line_group.dart';
 import 'package:mr_collection/data/repository/event_repository.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/logging/analytics_event_logger.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/provider/pending_event_focus_provider.dart';
 import 'package:mr_collection/services/auth_service.dart';
@@ -202,18 +203,42 @@ class _AddEventNameDialogState extends ConsumerState<AddEventNameDialog> {
           break;
       }
       if (!mounted) return;
+      if (createdEventId != null) {
+        await AnalyticsEventLogger.logEventCreated(
+          eventId: createdEventId,
+          mode: _currentAddEventModeName(),
+        );
+      }
       ref.read(pendingEventFocusProvider.notifier).state = createdEventId;
       Navigator.of(context).pop(createdEventId);
       Navigator.of(context).popUntil((route) => route.isFirst);
     } on AuthException catch (e) {
+      await AnalyticsEventLogger.logEventAddFailed(
+        mode: _currentAddEventModeName(),
+      );
       debugPrint('イベント作成失敗(認証エラー): $e');
       if (!mounted) return;
       await AuthService.signOut(context);
     } catch (e) {
+      await AnalyticsEventLogger.logEventAddFailed(
+        mode: _currentAddEventModeName(),
+      );
       debugPrint('イベント作成失敗: $e');
     } finally {
       ref.read(loadingProvider.notifier).state = false;
       if (mounted) setState(() => _isButtonEnabled = true);
+    }
+  }
+
+  // イベント作成モード名を返す。
+  String _currentAddEventModeName() {
+    switch (widget.mode) {
+      case AddEventMode.transferMembers:
+        return 'transfer_members';
+      case AddEventMode.fromLineGroup:
+        return 'from_line_group';
+      case AddEventMode.empty:
+        return 'empty';
     }
   }
 

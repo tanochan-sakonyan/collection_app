@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mr_collection/logging/analytics_member_logger.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
@@ -115,6 +116,7 @@ class _MemberListState extends ConsumerState<MemberList>
     if (user == null || !_hasBulkSelection || !mounted) return;
 
     _safeSetState(() => _isBulkActionInProgress = true);
+    final bulkCount = _selectedMemberIds.length;
     try {
       await ref.read(userProvider.notifier).bulkUpdateMemberStatus(
             user.userId,
@@ -122,12 +124,19 @@ class _MemberListState extends ConsumerState<MemberList>
             _selectedMemberIds.toList(),
             status,
           );
+      await AnalyticsMemberLogger.logMemberStatusChanged(
+        eventId: widget.eventId,
+        status: status,
+        isBulk: true,
+        memberCount: bulkCount,
+      );
       if (!mounted) return;
       _safeSetState(() {
         _selectedMemberIds.clear();
       });
       onSuccess?.call();
     } catch (error) {
+      await AnalyticsMemberLogger.logStatusChangeFailed(isBulk: true);
       debugPrint('一括ステータス更新中にエラーが発生しました: $error');
     } finally {
       _safeSetState(() => _isBulkActionInProgress = false);
@@ -140,6 +149,7 @@ class _MemberListState extends ConsumerState<MemberList>
     if (user == null) return;
 
     final firstId = _selectedMemberIds.first;
+    final bulkCount = _selectedMemberIds.length;
 
     final message = S.of(context)!.bulkDeleteConfirm(_selectedMemberIds.length);
 
@@ -152,6 +162,11 @@ class _MemberListState extends ConsumerState<MemberList>
         message: message,
         onConfirm: () async {
           await _performBulkDelete(onSuccess: onSuccess);
+          await AnalyticsMemberLogger.logMemberDeleted(
+            eventId: widget.eventId,
+            isBulk: true,
+            memberCount: bulkCount,
+          );
         },
       ),
     );
@@ -182,6 +197,9 @@ class _MemberListState extends ConsumerState<MemberList>
   }
 
   Future<void> _showBulkEditBottomSheet() async {
+    await AnalyticsMemberLogger.logBulkEditOpened(
+      eventId: widget.eventId,
+    );
     final members = widget.members ?? [];
     final mediaQuery = MediaQuery.of(context);
     final double screenHeight = mediaQuery.size.height;
@@ -509,8 +527,8 @@ class _MemberListState extends ConsumerState<MemberList>
                 String eventId,
                 String memberId,
                 int status,
-              ) {
-                _updateMemberStatus(
+              ) async {
+                await _updateMemberStatus(
                   ref,
                   userId,
                   eventId,
@@ -621,7 +639,14 @@ class _MemberListState extends ConsumerState<MemberList>
       await ref
           .read(userProvider.notifier)
           .updateMemberStatus(userId, eventId, memberId, status!);
+      await AnalyticsMemberLogger.logMemberStatusChanged(
+        eventId: eventId,
+        memberId: memberId,
+        status: status,
+        isBulk: false,
+      );
     } catch (error) {
+      await AnalyticsMemberLogger.logStatusChangeFailed(isBulk: false);
       debugPrint('ステータス更新中にエラーが発生しました。 $error');
     }
   }
@@ -704,6 +729,7 @@ class _MemberListState extends ConsumerState<MemberList>
                             GestureDetector(
                               key: widget.sortKey,
                               onTap: () {
+                                AnalyticsMemberLogger.logSortPressed();
                                 ref
                                     .read(userProvider.notifier)
                                     .sortingMembers(widget.eventId);
@@ -723,8 +749,7 @@ class _MemberListState extends ConsumerState<MemberList>
                                       .add(const Duration(hours: 24))))
                               ? Center(
                                   child: Text(
-                                    S.of(context)!.memberDeletedAfter24h ??
-                                        "Member information has been deleted after 24 hours.",
+                                    S.of(context)!.memberDeletedAfter24h,
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyMedium
@@ -744,6 +769,9 @@ class _MemberListState extends ConsumerState<MemberList>
                                     physics: const BouncingScrollPhysics(),
                                     itemCount: members.length,
                                     onReorder: _onReorderMember,
+                                    onReorderStart: (_) {
+                                      AnalyticsMemberLogger.logMemberLongPressed();
+                                    },
                                     itemBuilder: (context, index) {
                                       return ReorderableDelayedDragStartListener(
                                         key: ValueKey(members[index].memberId),

@@ -13,9 +13,12 @@ class Event with _$Event {
     required String eventId,
     required String eventName,
     required String? lineGroupId,
-    @JsonKey(name: 'fetched_at',
+    @JsonKey(
+      name: 'fetched_at',
       fromJson: _parseHttpDateToJST,
-      toJson: _dateToHttpString,) DateTime? lineMembersFetchedAt,
+      toJson: _dateToHttpString,
+    )
+    DateTime? lineMembersFetchedAt,
     required List<Member> members,
     required String? memo,
     int? totalMoney,
@@ -40,5 +43,5 @@ DateTime? _parseHttpDateToJST(String? httpDate) {
 // DateTimeからHTTP日付形式
 String? _dateToHttpString(DateTime? date) {
   if (date == null) return null;
-  return DateFormat('EEE, dd MMM yyyy HH:mm:ss', 'en_US').format(date) + ' GMT';
+  return '${DateFormat('EEE, dd MMM yyyy HH:mm:ss', 'en_US').format(date)} GMT';
 }

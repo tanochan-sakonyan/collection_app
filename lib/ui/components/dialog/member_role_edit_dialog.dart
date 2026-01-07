@@ -76,7 +76,8 @@ class _MemberRoleEditDialogState extends State<MemberRoleEditDialog> {
                             vertical: -2,
                           ),
                           dense: true,
-                          contentPadding: const EdgeInsets.only(left: 16, right: 16, top: 8),
+                          contentPadding: const EdgeInsets.only(
+                              left: 16, right: 16, top: 8),
                           title: Text(
                             '役割なし',
                             style: GoogleFonts.notoSansJp(
@@ -113,7 +114,6 @@ class _MemberRoleEditDialogState extends State<MemberRoleEditDialog> {
 
                   final role = widget.roles[index];
                   final roleName = role['role'] as String;
-                  final isSelected = selectedRole == roleName;
 
                   return Column(
                     children: [

@@ -4,14 +4,12 @@ import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/data/model/freezed/line_group.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/data/model/freezed/line_group_member.dart';
-import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
-import 'package:mr_collection/ui/screen/home_screen.dart';
+import 'package:mr_collection/logging/analytics_line_logger.dart';
 
 class CheckSelectedLineGroupScreen extends ConsumerStatefulWidget {
   final LineGroup lineGroup;
-  const CheckSelectedLineGroupScreen({Key? key, required this.lineGroup})
-      : super(key: key);
+  const CheckSelectedLineGroupScreen({super.key, required this.lineGroup});
   @override
   ConsumerState<CheckSelectedLineGroupScreen> createState() =>
       CheckSelectedLineGroupScreenState();
@@ -23,10 +21,7 @@ class CheckSelectedLineGroupScreenState
   Widget build(BuildContext context) {
     final isLoading = ref.watch(loadingProvider);
     final lineGroup = widget.lineGroup;
-    final userId = ref.read(userProvider)!.userId;
-    final groupId = lineGroup.groupId;
-    final eventName = lineGroup.groupName;
-    final members = lineGroup.members.map((member) {
+    lineGroup.members.map((member) {
       return LineGroupMember(
         memberId: member.memberId,
         memberName: member.memberName,
@@ -71,8 +66,7 @@ class CheckSelectedLineGroupScreenState
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              S.of(context)!.selectLineGroupTitle ??
-                  "Add members from LINE group",
+              S.of(context)!.selectLineGroupTitle,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
@@ -83,8 +77,7 @@ class CheckSelectedLineGroupScreenState
             ),
             const SizedBox(height: 36),
             Text(
-              S.of(context)!.selectLineGroupDesc2 ??
-                  "Would you like to create an event with these members?",
+              S.of(context)!.selectLineGroupDesc2,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
@@ -192,6 +185,7 @@ class CheckSelectedLineGroupScreenState
                 onPressed: isLoading
                     ? null
                     : () async {
+                        AnalyticsLineLogger.logLineGroupCreateEventPressed();
                         // ここでLINEグループを受け取って1つ前の画面に戻る(_checkSelectedLineGroup)
                         Navigator.pop(context, lineGroup);
                       },
@@ -203,8 +197,7 @@ class CheckSelectedLineGroupScreenState
                   ),
                 ),
                 child: Text(
-                  S.of(context)!.selectLineGroupButton ??
-                      "Create event with these members",
+                  S.of(context)!.selectLineGroupButton,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
@@ -215,8 +208,7 @@ class CheckSelectedLineGroupScreenState
             ),
             const SizedBox(height: 16),
             Text(
-              S.of(context)!.selectLineGroupNote ??
-                  "*Member information obtained from the LINE group will be deleted after 24 hours.\nPlease reacquire before 24 hours have passed.\nPayment statuses will be retained when reacquiring.",
+              S.of(context)!.selectLineGroupNote,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontSize: 10,
                     fontWeight: FontWeight.w500,

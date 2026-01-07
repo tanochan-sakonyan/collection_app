@@ -65,7 +65,7 @@ class TermsOfServiceScreen extends StatelessWidget {
                     ),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
-                        print("URL tapped");
+                        debugPrint("URL tapped");
                         _launchURL("https://tanochan.studio.site/");
                       },
                   ),

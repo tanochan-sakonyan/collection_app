@@ -8,12 +8,17 @@ import 'package:mr_collection/ui/components/dialog/line/line_message_complete_di
 import 'package:mr_collection/ui/components/dialog/line/line_message_failed_dialog.dart';
 import 'package:mr_collection/ui/screen/home_screen.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/logging/analytics_message_logger.dart';
 
 class LineMessageConfirmDialog extends ConsumerWidget {
   final Event event;
   final String message;
+  final bool includePaypayLink;
   const LineMessageConfirmDialog(
-      {super.key, required this.event, required this.message});
+      {super.key,
+      required this.event,
+      required this.message,
+      required this.includePaypayLink});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -89,7 +94,7 @@ class LineMessageConfirmDialog extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(width: 16),
-                    SizedBox(
+                  SizedBox(
                       width: 108,
                       height: 48,
                       child: ElevatedButton(
@@ -107,6 +112,10 @@ class LineMessageConfirmDialog extends ConsumerWidget {
                                           userId, event.eventId, message);
 
                                   if (isSuccess) {
+                                    await AnalyticsMessageLogger
+                                        .logReminderMessageCompleted(
+                                      includesPayPayLink: includePaypayLink,
+                                    );
                                     await showDialog(
                                         context: context,
                                         builder: (_) =>

@@ -1,10 +1,12 @@
+import 'dart:async';
+
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_line_sdk/flutter_line_sdk.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/data/model/freezed/user.dart';
+import 'package:mr_collection/logging/analytics_app_logger.dart';
 import 'package:mr_collection/provider/theme_color_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,9 +24,29 @@ class CollectionApp extends ConsumerStatefulWidget {
   ConsumerState<CollectionApp> createState() => _CollectionAppState();
 }
 
-class _CollectionAppState extends ConsumerState<CollectionApp> {
+class _CollectionAppState extends ConsumerState<CollectionApp>
+    with WidgetsBindingObserver {
   // ここで言語を指定(デバッグ時のみ)
   // final _locale = const Locale('en');
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.detached) {
+      unawaited(AnalyticsAppLogger.logAppTaskEnded());
+    }
+  }
 
   Future<Map<String, bool>> _checkLoginStatus() async {
     final prefs = await SharedPreferences.getInstance();

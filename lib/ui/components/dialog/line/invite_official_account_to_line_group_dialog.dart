@@ -36,8 +36,7 @@ class InviteOfficialAccountToLineGroupDialog extends StatelessWidget {
           children: [
             const SizedBox(height: 12),
             Text(
-              S.of(context)!.inviteOfficialAccountTitle ??
-                  "Invite the official LINE account to the group",
+              S.of(context)!.inviteOfficialAccountTitle,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                     fontSize: 15,
@@ -46,8 +45,7 @@ class InviteOfficialAccountToLineGroupDialog extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              S.of(context)!.inviteOfficialAccountDesc1 ??
-                  "You can only get members from LINE groups where 'Shukin-kun' is invited.",
+              S.of(context)!.inviteOfficialAccountDesc1,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
                     color: const Color(0xFF6A6A6A),
