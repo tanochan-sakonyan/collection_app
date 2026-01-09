@@ -21,11 +21,13 @@ import 'package:mr_collection/ui/components/dialog/event/delete_event_dialog.dar
 import 'package:mr_collection/ui/components/dialog/event/edit_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/terms_privacy_update_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_and_suggest_official_line_dialog.dart';
+import 'package:mr_collection/ui/components/home_app_bar.dart';
 import 'package:mr_collection/ui/components/line_member_delete_limit_countdown.dart';
 import 'package:mr_collection/ui/screen/member_list.dart';
 import 'package:mr_collection/ui/components/tanochan_drawer.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/user.dart';
+import 'package:mr_collection/ui/screen/share/share_screen.dart';
 import 'package:mr_collection/ui/tutorial/tutorial_targets.dart';
 import 'package:mr_collection/ui/components/duplicate_member_warning.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -885,7 +887,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                               ref.read(userProvider)!.userId,
                                               event.eventId,
                                               newNote);
-                                      unawaited(AnalyticsUiLogger.logMemoSaved());
+                                      unawaited(
+                                          AnalyticsUiLogger.logMemoSaved());
                                       Navigator.of(context).pop();
                                     } catch (e) {
                                       debugPrint('メモ保存に失敗: $e');
@@ -981,91 +984,36 @@ class HomeScreenState extends ConsumerState<HomeScreen>
             unawaited(AnalyticsUiLogger.logDrawerClosed());
           }
         },
-        appBar: AppBar(
-          surfaceTintColor: Colors.transparent,
-          scrolledUnderElevation: 0,
-          backgroundColor: Colors.white,
-          automaticallyImplyLeading: false,
-          actions: [
-            Row(
-              children: [
-                tabTitles.isEmpty
-                    ? const SizedBox(width: 24)
-                    : IconButton(
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        hoverColor: Colors.transparent,
-                        focusColor: Colors.transparent,
-                        onPressed: () {
-                          unawaited(AnalyticsUiLogger.logHomeHelpPressed());
-                          _resetTutorial();
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            _showTutorial();
-                          });
-                        },
-                        icon: SvgPicture.asset(
-                          'assets/icons/ic_question_circle.svg',
-                          width: 36,
-                          height: 36,
-                          colorFilter: ColorFilter.mode(
-                            Theme.of(context).primaryColor,
-                            BlendMode.srcIn,
-                          ),
-                        ),
-                      ),
-                IconButton(
-                  splashColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  hoverColor: Colors.transparent,
-                  focusColor: Colors.transparent,
-                  icon: SvgPicture.asset(
-                    'assets/icons/ic_settings.svg',
-                    width: 24,
-                    height: 24,
-                    colorFilter: ColorFilter.mode(
-                      Theme.of(context).primaryColor,
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                  onPressed: () {
-                    _scaffoldKey.currentState?.openDrawer();
-                  },
-                ),
-                SizedBox(
-                  width: screenWidth * 0.04,
-                ),
-              ],
-            ),
-          ],
-          bottom: PreferredSize(
-            preferredSize: Size.fromHeight(screenHeight * 0.04),
-            child: Stack(
-              children: [
-                SizedBox(
-                  height: screenHeight * 0.04,
-                  child: Row(
-                    children: [
-                      const SizedBox(width: 24),
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: SizedBox(
-                            height: screenHeight * 0.04,
-                            child: _buildReorderableTabs(
-                              context: context,
-                              user: user,
-                              screenHeight: screenHeight,
-                              primaryColor: primaryColor,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 24),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+        appBar: HomeAppBar(
+          hasTabs: tabTitles.isNotEmpty,
+          screenWidth: screenWidth,
+          screenHeight: screenHeight,
+          onSharePressed: () {
+            if (currentEvent == null) {
+              _showSnackBar('イベントが選択されていません');
+              return;
+            }
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => ShareScreen(event: currentEvent),
+              ),
+            );
+          },
+          onHelpPressed: () {
+            unawaited(AnalyticsUiLogger.logHomeHelpPressed());
+            _resetTutorial();
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              _showTutorial();
+            });
+          },
+          onSettingsPressed: () {
+            _scaffoldKey.currentState?.openDrawer();
+          },
+          tabBar: _buildReorderableTabs(
+            context: context,
+            user: user,
+            screenHeight: screenHeight,
+            primaryColor: primaryColor,
           ),
         ),
         drawer: const TanochanDrawer(),
@@ -1245,6 +1193,14 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           ],
         ),
       ),
+    );
+  }
+
+  // スナックバーを表示する。
+  void _showSnackBar(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
     );
   }
 }
