@@ -193,7 +193,7 @@ class _ShareScreenState extends State<ShareScreen> {
                   ],
                 ),
                 const SizedBox(
-                  height: 100,
+                  height: 50,
                 )
               ],
             ),
@@ -402,7 +402,7 @@ class SummaryCardPreview extends StatelessWidget {
             child: Align(
               alignment: Alignment.center,
               child: Opacity(
-                opacity: 0.2,
+                opacity: 0.25,
                 child: SvgPicture.asset(
                   logoAssetPath,
                   width: 120,
@@ -432,7 +432,10 @@ class SummaryCardPreview extends StatelessWidget {
                         Text.rich(
                           TextSpan(
                             children: [
-                              const TextSpan(text: 'メンバー数：'),
+                              const TextSpan(
+                                  text: 'メンバー数：',
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.w700)),
                               TextSpan(
                                 text: '${event.members.length}人',
                                 style: const TextStyle(
@@ -446,7 +449,10 @@ class SummaryCardPreview extends StatelessWidget {
                         Text.rich(
                           TextSpan(
                             children: [
-                              const TextSpan(text: '合計金額：'),
+                              const TextSpan(
+                                  text: '合計金額：',
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.w700)),
                               TextSpan(
                                 text: '$totalMoney円',
                                 style: const TextStyle(
@@ -465,7 +471,7 @@ class SummaryCardPreview extends StatelessWidget {
                         '回収率 $collectedCount/$totalCount人',
                         style: const TextStyle(
                           fontSize: 14,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -486,14 +492,15 @@ class SummaryCardPreview extends StatelessWidget {
                 Text(
                   'メンバー詳細',
                   style: GoogleFonts.notoSansJp(
-                    fontSize: 14,
+                    fontSize: 16,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 16),
                 for (final member in event.members)
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 6),
+                    padding:
+                        const EdgeInsets.only(left: 28, right: 28, bottom: 6),
                     child: Row(
                       children: [
                         Expanded(
@@ -503,7 +510,8 @@ class SummaryCardPreview extends StatelessWidget {
                                 : S.of(context)!.member,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(fontSize: 12),
+                            style: const TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.bold),
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -512,12 +520,16 @@ class SummaryCardPreview extends StatelessWidget {
                               ? '${member.memberMoney}円'
                               : '— 円',
                           style: const TextStyle(
-                            fontSize: 12,
+                            fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        statusIcon(member.status),
+                        const SizedBox(width: 32),
+                        SizedBox(
+                          height: 28,
+                          width: 28,
+                          child: statusIcon(member.status),
+                        ),
                       ],
                     ),
                   ),
