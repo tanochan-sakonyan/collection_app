@@ -9,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/ui/components/collection_rate_chart.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -36,6 +37,8 @@ class _ShareScreenState extends State<ShareScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        surfaceTintColor: Colors.transparent,
+        scrolledUnderElevation: 0,
         title: GestureDetector(
           onTap: () => Navigator.pop(context),
           child: Row(
@@ -67,7 +70,7 @@ class _ShareScreenState extends State<ShareScreen> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               '集金状況の共有',
@@ -84,8 +87,7 @@ class _ShareScreenState extends State<ShareScreen> {
                 child: SummaryCardPreview(
                   event: widget.event,
                   totalMoney: totalMoney,
-                  statusLabel: _statusLabel,
-                  statusColor: _statusColor,
+                  statusIcon: _statusIcon,
                 ),
               ),
             ),
@@ -109,7 +111,6 @@ class _ShareScreenState extends State<ShareScreen> {
       final origin = _buildShareOrigin(box);
       await Share.shareXFiles(
         [file],
-        text: '集金状況の共有です',
         sharePositionOrigin: origin,
       );
     } catch (error) {
@@ -127,7 +128,8 @@ class _ShareScreenState extends State<ShareScreen> {
       return const Rect.fromLTWH(0, 0, 1, 1);
     }
     final position = box.localToGlobal(Offset.zero);
-    return Rect.fromLTWH(position.dx, position.dy, box.size.width, box.size.height);
+    return Rect.fromLTWH(
+        position.dx, position.dy, box.size.width, box.size.height);
   }
 
   // カードを画像化してXFileにする。
@@ -156,31 +158,21 @@ class _ShareScreenState extends State<ShareScreen> {
     return XFile(file.path);
   }
 
-  // ステータスの文言を返す。
-  String _statusLabel(PaymentStatus status) {
+  // ステータスのアイコンを返す。
+  Widget _statusIcon(PaymentStatus status) {
     switch (status) {
       case PaymentStatus.paid:
-        return '支払い済み';
+        return const Icon(Icons.check, color: Color(0xFF35C759));
       case PaymentStatus.paypay:
-        return '支払い済み';
+        return Image.asset(
+          'assets/icons/ic_paypay.png',
+          width: 20,
+          height: 20,
+        );
       case PaymentStatus.unpaid:
-        return '未払い';
+        return const Icon(Icons.close, color: Colors.red);
       case PaymentStatus.absence:
-        return '欠席';
-    }
-  }
-
-  // ステータスの色を返す。
-  Color _statusColor(PaymentStatus status) {
-    switch (status) {
-      case PaymentStatus.paid:
-        return const Color(0xFF35C759);
-      case PaymentStatus.paypay:
-        return const Color(0xFF35C759);
-      case PaymentStatus.unpaid:
-        return const Color(0xFFE67E22);
-      case PaymentStatus.absence:
-        return Colors.grey;
+        return const Icon(Icons.remove, color: Color(0xFFC0C0C0));
     }
   }
 }
@@ -188,23 +180,27 @@ class _ShareScreenState extends State<ShareScreen> {
 class SummaryCardPreview extends StatelessWidget {
   final Event event;
   final int totalMoney;
-  final String Function(PaymentStatus status) statusLabel;
-  final Color Function(PaymentStatus status) statusColor;
+  final Widget Function(PaymentStatus status) statusIcon;
 
   const SummaryCardPreview({
     super.key,
     required this.event,
     required this.totalMoney,
-    required this.statusLabel,
-    required this.statusColor,
+    required this.statusIcon,
   });
 
   @override
   // サマリーカードのプレビューを描画する。
   Widget build(BuildContext context) {
+    final collectedCount = event.members
+        .where((member) =>
+            member.status == PaymentStatus.paid ||
+            member.status == PaymentStatus.paypay)
+        .length;
+    final totalCount = event.members.length;
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -219,28 +215,70 @@ class SummaryCardPreview extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            event.eventName,
-            style: GoogleFonts.notoSansJp(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      event.eventName,
+                      style: GoogleFonts.notoSansJp(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          const TextSpan(text: 'メンバー数：'),
+                          TextSpan(
+                            text: '${event.members.length}人',
+                            style: const TextStyle(fontWeight: FontWeight.w700),
+                          ),
+                        ],
+                      ),
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                    const SizedBox(height: 4),
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          const TextSpan(text: '合計金額：'),
+                          TextSpan(
+                            text: '$totalMoney円',
+                            style: const TextStyle(fontWeight: FontWeight.w700),
+                          ),
+                        ],
+                      ),
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                  ],
+                ),
+              ),
+              Column(
+                children: [
+                  Text(
+                    '回収率 $collectedCount/$totalCount',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  CollectionRateChart(
+                    collectedCount: collectedCount,
+                    totalCount: totalCount,
+                    size: 72,
+                  ),
+                ],
+              ),
+              const SizedBox(width: 12),
+            ],
           ),
-          const SizedBox(height: 8),
-          Text(
-            'メンバー数: ${event.members.length}人',
-            style: const TextStyle(fontSize: 14),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            '合計金額: $totalMoney円',
-            style: const TextStyle(fontSize: 14),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'イベントID: ${event.eventId}',
-            style: const TextStyle(fontSize: 12, color: Colors.black54),
-          ),
+          const SizedBox(height: 12),
           const SizedBox(height: 12),
           const Divider(height: 1),
           const SizedBox(height: 12),
@@ -267,22 +305,18 @@ class SummaryCardPreview extends StatelessWidget {
                       style: const TextStyle(fontSize: 12),
                     ),
                   ),
-                  Text(
-                    statusLabel(member.status),
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                      color: statusColor(member.status),
-                    ),
-                  ),
                   const SizedBox(width: 8),
                   Text(
-                    member.memberMoney != null ? '${member.memberMoney}円' : '—',
+                    member.memberMoney != null
+                        ? '${member.memberMoney}円'
+                        : '—-- 円',
                     style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
+                  const SizedBox(width: 8),
+                  statusIcon(member.status),
                 ],
               ),
             ),
