@@ -8,6 +8,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:mr_collection/data/model/freezed/user.dart';
 import 'package:mr_collection/logging/analytics_app_logger.dart';
 import 'package:mr_collection/provider/theme_color_provider.dart';
+import 'package:mr_collection/provider/theme_mode_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mr_collection/ui/screen/home_screen.dart';
@@ -90,6 +91,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp>
   @override
   Widget build(BuildContext context) {
     final themeColor = ref.watch(themeColorProvider);
+    final themeMode = ref.watch(themeModeProvider);
     final textTheme = Theme.of(context).textTheme.apply(
       fontFamily: 'Montserrat',
       fontFamilyFallback: ['Noto Sans JP'],
@@ -149,6 +151,34 @@ class _CollectionAppState extends ConsumerState<CollectionApp>
             ),
           ),
         ),
+        darkTheme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: themeColor.color,
+            brightness: Brightness.dark,
+          ),
+          brightness: Brightness.dark,
+          fontFamily: 'Montserrat',
+          fontFamilyFallback: const ['Noto Sans JP'],
+          textTheme: textTheme,
+          primaryColor: themeColor.color,
+          primaryTextTheme: textTheme,
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: themeColor.color,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ),
+          textButtonTheme: TextButtonThemeData(
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.grey.shade300,
+            ),
+          ),
+        ),
+        themeMode: themeMode,
         debugShowCheckedModeBanner: false,
         localizationsDelegates: const [
           S.delegate,

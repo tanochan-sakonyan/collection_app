@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mr_collection/logging/analytics_ui_logger.dart';
 import 'package:mr_collection/provider/theme_color_provider.dart';
+import 'package:mr_collection/provider/theme_mode_provider.dart';
 import 'package:mr_collection/theme/theme_color.dart';
 
 class ThemeColorDialog extends ConsumerWidget {
@@ -10,6 +11,7 @@ class ThemeColorDialog extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedColor = ref.watch(themeColorProvider);
+    final themeMode = ref.watch(themeModeProvider);
 
     return Dialog.fullscreen(
       backgroundColor: Colors.white,
@@ -43,6 +45,8 @@ class ThemeColorDialog extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 24),
+              _buildThemeModeToggle(ref, themeMode),
+              const SizedBox(height: 16),
               Expanded(
                 child: ListView.separated(
                   itemCount: ThemeColorOption.values.length,
@@ -69,6 +73,34 @@ class ThemeColorDialog extends ConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+
+  // ライト/ダークの切り替えを描画する。
+  Widget _buildThemeModeToggle(
+    WidgetRef ref,
+    ThemeMode mode,
+  ) {
+    final isDark = mode == ThemeMode.dark;
+    return Row(
+      children: [
+        const Text(
+          'ダークモード',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            color: Colors.black,
+          ),
+        ),
+        const Spacer(),
+        Switch(
+          value: isDark,
+          onChanged: (value) {
+            final nextMode = value ? ThemeMode.dark : ThemeMode.light;
+            ref.read(themeModeProvider.notifier).updateThemeMode(nextMode);
+          },
+        ),
+      ],
     );
   }
 }
