@@ -63,6 +63,10 @@ flutter_icons:
 flutter:
   generate: true
   assets:
+    - assets/icons/logo_default.svg
+    - assets/icons/logo_blue.svg
+    - assets/icons/logo_pink.svg
+    - assets/icons/logo_yellow.svg
     - assets/icons/reverse_icon.svg
     - assets/icons/filter.svg
     - assets/icons/circle_plus.svg
