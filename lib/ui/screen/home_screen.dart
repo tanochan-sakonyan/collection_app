@@ -781,9 +781,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   // 20250630追記。shownVersionFor200作成済み
   // 20260106追記。shownVersionFor270作成済み
   // 20260107追記。shownVersionFor280作成済み
+  // 20260110追記。shownVersionFor290作成済み
   Future<void> _checkAndShowUpdateDialog() async {
     final prefs = await SharedPreferences.getInstance();
-    final shown = prefs.getBool('shownVersionFor280') ?? false;
+    final shown = prefs.getBool('shownVersionFor290') ?? false;
     debugPrint('shownVersion: $shown');
     if (!shown) {
       showDialog(
@@ -793,7 +794,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           onPageChanged: (i) {},
         ),
       );
-      await prefs.setBool('shownVersionFor280', true);
+      await prefs.setBool('shownVersionFor290', true);
       debugPrint('Update dialog shown for version "true"');
     } else {
       debugPrint('すでに表示されています。');
@@ -989,6 +990,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           screenWidth: screenWidth,
           screenHeight: screenHeight,
           onSharePressed: () {
+            unawaited(AnalyticsUiLogger.logShareButtonPressed());
             if (currentEvent == null) {
               _showSnackBar('イベントが選択されていません');
               return;

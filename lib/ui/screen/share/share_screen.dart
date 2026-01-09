@@ -1,7 +1,7 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:ui' as ui;
 
-import 'package:cross_file/cross_file.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,6 +11,7 @@ import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/generated/s.dart';
+import 'package:mr_collection/logging/analytics_ui_logger.dart';
 import 'package:mr_collection/ui/components/collection_rate_chart.dart';
 import 'package:mr_collection/ui/components/dialog/paypay_dialog.dart';
 import 'package:mr_collection/provider/user_provider.dart';
@@ -120,7 +121,8 @@ class _ShareScreenState extends State<ShareScreen> {
                 ),
                 const SizedBox(height: 8),
                 GestureDetector(
-                  onTap: () => _handleCardTap(ref, _anonymousCardKey),
+                  onTap: () =>
+                      _handleCardTap(ref, _anonymousCardKey, isAnonymous: true),
                   child: RepaintBoundary(
                     key: _anonymousCardKey,
                     child: SummaryCardPreview(
@@ -170,7 +172,8 @@ class _ShareScreenState extends State<ShareScreen> {
                 ),
                 const SizedBox(height: 8),
                 GestureDetector(
-                  onTap: () => _handleCardTap(ref, _detailCardKey),
+                  onTap: () =>
+                      _handleCardTap(ref, _detailCardKey, isAnonymous: false),
                   child: RepaintBoundary(
                     key: _detailCardKey,
                     child: SummaryCardPreview(
@@ -273,10 +276,19 @@ class _ShareScreenState extends State<ShareScreen> {
   }
 
   // カードの画像化を試す。
-  Future<void> _handleCardTap(WidgetRef ref, GlobalKey cardKey) async {
+  Future<void> _handleCardTap(
+    WidgetRef ref,
+    GlobalKey cardKey, {
+    required bool isAnonymous,
+  }) async {
     try {
       final file = await _captureCardImage(cardKey);
       if (!mounted) return;
+      if (isAnonymous) {
+        unawaited(AnalyticsUiLogger.logShareAnonymousCard());
+      } else {
+        unawaited(AnalyticsUiLogger.logShareDetailCard());
+      }
       final shareText = _buildShareText(ref);
       final origin = _buildShareOrigin(context);
       await Share.shareXFiles(

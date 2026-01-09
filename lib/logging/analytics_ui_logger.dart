@@ -46,6 +46,39 @@ class AnalyticsUiLogger {
     }
   }
 
+  // Home画面の共有ボタン押下ログを送信する。
+  static Future<void> logShareButtonPressed() async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'share_button_pressed',
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // 匿名カード共有ログを送信する。
+  static Future<void> logShareAnonymousCard() async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'share_anonymous_card',
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
+  // 詳細カード共有ログを送信する。
+  static Future<void> logShareDetailCard() async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'share_detail_card',
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
+
   // 重複メンバー警告表示ログを送信する。
   static Future<void> logDuplicateMemberWarningShown() async {
     try {

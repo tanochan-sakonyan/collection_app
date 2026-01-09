@@ -42,10 +42,10 @@ class _UpdateInfoAndSuggestQuestionnaireDialogState
                 onPageChanged: widget.onPageChanged,
                 children: const [
                   UpdateInfoDialog(
-                    version: "2.8.1",
-                    first: "金額設定時に端数を切り上げる機能",
-                    second: "メンバー・タブの並び替えが可能に",
-                    third: "一括編集機能を実装！",
+                    version: "2.9.0",
+                    first: "集金状況の共有機能を実装！",
+                    second: "金額設定時に端数を切り上げる機能",
+                    third: "一括編集機能を実装",
                   ),
                   QuestionnaireDialog(),
                 ],
