@@ -10,6 +10,7 @@ import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ShareScreen extends StatefulWidget {
   final Event event;
@@ -102,10 +103,14 @@ class _ShareScreenState extends State<ShareScreen> {
   // カードの画像化を試す。
   Future<void> _handleCardTap() async {
     try {
-      await _captureCardImage();
+      final file = await _captureCardImage();
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('画像を作成しました')),
+      final box = _cardKey.currentContext?.findRenderObject() as RenderBox?;
+      final origin = _buildShareOrigin(box);
+      await Share.shareXFiles(
+        [file],
+        text: '集金状況の共有です',
+        sharePositionOrigin: origin,
       );
     } catch (error) {
       if (!mounted) return;
@@ -114,6 +119,15 @@ class _ShareScreenState extends State<ShareScreen> {
       );
       debugPrint('カード画像化エラー: $error');
     }
+  }
+
+  // 共有シートの基準位置を作る。
+  Rect _buildShareOrigin(RenderBox? box) {
+    if (box == null || !box.hasSize) {
+      return const Rect.fromLTWH(0, 0, 1, 1);
+    }
+    final position = box.localToGlobal(Offset.zero);
+    return Rect.fromLTWH(position.dx, position.dy, box.size.width, box.size.height);
   }
 
   // カードを画像化してXFileにする。
