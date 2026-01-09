@@ -13,6 +13,8 @@ import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/ui/components/collection_rate_chart.dart';
 import 'package:mr_collection/ui/components/dialog/paypay_dialog.dart';
 import 'package:mr_collection/provider/user_provider.dart';
+import 'package:mr_collection/provider/theme_color_provider.dart';
+import 'package:mr_collection/theme/theme_color.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -84,6 +86,7 @@ class _ShareScreenState extends State<ShareScreen> {
       ),
       body: Consumer(
         builder: (context, ref, _) {
+          final logoAssetPath = _logoAssetPath(ref.watch(themeColorProvider));
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -123,6 +126,7 @@ class _ShareScreenState extends State<ShareScreen> {
                       event: widget.event,
                       totalMoney: totalMoney,
                       statusIcon: _statusIcon,
+                      logoAssetPath: logoAssetPath,
                       showMembers: false,
                     ),
                   ),
@@ -172,6 +176,7 @@ class _ShareScreenState extends State<ShareScreen> {
                       event: widget.event,
                       totalMoney: totalMoney,
                       statusIcon: _statusIcon,
+                      logoAssetPath: logoAssetPath,
                       showMembers: true,
                     ),
                   ),
@@ -196,6 +201,21 @@ class _ShareScreenState extends State<ShareScreen> {
         },
       ),
     );
+  }
+
+  // テーマカラーに応じたロゴを返す。
+  String _logoAssetPath(ThemeColorOption option) {
+    switch (option.keyName) {
+      case 'sakura':
+        return 'assets/icons/logo_pink.svg';
+      case 'ajisai':
+        return 'assets/icons/logo_blue.svg';
+      case 'ichou':
+        return 'assets/icons/logo_yellow.svg';
+      case 'default':
+      default:
+        return 'assets/icons/logo_default.svg';
+    }
   }
 
   // PayPay共有チェックを描画する。
@@ -337,6 +357,7 @@ class SummaryCardPreview extends StatelessWidget {
   final Event event;
   final int totalMoney;
   final Widget Function(PaymentStatus status) statusIcon;
+  final String logoAssetPath;
   final bool showMembers;
 
   const SummaryCardPreview({
@@ -344,6 +365,7 @@ class SummaryCardPreview extends StatelessWidget {
     required this.event,
     required this.totalMoney,
     required this.statusIcon,
+    required this.logoAssetPath,
     required this.showMembers,
   });
 
@@ -374,115 +396,134 @@ class SummaryCardPreview extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      event.eventName,
-                      style: GoogleFonts.notoSansJp(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Text.rich(
-                      TextSpan(
-                        children: [
-                          const TextSpan(text: 'メンバー数：'),
-                          TextSpan(
-                            text: '${event.members.length}人',
-                            style: const TextStyle(fontWeight: FontWeight.w700),
-                          ),
-                        ],
-                      ),
-                      style: const TextStyle(fontSize: 14),
-                    ),
-                    const SizedBox(height: 4),
-                    Text.rich(
-                      TextSpan(
-                        children: [
-                          const TextSpan(text: '合計金額：'),
-                          TextSpan(
-                            text: '$totalMoney円',
-                            style: const TextStyle(fontWeight: FontWeight.w700),
-                          ),
-                        ],
-                      ),
-                      style: const TextStyle(fontSize: 14),
-                    ),
-                  ],
+          Positioned.fill(
+            child: Align(
+              alignment: Alignment.center,
+              child: Opacity(
+                opacity: 0.2,
+                child: SvgPicture.asset(
+                  logoAssetPath,
+                  width: 120,
+                  height: 120,
                 ),
-              ),
-              Column(
-                children: [
-                  Text(
-                    '回収率 $collectedCount/$totalCount人',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  CollectionRateChart(
-                    collectedCount: collectedCount,
-                    totalCount: totalCount,
-                    size: 72,
-                  ),
-                ],
-              ),
-              const SizedBox(width: 12),
-            ],
-          ),
-          if (showMembers) ...[
-            const SizedBox(height: 12),
-            const Divider(height: 1),
-            const SizedBox(height: 12),
-            Text(
-              'メンバー詳細',
-              style: GoogleFonts.notoSansJp(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
               ),
             ),
-            const SizedBox(height: 8),
-            for (final member in event.members)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 6),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        member.memberName.isNotEmpty
-                            ? member.memberName
-                            : S.of(context)!.member,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontSize: 12),
-                      ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          event.eventName,
+                          style: GoogleFonts.notoSansJp(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        Text.rich(
+                          TextSpan(
+                            children: [
+                              const TextSpan(text: 'メンバー数：'),
+                              TextSpan(
+                                text: '${event.members.length}人',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w700),
+                              ),
+                            ],
+                          ),
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                        const SizedBox(height: 4),
+                        Text.rich(
+                          TextSpan(
+                            children: [
+                              const TextSpan(text: '合計金額：'),
+                              TextSpan(
+                                text: '$totalMoney円',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w700),
+                              ),
+                            ],
+                          ),
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 8),
-                    Text(
-                      member.memberMoney != null
-                          ? '${member.memberMoney}円'
-                          : '—-- 円',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
+                  ),
+                  Column(
+                    children: [
+                      Text(
+                        '回収率 $collectedCount/$totalCount人',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    statusIcon(member.status),
-                  ],
-                ),
+                      const SizedBox(height: 8),
+                      CollectionRateChart(
+                        collectedCount: collectedCount,
+                        totalCount: totalCount,
+                        size: 72,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(width: 12),
+                ],
               ),
-          ],
+              if (showMembers) ...[
+                const SizedBox(height: 12),
+                const Divider(height: 1),
+                const SizedBox(height: 12),
+                Text(
+                  'メンバー詳細',
+                  style: GoogleFonts.notoSansJp(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                for (final member in event.members)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 6),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            member.memberName.isNotEmpty
+                                ? member.memberName
+                                : S.of(context)!.member,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          member.memberMoney != null
+                              ? '${member.memberMoney}円'
+                              : '— 円',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        statusIcon(member.status),
+                      ],
+                    ),
+                  ),
+              ],
+            ],
+          ),
         ],
       ),
     );
