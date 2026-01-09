@@ -88,6 +88,7 @@ class _ShareScreenState extends State<ShareScreen> {
                   event: widget.event,
                   totalMoney: totalMoney,
                   statusIcon: _statusIcon,
+                  showMembers: true,
                 ),
               ),
             ),
@@ -95,6 +96,13 @@ class _ShareScreenState extends State<ShareScreen> {
             const Text(
               'カードをタップすると画像を作成します',
               style: TextStyle(fontSize: 12, color: Colors.black54),
+            ),
+            const SizedBox(height: 16),
+            SummaryCardPreview(
+              event: widget.event,
+              totalMoney: totalMoney,
+              statusIcon: _statusIcon,
+              showMembers: false,
             ),
           ],
         ),
@@ -107,8 +115,7 @@ class _ShareScreenState extends State<ShareScreen> {
     try {
       final file = await _captureCardImage();
       if (!mounted) return;
-      final box = _cardKey.currentContext?.findRenderObject() as RenderBox?;
-      final origin = _buildShareOrigin(box);
+      final origin = _buildShareOrigin(context);
       await Share.shareXFiles(
         [file],
         sharePositionOrigin: origin,
@@ -123,13 +130,11 @@ class _ShareScreenState extends State<ShareScreen> {
   }
 
   // 共有シートの基準位置を作る。
-  Rect _buildShareOrigin(RenderBox? box) {
-    if (box == null || !box.hasSize) {
-      return const Rect.fromLTWH(0, 0, 1, 1);
-    }
-    final position = box.localToGlobal(Offset.zero);
-    return Rect.fromLTWH(
-        position.dx, position.dy, box.size.width, box.size.height);
+  Rect _buildShareOrigin(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final width = size.width.clamp(1.0, size.width);
+    final height = size.height.clamp(1.0, size.height);
+    return Rect.fromLTWH(0, 0, width, height);
   }
 
   // カードを画像化してXFileにする。
@@ -181,12 +186,14 @@ class SummaryCardPreview extends StatelessWidget {
   final Event event;
   final int totalMoney;
   final Widget Function(PaymentStatus status) statusIcon;
+  final bool showMembers;
 
   const SummaryCardPreview({
     super.key,
     required this.event,
     required this.totalMoney,
     required this.statusIcon,
+    required this.showMembers,
   });
 
   @override
@@ -204,6 +211,10 @@ class SummaryCardPreview extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Theme.of(context).primaryColor,
+          width: 2,
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.08),
@@ -278,48 +289,49 @@ class SummaryCardPreview extends StatelessWidget {
               const SizedBox(width: 12),
             ],
           ),
-          const SizedBox(height: 12),
-          const SizedBox(height: 12),
-          const Divider(height: 1),
-          const SizedBox(height: 12),
-          Text(
-            'メンバー詳細',
-            style: GoogleFonts.notoSansJp(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(height: 8),
-          for (final member in event.members)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 6),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      member.memberName.isNotEmpty
-                          ? member.memberName
-                          : S.of(context)!.member,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    member.memberMoney != null
-                        ? '${member.memberMoney}円'
-                        : '—-- 円',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  statusIcon(member.status),
-                ],
+          if (showMembers) ...[
+            const SizedBox(height: 12),
+            const Divider(height: 1),
+            const SizedBox(height: 12),
+            Text(
+              'メンバー詳細',
+              style: GoogleFonts.notoSansJp(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
               ),
             ),
+            const SizedBox(height: 8),
+            for (final member in event.members)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 6),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        member.memberName.isNotEmpty
+                            ? member.memberName
+                            : S.of(context)!.member,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      member.memberMoney != null
+                          ? '${member.memberMoney}円'
+                          : '—-- 円',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    statusIcon(member.status),
+                  ],
+                ),
+              ),
+          ],
         ],
       ),
     );
