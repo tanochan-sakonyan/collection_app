@@ -90,8 +90,31 @@ class _ShareScreenState extends State<ShareScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildPayPayCheckbox(ref),
-                const SizedBox(height: 12),
+                const SizedBox(height: 8),
+                const Divider(),
+                const SizedBox(height: 8),
                 // 匿名版カード
+                const Row(
+                  children: [
+                    SizedBox(width: 16),
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                              text: '匿名カード ',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold)),
+                          TextSpan(
+                            text: 'メンバーの名前は共有されません',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
                 GestureDetector(
                   onTap: () => _handleCardTap(ref, _anonymousCardKey),
                   child: RepaintBoundary(
@@ -105,12 +128,42 @@ class _ShareScreenState extends State<ShareScreen> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                const Text(
-                  'カードをタップすると画像を作成します',
-                  style: TextStyle(fontSize: 12, color: Colors.black54),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      'カードをタップして共有',
+                      style: TextStyle(fontSize: 12, color: Colors.black54),
+                    ),
+                    SizedBox(width: 20)
+                  ],
                 ),
                 const SizedBox(height: 16),
+                const SizedBox(height: 8),
+                const Divider(),
+                const SizedBox(height: 8),
                 // メンバー付きカード
+                const Row(
+                  children: [
+                    SizedBox(width: 16),
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                              text: 'カード ',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold)),
+                          TextSpan(
+                            text: 'メンバーの名前と集金状況も共有されます',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
                 GestureDetector(
                   onTap: () => _handleCardTap(ref, _detailCardKey),
                   child: RepaintBoundary(
@@ -123,6 +176,20 @@ class _ShareScreenState extends State<ShareScreen> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 12),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      'カードをタップして共有',
+                      style: TextStyle(fontSize: 12, color: Colors.black54),
+                    ),
+                    SizedBox(width: 20)
+                  ],
+                ),
+                const SizedBox(
+                  height: 100,
+                )
               ],
             ),
           );
