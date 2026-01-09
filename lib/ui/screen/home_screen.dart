@@ -27,7 +27,7 @@ import 'package:mr_collection/ui/screen/member_list.dart';
 import 'package:mr_collection/ui/components/tanochan_drawer.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/user.dart';
-import 'package:mr_collection/ui/screen/share/summary_share_screen.dart';
+import 'package:mr_collection/ui/screen/share/share_screen.dart';
 import 'package:mr_collection/ui/tutorial/tutorial_targets.dart';
 import 'package:mr_collection/ui/components/duplicate_member_warning.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -989,9 +989,13 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           screenWidth: screenWidth,
           screenHeight: screenHeight,
           onSharePressed: () {
+            if (currentEvent == null) {
+              _showSnackBar('イベントが選択されていません');
+              return;
+            }
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (_) => const SummaryShareScreen(),
+                builder: (_) => ShareScreen(event: currentEvent),
               ),
             );
           },
@@ -1192,4 +1196,11 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     );
   }
 
+  // スナックバーを表示する。
+  void _showSnackBar(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
 }
