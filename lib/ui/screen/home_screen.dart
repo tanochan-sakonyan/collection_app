@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:io' show Platform;
 
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -26,6 +28,7 @@ import 'package:mr_collection/ui/screen/member_list.dart';
 import 'package:mr_collection/ui/components/tanochan_drawer.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/user.dart';
+import 'package:mr_collection/ui/screen/share/summary_share_screen.dart';
 import 'package:mr_collection/ui/tutorial/tutorial_targets.dart';
 import 'package:mr_collection/ui/components/duplicate_member_warning.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -885,7 +888,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                               ref.read(userProvider)!.userId,
                                               event.eventId,
                                               newNote);
-                                      unawaited(AnalyticsUiLogger.logMemoSaved());
+                                      unawaited(
+                                          AnalyticsUiLogger.logMemoSaved());
                                       Navigator.of(context).pop();
                                     } catch (e) {
                                       debugPrint('メモ保存に失敗: $e');
@@ -989,6 +993,20 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           actions: [
             Row(
               children: [
+                IconButton(
+                  splashColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  hoverColor: Colors.transparent,
+                  focusColor: Colors.transparent,
+                  icon: _buildShareIcon(context),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const SummaryShareScreen(),
+                      ),
+                    );
+                  },
+                ),
                 tabTitles.isEmpty
                     ? const SizedBox(width: 24)
                     : IconButton(
@@ -1245,6 +1263,28 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           ],
         ),
       ),
+    );
+  }
+
+  // 共有アイコンを描画する。
+  Widget _buildShareIcon(BuildContext context) {
+    final primaryColor = Theme.of(context).primaryColor;
+    if (Platform.isAndroid) {
+      return SvgPicture.asset(
+        'assets/icons/ic_share_android.svg',
+        width: 24,
+        height: 24,
+        colorFilter: ColorFilter.mode(
+          primaryColor,
+          BlendMode.srcIn,
+        ),
+      );
+    }
+
+    return Icon(
+      CupertinoIcons.share,
+      size: 26,
+      color: primaryColor,
     );
   }
 }
