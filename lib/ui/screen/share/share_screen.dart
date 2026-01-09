@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
+import 'package:mr_collection/data/model/freezed/member.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/ui/components/collection_rate_chart.dart';
@@ -497,7 +498,7 @@ class SummaryCardPreview extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-                for (final member in event.members)
+                for (final member in _sortedMembers())
                   Padding(
                     padding:
                         const EdgeInsets.only(left: 28, right: 28, bottom: 6),
@@ -539,5 +540,27 @@ class SummaryCardPreview extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  // メンバーをステータス順に並べる。
+  List<Member> _sortedMembers() {
+    final members = List<Member>.from(event.members);
+    members
+        .sort((a, b) => _statusRank(a.status).compareTo(_statusRank(b.status)));
+    return members;
+  }
+
+  // ステータスの並び順を返す。
+  int _statusRank(PaymentStatus status) {
+    switch (status) {
+      case PaymentStatus.unpaid:
+        return 0;
+      case PaymentStatus.paid:
+        return 1;
+      case PaymentStatus.paypay:
+        return 2;
+      case PaymentStatus.absence:
+        return 3;
+    }
   }
 }
