@@ -4,12 +4,15 @@ import 'dart:ui' as ui;
 import 'package:cross_file/cross_file.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/ui/components/collection_rate_chart.dart';
+import 'package:mr_collection/ui/components/dialog/paypay_dialog.dart';
+import 'package:mr_collection/provider/user_provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -27,7 +30,9 @@ class ShareScreen extends StatefulWidget {
 }
 
 class _ShareScreenState extends State<ShareScreen> {
-  final GlobalKey _cardKey = GlobalKey();
+  final GlobalKey _anonymousCardKey = GlobalKey();
+  final GlobalKey _detailCardKey = GlobalKey();
+  bool _includePayPayLink = false;
 
   @override
   // Share画面を描画する。
@@ -39,11 +44,14 @@ class _ShareScreenState extends State<ShareScreen> {
         automaticallyImplyLeading: false,
         surfaceTintColor: Colors.transparent,
         scrolledUnderElevation: 0,
-        title: GestureDetector(
+        centerTitle: true,
+        leadingWidth: 88,
+        leading: GestureDetector(
           onTap: () => Navigator.pop(context),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              const SizedBox(width: 4),
               SvgPicture.asset(
                 'assets/icons/ic_back.svg',
                 width: 44,
@@ -64,60 +72,128 @@ class _ShareScreenState extends State<ShareScreen> {
             ],
           ),
         ),
+        title: Text(
+          '集金状況の共有',
+          style: GoogleFonts.notoSansJp(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         backgroundColor: Colors.white,
         elevation: 0,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              '集金状況の共有',
-              style: GoogleFonts.notoSansJp(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 12),
-            GestureDetector(
-              onTap: _handleCardTap,
-              child: RepaintBoundary(
-                key: _cardKey,
-                child: SummaryCardPreview(
-                  event: widget.event,
-                  totalMoney: totalMoney,
-                  statusIcon: _statusIcon,
-                  showMembers: true,
+      body: Consumer(
+        builder: (context, ref, _) {
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildPayPayCheckbox(ref),
+                const SizedBox(height: 12),
+                // 匿名版カード
+                GestureDetector(
+                  onTap: () => _handleCardTap(ref, _anonymousCardKey),
+                  child: RepaintBoundary(
+                    key: _anonymousCardKey,
+                    child: SummaryCardPreview(
+                      event: widget.event,
+                      totalMoney: totalMoney,
+                      statusIcon: _statusIcon,
+                      showMembers: false,
+                    ),
+                  ),
                 ),
-              ),
+                const SizedBox(height: 12),
+                const Text(
+                  'カードをタップすると画像を作成します',
+                  style: TextStyle(fontSize: 12, color: Colors.black54),
+                ),
+                const SizedBox(height: 16),
+                // メンバー付きカード
+                GestureDetector(
+                  onTap: () => _handleCardTap(ref, _detailCardKey),
+                  child: RepaintBoundary(
+                    key: _detailCardKey,
+                    child: SummaryCardPreview(
+                      event: widget.event,
+                      totalMoney: totalMoney,
+                      statusIcon: _statusIcon,
+                      showMembers: true,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 12),
-            const Text(
-              'カードをタップすると画像を作成します',
-              style: TextStyle(fontSize: 12, color: Colors.black54),
-            ),
-            const SizedBox(height: 16),
-            SummaryCardPreview(
-              event: widget.event,
-              totalMoney: totalMoney,
-              statusIcon: _statusIcon,
-              showMembers: false,
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
 
+  // PayPay共有チェックを描画する。
+  Widget _buildPayPayCheckbox(WidgetRef ref) {
+    return Row(
+      children: [
+        Checkbox(
+          value: _includePayPayLink,
+          onChanged: (value) {
+            if (value == null) return;
+            _handlePayPayToggle(ref, value);
+          },
+          fillColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.selected)) {
+              return Theme.of(context).primaryColor;
+            }
+          }),
+        ),
+        const SizedBox(width: 8),
+        const Expanded(
+          child: Text(
+            'PayPayリンクも一緒に共有する',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // PayPayリンク共有の状態を切り替える。
+  Future<void> _handlePayPayToggle(WidgetRef ref, bool value) async {
+    if (!value) {
+      setState(() => _includePayPayLink = false);
+      return;
+    }
+
+    final user = ref.read(userProvider);
+    final paypayUrl = user?.paypayUrl;
+    if (paypayUrl == null || paypayUrl.isEmpty) {
+      await showDialog(
+        context: context,
+        builder: (_) => const PayPayDialog(),
+      );
+      final updated = ref.read(userProvider)?.paypayUrl;
+      if (updated == null || updated.isEmpty) {
+        if (!mounted) return;
+        setState(() => _includePayPayLink = false);
+        return;
+      }
+    }
+
+    if (!mounted) return;
+    setState(() => _includePayPayLink = true);
+  }
+
   // カードの画像化を試す。
-  Future<void> _handleCardTap() async {
+  Future<void> _handleCardTap(WidgetRef ref, GlobalKey cardKey) async {
     try {
-      final file = await _captureCardImage();
+      final file = await _captureCardImage(cardKey);
       if (!mounted) return;
+      final shareText = _buildShareText(ref);
       final origin = _buildShareOrigin(context);
       await Share.shareXFiles(
         [file],
+        text: shareText,
         sharePositionOrigin: origin,
       );
     } catch (error) {
@@ -129,6 +205,14 @@ class _ShareScreenState extends State<ShareScreen> {
     }
   }
 
+  // 共有テキストを作る。
+  String? _buildShareText(WidgetRef ref) {
+    if (!_includePayPayLink) return null;
+    final paypayUrl = ref.read(userProvider)?.paypayUrl;
+    if (paypayUrl == null || paypayUrl.isEmpty) return null;
+    return 'お支払いをお願いいたします。PayPayリンク：$paypayUrl';
+  }
+
   // 共有シートの基準位置を作る。
   Rect _buildShareOrigin(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -138,9 +222,9 @@ class _ShareScreenState extends State<ShareScreen> {
   }
 
   // カードを画像化してXFileにする。
-  Future<XFile> _captureCardImage() async {
+  Future<XFile> _captureCardImage(GlobalKey cardKey) async {
     await WidgetsBinding.instance.endOfFrame;
-    final boundaryContext = _cardKey.currentContext;
+    final boundaryContext = cardKey.currentContext;
     if (boundaryContext == null) {
       throw Exception('カードの描画が取得できませんでした');
     }
@@ -272,7 +356,7 @@ class SummaryCardPreview extends StatelessWidget {
               Column(
                 children: [
                   Text(
-                    '回収率 $collectedCount/$totalCount',
+                    '回収率 $collectedCount/$totalCount人',
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
