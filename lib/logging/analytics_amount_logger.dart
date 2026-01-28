@@ -55,9 +55,11 @@ class AnalyticsAmountLogger {
   // 端数切り上げ選択ログを送信する。
   static Future<void> logRoundUpOptionPressed({
     required String option,
+    required String source,
   }) async {
     final parameters = <String, Object>{
       'option': option,
+      'source': source,
     };
     try {
       await FirebaseAnalytics.instance.logEvent(

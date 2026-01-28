@@ -424,13 +424,34 @@ class DonationDialogState extends ConsumerState<DonationDialog> {
                     ),
               ),
               const SizedBox(height: 14),
-              Text(
-                "「集金くん」は学生エンジニアによって\n赤字開発されています。\nよりよい機能を継続的に届けられるよう、\nご支援いただけると幸いです。",
-                style: GoogleFonts.notoSansJp(
+              Builder(
+                builder: (context) {
+                  final baseStyle = GoogleFonts.notoSansJp(
                     fontSize: 11,
                     color: const Color(0xFF777777),
-                    fontWeight: FontWeight.w600),
-                textAlign: TextAlign.center,
+                    fontWeight: FontWeight.w600,
+                  );
+                  return Text.rich(
+                    TextSpan(
+                      style: baseStyle,
+                      children: [
+                        const TextSpan(
+                          text: "「集金くん」は学生エンジニアによって\n",
+                        ),
+                        TextSpan(
+                          text: "赤字",
+                          style:
+                              baseStyle.copyWith(color: const Color(0xFFE53935)),
+                        ),
+                        const TextSpan(
+                          text:
+                              "開発されています。\nよりよい機能を継続的に届けられるよう、\nご支援いただけると幸いです。",
+                        ),
+                      ],
+                    ),
+                    textAlign: TextAlign.center,
+                  );
+                },
               ),
               const SizedBox(height: 24),
               Row(
