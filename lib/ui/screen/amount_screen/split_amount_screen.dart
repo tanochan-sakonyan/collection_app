@@ -830,6 +830,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                   currencyUnit: currencyUnit,
                   selectedOption: _selectedRoundUpOption,
                   onOptionChanged: _handleRoundOptionSelected,
+                  onOptionInteracted: _handleRoundUpOptionInteracted,
                   changeAmountText: formattedChange,
                 ),
               if (_currentTab == 0 ||
@@ -1000,12 +1001,20 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
     setState(() {
       _selectedRoundUpOption = newValue;
     });
-    AnalyticsAmountLogger.logRoundUpOptionPressed(
-      option: _roundUpOptionLabel(newValue),
-    );
     if (_currentTab == 1 || _currentTab == 2) {
       _recalculateAmounts();
     }
+  }
+
+  // 端数切り上げの操作ログを送信する。
+  void _handleRoundUpOptionInteracted(
+    RoundUpOption option,
+    RoundUpTapSource source,
+  ) {
+    AnalyticsAmountLogger.logRoundUpOptionPressed(
+      option: _roundUpOptionLabel(option),
+      source: _roundUpTapSourceLabel(source),
+    );
   }
 
   // タブごとの入力方式を返す。
@@ -1040,6 +1049,16 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
         return '100';
       default:
         return 'none';
+    }
+  }
+
+  // 端数切り上げの操作元ラベルを返す。
+  String _roundUpTapSourceLabel(RoundUpTapSource source) {
+    switch (source) {
+      case RoundUpTapSource.checkbox:
+        return 'checkbox';
+      case RoundUpTapSource.label:
+        return 'label';
     }
   }
 

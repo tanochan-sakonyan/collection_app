@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 enum RoundUpOption { none, ten, fifty, hundred }
+enum RoundUpTapSource { checkbox, label }
 
 class RoundUpModule extends StatelessWidget {
   const RoundUpModule({
@@ -8,12 +9,15 @@ class RoundUpModule extends StatelessWidget {
     required this.currencyUnit,
     required this.selectedOption,
     required this.onOptionChanged,
+    required this.onOptionInteracted,
     required this.changeAmountText,
   });
 
   final String currencyUnit;
   final RoundUpOption selectedOption;
   final ValueChanged<RoundUpOption> onOptionChanged;
+  final void Function(RoundUpOption option, RoundUpTapSource source)
+      onOptionInteracted;
   final String changeAmountText;
 
   @override
@@ -71,31 +75,43 @@ class RoundUpModule extends StatelessWidget {
       BuildContext context, String label, RoundUpOption option) {
     final isSelected = selectedOption == option;
     return Expanded(
-      child: InkWell(
-        onTap: () => onOptionChanged(option),
-        borderRadius: BorderRadius.circular(8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Checkbox(
-              value: isSelected,
-              onChanged: (_) => onOptionChanged(option),
-              fillColor: WidgetStateProperty.resolveWith((states) {
-                if (states.contains(WidgetState.selected)) {
-                  return Theme.of(context).primaryColor;
-                }
-              }),
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Checkbox(
+            value: isSelected,
+            onChanged: (_) {
+              onOptionInteracted(option, RoundUpTapSource.checkbox);
+              onOptionChanged(option);
+            },
+            fillColor: WidgetStateProperty.resolveWith((states) {
+              if (states.contains(WidgetState.selected)) {
+                return Theme.of(context).primaryColor;
+              }
+            }),
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          ),
+          Expanded(
+            child: InkWell(
+              onTap: () {
+                onOptionInteracted(option, RoundUpTapSource.label);
+                onOptionChanged(option);
+              },
+              borderRadius: BorderRadius.circular(8),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Text(
+                  label,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.copyWith(fontWeight: FontWeight.w600),
+                ),
+              ),
             ),
-            Text(
-              label,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium
-                  ?.copyWith(fontWeight: FontWeight.w600),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
