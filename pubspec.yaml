@@ -2,7 +2,7 @@ name: mr_collection
 description: "集金くん"
 publish_to: "none"
 
-version: 2.9.0
+version: 2.9.1
 
 environment:
   sdk: ^3.5.3
