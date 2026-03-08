@@ -118,6 +118,7 @@ class UserRepository {
   }
 
   // TODO: 今後はfetchLineUserByIdとfetchAppleUserByIdで運用する。
+  // 現状はAppleログインで使用されている
   Future<User?> fetchUserById(String userId) async {
     debugPrint('fetchUserById関数が呼ばれました。');
     final url = Uri.parse('$baseUrl/users/$userId');
@@ -344,6 +345,10 @@ class UserRepository {
 
     final accessToken = data['access_token'] as String?;
     final refreshToken = data['refresh_token'] as String?;
+
+    debugPrint('受け取ったデータ: $data');
+    debugPrint('受け取ったアクセストークン: $accessToken');
+    debugPrint('受け取ったリフレッシュトークン: $refreshToken');
 
     if (accessToken != null &&
         accessToken.isNotEmpty &&

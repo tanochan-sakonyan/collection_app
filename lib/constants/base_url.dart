@@ -1,2 +1,2 @@
 const baseUrl =
-    'https://shukinkun-grdsgngxf7hdg9fz.japaneast-01.azurewebsites.net/';
+    'https://asia-northeast1-collection-41a91.cloudfunctions.net/api/';
