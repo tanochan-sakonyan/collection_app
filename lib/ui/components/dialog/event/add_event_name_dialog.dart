@@ -13,6 +13,7 @@ import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/logging/analytics_event_logger.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/provider/pending_event_focus_provider.dart';
+import 'package:mr_collection/provider/ads_removal_provider.dart';
 import 'package:mr_collection/services/auth_service.dart';
 import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
 import 'package:mr_collection/ui/screen/line_add_member/invite_official_account_to_line_group_screen.dart';
@@ -113,7 +114,7 @@ class _AddEventNameDialogState extends ConsumerState<AddEventNameDialog> {
 
     ref.read(loadingProvider.notifier).state = true;
 
-    if (interstitial.isReady) {
+    if (!ref.read(adsRemovalProvider) && interstitial.isReady) {
       await interstitial.show();
     }
 

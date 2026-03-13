@@ -13,6 +13,7 @@ import 'package:mr_collection/logging/analytics_event_logger.dart';
 import 'package:mr_collection/logging/analytics_ui_logger.dart';
 import 'package:mr_collection/provider/tab_titles_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
+import 'package:mr_collection/provider/ads_removal_provider.dart';
 import 'package:mr_collection/ui/components/button/floating_action_button_off.dart';
 import 'package:mr_collection/ui/components/button/floating_action_button_on.dart';
 import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
@@ -59,6 +60,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   final Map<String, GlobalKey> _tabItemKeys = {};
   final Set<String> _dismissedDuplicateWarningEventIds = {};
   final Set<String> _loggedDuplicateWarningEventIds = {};
+  ProviderSubscription<bool>? _adsRemovalSubscription;
 
   final GlobalKey eventAddKey = GlobalKey();
   final GlobalKey leftTabKey = GlobalKey();
@@ -89,6 +91,19 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         }
       },
       fireImmediately: true,
+    );
+    _adsRemovalSubscription = ref.listenManual<bool>(
+      adsRemovalProvider,
+      (previous, next) {
+        if (next) {
+          _banner?.dispose();
+          setState(() {
+            _banner = null;
+            _isBannerLoaded = false;
+          });
+        }
+      },
+      fireImmediately: false,
     );
 
     tabController.addListener(() {
@@ -125,10 +140,22 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     _loadSavedTabIndex();
     _checkAndShowPrivacyPolicyUpdate();
 
+    unawaited(_restoreAdsRemovalStatusOnStart());
+  }
+
+  // 起動時に広告削除状態を復元してからバナーを作成する。
+  Future<void> _restoreAdsRemovalStatusOnStart() async {
+    await ref
+        .read(adsRemovalProvider.notifier)
+        .restoreAdsRemovalStatus();
+    if (!mounted) return;
     _createBannerAd();
   }
 
   void _createBannerAd() {
+    if (ref.read(adsRemovalProvider)) {
+      return;
+    }
     _banner?.dispose();
     _isBannerLoaded = false;
 
@@ -270,6 +297,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     tabController.dispose();
     _banner?.dispose();
     _pendingFocusSubscription?.close();
+    _adsRemovalSubscription?.close();
     super.dispose();
   }
 
@@ -1183,7 +1211,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                       ),
               ),
             ),
-            if (_isBannerLoaded && _banner != null)
+            if (!ref.watch(adsRemovalProvider) &&
+                _isBannerLoaded &&
+                _banner != null)
               SafeArea(
                 top: false,
                 child: SizedBox(
