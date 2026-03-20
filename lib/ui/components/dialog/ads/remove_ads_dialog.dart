@@ -98,8 +98,10 @@ class RemoveAdsDialogState extends ConsumerState<RemoveAdsDialog> {
         unawaited(ref.read(adsRemovalProvider.notifier).setAdsRemoved(true));
         _restoreCompleter?.complete(true);
         _showThanksDialog();
+      } else if (purchase.status == PurchaseStatus.canceled) {
+        _showSnackBar('購入がキャンセルされました。');
       } else if (purchase.status == PurchaseStatus.error) {
-        _showSnackBar('購入がキャンセルまたは失敗しました。');
+        _showSnackBar('購入に失敗しました。');
       }
 
       if (purchase.pendingCompletePurchase) {
