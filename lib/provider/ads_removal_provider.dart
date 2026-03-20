@@ -77,6 +77,7 @@ class AdsRemovalNotifier extends StateNotifier<bool> {
         }
       }
 
+      debugPrint('ストアの情報：${restored ? '購入済み' : '未購入'}');
       _storeVerified = true;
       if (mounted) state = restored;
       final prefs = await SharedPreferences.getInstance();
