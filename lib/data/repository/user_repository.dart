@@ -15,7 +15,7 @@ class UserRepository {
 
   // Appleユーザーを暫定エンドポイント経由で登録する
   Future<User?> registerAppleUser() async {
-    final url = Uri.parse('${baseUrl}auth/apple');
+    final url = Uri.parse('$baseUrl/auth/apple');
 
     final response = await http.get(
       url,

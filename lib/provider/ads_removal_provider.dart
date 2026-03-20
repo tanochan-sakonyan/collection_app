@@ -19,12 +19,13 @@ class AdsRemovalNotifier extends StateNotifier<bool> {
   }
 
   final InAppPurchase _inAppPurchase = InAppPurchase.instance;
+  bool _storeVerified = false;
 
-  // キャッシュから広告削除状態を読み込む。
+  // キャッシュから広告削除状態を読み込む（ストア検証前の仮状態）。
   Future<void> _loadFromPrefs() async {
     final prefs = await SharedPreferences.getInstance();
     final cached = prefs.getBool(_adsRemovedPrefsKey) ?? false;
-    if (cached && mounted) {
+    if (cached && mounted && !_storeVerified) {
       state = true;
     }
   }
@@ -32,11 +33,13 @@ class AdsRemovalNotifier extends StateNotifier<bool> {
   // 購入復元で広告削除状態を確認する。
   Future<bool> restoreAdsRemovalStatus() async {
     final completer = Completer<bool>();
+    final pendingPurchases = <PurchaseDetails>[];
     StreamSubscription<List<PurchaseDetails>>? subscription;
 
     subscription = _inAppPurchase.purchaseStream.listen(
       (purchases) {
         for (final purchase in purchases) {
+          pendingPurchases.add(purchase);
           if (purchase.productID != adsRemovalProductId) {
             continue;
           }
@@ -64,11 +67,20 @@ class AdsRemovalNotifier extends StateNotifier<bool> {
               onTimeout: () {
         return false;
       });
-      if (mounted) state = restored;
-      if (restored) {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setBool(_adsRemovedPrefsKey, true);
+
+      // 保留中のトランザクションを完了させる。
+      for (final purchase in pendingPurchases) {
+        if (purchase.pendingCompletePurchase) {
+          try {
+            await _inAppPurchase.completePurchase(purchase);
+          } catch (_) {}
+        }
       }
+
+      _storeVerified = true;
+      if (mounted) state = restored;
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool(_adsRemovedPrefsKey, restored);
       return restored;
     } finally {
       await subscription.cancel();

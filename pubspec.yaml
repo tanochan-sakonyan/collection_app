@@ -42,6 +42,7 @@ dependencies:
   upgrader: ^11.4.0
   liquid_glass_renderer: ^0.1.1-dev.10
   in_app_purchase: ^3.2.3
+  material_symbols_icons: ^4.2906.0
 
 dev_dependencies:
   flutter_test:

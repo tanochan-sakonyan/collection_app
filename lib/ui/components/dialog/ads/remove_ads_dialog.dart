@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:mr_collection/provider/ads_removal_provider.dart';
 import 'package:mr_collection/ui/components/dialog/ads/remove_ads_thanks_dialog.dart';
 
@@ -54,8 +56,8 @@ class RemoveAdsDialogState extends ConsumerState<RemoveAdsDialog> {
         _showSnackBar('購入処理でエラーが発生しました。');
       });
 
-      final response = await _inAppPurchase
-          .queryProductDetails({adsRemovalProductId});
+      final response =
+          await _inAppPurchase.queryProductDetails({adsRemovalProductId});
       if (!mounted) return;
 
       if (response.error != null) {
@@ -85,8 +87,7 @@ class RemoveAdsDialogState extends ConsumerState<RemoveAdsDialog> {
   }
 
   // 購入状態の更新を処理する。
-  Future<void> _handlePurchaseUpdates(
-      List<PurchaseDetails> purchases) async {
+  Future<void> _handlePurchaseUpdates(List<PurchaseDetails> purchases) async {
     for (final purchase in purchases) {
       if (purchase.productID != adsRemovalProductId) {
         continue;
@@ -196,53 +197,118 @@ class RemoveAdsDialogState extends ConsumerState<RemoveAdsDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.transparent,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(14),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: SizedBox(
-          width: 320,
+      child: Container(
+        width: 360,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFF37F3BE), Color(0xFF6BE8F0)],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // タイトル行（アイコン + テキスト）
+              Row(
+                children: [
+                  const Icon(
+                    Symbols.block,
+                    color: Colors.black,
+                    size: 32,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    '広告を削除する',
+                    style: GoogleFonts.notoSansJp(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              // 説明テキスト
               Text(
-                '300円で広告を永久に削除できます！\n(端数繰り上げ機能を使えば簡単に元が取れます。)',
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                '全ての広告を永久に削除します。\n※ 金額設定で端数切り上げをすればすぐ元が取れます。',
+                style: GoogleFonts.notoSansJp(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black,
+                ),
+              ),
+              const SizedBox(height: 12),
+              // 価格と購入ボタンを横並び
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                // crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    '¥300 買い切り',
+                    style: GoogleFonts.notoSansJp(
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
                       color: Colors.black,
                     ),
-              ),
-              const SizedBox(height: 24),
-              if (_isLoading) ...[
-                const CircularProgressIndicator(),
-                const SizedBox(height: 12),
-              ],
-              Row(
-                children: [
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: TextButton(
-                        onPressed: _isProcessing ? null : _restorePurchase,
-                        child: const Text('購入を復元'),
-                      ),
-                    ),
                   ),
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: ElevatedButton(
-                        onPressed:
-                            _isProcessing || _isLoading ? null : _startPurchase,
-                        child: const Text('広告を削除'),
-                      ),
-                    ),
-                  ),
+                  const SizedBox(width: 60),
+                  _isLoading
+                      ? const SizedBox(
+                          width: 48,
+                          height: 48,
+                          child: CircularProgressIndicator(),
+                        )
+                      : ElevatedButton(
+                          onPressed: _isProcessing || _isLoading
+                              ? null
+                              : _startPurchase,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.black,
+                            elevation: 2,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 14,
+                            ),
+                          ),
+                          child: Text(
+                            '購入',
+                            style: GoogleFonts.notoSansJp(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
                 ],
+              ),
+              const SizedBox(height: 12),
+              // 購入を復元する
+              Center(
+                child: GestureDetector(
+                  onTap: _isProcessing ? null : _restorePurchase,
+                  child: Text(
+                    '購入を復元する',
+                    style: GoogleFonts.notoSansJp(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
