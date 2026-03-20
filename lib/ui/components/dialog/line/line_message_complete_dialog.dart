@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/ads/interstitial_singleton.dart';
+import 'package:mr_collection/provider/ads_removal_provider.dart';
 
-class LineMessageCompleteDialog extends StatefulWidget {
+class LineMessageCompleteDialog extends ConsumerStatefulWidget {
   const LineMessageCompleteDialog({super.key});
   @override
-  State<LineMessageCompleteDialog> createState() =>
+  ConsumerState<LineMessageCompleteDialog> createState() =>
       _LineMessageCompleteDialogState();
 }
 
-class _LineMessageCompleteDialogState extends State<LineMessageCompleteDialog> {
+class _LineMessageCompleteDialogState
+    extends ConsumerState<LineMessageCompleteDialog> {
   @override
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 2), () async {
-      if (interstitial.isReady) {
+      if (!ref.read(adsRemovalProvider) && interstitial.isReady) {
         await interstitial.showAndWait(); // 広告を閉じるまで待機
       }
       if (mounted) Navigator.of(context).pop();

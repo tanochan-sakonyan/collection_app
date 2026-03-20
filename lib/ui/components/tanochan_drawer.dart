@@ -10,6 +10,8 @@ import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/ui/components/dialog/auth/delete_account_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/auth/logout_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/ads/remove_ads_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/ads/remove_ads_thanks_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/donation/donation_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/paypay_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/questionnaire_dialog.dart';
@@ -20,15 +22,16 @@ import 'package:mr_collection/ui/screen/terms_of_service_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/logging/analytics_ui_logger.dart';
+import 'package:mr_collection/provider/ads_removal_provider.dart';
 
-class TanochanDrawer extends StatefulWidget {
+class TanochanDrawer extends ConsumerStatefulWidget {
   const TanochanDrawer({super.key});
 
   @override
   TanochanDrawerState createState() => TanochanDrawerState();
 }
 
-class TanochanDrawerState extends State<TanochanDrawer>
+class TanochanDrawerState extends ConsumerState<TanochanDrawer>
     with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
@@ -112,6 +115,44 @@ class TanochanDrawerState extends State<TanochanDrawer>
                     builder: (_) => const ThemeColorDialog(),
                   );
                 },
+              ),
+              const SizedBox(height: 20),
+              // ここだけ何故かアイコンがズレるので_buildMenuItemは使わない。
+              GestureDetector(
+                onTap: () {
+                  final isAdsRemoved = ref.read(adsRemovalProvider);
+                  showDialog(
+                    context: context,
+                    builder: (_) => isAdsRemoved
+                        ? const RemoveAdsThanksDialog()
+                        : const RemoveAdsDialog(),
+                  );
+                },
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.61,
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        "assets/icons/ic_crown.svg",
+                        width: 24,
+                        height: 24,
+                        colorFilter: const ColorFilter.mode(
+                          Color(0xFFFFD700),
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        "広告を削除する",
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.black,
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
               const SizedBox(height: 20),
               _buildMenuItem(

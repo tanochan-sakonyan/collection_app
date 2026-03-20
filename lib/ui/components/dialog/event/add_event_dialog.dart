@@ -8,6 +8,7 @@ import 'package:mr_collection/ads/interstitial_singleton.dart';
 import 'package:mr_collection/constants/base_url.dart';
 import 'package:mr_collection/data/model/freezed/line_group.dart';
 import 'package:mr_collection/logging/analytics_line_logger.dart';
+import 'package:mr_collection/provider/ads_removal_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/data/repository/event_repository.dart';
 import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
@@ -98,7 +99,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
     ref.read(loadingProvider.notifier).state = true;
 
     // インターステイシャル広告を表示
-    if (interstitial.isReady) {
+    if (!ref.read(adsRemovalProvider) && interstitial.isReady) {
       await interstitial.show();
       if (!mounted) return;
     } else {
