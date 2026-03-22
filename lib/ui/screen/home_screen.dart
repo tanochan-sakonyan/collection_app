@@ -20,8 +20,8 @@ import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
 import 'package:mr_collection/ui/components/dialog/event/add_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/event/delete_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/event/edit_event_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/terms_privacy_update_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_and_suggest_official_line_dialog.dart';
+import 'package:mr_collection/ui/screen/onboarding_screen.dart';
 import 'package:mr_collection/ui/components/home_app_bar.dart';
 import 'package:mr_collection/ui/components/line_member_delete_limit_countdown.dart';
 import 'package:mr_collection/ui/screen/member_list.dart';
@@ -127,8 +127,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
 
     unawaited(_loadSavedTabOrder());
     _loadSavedTabIndex();
-    _checkAndShowPrivacyPolicyUpdate();
-
     unawaited(_restoreAdsRemovalStatusOnStart());
   }
 
@@ -183,31 +181,61 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   }
 
 
-  bool _updateDialogChecked = false;
+  bool _startupChecked = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (_updateDialogChecked) return;
+    if (_startupChecked) return;
 
     final route = ModalRoute.of(context);
     final anim = route?.animation;
 
     if (anim == null || anim.status == AnimationStatus.completed) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) _checkAndShowUpdateDialog();
+        if (mounted) _checkOnboardingOrUpdateDialog();
       });
     } else {
       void listener(AnimationStatus status) {
         if (status == AnimationStatus.completed && mounted) {
-          _checkAndShowUpdateDialog();
+          _checkOnboardingOrUpdateDialog();
           anim.removeStatusListener(listener);
         }
       }
 
       anim.addStatusListener(listener);
     }
-    _updateDialogChecked = true;
+    _startupChecked = true;
+  }
+
+  /// 初回起動時はオンボーディング→完了後にアップデートダイアログ、
+  /// 2回目以降はアップデートダイアログのみ表示
+  Future<void> _checkOnboardingOrUpdateDialog() async {
+    final shouldShowOnboarding = await OnboardingScreen.shouldShow();
+    if (!mounted) return;
+
+    if (shouldShowOnboarding) {
+      _showOnboardingScreen(showUpdateDialogAfter: true);
+    } else {
+      _checkAndShowUpdateDialog();
+    }
+  }
+
+  /// オンボーディング画面を表示
+  void _showOnboardingScreen({bool showUpdateDialogAfter = false}) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (_) => OnboardingScreen(
+          onCompleted: () {
+            Navigator.of(context).pop();
+            if (showUpdateDialogAfter) {
+              _checkAndShowUpdateDialog();
+            }
+          },
+        ),
+      ),
+    );
   }
 
 
@@ -716,31 +744,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   // 2025年7月28日、LINEから取得したグループ情報が、24時間で切れることを利用規約・プライバシーポリシーに追記。
-  Future<void> _checkAndShowPrivacyPolicyUpdate() async {
-    final prefs = await SharedPreferences.getInstance();
-    final hasShownUpdate =
-        prefs.getBool('terms_and_privacy_update_20250728') ?? false;
-
-    if (!hasShownUpdate) {
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        await Future.delayed(const Duration(milliseconds: 100));
-        if (mounted) {
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-              return const TermsPrivacyUpdateDialog();
-            },
-          );
-          // フラグをtrueに変更
-          await prefs.setBool('terms_and_privacy_update_20250728', true);
-        }
-      });
-    } else {
-      debugPrint('Terms and Privacy Update dialog already shown.');
-    }
-  }
-
   // versionForUpdateDialogを、2025/04現在は1.2.0で定義
   // これがshownVersionFor120と異なる時、ポップアップを出す。
   // 今後のアップデートの際は、shownVersionFor〇〇〇のpreferenceを更新する。(2箇所)
@@ -969,7 +972,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
             );
           },
           onHelpPressed: () {
-            // TODO: オンボーディング画面を表示
+            _showOnboardingScreen();
           },
           onSettingsPressed: () {
             _scaffoldKey.currentState?.openDrawer();
