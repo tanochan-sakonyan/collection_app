@@ -191,25 +191,6 @@ class SEn extends S {
   String get enterEventName => 'Please enter an event name.';
 
   @override
-  String get tapToAddEvent => 'Tap here to add an event.';
-
-  @override
-  String get longPressToDeleteEvent =>
-      'Tap to edit an event.\nLong press to delete an event.';
-
-  @override
-  String get tapToAddMember => 'Tap here to add a member.';
-
-  @override
-  String get swipeToEditOrDeleteMember => 'Swipe to delete or edit a member.';
-
-  @override
-  String get tapToSortByPayment => 'Tap here to sort by payment status.';
-
-  @override
-  String get tapToSendReminder => 'Tap here to send a reminder message.';
-
-  @override
   String get skip => 'Skip';
 
   @override

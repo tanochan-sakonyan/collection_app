@@ -5,15 +5,11 @@ import 'package:mr_collection/logging/analytics_message_logger.dart';
 import 'package:mr_collection/ui/components/dialog/line/suggest_send_message_dialog.dart';
 
 class FloatingActionButtonOff extends StatelessWidget {
-  final int index;
-  final List<GlobalKey> fabKeys;
   final TabController tabController;
   final Event event;
 
   const FloatingActionButtonOff({
     super.key,
-    required this.index,
-    required this.fabKeys,
     required this.tabController,
     required this.event,
   });
@@ -21,7 +17,6 @@ class FloatingActionButtonOff extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-      key: fabKeys[index],
       backgroundColor: const Color(0xFFBABABA),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(48),

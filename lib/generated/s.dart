@@ -445,42 +445,6 @@ abstract class S {
   /// **'イベント名を入力してください'**
   String get enterEventName;
 
-  /// No description provided for @tapToAddEvent.
-  ///
-  /// In ja, this message translates to:
-  /// **'こちらをタップでイベントを\n追加できます'**
-  String get tapToAddEvent;
-
-  /// No description provided for @longPressToDeleteEvent.
-  ///
-  /// In ja, this message translates to:
-  /// **'タップでイベントを編集\n長押しでイベントを削除\nできます'**
-  String get longPressToDeleteEvent;
-
-  /// No description provided for @tapToAddMember.
-  ///
-  /// In ja, this message translates to:
-  /// **'こちらをタップでメンバーを\n追加できます'**
-  String get tapToAddMember;
-
-  /// No description provided for @swipeToEditOrDeleteMember.
-  ///
-  /// In ja, this message translates to:
-  /// **'スワイプでメンバーの削除及び\nメンバー名の変更ができます'**
-  String get swipeToEditOrDeleteMember;
-
-  /// No description provided for @tapToSortByPayment.
-  ///
-  /// In ja, this message translates to:
-  /// **'こちらをタップで支払い状況順に\n並び変えることができます'**
-  String get tapToSortByPayment;
-
-  /// No description provided for @tapToSendReminder.
-  ///
-  /// In ja, this message translates to:
-  /// **'こちらをタップで催促メッセージを\n送信できます'**
-  String get tapToSendReminder;
-
   /// No description provided for @skip.
   ///
   /// In ja, this message translates to:

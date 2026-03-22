@@ -29,10 +29,8 @@ import 'package:mr_collection/ui/components/tanochan_drawer.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/user.dart';
 import 'package:mr_collection/ui/screen/share/share_screen.dart';
-import 'package:mr_collection/ui/tutorial/tutorial_targets.dart';
 import 'package:mr_collection/ui/components/duplicate_member_warning.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:mr_collection/ui/components/event_zero_components.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/provider/pending_event_focus_provider.dart';
@@ -63,14 +61,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   ProviderSubscription<bool>? _adsRemovalSubscription;
 
   final GlobalKey eventAddKey = GlobalKey();
-  final GlobalKey leftTabKey = GlobalKey();
-  late List<GlobalKey> _memberAddKeys;
-  late List<GlobalKey> _slidableKeys;
-  late List<GlobalKey> _sortKeys;
-  late List<GlobalKey> fabKeys;
-
-  late TutorialCoachMark tutorialCoachMark;
-  List<TargetFocus> targets = [];
   ProviderSubscription<String?>? _pendingFocusSubscription;
 
   @override
@@ -80,7 +70,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       unawaited(AnalyticsUiLogger.logHomeScreenViewed());
     });
     _tabTitles = ref.read(tabTitlesProvider);
-    _initKeys(_tabTitles.length);
     tabController = TabController(length: _tabTitles.length, vsync: this);
     _pendingFocusSubscription = ref.listenManual<String?>(
       pendingEventFocusProvider,
@@ -193,13 +182,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     _banner = banner;
   }
 
-  void _initKeys([int? explicitLength]) {
-    final len = explicitLength ?? _tabTitles.length;
-    _memberAddKeys = List.generate(len, (_) => GlobalKey());
-    _slidableKeys = List.generate(len, (_) => GlobalKey());
-    _sortKeys = List.generate(len, (_) => GlobalKey());
-    fabKeys = List.generate(len, (_) => GlobalKey());
-  }
 
   bool _updateDialogChecked = false;
 
@@ -228,47 +210,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     _updateDialogChecked = true;
   }
 
-  void _showTutorial() {
-    targets = TutorialTargets.createTargets(
-      context: context,
-      eventAddKey: eventAddKey,
-      leftTabKey: leftTabKey,
-      memberAddKey: _memberAddKeys[_currentTabIndex],
-      slidableKey: _slidableKeys[_currentTabIndex],
-      sortKey: _sortKeys[_currentTabIndex],
-      fabKey: fabKeys[_currentTabIndex],
-    );
-    tutorialCoachMark = TutorialCoachMark(
-      targets: targets,
-      useSafeArea: true,
-      colorShadow: const Color(0xFFE0E0E0),
-      alignSkip: Alignment.topRight,
-      textSkip: S.of(context)!.skip,
-      textStyleSkip: const TextStyle(
-        color: Colors.black,
-        fontSize: 16,
-      ),
-      paddingFocus: 6,
-      onFinish: () {
-        _setTutorialShown();
-      },
-      onSkip: () {
-        _setTutorialShown();
-        return true;
-      },
-    );
-    tutorialCoachMark.show(context: context);
-  }
-
-  void _setTutorialShown() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isTutorialShown120', true);
-  }
-
-  void _resetTutorial() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isTutorialShown120', false);
-  }
 
   // Detects duplicate member names within a specific event.
   List<String> _findDuplicatedMemberNames(Event? event) {
@@ -304,7 +245,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   void _updateTabController(int newLength) {
     tabController.dispose();
     tabController = TabController(length: newLength, vsync: this);
-    _initKeys(newLength);
     tabController.addListener(() {
       if (tabController.index != _currentTabIndex &&
           !tabController.indexIsChanging) {
@@ -656,7 +596,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           child: ReorderableDelayedDragStartListener(
             index: index,
             child: GestureDetector(
-              key: index == 0 ? leftTabKey : null,
               onTap: () {
                 if (index == _currentTabIndex) {
                   showDialog(
@@ -1030,11 +969,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
             );
           },
           onHelpPressed: () {
-            unawaited(AnalyticsUiLogger.logHomeHelpPressed());
-            _resetTutorial();
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              _showTutorial();
-            });
+            // TODO: オンボーディング画面を表示
           },
           onSettingsPressed: () {
             _scaffoldKey.currentState?.openDrawer();
@@ -1118,15 +1053,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                           ? event.eventId
                                           : "",
                                       eventName: event.eventName,
-                                      memberAddKey: (_currentTabIndex == index)
-                                          ? _memberAddKeys[index]
-                                          : null,
-                                      slidableKey: (_currentTabIndex == index)
-                                          ? _slidableKeys[index]
-                                          : null,
-                                      sortKey: (_currentTabIndex == index)
-                                          ? _sortKeys[index]
-                                          : null,
                                     ),
                                   ),
                                   SliverFillRemaining(
@@ -1192,14 +1118,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                   width: 60,
                                   child: isEventConnected
                                       ? FloatingActionButtonOn(
-                                          index: index,
-                                          fabKeys: fabKeys,
                                           tabController: tabController,
                                           event: event,
                                         )
                                       : FloatingActionButtonOff(
-                                          index: index,
-                                          fabKeys: fabKeys,
                                           tabController: tabController,
                                           event: event,
                                         ),
