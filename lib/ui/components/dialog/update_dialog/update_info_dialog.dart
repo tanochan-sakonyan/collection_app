@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mr_collection/generated/s.dart';
 
 class UpdateInfoDialog extends StatelessWidget {
   const UpdateInfoDialog(
@@ -25,7 +26,7 @@ class UpdateInfoDialog extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              'アップデートのお知らせ🎉',
+              S.of(context)!.updateAnnouncement,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -155,7 +156,7 @@ class UpdateInfoDialog extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'ご意見・ご要望はアンケートからいつでも\nお気軽にお寄せください📮',
+              S.of(context)!.updateFeedbackMessage,
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/ui/screen/home_screen.dart';
 
 class MemberEmptyErrorDialog extends StatelessWidget {
@@ -22,7 +23,7 @@ class MemberEmptyErrorDialog extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'エラー',
+              S.of(context)!.errorTitle,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
@@ -31,7 +32,7 @@ class MemberEmptyErrorDialog extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'イベントにメンバーを一人以上追加してください。',
+              S.of(context)!.addOneMemberError,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,

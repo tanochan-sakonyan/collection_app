@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mr_collection/generated/s.dart';
 
 enum RoundUpOption { none, ten, fifty, hundred }
 enum RoundUpTapSource { checkbox, label }
@@ -35,7 +36,7 @@ class RoundUpModule extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '端数切り上げ',
+            S.of(context)!.roundUp,
             style: textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
           ),
           Row(
@@ -52,7 +53,7 @@ class RoundUpModule extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                'お釣り',
+                S.of(context)!.change,
                 style:
                     textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
               ),

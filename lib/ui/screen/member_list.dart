@@ -440,7 +440,7 @@ class _MemberListState extends ConsumerState<MemberList>
                                         vertical: 14),
                                   ),
                                   child: Text(
-                                    hasSelection ? '変更($selectedCount)' : '変更',
+                                    hasSelection ? S.of(sheetContext)!.changeCount(selectedCount) : S.of(sheetContext)!.changeButton,
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold),

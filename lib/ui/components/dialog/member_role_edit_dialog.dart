@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mr_collection/data/model/freezed/member.dart';
+import 'package:mr_collection/generated/s.dart';
 
 class MemberRoleEditDialog extends StatefulWidget {
   final Member member;
@@ -49,7 +50,7 @@ class _MemberRoleEditDialogState extends State<MemberRoleEditDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              '${widget.member.memberName}の役割を修正',
+              S.of(context)!.modifyMemberRole(widget.member.memberName),
               style: GoogleFonts.notoSansJp(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -79,7 +80,7 @@ class _MemberRoleEditDialogState extends State<MemberRoleEditDialog> {
                           contentPadding: const EdgeInsets.only(
                               left: 16, right: 16, top: 8),
                           title: Text(
-                            '役割なし',
+                            S.of(context)!.noRoleOption,
                             style: GoogleFonts.notoSansJp(
                               fontSize: 16,
                               color: Colors.grey,

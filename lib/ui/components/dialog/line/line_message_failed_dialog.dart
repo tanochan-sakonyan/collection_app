@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mr_collection/generated/s.dart';
 
 class LineMessageFailedDialog extends StatelessWidget {
   const LineMessageFailedDialog({super.key});
@@ -15,7 +16,7 @@ class LineMessageFailedDialog extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              '送信に失敗しました',
+              S.of(context)!.sendFailed,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
@@ -24,7 +25,7 @@ class LineMessageFailedDialog extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Text(
-              'お手数ですが再度お試しください',
+              S.of(context)!.pleaseTryAgainShort,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
@@ -44,7 +45,7 @@ class LineMessageFailedDialog extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  '閉じる',
+                  S.of(context)!.close,
                   style: GoogleFonts.notoSansJp(
                     fontSize: 12,
                     fontWeight: FontWeight.w700,

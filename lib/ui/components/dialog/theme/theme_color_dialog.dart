@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/logging/analytics_ui_logger.dart';
 import 'package:mr_collection/provider/theme_color_provider.dart';
 import 'package:mr_collection/theme/theme_color.dart';
@@ -23,9 +24,9 @@ class ThemeColorDialog extends ConsumerWidget {
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Text(
-                    '閉じる',
-                    style: TextStyle(
+                  child: Text(
+                    S.of(context)!.close,
+                    style: const TextStyle(
                       color: Colors.blue,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -34,9 +35,9 @@ class ThemeColorDialog extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              const Text(
-                'テーマカラー',
-                style: TextStyle(
+              Text(
+                S.of(context)!.themeColor,
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w800,
                   color: Colors.black,
@@ -84,6 +85,22 @@ class _ThemeColorTile extends StatelessWidget {
     required this.onTap,
   });
 
+  // keyNameからローカライズされた表示名を返す
+  String _localizedDisplayName(BuildContext context) {
+    switch (option.keyName) {
+      case 'default':
+        return S.of(context)!.themeColorDefault;
+      case 'sakura':
+        return S.of(context)!.themeColorSakura;
+      case 'ajisai':
+        return S.of(context)!.themeColorAjisai;
+      case 'ichou':
+        return S.of(context)!.themeColorIchou;
+      default:
+        return option.displayName;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).primaryColor;
@@ -110,7 +127,7 @@ class _ThemeColorTile extends StatelessWidget {
             const SizedBox(width: 16),
             Expanded(
               child: Text(
-                option.displayName,
+                _localizedDisplayName(context),
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,

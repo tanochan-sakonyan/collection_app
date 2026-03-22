@@ -582,7 +582,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
 
   TextSpan _buildRoleDescriptionTextSpan(BuildContext context) {
     final description = S.of(context)!.roleSetupDescription;
-    const boldPhrase = "役割別で割り勘"; // 太字にしたい部分
+    final boldPhrase = S.of(context)!.roleBasedSplit; // 太字にしたい部分
 
     if (description.contains(boldPhrase)) {
       final parts = description.split(boldPhrase);

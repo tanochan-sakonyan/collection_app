@@ -28,7 +28,7 @@ class QuestionnaireDialog extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              "【集金くん】に追加してほしい\n機能があれば\nぜひご意見ください！",
+              S.of(context)!.questionnaireDesc1,
               textAlign: TextAlign.center,
               style: Theme.of(context)
                   .textTheme
@@ -37,7 +37,7 @@ class QuestionnaireDialog extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              "匿名で提出できます。",
+              S.of(context)!.questionnaireDesc2,
               textAlign: TextAlign.center,
               style: Theme.of(context)
                   .textTheme
@@ -46,7 +46,7 @@ class QuestionnaireDialog extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              "今後のアップデートの\n参考にさせていただきます。",
+              S.of(context)!.questionnaireDesc3,
               textAlign: TextAlign.center,
               style: Theme.of(context)
                   .textTheme

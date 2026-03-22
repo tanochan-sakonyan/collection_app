@@ -176,7 +176,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                        "“LINEグループから作成”をすると、\n自動でグループのメンバーを追加し、\nグループにメッセージを送信できます。",
+                        S.of(context)!.addEventFromLineDesc,
                         style: GoogleFonts.notoSansJp(
                           fontSize: 10,
                           fontWeight: FontWeight.w400,
@@ -184,7 +184,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                         textAlign: TextAlign.center),
                     const SizedBox(height: 20),
                     EventDialogComponent(
-                        label: 'LINEグループから作成',
+                        label: S.of(context)!.createFromLineGroup,
                         leading: SvgPicture.asset(
                           'assets/icons/ic_smile_bubble.svg',
                           width: 24,
@@ -195,7 +195,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                         onTap: _selectLineGroup),
                     const SizedBox(height: 8),
                     EventDialogComponent(
-                        label: '他のイベントからメンバー引継ぎ',
+                        label: S.of(context)!.transferFromOtherEvent,
                         leading: SvgPicture.asset(
                           'assets/icons/ic_download_file.svg',
                           width: 24,
@@ -206,7 +206,7 @@ class AddEventDialogState extends ConsumerState<AddEventDialog> {
                         onTap: _choiceEvent),
                     const SizedBox(height: 8),
                     EventDialogComponent(
-                      label: '空のイベントを作成',
+                      label: S.of(context)!.createEmptyEvent,
                       leading: SvgPicture.asset(
                         'assets/icons/ic_empty_clipboard.svg',
                         width: 24,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mr_collection/generated/s.dart';
 
 class PayPayStatusExplanationDialog extends StatelessWidget {
   const PayPayStatusExplanationDialog({super.key});
@@ -37,24 +38,22 @@ class PayPayStatusExplanationDialog extends StatelessWidget {
             children: [
               Center(
                 child: Text(
-                  '「PayPayで支払い済み」とは？',
+                  S.of(context)!.paypayStatusTitle,
                   style: titleStyle,
                   textAlign: TextAlign.center,
                 ),
               ),
               const SizedBox(height: 24),
               Text(
-                'PayPayで受け取った支払いを管理しやすくするためのステータスです。\n'
-                '現金で受け取った場合と区別して記録できます。',
+                S.of(context)!.paypayStatusDesc,
                 style: GoogleFonts.notoSansJp(
                     fontSize: 12, color: Colors.grey[800]),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 24),
               _buildQA(
-                question: 'Q. PayPayで支払ったら、自動で反映されますか？',
-                answer: 'A. いいえ。PayPayの仕組み上、自動反映はできません。\n'
-                    'PayPayで受け取ったことを確認したら、手動で「PayPayで支払い済み」を選んでください。',
+                question: S.of(context)!.paypayStatusQ,
+                answer: S.of(context)!.paypayStatusA,
                 questionStyle: questionStyle,
                 answerStyle: bodyStyle,
               ),
@@ -75,7 +74,7 @@ class PayPayStatusExplanationDialog extends StatelessWidget {
                       elevation: 0,
                     ),
                     child: Text(
-                      '閉じる',
+                      S.of(context)!.close,
                       style: GoogleFonts.notoSansJp(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,

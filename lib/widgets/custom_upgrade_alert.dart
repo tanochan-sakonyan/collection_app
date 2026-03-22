@@ -32,10 +32,12 @@ class _CustomUpgradeAlertState extends State<CustomUpgradeAlert> {
   }
 
   void _showCustomDialog() async {
+    // await前にローカライズ文字列を取得しておく
+    final releaseNotesEmpty = S.of(context)!.releaseNotesEmpty;
     await widget.upgrader.initialize();
 
     final appStoreVersion = widget.upgrader.currentAppStoreVersion ?? "";
-    final releaseNotes = widget.upgrader.releaseNotes ?? "リリースノートなし";
+    final releaseNotes = widget.upgrader.releaseNotes ?? releaseNotesEmpty;
     final notesList = releaseNotes
         .split('\n')
         .where((line) => line.trim().isNotEmpty)
