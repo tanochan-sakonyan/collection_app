@@ -9,7 +9,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 const String onboardingCompletedKey = 'onboarding_completed';
 
 /// オンボーディングの総ページ数
-const int _totalPages = 8;
+const int _totalPages = 7;
 
 /// オンボーディング画面
 class OnboardingScreen extends StatefulWidget {
@@ -46,6 +46,17 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   late final AnimationController _floatController;
   late final Animation<double> _floatAnimation;
 
+  // ウェルカムページ用アニメーション
+  late final AnimationController _welcomeController;
+  late final Animation<double> _welcomeTextOpacity;
+  late final Animation<Offset> _welcomeTextSlide;
+
+  // 最終ページ用アニメーション
+  late final AnimationController _startPageController;
+  late final Animation<double> _titleScale;
+  late final Animation<double> _subtitleOpacity;
+  late final Animation<Offset> _subtitleSlide;
+
   @override
   void initState() {
     super.initState();
@@ -61,12 +72,60 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     _floatAnimation = Tween<double>(begin: -10, end: 10).animate(
       CurvedAnimation(parent: _floatController, curve: Curves.easeInOut),
     );
+    // ウェルカムテキストのアニメーション
+    _welcomeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    )..forward();
+    _welcomeTextOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _welcomeController,
+        curve: const Interval(0.5, 1.0, curve: Curves.easeIn),
+      ),
+    );
+    _welcomeTextSlide = Tween<Offset>(
+      begin: const Offset(0, 0.5),
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(
+        parent: _welcomeController,
+        curve: const Interval(0.3, 1.0, curve: Curves.easeOut),
+      ),
+    );
+    // 最終ページ用アニメーションコントローラー
+    _startPageController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    );
+    _titleScale = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _startPageController,
+        curve: const Interval(0.0, 1.0, curve: Curves.elasticOut),
+      ),
+    );
+    _subtitleOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _startPageController,
+        curve: const Interval(0.5, 1.0, curve: Curves.easeIn),
+      ),
+    );
+    _subtitleSlide = Tween<Offset>(
+      begin: const Offset(0, 0.5),
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(
+        parent: _startPageController,
+        curve: const Interval(0.5, 1.0, curve: Curves.easeOut),
+      ),
+    );
   }
 
   @override
   void dispose() {
     _waveController.dispose();
     _floatController.dispose();
+    _welcomeController.dispose();
+    _startPageController.dispose();
     _pageController.dispose();
     super.dispose();
   }
@@ -113,16 +172,28 @@ class _OnboardingScreenState extends State<OnboardingScreen>
             ),
           ),
           const SizedBox(height: 36),
-          // ウェルカムテキスト
-          const Text(
-            'ようこそ\n集金くんへ',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: 'Noto Sans JP',
-              fontSize: 32,
-              fontWeight: FontWeight.w900,
-              color: Colors.white,
-              height: 1.4,
+          // ウェルカムテキスト（フェードイン+スライドイン）
+          AnimatedBuilder(
+            animation: _welcomeController,
+            builder: (context, child) {
+              return SlideTransition(
+                position: _welcomeTextSlide,
+                child: Opacity(
+                  opacity: _welcomeTextOpacity.value,
+                  child: child,
+                ),
+              );
+            },
+            child: const Text(
+              'ようこそ\n集金くんへ',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'Noto Sans JP',
+                fontSize: 32,
+                fontWeight: FontWeight.w900,
+                color: Colors.white,
+                height: 1.4,
+              ),
             ),
           ),
         ],
@@ -789,6 +860,62 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     );
   }
 
+  /// 7ページ目（最終ページ）：さあはじめよう
+  Widget _buildStartPage() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 180),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // ポップなスケールアニメーションで出現
+          AnimatedBuilder(
+            animation: _titleScale,
+            builder: (context, child) {
+              return Transform.scale(
+                scale: _titleScale.value,
+                child: child,
+              );
+            },
+            child: const Text(
+              'さあ\nはじめよう',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'Noto Sans JP',
+                fontSize: 36,
+                fontWeight: FontWeight.w900,
+                color: Colors.white,
+                height: 1.4,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          // フェードイン+スライドインで出現
+          AnimatedBuilder(
+            animation: _startPageController,
+            builder: (context, child) {
+              return SlideTransition(
+                position: _subtitleSlide,
+                child: Opacity(
+                  opacity: _subtitleOpacity.value,
+                  child: child,
+                ),
+              );
+            },
+            child: Text(
+              'ストレスのない集金ライフを',
+              style: TextStyle(
+                fontFamily: 'Noto Sans JP',
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: Colors.white.withValues(alpha: 0.85),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   /// セクションカードを構築
   Widget _buildSectionCard({required List<Widget> children}) {
     return Container(
@@ -945,25 +1072,32 @@ class _OnboardingScreenState extends State<OnboardingScreen>
               itemCount: _totalPages,
               onPageChanged: (index) {
                 setState(() => _currentPage = index);
+                // 最終ページに到達したらアニメーション開始
+                if (index == 6) {
+                  _startPageController.forward(from: 0.0);
+                }
               },
               itemBuilder: (context, index) {
                 if (index == 0) {
                   return _buildWelcomePage();
                 }
                 if (index == 1) {
-                  return _buildLineGroupPage();
+                  return _buildHomeScreenPage();
                 }
                 if (index == 2) {
-                  return _buildAddMemberPage();
+                  return _buildLineGroupPage();
                 }
                 if (index == 3) {
-                  return _buildAmountSettingPage();
+                  return _buildAddMemberPage();
                 }
                 if (index == 4) {
-                  return _buildHomeScreenPage();
+                  return _buildAmountSettingPage();
                 }
                 if (index == 5) {
                   return _buildRequestPage();
+                }
+                if (index == 6) {
+                  return _buildStartPage();
                 }
                 return Center(
                   child: Text(
@@ -982,7 +1116,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
           Positioned(
             left: 0,
             right: 0,
-            bottom: _currentPage == 0 ? 48 : 16,
+            bottom: (_currentPage == 0 || _currentPage == 6) ? 48 : 16,
             child: SafeArea(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
