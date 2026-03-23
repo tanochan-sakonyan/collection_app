@@ -10,6 +10,7 @@ import 'package:mr_collection/logging/analytics_app_logger.dart';
 import 'package:mr_collection/provider/theme_color_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mr_collection/route_observer.dart';
 import 'package:mr_collection/ui/screen/home_screen.dart';
 import 'package:mr_collection/ui/screen/login_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -100,6 +101,7 @@ class _CollectionAppState extends ConsumerState<CollectionApp>
         title: '集金くん',
         navigatorObservers: [
           FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
+          appRouteObserver,
         ],
         theme: ThemeData(
           useMaterial3: true,

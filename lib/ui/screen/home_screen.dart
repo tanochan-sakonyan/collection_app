@@ -8,6 +8,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:mr_collection/ads/ad_helper.dart';
 import 'package:mr_collection/ads/idle_interstitial_manager.dart';
+import 'package:mr_collection/route_observer.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/logging/analytics_ads_logger.dart';
 import 'package:mr_collection/logging/analytics_event_logger.dart';
@@ -44,7 +45,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class HomeScreenState extends ConsumerState<HomeScreen>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, RouteAware {
   late TabController tabController;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<String> _tabTitles = [];
@@ -190,9 +191,18 @@ class HomeScreenState extends ConsumerState<HomeScreen>
 
   bool _startupChecked = false;
 
+  bool _routeAwareSubscribed = false;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    if (!_routeAwareSubscribed) {
+      final route = ModalRoute.of(context);
+      if (route != null) {
+        appRouteObserver.subscribe(this, route);
+        _routeAwareSubscribed = true;
+      }
+    }
     if (_startupChecked) return;
 
     final route = ModalRoute.of(context);
@@ -268,7 +278,22 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   @override
+  // 別の画面がプッシュされてHomeScreenが非表示になった時、タイマーを停止する。
+  void didPushNext() {
+    _idleInterstitialManager.stop();
+  }
+
+  @override
+  // 別の画面からHomeScreenに戻ってきた時、タイマーをリセットして再開する。
+  void didPopNext() {
+    if (!ref.read(adsRemovalProvider)) {
+      _idleInterstitialManager.start();
+    }
+  }
+
+  @override
   void dispose() {
+    appRouteObserver.unsubscribe(this);
     _tabTitlesSubscription?.close();
     tabController.dispose();
     _banner?.dispose();
