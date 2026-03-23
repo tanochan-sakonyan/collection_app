@@ -415,6 +415,204 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     );
   }
 
+  /// 3枚の画像を横並びで表示
+  Widget _buildTripleImages(String path1, String path2, String path3) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8, bottom: 12),
+      child: Row(
+        children: [
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.asset(path1, fit: BoxFit.fitWidth),
+            ),
+          ),
+          const SizedBox(width: 6),
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.asset(path2, fit: BoxFit.fitWidth),
+            ),
+          ),
+          const SizedBox(width: 6),
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.asset(path3, fit: BoxFit.fitWidth),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 2枚の画像を横並びで表示
+  Widget _buildDoubleImages(String path1, String path2) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8, bottom: 12),
+      child: Row(
+        children: [
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.asset(path1, fit: BoxFit.fitWidth),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.asset(path2, fit: BoxFit.fitWidth),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// セクション内の説明テキスト
+  Widget _buildDescText(String text) {
+    return Text(
+      text,
+      style: const TextStyle(
+        fontFamily: 'Noto Sans JP',
+        fontSize: 14,
+        fontWeight: FontWeight.w600,
+        color: Colors.white,
+        height: 1.5,
+      ),
+    );
+  }
+
+  /// 4ページ目：金額設定の説明ページ
+  Widget _buildAmountSettingPage() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 24, right: 24, bottom: 160),
+      child: ShaderMask(
+        shaderCallback: (bounds) {
+          return const LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.white,
+              Colors.white,
+              Colors.white,
+              Colors.transparent,
+            ],
+            stops: [0.0, 0.05, 0.9, 1.0],
+          ).createShader(bounds);
+        },
+        blendMode: BlendMode.dstIn,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.only(bottom: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 74),
+              // ページタイトル
+              const Center(
+                child: Text(
+                  '金額を設定する',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: 'Noto Sans JP',
+                    fontSize: 24,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white,
+                    height: 1.3,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              // グループ1：合計金額を入力する
+              _buildSectionCard(
+                children: [
+                  const Text(
+                    '合計金額を入力する',
+                    style: TextStyle(
+                      fontFamily: 'Noto Sans JP',
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white,
+                    ),
+                  ),
+                  _buildTutorialImage('assets/images/tutorial_4_1.png'),
+                  _buildDescText('合計金額を入力します。'),
+                ],
+              ),
+              const SizedBox(height: 12),
+              // グループ2：個別金額の設定
+              _buildSectionCard(
+                children: [
+                  const Text(
+                    '個別金額の設定',
+                    style: TextStyle(
+                      fontFamily: 'Noto Sans JP',
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  _buildDescText('個人が支払う金額を入力します'),
+                  const SizedBox(height: 12),
+                  _buildStepItem(1, '割り勘モード\n全員で均等に金額を割る場合に使用します。'),
+                  _buildTutorialImage('assets/images/tutorial_4_2.png'),
+                  _buildStepItem(2,
+                      '金額の調整モード\n特定の人が多く金額を払う場合に使用します。\n例. 先輩や上司が多く払った。遅れて参加した人は少なく支払った。'),
+                  _buildTutorialImage('assets/images/tutorial_4_3.png'),
+                  _buildDescText(
+                      '金額を入力し、ロックすることができます。ロックがかかっていない人たちで、残りの金額が割り勘されます。\n鍵マークをタップすることで、金額を固定&解除できます。'),
+                  const SizedBox(height: 12),
+                  _buildStepItem(3,
+                      '役割別に調整モード\n役割によって支払う金額が異なる場合に使用します。\n例. 4年生は多く、1年生は少なく支払う。男性は多く、女性は少なく支払う。マネージャー以上は多く、新卒入社の人は少なく支払う。など'),
+                  _buildTutorialImage('assets/images/tutorial_4_4.png'),
+                  _buildDescText(
+                      '「役割を入力する」ボタンから、役割と金額を入力し、メンバーに役割を割り振ります。\n役割が無い人で、残りの金額が割り勘されます。'),
+                  _buildTripleImages(
+                    'assets/images/tutorial_4_5.png',
+                    'assets/images/tutorial_4_6.png',
+                    'assets/images/tutorial_4_7.png',
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              // グループ3：端数切り上げモード
+              _buildSectionCard(
+                children: [
+                  const Text(
+                    '端数切り上げモード',
+                    style: TextStyle(
+                      fontFamily: 'Noto Sans JP',
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  _buildDescText('現金で受け取る場合、端数が多いと小銭が発生して大変です。'),
+                  _buildTripleImages(
+                    'assets/images/tutorial_4_8.png',
+                    'assets/images/tutorial_4_9.png',
+                    'assets/images/tutorial_4_10.png',
+                  ),
+                  _buildDescText(
+                      '10円、50円、100円単位で端数を切り上げて金額を設定することができます。\n金額の調整モードや、役割から調整モードに切り上げを適用することも可能です。（割り勘されたメンバーの金額に切り上げが適用されます。）'),
+                  _buildDoubleImages(
+                    'assets/images/tutorial_4_11.png',
+                    'assets/images/tutorial_4_12.png',
+                  ),
+                  _buildDescText(
+                      '切り上げるので、まとめて払った人が損をすることはありません。\n余ったお金は、代表会計を頑張ったごほうびで何かに使うか、集金くんアプリの開発者に寄付してくれたらうれしいです！'),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   /// セクションカードを構築
   Widget _buildSectionCard({required List<Widget> children}) {
     return Container(
@@ -581,6 +779,9 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                 }
                 if (index == 2) {
                   return _buildAddMemberPage();
+                }
+                if (index == 3) {
+                  return _buildAmountSettingPage();
                 }
                 return Center(
                   child: Text(
