@@ -14,13 +14,15 @@ import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/logging/analytics_ui_logger.dart';
 import 'package:mr_collection/ui/components/collection_rate_chart.dart';
 import 'package:mr_collection/ui/components/dialog/paypay_dialog.dart';
+import 'package:mr_collection/ads/rewarded_ad_singleton.dart';
+import 'package:mr_collection/provider/ads_removal_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/provider/theme_color_provider.dart';
 import 'package:mr_collection/theme/theme_color.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
-class ShareScreen extends StatefulWidget {
+class ShareScreen extends ConsumerStatefulWidget {
   final Event event;
 
   const ShareScreen({
@@ -30,10 +32,10 @@ class ShareScreen extends StatefulWidget {
 
   @override
   // Share画面の状態を作成する。
-  State<ShareScreen> createState() => _ShareScreenState();
+  ConsumerState<ShareScreen> createState() => _ShareScreenState();
 }
 
-class _ShareScreenState extends State<ShareScreen> {
+class _ShareScreenState extends ConsumerState<ShareScreen> {
   final GlobalKey _anonymousCardKey = GlobalKey();
   final GlobalKey _detailCardKey = GlobalKey();
   bool _includePayPayLink = false;
@@ -275,12 +277,22 @@ class _ShareScreenState extends State<ShareScreen> {
     setState(() => _includePayPayLink = true);
   }
 
-  // カードの画像化を試す。
+  // カードタップ時にリワード広告を表示してから共有する。
   Future<void> _handleCardTap(
     WidgetRef ref,
     GlobalKey cardKey, {
     required bool isAnonymous,
   }) async {
+    // 広告削除ユーザーでなければリワード広告を表示する
+    if (!ref.read(adsRemovalProvider)) {
+      final rewarded = await rewardedAd.showAndWaitForReward();
+      if (!mounted) return;
+      if (!rewarded) {
+        // リワード広告が未準備・失敗の場合はそのまま共有を許可
+        // （広告がロードできていない場合にブロックしない）
+      }
+    }
+
     try {
       final file = await _captureCardImage(cardKey);
       if (!mounted) return;

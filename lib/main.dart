@@ -6,6 +6,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:mr_collection/ads/idle_interstitial_manager.dart';
 import 'package:mr_collection/ads/interstitial_singleton.dart';
+import 'package:mr_collection/ads/rewarded_ad_singleton.dart';
 import 'package:mr_collection/collection_app.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -28,6 +29,7 @@ void main() async {
 
   await interstitial.load();
   await idleInterstitial.load();
+  await rewardedAd.load();
 
   //TODO: Androidリリース後に広告搭載する時に使う
   // RequestConfiguration requestConfiguration = RequestConfiguration(
