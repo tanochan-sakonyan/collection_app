@@ -42,6 +42,8 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   int _currentPage = 0;
 
   late final AnimationController _waveController;
+  late final AnimationController _floatController;
+  late final Animation<double> _floatAnimation;
 
   @override
   void initState() {
@@ -50,13 +52,78 @@ class _OnboardingScreenState extends State<OnboardingScreen>
       vsync: this,
       duration: const Duration(seconds: 6),
     )..repeat();
+    // アイコンのふわふわアニメーションコントローラー
+    _floatController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 3),
+    )..repeat(reverse: true);
+    _floatAnimation = Tween<double>(begin: -10, end: 10).animate(
+      CurvedAnimation(parent: _floatController, curve: Curves.easeInOut),
+    );
   }
 
   @override
   void dispose() {
     _waveController.dispose();
+    _floatController.dispose();
     _pageController.dispose();
     super.dispose();
+  }
+
+  /// 1ページ目のウェルカムページを構築
+  Widget _buildWelcomePage() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const SizedBox(height: 40),
+        // ふわふわ浮くアイコン
+        AnimatedBuilder(
+          animation: _floatAnimation,
+          builder: (context, child) {
+            return Transform.translate(
+              offset: Offset(0, _floatAnimation.value),
+              child: child,
+            );
+          },
+          child: Container(
+            width: 120,
+            height: 120,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(28),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.25),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(28),
+              child: Image.asset(
+                'assets/icons/icon.png',
+                width: 120,
+                height: 120,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 36),
+        // ウェルカムテキスト
+        const Text(
+          'ようこそ\n集金くんへ',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontFamily: 'Noto Sans JP',
+            fontSize: 32,
+            fontWeight: FontWeight.w900,
+            color: Colors.white,
+            height: 1.4,
+          ),
+        ),
+      ],
+    );
   }
 
   /// 完了処理
@@ -111,6 +178,9 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                       setState(() => _currentPage = index);
                     },
                     itemBuilder: (context, index) {
+                      if (index == 0) {
+                        return _buildWelcomePage();
+                      }
                       return Center(
                         child: Text(
                           '${index + 1}ページ目です',
@@ -154,7 +224,23 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                             ),
                           ),
                           child: Text(
-                            _currentPage == _totalPages - 1 ? 'はじめる' : '次へ',
+                            _currentPage == 0
+                                ? 'チュートリアルを開始'
+                                : _currentPage == _totalPages - 1
+                                    ? 'はじめる'
+                                    : '次へ',
+                            style: const TextStyle(fontWeight: FontWeight.w900),
+                          ),
+                        ),
+                      ),
+                      // スキップボタン
+                      TextButton(
+                        onPressed: _complete,
+                        child: const Text(
+                          'スキップ',
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 14,
                           ),
                         ),
                       ),
@@ -230,7 +316,9 @@ class _WavePainter extends CustomPainter {
     for (double x = 0; x <= size.width; x += 1) {
       final y = verticalOffset +
           amplitude * sin(frequency * (x / size.width) * 2 * pi + phase) +
-          amplitude * 0.5 * sin(frequency * 2 * (x / size.width) * 2 * pi + phase * 1.5);
+          amplitude *
+              0.5 *
+              sin(frequency * 2 * (x / size.width) * 2 * pi + phase * 1.5);
       path.lineTo(x, y);
     }
 
