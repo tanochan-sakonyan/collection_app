@@ -184,24 +184,6 @@ class SJa extends S {
   String get enterEventName => 'イベント名を入力してください';
 
   @override
-  String get tapToAddEvent => 'こちらをタップでイベントを\n追加できます';
-
-  @override
-  String get longPressToDeleteEvent => 'タップでイベントを編集\n長押しでイベントを削除\nできます';
-
-  @override
-  String get tapToAddMember => 'こちらをタップでメンバーを\n追加できます';
-
-  @override
-  String get swipeToEditOrDeleteMember => 'スワイプでメンバーの削除及び\nメンバー名の変更ができます';
-
-  @override
-  String get tapToSortByPayment => 'こちらをタップで支払い状況順に\n並び変えることができます';
-
-  @override
-  String get tapToSendReminder => 'こちらをタップで催促メッセージを\n送信できます';
-
-  @override
   String get skip => 'スキップ';
 
   @override

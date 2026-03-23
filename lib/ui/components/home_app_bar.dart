@@ -48,24 +48,22 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
               icon: _buildShareIcon(context),
               onPressed: onSharePressed,
             ),
-            hasTabs
-                ? IconButton(
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
-                    focusColor: Colors.transparent,
-                    onPressed: onHelpPressed,
-                    icon: SvgPicture.asset(
-                      'assets/icons/ic_question_circle.svg',
-                      width: 36,
-                      height: 36,
-                      colorFilter: ColorFilter.mode(
-                        Theme.of(context).primaryColor,
-                        BlendMode.srcIn,
-                      ),
-                    ),
-                  )
-                : const SizedBox(width: 24),
+            IconButton(
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              hoverColor: Colors.transparent,
+              focusColor: Colors.transparent,
+              onPressed: onHelpPressed,
+              icon: SvgPicture.asset(
+                'assets/icons/ic_question_circle.svg',
+                width: 36,
+                height: 36,
+                colorFilter: ColorFilter.mode(
+                  Theme.of(context).primaryColor,
+                  BlendMode.srcIn,
+                ),
+              ),
+            ),
             IconButton(
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,

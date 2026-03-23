@@ -9,15 +9,11 @@ import 'package:mr_collection/logging/analytics_message_logger.dart';
 import 'package:mr_collection/ui/screen/send_line_message_bottom_sheet.dart';
 
 class FloatingActionButtonOn extends StatelessWidget {
-  final int index;
-  final List<GlobalKey> fabKeys;
   final TabController tabController;
   final Event event;
 
   const FloatingActionButtonOn({
     super.key,
-    required this.index,
-    required this.fabKeys,
     required this.tabController,
     required this.event,
   });
@@ -36,7 +32,6 @@ class FloatingActionButtonOn extends StatelessWidget {
         lightness: 1.05,
       ),
       child: FloatingActionButton(
-        key: fabKeys[index],
         backgroundColor: primaryColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(48),

@@ -27,7 +27,6 @@ dependencies:
   url_launcher: ^6.1.10
   webview_flutter: ^4.11.0
   auto_size_text: ^3.0.0
-  tutorial_coach_mark: ^1.2.13
   smooth_page_indicator: ^1.2.1
   intl: ^0.20.2
   flutter_localizations:
@@ -127,6 +126,29 @@ flutter:
     - assets/icons/ic_crown.svg
     - assets/images/img_add_from_line.png
     - assets/images/login_screen_image.png
+    - assets/images/tutorial_2_0.png
+    - assets/images/tutorial_2_1.PNG
+    - assets/images/tutorial_2_2.PNG
+    - assets/images/tutorial_2_3.PNG
+    - assets/images/tutorial_2_4.PNG
+    - assets/images/tutorial_3_1.png
+    - assets/images/tutorial_3_2.png
+    - assets/images/tutorial_3_3.png
+    - assets/images/tutorial_3_4.png
+    - assets/images/tutorial_4_1.png
+    - assets/images/tutorial_4_2.png
+    - assets/images/tutorial_4_3.png
+    - assets/images/tutorial_4_4.png
+    - assets/images/tutorial_4_5.png
+    - assets/images/tutorial_4_6.png
+    - assets/images/tutorial_4_7.png
+    - assets/images/tutorial_4_8.png
+    - assets/images/tutorial_4_9.png
+    - assets/images/tutorial_4_10.png
+    - assets/images/tutorial_4_11.png
+    - assets/images/tutorial_4_12.png
+    - assets/images/tutorial_5_1.png
+    - assets/images/tutorial_6_1.png
 
 
   fonts:
