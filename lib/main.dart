@@ -4,6 +4,7 @@ import 'package:flutter_line_sdk/flutter_line_sdk.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:mr_collection/ads/idle_interstitial_manager.dart';
 import 'package:mr_collection/ads/interstitial_singleton.dart';
 import 'package:mr_collection/collection_app.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -26,6 +27,7 @@ void main() async {
   await MobileAds.instance.initialize();
 
   await interstitial.load();
+  await idleInterstitial.load();
 
   //TODO: Androidリリース後に広告搭載する時に使う
   // RequestConfiguration requestConfiguration = RequestConfiguration(

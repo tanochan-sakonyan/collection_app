@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:mr_collection/ads/ad_helper.dart';
+import 'package:mr_collection/ads/idle_interstitial_manager.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/logging/analytics_ads_logger.dart';
 import 'package:mr_collection/logging/analytics_event_logger.dart';
@@ -59,6 +60,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   final Set<String> _dismissedDuplicateWarningEventIds = {};
   final Set<String> _loggedDuplicateWarningEventIds = {};
   ProviderSubscription<bool>? _adsRemovalSubscription;
+  late final IdleInterstitialManager _idleInterstitialManager;
 
   final GlobalKey eventAddKey = GlobalKey();
   ProviderSubscription<String?>? _pendingFocusSubscription;
@@ -90,6 +92,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
             _banner = null;
             _isBannerLoaded = false;
           });
+          _idleInterstitialManager.stop();
         }
       },
       fireImmediately: false,
@@ -125,18 +128,22 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       fireImmediately: false,
     );
 
+    _idleInterstitialManager = IdleInterstitialManager();
     unawaited(_loadSavedTabOrder());
     _loadSavedTabIndex();
     unawaited(_restoreAdsRemovalStatusOnStart());
   }
 
-  // 起動時に広告削除状態を復元してからバナーを作成する。
+  // 起動時に広告削除状態を復元してからバナーを作成し、アイドルタイマーを開始する。
   Future<void> _restoreAdsRemovalStatusOnStart() async {
     await ref
         .read(adsRemovalProvider.notifier)
         .restoreAdsRemovalStatus();
     if (!mounted) return;
     _createBannerAd();
+    if (!ref.read(adsRemovalProvider)) {
+      _idleInterstitialManager.start();
+    }
   }
 
   void _createBannerAd() {
@@ -267,6 +274,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     _banner?.dispose();
     _pendingFocusSubscription?.close();
     _adsRemovalSubscription?.close();
+    _idleInterstitialManager.dispose();
     super.dispose();
   }
 
@@ -942,7 +950,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    return WillPopScope(
+    return Listener(
+      onPointerDown: (_) => _idleInterstitialManager.resetTimer(),
+      onPointerMove: (_) => _idleInterstitialManager.resetTimer(),
+      child: WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
         key: _scaffoldKey,
@@ -1149,6 +1160,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
               ),
           ],
         ),
+      ),
       ),
     );
   }

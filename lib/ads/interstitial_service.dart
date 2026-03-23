@@ -8,16 +8,20 @@ import 'ad_helper.dart';
 class InterstitialService {
   InterstitialAd? _ad;
   final bool useProd;
+  final String? adUnitIdOverride;
 
-  InterstitialService({required this.useProd});
+  InterstitialService({required this.useProd, this.adUnitIdOverride});
 
   bool get isReady => _ad != null;
 
+  // 使用する広告ユニットIDを返す。
+  String get _adUnitId =>
+      adUnitIdOverride ??
+      (useProd ? AdHelper.interstitialProdId() : AdHelper.interstitialTestId());
+
   Future<void> load() async {
     await InterstitialAd.load(
-      adUnitId: useProd
-          ? AdHelper.interstitialProdId()
-          : AdHelper.interstitialTestId(),
+      adUnitId: _adUnitId,
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
