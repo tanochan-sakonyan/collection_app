@@ -16,6 +16,8 @@ import 'package:mr_collection/logging/analytics_amount_logger.dart';
 import 'package:mr_collection/ui/screen/amount_screen/tabs/adjust_amounts_tab.dart';
 import 'package:mr_collection/ui/screen/amount_screen/tabs/role_adjust_tab.dart';
 import 'package:mr_collection/ui/screen/amount_screen/tabs/split_equally_tab.dart';
+import 'package:mr_collection/ads/rewarded_ad_singleton.dart';
+import 'package:mr_collection/provider/ads_removal_provider.dart';
 import 'package:mr_collection/ui/screen/home_screen.dart';
 import 'package:mr_collection/ui/components/round_up_module.dart';
 
@@ -857,6 +859,12 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                           );
                           if (!mounted) {
                             return;
+                          }
+                          // 広告削除ユーザーでなければリワード広告を表示する
+                          if (!ref.read(adsRemovalProvider)) {
+                            await amountConfirmRewardedAd
+                                .showAndWaitForReward();
+                            if (!mounted) return;
                           }
                           ref.read(pendingEventFocusProvider.notifier).state =
                               widget.eventId;

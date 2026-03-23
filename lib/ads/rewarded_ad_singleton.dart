@@ -24,3 +24,17 @@ RewardedAdService lineGroupRewardedAd = RewardedAdService(
 void setLineGroupRewardedAdForTesting(RewardedAdService service) {
   lineGroupRewardedAd = service;
 }
+
+// 個別金額確定時用リワード広告シングルトン
+RewardedAdService amountConfirmRewardedAd = RewardedAdService(
+  useProd: kReleaseMode,
+  adUnitIdOverride: kReleaseMode
+      ? AdHelper.amountConfirmRewardedProdId()
+      : AdHelper.amountConfirmRewardedTestId(),
+);
+
+@visibleForTesting
+// テスト用に個別金額確定時リワード広告のシングルトンを差し替える。
+void setAmountConfirmRewardedAdForTesting(RewardedAdService service) {
+  amountConfirmRewardedAd = service;
+}
