@@ -126,6 +126,11 @@ flutter:
     - assets/icons/ic_crown.svg
     - assets/images/img_add_from_line.png
     - assets/images/login_screen_image.png
+    - assets/images/tutorial_2_0.png
+    - assets/images/tutorial_2_1.PNG
+    - assets/images/tutorial_2_2.PNG
+    - assets/images/tutorial_2_3.PNG
+    - assets/images/tutorial_2_4.PNG
 
 
   fonts:
