@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mr_collection/ui/components/dialog/ads/remove_ads_dialog.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 /// オンボーディング完了済みかどうかのSharedPreferencesキー
@@ -613,6 +614,181 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     );
   }
 
+  /// 5ページ目：ホーム画面の説明ページ
+  Widget _buildHomeScreenPage() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 24, right: 24, bottom: 160),
+      child: ShaderMask(
+        shaderCallback: (bounds) {
+          return const LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.white,
+              Colors.white,
+              Colors.white,
+              Colors.transparent,
+            ],
+            stops: [0.0, 0.05, 0.9, 1.0],
+          ).createShader(bounds);
+        },
+        blendMode: BlendMode.dstIn,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.only(bottom: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 74),
+              // ページタイトル
+              const Center(
+                child: Text(
+                  'ホーム画面',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: 'Noto Sans JP',
+                    fontSize: 24,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white,
+                    height: 1.3,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              _buildTutorialImage('assets/images/tutorial_5_1.png'),
+              const SizedBox(height: 12),
+              _buildSectionCard(
+                children: [
+                  _buildStepItem(1,
+                      'メンバーリスト\n名前、役割、金額、ステータスが表示されます。右側の並び替えボタンを押して、メンバーを支払い状況順に並び替えることもできます。'),
+                  _buildStepItem(2, 'イベント名\nここをタップすることで、イベントの名前を変更することができます。'),
+                  _buildStepItem(3, 'イベント追加\nイベントを追加する際にタップします。'),
+                  _buildStepItem(4, 'イベント削除\nタップすると、選択されているイベントが削除されます。'),
+                  _buildStepItem(5,
+                      '集金状況共有ボタン\n現在の集金状況を共有できます。\n名前付きモード、匿名モードを選ぶことができます。'),
+                  _buildStepItem(6, 'ヘルプボタン\n使い方を確認することができます。'),
+                  _buildStepItem(7, '一括編集\nメンバーのステータスの一括変更や、メンバーの一括削除ができます'),
+                  _buildStepItem(8, '人数・金額\n押すと、金額を入力・変更することができます。'),
+                  _buildStepItem(9, 'メモ欄'),
+                  _buildStepItem(10,
+                      '催促メッセージ送信\nグループに集金くん公式LINEから自動でメッセージを送信することができます。\n未払いの人に自分から催促するのが気まずい時に便利です。\nLINEグループからメンバーを取得したグループでしか送ることができません。そのグループを引き継いで作成したグループでも、送ることはできませんのでご了承ください。'),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 6ページ目：お願いページ
+  Widget _buildRequestPage() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 24, right: 24, bottom: 160),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text(
+            'お願い',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'Noto Sans JP',
+              fontSize: 24,
+              fontWeight: FontWeight.w900,
+              color: Colors.white,
+              height: 1.3,
+            ),
+          ),
+          const SizedBox(height: 24),
+          // 浮くアイコン画像
+          AnimatedBuilder(
+            animation: _floatAnimation,
+            builder: (context, child) {
+              return Transform.translate(
+                offset: Offset(0, _floatAnimation.value),
+                child: child,
+              );
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.3),
+                    blurRadius: 24,
+                    offset: const Offset(0, 12),
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Image.asset(
+                  'assets/images/tutorial_6_1.png',
+                  width: 320,
+                  fit: BoxFit.fitWidth,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          // 購入するボタン
+          SizedBox(
+            width: 120,
+            height: 44,
+            child: ElevatedButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => const RemoveAdsDialog(),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: Theme.of(context).primaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(22),
+                ),
+              ),
+              child: const Text(
+                '購入する',
+                style: TextStyle(
+                  fontFamily: 'Noto Sans JP',
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+          _buildSectionCard(
+            children: [
+              RichText(
+                text: const TextSpan(
+                  style: TextStyle(
+                    fontFamily: 'Noto Sans JP',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                    height: 1.5,
+                  ),
+                  children: [
+                    TextSpan(text: '集金くんは、現在'),
+                    TextSpan(
+                      text: '赤字',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                    TextSpan(
+                        text: '開発されています。\n'
+                            '今後集金くんの機能を継続して提供できない可能性がございます。\n\n'
+                            '広告を削除できる機能を300円でご用意しております。ぜひ、ご利用いただければと思います。'),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   /// セクションカードを構築
   Widget _buildSectionCard({required List<Widget> children}) {
     return Container(
@@ -782,6 +958,12 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                 }
                 if (index == 3) {
                   return _buildAmountSettingPage();
+                }
+                if (index == 4) {
+                  return _buildHomeScreenPage();
+                }
+                if (index == 5) {
+                  return _buildRequestPage();
                 }
                 return Center(
                   child: Text(
