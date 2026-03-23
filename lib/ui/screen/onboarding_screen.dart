@@ -8,7 +8,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 const String onboardingCompletedKey = 'onboarding_completed';
 
 /// オンボーディングの総ページ数
-const int _totalPages = 5;
+const int _totalPages = 8;
 
 /// オンボーディング画面
 class OnboardingScreen extends StatefulWidget {
@@ -273,6 +273,148 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     );
   }
 
+  /// 3ページ目：メンバー追加の説明ページ
+  Widget _buildAddMemberPage() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 24, right: 24, bottom: 160),
+      child: ShaderMask(
+        shaderCallback: (bounds) {
+          return const LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.white,
+              Colors.white,
+              Colors.white,
+              Colors.transparent,
+            ],
+            stops: [0.0, 0.05, 0.9, 1.0],
+          ).createShader(bounds);
+        },
+        blendMode: BlendMode.dstIn,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.only(bottom: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 74),
+              // ページタイトル
+              const Center(
+                child: Text(
+                  'メンバーを追加',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: 'Noto Sans JP',
+                    fontSize: 24,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white,
+                    height: 1.3,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              // メンバー追加方法セクション
+              _buildSectionCard(
+                children: [
+                  const Text(
+                    'メンバーを追加',
+                    style: TextStyle(
+                      fontFamily: 'Noto Sans JP',
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    '改行区切りでメンバーをまとめて追加できます。',
+                    style: TextStyle(
+                      fontFamily: 'Noto Sans JP',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                      height: 1.5,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  // 2枚の画像を横並びで表示
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.asset(
+                            'assets/images/tutorial_3_1.png',
+                            fit: BoxFit.fitWidth,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.asset(
+                            'assets/images/tutorial_3_2.png',
+                            fit: BoxFit.fitWidth,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              // ステータスセクション
+              _buildSectionCard(
+                children: [
+                  const Text(
+                    'ステータス',
+                    style: TextStyle(
+                      fontFamily: 'Noto Sans JP',
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white,
+                    ),
+                  ),
+                  _buildTutorialImage('assets/images/tutorial_3_4.png'),
+                  _buildStepItem(1, '支払い済み：現金などでお金を受け取った場合に使用します'),
+                  _buildStepItem(2, 'PayPayで支払い済み：PayPayでお金を受け取った場合に使用します'),
+                  _buildStepItem(3, '未払い'),
+                  _buildStepItem(4, '欠席'),
+                ],
+              ),
+              const SizedBox(height: 12),
+              // よくある質問セクション
+              _buildSectionCard(
+                children: [
+                  const Text(
+                    'よくある質問',
+                    style: TextStyle(
+                      fontFamily: 'Noto Sans JP',
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  _buildFaqItem(
+                    'PayPayで支払った場合、ステータスが自動で反映されますか？',
+                    'いいえ。PayPayの利用規約上、自動反映はできません。現金とPayPayを区別するための機能となります。',
+                  ),
+                  const SizedBox(height: 12),
+                  _buildFaqItem(
+                    '集金くんが支払い代行をしてくれるのですか？',
+                    'いいえ。集金くんによる代行支払いはできません。グループの代表者がまとめて支払った後に、メンバーからお金を集める際の管理用アプリとなります。',
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   /// セクションカードを構築
   Widget _buildSectionCard({required List<Widget> children}) {
     return Container(
@@ -436,6 +578,9 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                 }
                 if (index == 1) {
                   return _buildLineGroupPage();
+                }
+                if (index == 2) {
+                  return _buildAddMemberPage();
                 }
                 return Center(
                   child: Text(

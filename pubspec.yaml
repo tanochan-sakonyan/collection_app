@@ -131,6 +131,10 @@ flutter:
     - assets/images/tutorial_2_2.PNG
     - assets/images/tutorial_2_3.PNG
     - assets/images/tutorial_2_4.PNG
+    - assets/images/tutorial_3_1.png
+    - assets/images/tutorial_3_2.png
+    - assets/images/tutorial_3_3.png
+    - assets/images/tutorial_3_4.png
 
 
   fonts:
