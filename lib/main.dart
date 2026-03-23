@@ -30,6 +30,7 @@ void main() async {
   await interstitial.load();
   await idleInterstitial.load();
   await rewardedAd.load();
+  await lineGroupRewardedAd.load();
 
   //TODO: Androidリリース後に広告搭載する時に使う
   // RequestConfiguration requestConfiguration = RequestConfiguration(

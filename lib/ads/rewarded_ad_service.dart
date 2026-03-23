@@ -8,15 +8,21 @@ import 'package:mr_collection/logging/analytics_ads_logger.dart';
 class RewardedAdService {
   RewardedAd? _ad;
   final bool useProd;
+  final String? adUnitIdOverride;
 
-  RewardedAdService({required this.useProd});
+  RewardedAdService({required this.useProd, this.adUnitIdOverride});
 
   bool get isReady => _ad != null;
+
+  // 使用する広告ユニットIDを返す。
+  String get _adUnitId =>
+      adUnitIdOverride ??
+      (useProd ? AdHelper.rewardedProdId() : AdHelper.rewardedTestId());
 
   /// リワード広告をロードする。
   Future<void> load() async {
     await RewardedAd.load(
-      adUnitId: useProd ? AdHelper.rewardedProdId() : AdHelper.rewardedTestId(),
+      adUnitId: _adUnitId,
       request: const AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (ad) {

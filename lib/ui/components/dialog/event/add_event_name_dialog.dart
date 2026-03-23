@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mr_collection/ads/interstitial_singleton.dart';
+import 'package:mr_collection/ads/rewarded_ad_singleton.dart';
 import 'package:mr_collection/constants/base_url.dart';
 import 'package:mr_collection/data/exception/auth_exception.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
@@ -114,8 +114,9 @@ class _AddEventNameDialogState extends ConsumerState<AddEventNameDialog> {
 
     ref.read(loadingProvider.notifier).state = true;
 
-    if (!ref.read(adsRemovalProvider) && interstitial.isReady) {
-      await interstitial.show();
+    // リワード広告を表示
+    if (!ref.read(adsRemovalProvider)) {
+      await lineGroupRewardedAd.showAndWaitForReward();
     }
 
     List<LineGroup> lineGroups = [];

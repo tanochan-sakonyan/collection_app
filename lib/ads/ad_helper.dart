@@ -78,4 +78,24 @@ class AdHelper {
     }
     throw UnsupportedError('Unsupported platform');
   }
+
+  // LINEグループ追加時リワード広告のテストIDを返す。
+  static String lineGroupRewardedTestId() {
+    if (Platform.isAndroid) {
+      return 'ca-app-pub-3940256099942544/5224354917'; // Android リワード広告テストID
+    } else if (Platform.isIOS) {
+      return 'ca-app-pub-3940256099942544/1712485313'; // iOS リワード広告テストID
+    }
+    throw UnsupportedError('Unsupported platform');
+  }
+
+  // LINEグループ追加時リワード広告の本番IDを返す。
+  static String lineGroupRewardedProdId() {
+    if (Platform.isAndroid) {
+      return 'ca-app-pub-xxxxxxxxxxxxxxxx/cccccccccc'; // TODO: 後々設定
+    } else if (Platform.isIOS) {
+      return 'ca-app-pub-8038336425425966/5937784276'; // iOS LINEグループ追加時リワード広告本番ID
+    }
+    throw UnsupportedError('Unsupported platform');
+  }
 }
