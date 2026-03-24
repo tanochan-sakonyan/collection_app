@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
+import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/provider/ads_removal_provider.dart';
 import 'package:mr_collection/ui/components/dialog/ads/remove_ads_thanks_dialog.dart';
 
@@ -42,26 +43,28 @@ class RemoveAdsDialogState extends ConsumerState<RemoveAdsDialog> {
     try {
       final available = await _inAppPurchase.isAvailable();
       if (!mounted) return;
+      final s = S.of(context)!;
       if (!available) {
         setState(() {
           _isStoreAvailable = false;
           _isLoading = false;
         });
-        _showSnackBar('現在購入を利用できません。');
+        _showSnackBar(s.purchaseUnavailable);
         return;
       }
 
       _purchaseSubscription ??= _inAppPurchase.purchaseStream
           .listen(_handlePurchaseUpdates, onError: (Object error) {
-        _showSnackBar('購入処理でエラーが発生しました。');
+        _showSnackBar(s.purchaseError);
       });
 
       final response =
           await _inAppPurchase.queryProductDetails({adsRemovalProductId});
       if (!mounted) return;
+      final s2 = S.of(context)!;
 
       if (response.error != null) {
-        _showSnackBar('商品情報の取得に失敗しました。');
+        _showSnackBar(s2.productQueryFailed);
         setState(() {
           _isStoreAvailable = false;
           _isLoading = false;
@@ -82,7 +85,7 @@ class RemoveAdsDialogState extends ConsumerState<RemoveAdsDialog> {
         _isStoreAvailable = false;
         _isLoading = false;
       });
-      _showSnackBar('購入の準備に失敗しました。');
+      _showSnackBar(S.of(context)!.purchasePrepareFailed);
     }
   }
 
@@ -93,15 +96,20 @@ class RemoveAdsDialogState extends ConsumerState<RemoveAdsDialog> {
         continue;
       }
 
+      // await より前に S を取得して async gap 越えの context 使用を避ける。
+      final cancelledMessage =
+          mounted ? S.of(context)!.purchaseCancelled : null;
+      final failedMessage = mounted ? S.of(context)!.purchaseFailed : null;
+
       if (purchase.status == PurchaseStatus.purchased ||
           purchase.status == PurchaseStatus.restored) {
         unawaited(ref.read(adsRemovalProvider.notifier).setAdsRemoved(true));
         _restoreCompleter?.complete(true);
         _showThanksDialog();
       } else if (purchase.status == PurchaseStatus.canceled) {
-        _showSnackBar('購入がキャンセルされました。');
+        if (cancelledMessage != null) _showSnackBar(cancelledMessage);
       } else if (purchase.status == PurchaseStatus.error) {
-        _showSnackBar('購入に失敗しました。');
+        if (failedMessage != null) _showSnackBar(failedMessage);
       }
 
       if (purchase.pendingCompletePurchase) {
@@ -120,11 +128,11 @@ class RemoveAdsDialogState extends ConsumerState<RemoveAdsDialog> {
   Future<void> _startPurchase() async {
     if (_isProcessing) return;
     if (!_isStoreAvailable) {
-      _showSnackBar('現在購入を利用できません。');
+      _showSnackBar(S.of(context)!.purchaseUnavailable);
       return;
     }
     if (_product == null) {
-      _showSnackBar('商品情報が見つかりませんでした。');
+      _showSnackBar(S.of(context)!.productNotFound);
       return;
     }
 
@@ -135,12 +143,12 @@ class RemoveAdsDialogState extends ConsumerState<RemoveAdsDialog> {
           await _inAppPurchase.buyNonConsumable(purchaseParam: purchaseParam);
       if (!success && mounted) {
         setState(() => _isProcessing = false);
-        _showSnackBar('購入処理を開始できませんでした。');
+        _showSnackBar(S.of(context)!.purchaseStartFailed);
       }
     } catch (_) {
       if (!mounted) return;
       setState(() => _isProcessing = false);
-      _showSnackBar('購入に失敗しました。');
+      _showSnackBar(S.of(context)!.purchaseFailed);
     }
   }
 
@@ -156,7 +164,7 @@ class RemoveAdsDialogState extends ConsumerState<RemoveAdsDialog> {
       _restoreCompleter = null;
       if (!mounted) return;
       setState(() => _isProcessing = false);
-      _showSnackBar('購入の復元に失敗しました。');
+      _showSnackBar(S.of(context)!.restoreFailed);
       return;
     }
 
@@ -171,7 +179,7 @@ class RemoveAdsDialogState extends ConsumerState<RemoveAdsDialog> {
     // 成功時は _handlePurchaseUpdates が _showThanksDialog() を呼ぶ
     if (!restored) {
       setState(() => _isProcessing = false);
-      _showSnackBar('復元できる購入が見つかりませんでした。');
+      _showSnackBar(S.of(context)!.noRestorablePurchase);
     }
   }
 
@@ -229,7 +237,7 @@ class RemoveAdsDialogState extends ConsumerState<RemoveAdsDialog> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    '広告を削除する',
+                    S.of(context)!.removeAds,
                     style: GoogleFonts.notoSansJp(
                       fontSize: 22,
                       fontWeight: FontWeight.w800,
@@ -241,7 +249,7 @@ class RemoveAdsDialogState extends ConsumerState<RemoveAdsDialog> {
               const SizedBox(height: 16),
               // 説明テキスト
               Text(
-                '全ての広告を永久に削除します。\n※ 金額設定で端数切り上げをすればすぐ元が取れます。',
+                S.of(context)!.removeAdsDescription,
                 style: GoogleFonts.notoSansJp(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
@@ -255,7 +263,7 @@ class RemoveAdsDialogState extends ConsumerState<RemoveAdsDialog> {
                 // crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    '¥300 買い切り',
+                    S.of(context)!.removeAdsPriceLabel,
                     style: GoogleFonts.notoSansJp(
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
@@ -286,7 +294,7 @@ class RemoveAdsDialogState extends ConsumerState<RemoveAdsDialog> {
                             ),
                           ),
                           child: Text(
-                            '購入',
+                            S.of(context)!.purchase,
                             style: GoogleFonts.notoSansJp(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
@@ -302,7 +310,7 @@ class RemoveAdsDialogState extends ConsumerState<RemoveAdsDialog> {
                 child: GestureDetector(
                   onTap: _isProcessing ? null : _restorePurchase,
                   child: Text(
-                    '購入を復元する',
+                    S.of(context)!.restorePurchase,
                     style: GoogleFonts.notoSansJp(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,

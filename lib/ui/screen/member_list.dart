@@ -26,19 +26,12 @@ class MemberList extends ConsumerStatefulWidget {
   final String eventId;
   final String eventName;
 
-  final GlobalKey? memberAddKey;
-  final GlobalKey? slidableKey;
-  final GlobalKey? sortKey;
-
   const MemberList({
     super.key,
     required this.event,
     required this.members,
     required this.eventId,
     required this.eventName,
-    this.memberAddKey,
-    this.slidableKey,
-    this.sortKey,
   });
 
   @override
@@ -440,7 +433,7 @@ class _MemberListState extends ConsumerState<MemberList>
                                         vertical: 14),
                                   ),
                                   child: Text(
-                                    hasSelection ? '変更($selectedCount)' : '変更',
+                                    hasSelection ? S.of(sheetContext)!.changeCount(selectedCount) : S.of(sheetContext)!.changeButton,
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold),
@@ -727,7 +720,6 @@ class _MemberListState extends ConsumerState<MemberList>
                             ),
                             const SizedBox(width: 2),
                             GestureDetector(
-                              key: widget.sortKey,
                               onTap: () {
                                 AnalyticsMemberLogger.logSortPressed();
                                 ref
@@ -858,7 +850,6 @@ class _MemberListState extends ConsumerState<MemberList>
                                 ),
                               ),
                               child: Row(
-                                key: widget.memberAddKey,
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   SizedBox(

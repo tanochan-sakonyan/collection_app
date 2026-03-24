@@ -7,6 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:mr_collection/ads/ad_helper.dart';
+import 'package:mr_collection/ads/idle_interstitial_manager.dart';
+import 'package:mr_collection/route_observer.dart';
 import 'package:mr_collection/data/model/payment_status.dart';
 import 'package:mr_collection/logging/analytics_ads_logger.dart';
 import 'package:mr_collection/logging/analytics_event_logger.dart';
@@ -20,8 +22,8 @@ import 'package:mr_collection/ui/components/circular_loading_indicator.dart';
 import 'package:mr_collection/ui/components/dialog/event/add_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/event/delete_event_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/event/edit_event_dialog.dart';
-import 'package:mr_collection/ui/components/dialog/terms_privacy_update_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_and_suggest_official_line_dialog.dart';
+import 'package:mr_collection/ui/screen/onboarding_screen.dart';
 import 'package:mr_collection/ui/components/home_app_bar.dart';
 import 'package:mr_collection/ui/components/line_member_delete_limit_countdown.dart';
 import 'package:mr_collection/ui/screen/member_list.dart';
@@ -29,10 +31,8 @@ import 'package:mr_collection/ui/components/tanochan_drawer.dart';
 import 'package:mr_collection/data/model/freezed/event.dart';
 import 'package:mr_collection/data/model/freezed/user.dart';
 import 'package:mr_collection/ui/screen/share/share_screen.dart';
-import 'package:mr_collection/ui/tutorial/tutorial_targets.dart';
 import 'package:mr_collection/ui/components/duplicate_member_warning.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:mr_collection/ui/components/event_zero_components.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/provider/pending_event_focus_provider.dart';
@@ -45,7 +45,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class HomeScreenState extends ConsumerState<HomeScreen>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, RouteAware {
   late TabController tabController;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<String> _tabTitles = [];
@@ -63,14 +63,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   ProviderSubscription<bool>? _adsRemovalSubscription;
 
   final GlobalKey eventAddKey = GlobalKey();
-  final GlobalKey leftTabKey = GlobalKey();
-  late List<GlobalKey> _memberAddKeys;
-  late List<GlobalKey> _slidableKeys;
-  late List<GlobalKey> _sortKeys;
-  late List<GlobalKey> fabKeys;
-
-  late TutorialCoachMark tutorialCoachMark;
-  List<TargetFocus> targets = [];
   ProviderSubscription<String?>? _pendingFocusSubscription;
 
   @override
@@ -80,7 +72,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       unawaited(AnalyticsUiLogger.logHomeScreenViewed());
     });
     _tabTitles = ref.read(tabTitlesProvider);
-    _initKeys(_tabTitles.length);
     tabController = TabController(length: _tabTitles.length, vsync: this);
     _pendingFocusSubscription = ref.listenManual<String?>(
       pendingEventFocusProvider,
@@ -101,6 +92,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
             _banner = null;
             _isBannerLoaded = false;
           });
+          idleInterstitialManager.stop();
         }
       },
       fireImmediately: false,
@@ -138,18 +130,19 @@ class HomeScreenState extends ConsumerState<HomeScreen>
 
     unawaited(_loadSavedTabOrder());
     _loadSavedTabIndex();
-    _checkAndShowPrivacyPolicyUpdate();
-
     unawaited(_restoreAdsRemovalStatusOnStart());
   }
 
-  // 起動時に広告削除状態を復元してからバナーを作成する。
+  // 起動時に広告削除状態を復元してからバナーを作成し、アイドルタイマーを開始する。
   Future<void> _restoreAdsRemovalStatusOnStart() async {
     await ref
         .read(adsRemovalProvider.notifier)
         .restoreAdsRemovalStatus();
     if (!mounted) return;
     _createBannerAd();
+    if (!ref.read(adsRemovalProvider)) {
+      idleInterstitialManager.start();
+    }
   }
 
   void _createBannerAd() {
@@ -193,82 +186,73 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     _banner = banner;
   }
 
-  void _initKeys([int? explicitLength]) {
-    final len = explicitLength ?? _tabTitles.length;
-    _memberAddKeys = List.generate(len, (_) => GlobalKey());
-    _slidableKeys = List.generate(len, (_) => GlobalKey());
-    _sortKeys = List.generate(len, (_) => GlobalKey());
-    fabKeys = List.generate(len, (_) => GlobalKey());
-  }
 
-  bool _updateDialogChecked = false;
+  bool _startupChecked = false;
+
+  bool _routeAwareSubscribed = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (_updateDialogChecked) return;
+    if (!_routeAwareSubscribed) {
+      final route = ModalRoute.of(context);
+      if (route != null) {
+        appRouteObserver.subscribe(this, route);
+        _routeAwareSubscribed = true;
+      }
+    }
+    if (_startupChecked) return;
 
     final route = ModalRoute.of(context);
     final anim = route?.animation;
 
     if (anim == null || anim.status == AnimationStatus.completed) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) _checkAndShowUpdateDialog();
+        if (mounted) _checkOnboardingOrUpdateDialog();
       });
     } else {
       void listener(AnimationStatus status) {
         if (status == AnimationStatus.completed && mounted) {
-          _checkAndShowUpdateDialog();
+          _checkOnboardingOrUpdateDialog();
           anim.removeStatusListener(listener);
         }
       }
 
       anim.addStatusListener(listener);
     }
-    _updateDialogChecked = true;
+    _startupChecked = true;
   }
 
-  void _showTutorial() {
-    targets = TutorialTargets.createTargets(
-      context: context,
-      eventAddKey: eventAddKey,
-      leftTabKey: leftTabKey,
-      memberAddKey: _memberAddKeys[_currentTabIndex],
-      slidableKey: _slidableKeys[_currentTabIndex],
-      sortKey: _sortKeys[_currentTabIndex],
-      fabKey: fabKeys[_currentTabIndex],
-    );
-    tutorialCoachMark = TutorialCoachMark(
-      targets: targets,
-      useSafeArea: true,
-      colorShadow: const Color(0xFFE0E0E0),
-      alignSkip: Alignment.topRight,
-      textSkip: S.of(context)!.skip,
-      textStyleSkip: const TextStyle(
-        color: Colors.black,
-        fontSize: 16,
+  /// 初回起動時はオンボーディング→完了後にアップデートダイアログ、
+  /// 2回目以降はアップデートダイアログのみ表示
+  Future<void> _checkOnboardingOrUpdateDialog() async {
+    final shouldShowOnboarding = await OnboardingScreen.shouldShow();
+    if (!mounted) return;
+
+    if (shouldShowOnboarding) {
+      _showOnboardingScreen(showUpdateDialogAfter: true);
+    } else {
+      _checkAndShowUpdateDialog();
+    }
+  }
+
+  /// オンボーディング画面を表示
+  void _showOnboardingScreen({bool showUpdateDialogAfter = false}) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (_) => OnboardingScreen(
+          onCompleted: () {
+            Navigator.of(context).pop();
+            if (showUpdateDialogAfter) {
+              _checkAndShowUpdateDialog();
+            }
+          },
+        ),
       ),
-      paddingFocus: 6,
-      onFinish: () {
-        _setTutorialShown();
-      },
-      onSkip: () {
-        _setTutorialShown();
-        return true;
-      },
     );
-    tutorialCoachMark.show(context: context);
   }
 
-  void _setTutorialShown() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isTutorialShown120', true);
-  }
-
-  void _resetTutorial() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isTutorialShown120', false);
-  }
 
   // Detects duplicate member names within a specific event.
   List<String> _findDuplicatedMemberNames(Event? event) {
@@ -292,19 +276,34 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   @override
+  // 別の画面がプッシュされてHomeScreenが非表示になった時、タイマーを停止する。
+  void didPushNext() {
+    idleInterstitialManager.stop();
+  }
+
+  @override
+  // 別の画面からHomeScreenに戻ってきた時、タイマーをリセットして再開する。
+  void didPopNext() {
+    if (!ref.read(adsRemovalProvider)) {
+      idleInterstitialManager.start();
+    }
+  }
+
+  @override
   void dispose() {
+    appRouteObserver.unsubscribe(this);
     _tabTitlesSubscription?.close();
     tabController.dispose();
     _banner?.dispose();
     _pendingFocusSubscription?.close();
     _adsRemovalSubscription?.close();
+    idleInterstitialManager.dispose();
     super.dispose();
   }
 
   void _updateTabController(int newLength) {
     tabController.dispose();
     tabController = TabController(length: newLength, vsync: this);
-    _initKeys(newLength);
     tabController.addListener(() {
       if (tabController.index != _currentTabIndex &&
           !tabController.indexIsChanging) {
@@ -656,7 +655,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
           child: ReorderableDelayedDragStartListener(
             index: index,
             child: GestureDetector(
-              key: index == 0 ? leftTabKey : null,
               onTap: () {
                 if (index == _currentTabIndex) {
                   showDialog(
@@ -777,31 +775,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   // 2025年7月28日、LINEから取得したグループ情報が、24時間で切れることを利用規約・プライバシーポリシーに追記。
-  Future<void> _checkAndShowPrivacyPolicyUpdate() async {
-    final prefs = await SharedPreferences.getInstance();
-    final hasShownUpdate =
-        prefs.getBool('terms_and_privacy_update_20250728') ?? false;
-
-    if (!hasShownUpdate) {
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        await Future.delayed(const Duration(milliseconds: 100));
-        if (mounted) {
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-              return const TermsPrivacyUpdateDialog();
-            },
-          );
-          // フラグをtrueに変更
-          await prefs.setBool('terms_and_privacy_update_20250728', true);
-        }
-      });
-    } else {
-      debugPrint('Terms and Privacy Update dialog already shown.');
-    }
-  }
-
   // versionForUpdateDialogを、2025/04現在は1.2.0で定義
   // これがshownVersionFor120と異なる時、ポップアップを出す。
   // 今後のアップデートの際は、shownVersionFor〇〇〇のpreferenceを更新する。(2箇所)
@@ -1000,7 +973,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    return WillPopScope(
+    return Listener(
+      onPointerDown: (_) => idleInterstitialManager.resetTimer(),
+      onPointerMove: (_) => idleInterstitialManager.resetTimer(),
+      child: WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
         key: _scaffoldKey,
@@ -1030,11 +1006,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
             );
           },
           onHelpPressed: () {
-            unawaited(AnalyticsUiLogger.logHomeHelpPressed());
-            _resetTutorial();
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              _showTutorial();
-            });
+            _showOnboardingScreen();
           },
           onSettingsPressed: () {
             _scaffoldKey.currentState?.openDrawer();
@@ -1118,15 +1090,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                           ? event.eventId
                                           : "",
                                       eventName: event.eventName,
-                                      memberAddKey: (_currentTabIndex == index)
-                                          ? _memberAddKeys[index]
-                                          : null,
-                                      slidableKey: (_currentTabIndex == index)
-                                          ? _slidableKeys[index]
-                                          : null,
-                                      sortKey: (_currentTabIndex == index)
-                                          ? _sortKeys[index]
-                                          : null,
                                     ),
                                   ),
                                   SliverFillRemaining(
@@ -1192,14 +1155,10 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                                   width: 60,
                                   child: isEventConnected
                                       ? FloatingActionButtonOn(
-                                          index: index,
-                                          fabKeys: fabKeys,
                                           tabController: tabController,
                                           event: event,
                                         )
                                       : FloatingActionButtonOff(
-                                          index: index,
-                                          fabKeys: fabKeys,
                                           tabController: tabController,
                                           event: event,
                                         ),
@@ -1224,6 +1183,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
               ),
           ],
         ),
+      ),
       ),
     );
   }

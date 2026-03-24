@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mr_collection/generated/s.dart';
 
 class PayPayLinkExplanationDialog extends StatelessWidget {
   const PayPayLinkExplanationDialog({super.key});
@@ -31,7 +32,7 @@ class PayPayLinkExplanationDialog extends StatelessWidget {
             children: [
               Center(
                 child: Text(
-                  'PayPayリンクとは？',
+                  S.of(context)!.paypayLinkTitle,
                   style: Theme.of(context)
                       .textTheme
                       .bodyLarge
@@ -41,23 +42,22 @@ class PayPayLinkExplanationDialog extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               Text(
-                'PayPayアプリで自分に送金してもらうためのリンクです。\n'
-                '「集金くん」に登録しておくと、LINEで催促メッセージを送る際に、そのリンクから支払いをお願いできます。',
+                S.of(context)!.paypayLinkDesc,
                 style: GoogleFonts.notoSansJp(
                     fontSize: 12, color: Colors.grey[800]),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 24),
               _buildQA(
-                question: 'Q. PayPayリンクはどうやって取得するの？',
-                answer: 'A. PayPayアプリの「アカウント」→「マイコード」からコピーできます。',
+                question: S.of(context)!.paypayLinkQ1,
+                answer: S.of(context)!.paypayLinkA1,
                 questionStyle: questionStyle,
                 answerStyle: bodyStyle,
               ),
               const SizedBox(height: 16),
               _buildQA(
-                question: 'Q. PayPayリンクを登録すれば、自動で支払い状況が反映される？',
-                answer: 'A. いいえ。PayPayの仕様上、自動反映はできません。',
+                question: S.of(context)!.paypayLinkQ2,
+                answer: S.of(context)!.paypayLinkA2,
                 questionStyle: questionStyle,
                 answerStyle: bodyStyle,
               ),
@@ -78,7 +78,7 @@ class PayPayLinkExplanationDialog extends StatelessWidget {
                       elevation: 0,
                     ),
                     child: Text(
-                      '閉じる',
+                      S.of(context)!.close,
                       style: GoogleFonts.notoSansJp(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,

@@ -191,25 +191,6 @@ class SEn extends S {
   String get enterEventName => 'Please enter an event name.';
 
   @override
-  String get tapToAddEvent => 'Tap here to add an event.';
-
-  @override
-  String get longPressToDeleteEvent =>
-      'Tap to edit an event.\nLong press to delete an event.';
-
-  @override
-  String get tapToAddMember => 'Tap here to add a member.';
-
-  @override
-  String get swipeToEditOrDeleteMember => 'Swipe to delete or edit a member.';
-
-  @override
-  String get tapToSortByPayment => 'Tap here to sort by payment status.';
-
-  @override
-  String get tapToSendReminder => 'Tap here to send a reminder message.';
-
-  @override
   String get skip => 'Skip';
 
   @override
@@ -497,4 +478,340 @@ class SEn extends S {
 
   @override
   String get newFeatures => 'you can use these new features';
+
+  @override
+  String get changeThemeColor => 'Change Theme Color';
+
+  @override
+  String get removeAds => 'Remove Ads';
+
+  @override
+  String get supportDeveloper => 'Support the Developer';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get registerEvent => 'Register an event';
+
+  @override
+  String get tryRegistering => 'to manage collections';
+
+  @override
+  String get eventExample => 'e.g. Party, Karaoke, Trip etc...';
+
+  @override
+  String get addEventButton => 'Add Event';
+
+  @override
+  String get roundUp => 'Round Up';
+
+  @override
+  String get change => 'Change';
+
+  @override
+  String get shareCollectionStatus => 'Share Collection Status';
+
+  @override
+  String get anonymousCard => 'Anonymous Card ';
+
+  @override
+  String get memberNamesNotShared => 'Member names will not be shared';
+
+  @override
+  String get tapCardToShare => 'Tap card to share';
+
+  @override
+  String get card => 'Card ';
+
+  @override
+  String get memberNamesAndStatusShared =>
+      'Member names and status will be shared';
+
+  @override
+  String get sharePayPayLink => 'Also share PayPay link';
+
+  @override
+  String get imageCreationFailed => 'Failed to create image';
+
+  @override
+  String get sharePaymentRequest => 'Please make the payment. PayPay link: ';
+
+  @override
+  String get memberCount => 'Members: ';
+
+  @override
+  String get personUnit => '';
+
+  @override
+  String get totalAmount => 'Total: ';
+
+  @override
+  String get collectionRate => 'Collection rate';
+
+  @override
+  String get memberDetail => 'Member Details';
+
+  @override
+  String get errorTitle => 'Error';
+
+  @override
+  String get addOneMemberError =>
+      'Please add at least one member to the event.';
+
+  @override
+  String get signInFailed => 'Sign-in failed';
+
+  @override
+  String get pleaseTryAgain => 'Please try again';
+
+  @override
+  String get sendFailed => 'Sending failed';
+
+  @override
+  String get pleaseTryAgainShort => 'Please try again';
+
+  @override
+  String get purchaseError => 'An error occurred during purchase.';
+
+  @override
+  String get purchaseCancelledOrFailed => 'Purchase was cancelled or failed.';
+
+  @override
+  String get purchaseUnavailable => 'Purchases are currently unavailable.';
+
+  @override
+  String get productNotFound => 'Product information not found.';
+
+  @override
+  String get purchaseStartFailed => 'Could not start the purchase.';
+
+  @override
+  String get purchaseFailed => 'Purchase failed.';
+
+  @override
+  String get productQueryFailed => 'Failed to retrieve product information.';
+
+  @override
+  String get purchasePrepareFailed => 'Failed to prepare purchase.';
+
+  @override
+  String get purchaseCancelled => 'Purchase was cancelled.';
+
+  @override
+  String get restoreFailed => 'Failed to restore purchase.';
+
+  @override
+  String get noRestorablePurchase => 'No restorable purchases found.';
+
+  @override
+  String get removeAdsDescription =>
+      'Remove all ads permanently.\n* You can quickly recoup the cost by rounding up amounts.';
+
+  @override
+  String get removeAdsPriceLabel => '¥300 one-time';
+
+  @override
+  String get purchase => 'Purchase';
+
+  @override
+  String get restorePurchase => 'Restore Purchase';
+
+  @override
+  String get adsAlreadyRemoved => 'Ads have already been removed.';
+
+  @override
+  String modifyMemberRole(Object name) {
+    return 'Modify $name\'s role';
+  }
+
+  @override
+  String get noRoleOption => 'No role';
+
+  @override
+  String get questionnaireDesc1 =>
+      'If you\'d like a new feature\nin Shukinkun,\nplease share your feedback!';
+
+  @override
+  String get questionnaireDesc2 => 'You can submit anonymously.';
+
+  @override
+  String get questionnaireDesc3 =>
+      'Your feedback will help us\nimprove future updates.';
+
+  @override
+  String get termsPrivacyUpdated =>
+      'We\'ve updated our\nTerms of Service & Privacy Policy';
+
+  @override
+  String get termsPrivacyPrefix => 'By using this service,\nyou agree to the ';
+
+  @override
+  String get termsPrivacySuffix2 => '.';
+
+  @override
+  String get createFromLineGroup => 'Create from LINE Group';
+
+  @override
+  String get addEventFromLineDesc =>
+      'Creating from a LINE group will\nautomatically add group members and\nlet you send messages to the group.';
+
+  @override
+  String get transferFromOtherEvent => 'Transfer members from another event';
+
+  @override
+  String get createEmptyEvent => 'Create an empty event';
+
+  @override
+  String get themeColor => 'Theme Color';
+
+  @override
+  String get roleName => 'Role name';
+
+  @override
+  String changeCount(int count) {
+    return 'Change($count)';
+  }
+
+  @override
+  String get changeButton => 'Change';
+
+  @override
+  String get themeColorDefault => 'Default';
+
+  @override
+  String get themeColorSakura => 'Sakura';
+
+  @override
+  String get themeColorAjisai => 'Hydrangea';
+
+  @override
+  String get themeColorIchou => 'Ginkgo';
+
+  @override
+  String get donationTitle => 'Buy the developer a drink';
+
+  @override
+  String donationDescription(Object deficit) {
+    return 'Shukinkun is developed by student engineers\nat a $deficit.\nYour support helps us continue delivering\nbetter features.';
+  }
+
+  @override
+  String get deficit => 'deficit';
+
+  @override
+  String get donationCoffeeName => 'Cafe Mocha';
+
+  @override
+  String get donationFrappeName => 'Matcha Frappe';
+
+  @override
+  String get donationSweetsName => 'Sweets Set';
+
+  @override
+  String get donationThanksTitle => 'Thank you for your support!';
+
+  @override
+  String get donationThanksSmall1 => 'Thank you for the treat!';
+
+  @override
+  String get donationThanksSmall2 => 'I\'ll take a break with a cafe mocha';
+
+  @override
+  String get donationThanksSmall3 => 'and get back to work!';
+
+  @override
+  String get donationThanksSmall4 => 'Thanks for your support 🙌';
+
+  @override
+  String get donationThanksMedium2 => 'I\'ll refresh with a matcha frappe';
+
+  @override
+  String get donationThanksMedium3 => 'and fuel the next great idea!';
+
+  @override
+  String get donationThanksLarge1 => 'Powered up with donuts!';
+
+  @override
+  String get donationThanksLarge2 => 'Entering focus mode!';
+
+  @override
+  String get paypayLinkTitle => 'What is a PayPay Link?';
+
+  @override
+  String get paypayLinkDesc =>
+      'A PayPay link is a URL that allows others to send you money via the PayPay app.\nBy registering it in Shukinkun, you can include the link when sending reminder messages via LINE.';
+
+  @override
+  String get paypayLinkQ1 => 'Q. How do I get a PayPay link?';
+
+  @override
+  String get paypayLinkA1 =>
+      'A. You can copy it from the PayPay app under \"Account\" → \"My Code\".';
+
+  @override
+  String get paypayLinkQ2 =>
+      'Q. Will payment status update automatically if I register a PayPay link?';
+
+  @override
+  String get paypayLinkA2 =>
+      'A. No. Due to PayPay\'s system, automatic updates are not possible.';
+
+  @override
+  String get paypayStatusTitle => 'What does \"Paid via PayPay\" mean?';
+
+  @override
+  String get paypayStatusDesc =>
+      'This status helps you manage payments received via PayPay.\nIt lets you distinguish between cash and PayPay payments.';
+
+  @override
+  String get paypayStatusQ =>
+      'Q. Will it be automatically reflected when someone pays via PayPay?';
+
+  @override
+  String get paypayStatusA =>
+      'A. No. Due to PayPay\'s system, automatic updates are not possible.\nOnce you confirm a PayPay payment, manually select \"Paid via PayPay\".';
+
+  @override
+  String get updateAnnouncement => 'Update Announcement 🎉';
+
+  @override
+  String get updateShareFeature => 'Collection status sharing feature!';
+
+  @override
+  String get updateRoundUpFeature => 'Amount rounding up feature';
+
+  @override
+  String get updateBulkEditFeature => 'Bulk edit feature';
+
+  @override
+  String get updateFeedbackMessage =>
+      'Feel free to share your feedback\nanytime via the survey 📮';
+
+  @override
+  String get suggestOfficialLineTitle =>
+      'Add the official LINE account\nto enhance Shukinkun!';
+
+  @override
+  String get suggestOfficialLineDesc =>
+      'Our official LINE account is now verified!\nYou can now use powerful LINE-integrated features!';
+
+  @override
+  String get suggestOfficialLineAction =>
+      'Add the official LINE to your group to...';
+
+  @override
+  String get bulkAddMembers => 'Bulk add members';
+
+  @override
+  String get autoSendGroupMessage => 'Auto-send messages to group';
+
+  @override
+  String get addMemberFailed => 'Failed to add member';
+
+  @override
+  String get releaseNotesEmpty => 'No release notes';
+
+  @override
+  String get roleBasedSplit => 'Split by role';
 }

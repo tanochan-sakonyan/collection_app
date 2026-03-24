@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
+import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/ui/components/dialog/donation/donation_thanks_dialog.dart';
 
 class _DonationOption {
@@ -98,12 +99,14 @@ class DonationDialogState extends ConsumerState<DonationDialog> {
           .listen(_handlePurchaseUpdates,
               onError: (Object error, StackTrace stackTrace) {
         debugPrint('[IAP] purchaseStream onError: $error');
-        _reportIssue(
-          'Purchase stream error: $error',
-          userMessage: '購入処理でエラーが発生しました。',
-        );
         if (mounted) {
+          _reportIssue(
+            'Purchase stream error: $error',
+            userMessage: S.of(context)!.purchaseError,
+          );
           setState(() => _processingProductId = null);
+        } else {
+          debugPrint('[IAP] purchaseStream onError: widget not mounted');
         }
       });
 
@@ -187,10 +190,12 @@ class DonationDialogState extends ConsumerState<DonationDialog> {
 
         case PurchaseStatus.error:
           debugPrint('[IAP] status=error -> report');
-          _reportIssue(
-            'Purchase error for $pid: ${purchase.error}',
-            userMessage: '購入がキャンセルまたは失敗しました。',
-          );
+          if (mounted) {
+            _reportIssue(
+              'Purchase error for $pid: ${purchase.error}',
+              userMessage: S.of(context)!.purchaseCancelledOrFailed,
+            );
+          }
           break;
 
         case PurchaseStatus.pending:
@@ -230,7 +235,7 @@ class DonationDialogState extends ConsumerState<DonationDialog> {
       debugPrint('[IAP] Attempted purchase while store unavailable');
       _reportIssue(
         'Attempted purchase while store unavailable.',
-        userMessage: '現在購入を利用できません。',
+        userMessage: S.of(context)!.purchaseUnavailable,
       );
       return;
     }
@@ -241,7 +246,7 @@ class DonationDialogState extends ConsumerState<DonationDialog> {
     if (product == null) {
       _reportIssue(
         'Product details missing for productId=$productId',
-        userMessage: '商品情報が見つかりませんでした。',
+        userMessage: S.of(context)!.productNotFound,
       );
       return;
     }
@@ -262,7 +267,7 @@ class DonationDialogState extends ConsumerState<DonationDialog> {
         setState(() => _processingProductId = null);
         _reportIssue(
           'buyConsumable returned false for productId=$productId',
-          userMessage: '購入処理を開始できませんでした。',
+          userMessage: S.of(context)!.purchaseStartFailed,
         );
       }
     } catch (e, stackTrace) {
@@ -270,7 +275,7 @@ class DonationDialogState extends ConsumerState<DonationDialog> {
           '[IAP] Exception in _startPurchase($productId): $e\n$stackTrace');
       _reportIssue(
         'Failed to start purchase for productId=$productId: $e\n$stackTrace',
-        userMessage: '購入に失敗しました。',
+        userMessage: mounted ? S.of(context)!.purchaseFailed : null,
       );
       if (mounted) {
         setState(() => _processingProductId = null);
@@ -288,18 +293,21 @@ class DonationDialogState extends ConsumerState<DonationDialog> {
       return;
     }
 
+    // ローカライズ文字列を取得
+    final s = S.of(context)!;
+
     // Map productId -> dialog with detailed logging
     DonationThanksDialog? dialog;
     switch (productId) {
       case 'app.web.mrCollection.coffee.tip.small':
         debugPrint('[Donation] Dialog mapping: SMALL');
-        dialog = const DonationThanksDialog(
-          title: 'ご支援ありがとうございます！',
+        dialog = DonationThanksDialog(
+          title: s.donationThanksTitle,
           messageLines: [
-            'ごちそうさまです！',
-            'カフェモカでほっと一息ついて、',
-            'また開発がんばります！',
-            '応援してくれてありがとう🙌',
+            s.donationThanksSmall1,
+            s.donationThanksSmall2,
+            s.donationThanksSmall3,
+            s.donationThanksSmall4,
           ],
           assetPath: 'assets/icons/ic_coffee.svg',
           assetWidth: 120,
@@ -307,13 +315,13 @@ class DonationDialogState extends ConsumerState<DonationDialog> {
         break;
       case 'app.web.mrCollection.coffee.tip.medium':
         debugPrint('[Donation] Dialog mapping: MEDIUM');
-        dialog = const DonationThanksDialog(
-          title: 'ご支援ありがとうございます！',
+        dialog = DonationThanksDialog(
+          title: s.donationThanksTitle,
           messageLines: [
-            'ごちそうさまです！',
-            '抹茶フラッペでリフレッシュして、',
-            '次のアイデアにつなげます！',
-            '応援してくれてありがとう🙌',
+            s.donationThanksSmall1,
+            s.donationThanksMedium2,
+            s.donationThanksMedium3,
+            s.donationThanksSmall4,
           ],
           assetPath: 'assets/icons/ic_frappe.svg',
           assetWidth: 120,
@@ -321,13 +329,13 @@ class DonationDialogState extends ConsumerState<DonationDialog> {
         break;
       case 'app.web.mrCollection.coffee.tip.large':
         debugPrint('[Donation] Dialog mapping: LARGE');
-        dialog = const DonationThanksDialog(
-          title: 'ご支援ありがとうございます！',
+        dialog = DonationThanksDialog(
+          title: s.donationThanksTitle,
           messageLines: [
-            'ごちそうさまです！',
-            'ドーナツで当分補給ばっちり！',
-            '集中モードに入ります！',
-            '応援してくれてありがとう🙌',
+            s.donationThanksSmall1,
+            s.donationThanksLarge1,
+            s.donationThanksLarge2,
+            s.donationThanksSmall4,
           ],
           assetPath: 'assets/icons/ic_sweets.svg',
           assetWidth: 120,
@@ -416,7 +424,7 @@ class DonationDialogState extends ConsumerState<DonationDialog> {
             children: [
               const SizedBox(height: 28),
               Text(
-                "開発者にドリンク１杯をご馳走する",
+                S.of(context)!.donationTitle,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.w700,
@@ -431,22 +439,19 @@ class DonationDialogState extends ConsumerState<DonationDialog> {
                     color: const Color(0xFF777777),
                     fontWeight: FontWeight.w600,
                   );
+                  final deficitText = S.of(context)!.deficit;
+                  final fullText = S.of(context)!.donationDescription(deficitText);
+                  final parts = fullText.split(deficitText);
                   return Text.rich(
                     TextSpan(
                       style: baseStyle,
                       children: [
-                        const TextSpan(
-                          text: "「集金くん」は学生エンジニアによって\n",
-                        ),
+                        TextSpan(text: parts[0]),
                         TextSpan(
-                          text: "赤字",
-                          style:
-                              baseStyle.copyWith(color: const Color(0xFFE53935)),
+                          text: deficitText,
+                          style: baseStyle.copyWith(color: const Color(0xFFE53935)),
                         ),
-                        const TextSpan(
-                          text:
-                              "開発されています。\nよりよい機能を継続的に届けられるよう、\nご支援いただけると幸いです。",
-                        ),
+                        if (parts.length > 1) TextSpan(text: parts[1]),
                       ],
                     ),
                     textAlign: TextAlign.center,
@@ -496,6 +501,20 @@ class _DonationCard extends StatelessWidget {
   final bool enabled;
   final bool processing;
 
+  // ローカライズされた商品名を返す
+  String _localizedName(BuildContext context) {
+    switch (option.productId) {
+      case 'app.web.mrCollection.coffee.tip.small':
+        return S.of(context)!.donationCoffeeName;
+      case 'app.web.mrCollection.coffee.tip.medium':
+        return S.of(context)!.donationFrappeName;
+      case 'app.web.mrCollection.coffee.tip.large':
+        return S.of(context)!.donationSweetsName;
+      default:
+        return option.name;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final isEnabled = enabled && !processing;
@@ -528,7 +547,7 @@ class _DonationCard extends StatelessWidget {
               SvgPicture.asset(option.assetPath, width: option.assetWidth),
               const SizedBox(height: 4),
               Text(
-                option.name,
+                _localizedName(context),
                 style: GoogleFonts.notoSansJp(fontSize: 10),
               ),
               const SizedBox(height: 4),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/logging/analytics_event_logger.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 
@@ -15,14 +16,14 @@ class EventZeroComponents extends ConsumerWidget {
         children: [
           const SizedBox(height: 160),
           Text(
-            '集金管理するイベントを',
+            S.of(context)!.registerEvent,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 20,
                   fontWeight: FontWeight.w900,
                 ),
           ),
           Text(
-            '登録してみよう',
+            S.of(context)!.tryRegistering,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontSize: 20,
                   fontWeight: FontWeight.w900,
@@ -30,7 +31,7 @@ class EventZeroComponents extends ConsumerWidget {
           ),
           const SizedBox(height: 28),
           Text(
-            '例) 飲み会、カラオケ、旅行 etc...',
+            S.of(context)!.eventExample,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
@@ -53,7 +54,7 @@ class EventZeroComponents extends ConsumerWidget {
               fixedSize: const Size(152, 48),
               padding: const EdgeInsets.symmetric(horizontal: 10),
             ),
-            label: Text('イベントを追加',
+            label: Text(S.of(context)!.addEventButton,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontSize: 16,
                     fontWeight: FontWeight.w900,

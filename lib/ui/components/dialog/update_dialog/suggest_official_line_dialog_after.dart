@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mr_collection/generated/s.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SuggestOfficialLineDialogAfter extends StatelessWidget {
@@ -27,7 +28,7 @@ class SuggestOfficialLineDialogAfter extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'LINE公式アカウントを追加して\n集金くんを便利にしませんか？',
+            S.of(context)!.suggestOfficialLineTitle,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -35,7 +36,7 @@ class SuggestOfficialLineDialogAfter extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'おかげさまで、LINE公式アカウントが認証され、\nLINEと連携した超便利機能が使えるようになりました！',
+            S.of(context)!.suggestOfficialLineDesc,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   color: const Color(0xFF6A6A6A),
@@ -55,7 +56,7 @@ class SuggestOfficialLineDialogAfter extends StatelessWidget {
               )),
           const SizedBox(height: 24),
           Text(
-            "公式LINEをグループに追加すると...",
+            S.of(context)!.suggestOfficialLineAction,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -75,7 +76,7 @@ class SuggestOfficialLineDialogAfter extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    'メンバーを一括追加',
+                    S.of(context)!.bulkAddMembers,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -94,7 +95,7 @@ class SuggestOfficialLineDialogAfter extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    'グループにメッセージを自動送信',
+                    S.of(context)!.autoSendGroupMessage,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),

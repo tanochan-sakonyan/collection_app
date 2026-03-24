@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/ui/screen/privacy_policy_screen.dart';
 import 'package:mr_collection/ui/screen/terms_of_service_screen.dart';
 
@@ -21,7 +22,7 @@ class TermsPrivacyUpdateDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              '利用規約・プライバシーポリシーを\n一部変更しました',
+              S.of(context)!.termsPrivacyUpdated,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.w700,
@@ -32,7 +33,7 @@ class TermsPrivacyUpdateDialog extends StatelessWidget {
               TextSpan(
                 children: [
                   TextSpan(
-                    text: 'コンテンツ利用に当たっては、\n本',
+                    text: S.of(context)!.termsPrivacyPrefix,
                     style: Theme.of(context)
                         .textTheme
                         .bodyMedium
@@ -49,7 +50,7 @@ class TermsPrivacyUpdateDialog extends StatelessWidget {
                         ),
                       ),
                       child: Text(
-                        '利用規約',
+                        S.of(context)!.termsOfService,
                         style: Theme.of(context)
                             .textTheme
                             .bodyMedium
@@ -75,7 +76,7 @@ class TermsPrivacyUpdateDialog extends StatelessWidget {
                         ),
                       ),
                       child: Text(
-                        'プライバシーポリシー',
+                        S.of(context)!.privacyPolicy,
                         style: Theme.of(context)
                             .textTheme
                             .bodyMedium
@@ -84,7 +85,7 @@ class TermsPrivacyUpdateDialog extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: '\n双方に同意したものとみなします。',
+                    text: S.of(context)!.termsPrivacySuffix2,
                     style: Theme.of(context)
                         .textTheme
                         .bodyMedium

@@ -23,4 +23,15 @@ class AnalyticsAdsLogger {
       debugPrint('Analyticsログ送信に失敗しました: $error');
     }
   }
+
+  // リワード広告表示ログを送信する。
+  static Future<void> logRewardedAdShown() async {
+    try {
+      await FirebaseAnalytics.instance.logEvent(
+        name: 'rewarded_ad_shown',
+      );
+    } catch (error) {
+      debugPrint('Analyticsログ送信に失敗しました: $error');
+    }
+  }
 }

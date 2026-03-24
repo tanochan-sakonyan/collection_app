@@ -445,42 +445,6 @@ abstract class S {
   /// **'イベント名を入力してください'**
   String get enterEventName;
 
-  /// No description provided for @tapToAddEvent.
-  ///
-  /// In ja, this message translates to:
-  /// **'こちらをタップでイベントを\n追加できます'**
-  String get tapToAddEvent;
-
-  /// No description provided for @longPressToDeleteEvent.
-  ///
-  /// In ja, this message translates to:
-  /// **'タップでイベントを編集\n長押しでイベントを削除\nできます'**
-  String get longPressToDeleteEvent;
-
-  /// No description provided for @tapToAddMember.
-  ///
-  /// In ja, this message translates to:
-  /// **'こちらをタップでメンバーを\n追加できます'**
-  String get tapToAddMember;
-
-  /// No description provided for @swipeToEditOrDeleteMember.
-  ///
-  /// In ja, this message translates to:
-  /// **'スワイプでメンバーの削除及び\nメンバー名の変更ができます'**
-  String get swipeToEditOrDeleteMember;
-
-  /// No description provided for @tapToSortByPayment.
-  ///
-  /// In ja, this message translates to:
-  /// **'こちらをタップで支払い状況順に\n並び変えることができます'**
-  String get tapToSortByPayment;
-
-  /// No description provided for @tapToSendReminder.
-  ///
-  /// In ja, this message translates to:
-  /// **'こちらをタップで催促メッセージを\n送信できます'**
-  String get tapToSendReminder;
-
   /// No description provided for @skip.
   ///
   /// In ja, this message translates to:
@@ -1014,6 +978,630 @@ abstract class S {
   /// In ja, this message translates to:
   /// **'以下の新機能が使えるようになります'**
   String get newFeatures;
+
+  /// No description provided for @changeThemeColor.
+  ///
+  /// In ja, this message translates to:
+  /// **'テーマカラーの変更'**
+  String get changeThemeColor;
+
+  /// No description provided for @removeAds.
+  ///
+  /// In ja, this message translates to:
+  /// **'広告を削除する'**
+  String get removeAds;
+
+  /// No description provided for @supportDeveloper.
+  ///
+  /// In ja, this message translates to:
+  /// **'開発者に支援をする'**
+  String get supportDeveloper;
+
+  /// No description provided for @close.
+  ///
+  /// In ja, this message translates to:
+  /// **'閉じる'**
+  String get close;
+
+  /// No description provided for @registerEvent.
+  ///
+  /// In ja, this message translates to:
+  /// **'集金管理するイベントを'**
+  String get registerEvent;
+
+  /// No description provided for @tryRegistering.
+  ///
+  /// In ja, this message translates to:
+  /// **'登録してみよう'**
+  String get tryRegistering;
+
+  /// No description provided for @eventExample.
+  ///
+  /// In ja, this message translates to:
+  /// **'例) 飲み会、カラオケ、旅行 etc...'**
+  String get eventExample;
+
+  /// No description provided for @addEventButton.
+  ///
+  /// In ja, this message translates to:
+  /// **'イベントを追加'**
+  String get addEventButton;
+
+  /// No description provided for @roundUp.
+  ///
+  /// In ja, this message translates to:
+  /// **'端数切り上げ'**
+  String get roundUp;
+
+  /// No description provided for @change.
+  ///
+  /// In ja, this message translates to:
+  /// **'お釣り'**
+  String get change;
+
+  /// No description provided for @shareCollectionStatus.
+  ///
+  /// In ja, this message translates to:
+  /// **'集金状況の共有'**
+  String get shareCollectionStatus;
+
+  /// No description provided for @anonymousCard.
+  ///
+  /// In ja, this message translates to:
+  /// **'匿名カード '**
+  String get anonymousCard;
+
+  /// No description provided for @memberNamesNotShared.
+  ///
+  /// In ja, this message translates to:
+  /// **'メンバーの名前は共有されません'**
+  String get memberNamesNotShared;
+
+  /// No description provided for @tapCardToShare.
+  ///
+  /// In ja, this message translates to:
+  /// **'カードをタップして共有'**
+  String get tapCardToShare;
+
+  /// No description provided for @card.
+  ///
+  /// In ja, this message translates to:
+  /// **'カード '**
+  String get card;
+
+  /// No description provided for @memberNamesAndStatusShared.
+  ///
+  /// In ja, this message translates to:
+  /// **'メンバーの名前と集金状況も共有されます'**
+  String get memberNamesAndStatusShared;
+
+  /// No description provided for @sharePayPayLink.
+  ///
+  /// In ja, this message translates to:
+  /// **'PayPayリンクも一緒に共有する'**
+  String get sharePayPayLink;
+
+  /// No description provided for @imageCreationFailed.
+  ///
+  /// In ja, this message translates to:
+  /// **'画像の作成に失敗しました'**
+  String get imageCreationFailed;
+
+  /// No description provided for @sharePaymentRequest.
+  ///
+  /// In ja, this message translates to:
+  /// **'お支払いをお願いいたします。PayPayリンク：'**
+  String get sharePaymentRequest;
+
+  /// No description provided for @memberCount.
+  ///
+  /// In ja, this message translates to:
+  /// **'メンバー数：'**
+  String get memberCount;
+
+  /// No description provided for @personUnit.
+  ///
+  /// In ja, this message translates to:
+  /// **'人'**
+  String get personUnit;
+
+  /// No description provided for @totalAmount.
+  ///
+  /// In ja, this message translates to:
+  /// **'合計金額：'**
+  String get totalAmount;
+
+  /// No description provided for @collectionRate.
+  ///
+  /// In ja, this message translates to:
+  /// **'回収率'**
+  String get collectionRate;
+
+  /// No description provided for @memberDetail.
+  ///
+  /// In ja, this message translates to:
+  /// **'メンバー詳細'**
+  String get memberDetail;
+
+  /// No description provided for @errorTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'エラー'**
+  String get errorTitle;
+
+  /// No description provided for @addOneMemberError.
+  ///
+  /// In ja, this message translates to:
+  /// **'イベントにメンバーを一人以上追加してください。'**
+  String get addOneMemberError;
+
+  /// No description provided for @signInFailed.
+  ///
+  /// In ja, this message translates to:
+  /// **'サインインに失敗しました'**
+  String get signInFailed;
+
+  /// No description provided for @pleaseTryAgain.
+  ///
+  /// In ja, this message translates to:
+  /// **'お手数ですが、再度お試しください'**
+  String get pleaseTryAgain;
+
+  /// No description provided for @sendFailed.
+  ///
+  /// In ja, this message translates to:
+  /// **'送信に失敗しました'**
+  String get sendFailed;
+
+  /// No description provided for @pleaseTryAgainShort.
+  ///
+  /// In ja, this message translates to:
+  /// **'お手数ですが再度お試しください'**
+  String get pleaseTryAgainShort;
+
+  /// No description provided for @purchaseError.
+  ///
+  /// In ja, this message translates to:
+  /// **'購入処理でエラーが発生しました。'**
+  String get purchaseError;
+
+  /// No description provided for @purchaseCancelledOrFailed.
+  ///
+  /// In ja, this message translates to:
+  /// **'購入がキャンセルまたは失敗しました。'**
+  String get purchaseCancelledOrFailed;
+
+  /// No description provided for @purchaseUnavailable.
+  ///
+  /// In ja, this message translates to:
+  /// **'現在購入を利用できません。'**
+  String get purchaseUnavailable;
+
+  /// No description provided for @productNotFound.
+  ///
+  /// In ja, this message translates to:
+  /// **'商品情報が見つかりませんでした。'**
+  String get productNotFound;
+
+  /// No description provided for @purchaseStartFailed.
+  ///
+  /// In ja, this message translates to:
+  /// **'購入処理を開始できませんでした。'**
+  String get purchaseStartFailed;
+
+  /// No description provided for @purchaseFailed.
+  ///
+  /// In ja, this message translates to:
+  /// **'購入に失敗しました。'**
+  String get purchaseFailed;
+
+  /// No description provided for @productQueryFailed.
+  ///
+  /// In ja, this message translates to:
+  /// **'商品情報の取得に失敗しました。'**
+  String get productQueryFailed;
+
+  /// No description provided for @purchasePrepareFailed.
+  ///
+  /// In ja, this message translates to:
+  /// **'購入の準備に失敗しました。'**
+  String get purchasePrepareFailed;
+
+  /// No description provided for @purchaseCancelled.
+  ///
+  /// In ja, this message translates to:
+  /// **'購入がキャンセルされました。'**
+  String get purchaseCancelled;
+
+  /// No description provided for @restoreFailed.
+  ///
+  /// In ja, this message translates to:
+  /// **'購入の復元に失敗しました。'**
+  String get restoreFailed;
+
+  /// No description provided for @noRestorablePurchase.
+  ///
+  /// In ja, this message translates to:
+  /// **'復元できる購入が見つかりませんでした。'**
+  String get noRestorablePurchase;
+
+  /// No description provided for @removeAdsDescription.
+  ///
+  /// In ja, this message translates to:
+  /// **'全ての広告を永久に削除します。\n※ 金額設定で端数切り上げをすればすぐ元が取れます。'**
+  String get removeAdsDescription;
+
+  /// No description provided for @removeAdsPriceLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'¥300 買い切り'**
+  String get removeAdsPriceLabel;
+
+  /// No description provided for @purchase.
+  ///
+  /// In ja, this message translates to:
+  /// **'購入'**
+  String get purchase;
+
+  /// No description provided for @restorePurchase.
+  ///
+  /// In ja, this message translates to:
+  /// **'購入を復元する'**
+  String get restorePurchase;
+
+  /// No description provided for @adsAlreadyRemoved.
+  ///
+  /// In ja, this message translates to:
+  /// **'すでに広告は削除済みです。'**
+  String get adsAlreadyRemoved;
+
+  /// No description provided for @modifyMemberRole.
+  ///
+  /// In ja, this message translates to:
+  /// **'{name}の役割を修正'**
+  String modifyMemberRole(Object name);
+
+  /// No description provided for @noRoleOption.
+  ///
+  /// In ja, this message translates to:
+  /// **'役割なし'**
+  String get noRoleOption;
+
+  /// No description provided for @questionnaireDesc1.
+  ///
+  /// In ja, this message translates to:
+  /// **'【集金くん】に追加してほしい\n機能があれば\nぜひご意見ください！'**
+  String get questionnaireDesc1;
+
+  /// No description provided for @questionnaireDesc2.
+  ///
+  /// In ja, this message translates to:
+  /// **'匿名で提出できます。'**
+  String get questionnaireDesc2;
+
+  /// No description provided for @questionnaireDesc3.
+  ///
+  /// In ja, this message translates to:
+  /// **'今後のアップデートの\n参考にさせていただきます。'**
+  String get questionnaireDesc3;
+
+  /// No description provided for @termsPrivacyUpdated.
+  ///
+  /// In ja, this message translates to:
+  /// **'利用規約・プライバシーポリシーを\n一部変更しました'**
+  String get termsPrivacyUpdated;
+
+  /// No description provided for @termsPrivacyPrefix.
+  ///
+  /// In ja, this message translates to:
+  /// **'コンテンツ利用に当たっては、\n本'**
+  String get termsPrivacyPrefix;
+
+  /// No description provided for @termsPrivacySuffix2.
+  ///
+  /// In ja, this message translates to:
+  /// **'\n双方に同意したものとみなします。'**
+  String get termsPrivacySuffix2;
+
+  /// No description provided for @createFromLineGroup.
+  ///
+  /// In ja, this message translates to:
+  /// **'LINEグループから作成'**
+  String get createFromLineGroup;
+
+  /// No description provided for @addEventFromLineDesc.
+  ///
+  /// In ja, this message translates to:
+  /// **'「LINEグループから作成」をすると、\n自動でグループのメンバーを追加し、\nグループにメッセージを送信できます。'**
+  String get addEventFromLineDesc;
+
+  /// No description provided for @transferFromOtherEvent.
+  ///
+  /// In ja, this message translates to:
+  /// **'他のイベントからメンバー引継ぎ'**
+  String get transferFromOtherEvent;
+
+  /// No description provided for @createEmptyEvent.
+  ///
+  /// In ja, this message translates to:
+  /// **'空のイベントを作成'**
+  String get createEmptyEvent;
+
+  /// No description provided for @themeColor.
+  ///
+  /// In ja, this message translates to:
+  /// **'テーマカラー'**
+  String get themeColor;
+
+  /// No description provided for @roleName.
+  ///
+  /// In ja, this message translates to:
+  /// **'役割名'**
+  String get roleName;
+
+  /// No description provided for @changeCount.
+  ///
+  /// In ja, this message translates to:
+  /// **'変更({count})'**
+  String changeCount(int count);
+
+  /// No description provided for @changeButton.
+  ///
+  /// In ja, this message translates to:
+  /// **'変更'**
+  String get changeButton;
+
+  /// No description provided for @themeColorDefault.
+  ///
+  /// In ja, this message translates to:
+  /// **'デフォルト'**
+  String get themeColorDefault;
+
+  /// No description provided for @themeColorSakura.
+  ///
+  /// In ja, this message translates to:
+  /// **'サクラ'**
+  String get themeColorSakura;
+
+  /// No description provided for @themeColorAjisai.
+  ///
+  /// In ja, this message translates to:
+  /// **'アジサイ'**
+  String get themeColorAjisai;
+
+  /// No description provided for @themeColorIchou.
+  ///
+  /// In ja, this message translates to:
+  /// **'イチョウ'**
+  String get themeColorIchou;
+
+  /// No description provided for @donationTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'開発者にドリンク１杯をご馳走する'**
+  String get donationTitle;
+
+  /// No description provided for @donationDescription.
+  ///
+  /// In ja, this message translates to:
+  /// **'「集金くん」は学生エンジニアによって\n{deficit}開発されています。\nよりよい機能を継続的に届けられるよう、\nご支援いただけると幸いです。'**
+  String donationDescription(Object deficit);
+
+  /// No description provided for @deficit.
+  ///
+  /// In ja, this message translates to:
+  /// **'赤字'**
+  String get deficit;
+
+  /// No description provided for @donationCoffeeName.
+  ///
+  /// In ja, this message translates to:
+  /// **'カフェモカ'**
+  String get donationCoffeeName;
+
+  /// No description provided for @donationFrappeName.
+  ///
+  /// In ja, this message translates to:
+  /// **'抹茶フラッペ'**
+  String get donationFrappeName;
+
+  /// No description provided for @donationSweetsName.
+  ///
+  /// In ja, this message translates to:
+  /// **'スイーツセット'**
+  String get donationSweetsName;
+
+  /// No description provided for @donationThanksTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'ご支援ありがとうございます！'**
+  String get donationThanksTitle;
+
+  /// No description provided for @donationThanksSmall1.
+  ///
+  /// In ja, this message translates to:
+  /// **'ごちそうさまです！'**
+  String get donationThanksSmall1;
+
+  /// No description provided for @donationThanksSmall2.
+  ///
+  /// In ja, this message translates to:
+  /// **'カフェモカでほっと一息ついて、'**
+  String get donationThanksSmall2;
+
+  /// No description provided for @donationThanksSmall3.
+  ///
+  /// In ja, this message translates to:
+  /// **'また開発がんばります！'**
+  String get donationThanksSmall3;
+
+  /// No description provided for @donationThanksSmall4.
+  ///
+  /// In ja, this message translates to:
+  /// **'応援してくれてありがとう🙌'**
+  String get donationThanksSmall4;
+
+  /// No description provided for @donationThanksMedium2.
+  ///
+  /// In ja, this message translates to:
+  /// **'抹茶フラッペでリフレッシュして、'**
+  String get donationThanksMedium2;
+
+  /// No description provided for @donationThanksMedium3.
+  ///
+  /// In ja, this message translates to:
+  /// **'次のアイデアにつなげます！'**
+  String get donationThanksMedium3;
+
+  /// No description provided for @donationThanksLarge1.
+  ///
+  /// In ja, this message translates to:
+  /// **'ドーナツで当分補給ばっちり！'**
+  String get donationThanksLarge1;
+
+  /// No description provided for @donationThanksLarge2.
+  ///
+  /// In ja, this message translates to:
+  /// **'集中モードに入ります！'**
+  String get donationThanksLarge2;
+
+  /// No description provided for @paypayLinkTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'PayPayリンクとは？'**
+  String get paypayLinkTitle;
+
+  /// No description provided for @paypayLinkDesc.
+  ///
+  /// In ja, this message translates to:
+  /// **'PayPayアプリで自分に送金してもらうためのリンクです。\n「集金くん」に登録しておくと、LINEで催促メッセージを送る際に、そのリンクから支払いをお願いできます。'**
+  String get paypayLinkDesc;
+
+  /// No description provided for @paypayLinkQ1.
+  ///
+  /// In ja, this message translates to:
+  /// **'Q. PayPayリンクはどうやって取得するの？'**
+  String get paypayLinkQ1;
+
+  /// No description provided for @paypayLinkA1.
+  ///
+  /// In ja, this message translates to:
+  /// **'A. PayPayアプリの「アカウント」→「マイコード」からコピーできます。'**
+  String get paypayLinkA1;
+
+  /// No description provided for @paypayLinkQ2.
+  ///
+  /// In ja, this message translates to:
+  /// **'Q. PayPayリンクを登録すれば、自動で支払い状況が反映される？'**
+  String get paypayLinkQ2;
+
+  /// No description provided for @paypayLinkA2.
+  ///
+  /// In ja, this message translates to:
+  /// **'A. いいえ。PayPayの仕様上、自動反映はできません。'**
+  String get paypayLinkA2;
+
+  /// No description provided for @paypayStatusTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'「PayPayで支払い済み」とは？'**
+  String get paypayStatusTitle;
+
+  /// No description provided for @paypayStatusDesc.
+  ///
+  /// In ja, this message translates to:
+  /// **'PayPayで受け取った支払いを管理しやすくするためのステータスです。\n現金で受け取った場合と区別して記録できます。'**
+  String get paypayStatusDesc;
+
+  /// No description provided for @paypayStatusQ.
+  ///
+  /// In ja, this message translates to:
+  /// **'Q. PayPayで支払ったら、自動で反映されますか？'**
+  String get paypayStatusQ;
+
+  /// No description provided for @paypayStatusA.
+  ///
+  /// In ja, this message translates to:
+  /// **'A. いいえ。PayPayの仕組み上、自動反映はできません。\nPayPayで受け取ったことを確認したら、手動で「PayPayで支払い済み」を選んでください。'**
+  String get paypayStatusA;
+
+  /// No description provided for @updateAnnouncement.
+  ///
+  /// In ja, this message translates to:
+  /// **'アップデートのお知らせ🎉'**
+  String get updateAnnouncement;
+
+  /// No description provided for @updateShareFeature.
+  ///
+  /// In ja, this message translates to:
+  /// **'集金状況の共有機能を実装！'**
+  String get updateShareFeature;
+
+  /// No description provided for @updateRoundUpFeature.
+  ///
+  /// In ja, this message translates to:
+  /// **'金額設定時に端数を切り上げる機能'**
+  String get updateRoundUpFeature;
+
+  /// No description provided for @updateBulkEditFeature.
+  ///
+  /// In ja, this message translates to:
+  /// **'一括編集機能を実装'**
+  String get updateBulkEditFeature;
+
+  /// No description provided for @updateFeedbackMessage.
+  ///
+  /// In ja, this message translates to:
+  /// **'ご意見・ご要望はアンケートからいつでも\nお気軽にお寄せください📮'**
+  String get updateFeedbackMessage;
+
+  /// No description provided for @suggestOfficialLineTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'LINE公式アカウントを追加して\n集金くんを便利にしませんか？'**
+  String get suggestOfficialLineTitle;
+
+  /// No description provided for @suggestOfficialLineDesc.
+  ///
+  /// In ja, this message translates to:
+  /// **'おかげさまで、LINE公式アカウントが認証され、\nLINEと連携した超便利機能が使えるようになりました！'**
+  String get suggestOfficialLineDesc;
+
+  /// No description provided for @suggestOfficialLineAction.
+  ///
+  /// In ja, this message translates to:
+  /// **'公式LINEをグループに追加すると...'**
+  String get suggestOfficialLineAction;
+
+  /// No description provided for @bulkAddMembers.
+  ///
+  /// In ja, this message translates to:
+  /// **'メンバーを一括追加'**
+  String get bulkAddMembers;
+
+  /// No description provided for @autoSendGroupMessage.
+  ///
+  /// In ja, this message translates to:
+  /// **'グループにメッセージを自動送信'**
+  String get autoSendGroupMessage;
+
+  /// No description provided for @addMemberFailed.
+  ///
+  /// In ja, this message translates to:
+  /// **'メンバーの追加に失敗しました'**
+  String get addMemberFailed;
+
+  /// No description provided for @releaseNotesEmpty.
+  ///
+  /// In ja, this message translates to:
+  /// **'リリースノートなし'**
+  String get releaseNotesEmpty;
+
+  /// No description provided for @roleBasedSplit.
+  ///
+  /// In ja, this message translates to:
+  /// **'役割別で割り勘'**
+  String get roleBasedSplit;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

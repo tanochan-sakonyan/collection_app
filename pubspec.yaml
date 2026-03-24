@@ -2,7 +2,7 @@ name: mr_collection
 description: "集金くん"
 publish_to: "none"
 
-version: 2.11.0
+version: 2.12.0
 
 environment:
   sdk: ^3.5.3
@@ -27,7 +27,6 @@ dependencies:
   url_launcher: ^6.1.10
   webview_flutter: ^4.11.0
   auto_size_text: ^3.0.0
-  tutorial_coach_mark: ^1.2.13
   smooth_page_indicator: ^1.2.1
   intl: ^0.20.2
   flutter_localizations:
@@ -43,6 +42,7 @@ dependencies:
   liquid_glass_renderer: ^0.1.1-dev.10
   in_app_purchase: ^3.2.3
   material_symbols_icons: ^4.2906.0
+  clock: ^1.1.1
 
 dev_dependencies:
   flutter_test:
@@ -53,6 +53,8 @@ dev_dependencies:
   freezed: ^2.5.2
   json_serializable: ^6.8.0
   flutter_launcher_icons: ^0.14.1
+  fake_async: ^1.3.1
+  in_app_purchase_storekit: ^0.4.4
 
 flutter_icons:
   ios: true
@@ -127,6 +129,29 @@ flutter:
     - assets/icons/ic_crown.svg
     - assets/images/img_add_from_line.png
     - assets/images/login_screen_image.png
+    - assets/images/tutorial_2_0.png
+    - assets/images/tutorial_2_1.PNG
+    - assets/images/tutorial_2_2.PNG
+    - assets/images/tutorial_2_3.PNG
+    - assets/images/tutorial_2_4.PNG
+    - assets/images/tutorial_3_1.png
+    - assets/images/tutorial_3_2.png
+    - assets/images/tutorial_3_3.png
+    - assets/images/tutorial_3_4.png
+    - assets/images/tutorial_4_1.png
+    - assets/images/tutorial_4_2.png
+    - assets/images/tutorial_4_3.png
+    - assets/images/tutorial_4_4.png
+    - assets/images/tutorial_4_5.png
+    - assets/images/tutorial_4_6.png
+    - assets/images/tutorial_4_7.png
+    - assets/images/tutorial_4_8.png
+    - assets/images/tutorial_4_9.png
+    - assets/images/tutorial_4_10.png
+    - assets/images/tutorial_4_11.png
+    - assets/images/tutorial_4_12.png
+    - assets/images/tutorial_5_1.png
+    - assets/images/tutorial_6_1.png
 
 
   fonts:

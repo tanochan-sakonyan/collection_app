@@ -14,13 +14,15 @@ import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/logging/analytics_ui_logger.dart';
 import 'package:mr_collection/ui/components/collection_rate_chart.dart';
 import 'package:mr_collection/ui/components/dialog/paypay_dialog.dart';
+import 'package:mr_collection/ads/rewarded_ad_singleton.dart';
+import 'package:mr_collection/provider/ads_removal_provider.dart';
 import 'package:mr_collection/provider/user_provider.dart';
 import 'package:mr_collection/provider/theme_color_provider.dart';
 import 'package:mr_collection/theme/theme_color.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
-class ShareScreen extends StatefulWidget {
+class ShareScreen extends ConsumerStatefulWidget {
   final Event event;
 
   const ShareScreen({
@@ -30,10 +32,10 @@ class ShareScreen extends StatefulWidget {
 
   @override
   // Share画面の状態を作成する。
-  State<ShareScreen> createState() => _ShareScreenState();
+  ConsumerState<ShareScreen> createState() => _ShareScreenState();
 }
 
-class _ShareScreenState extends State<ShareScreen> {
+class _ShareScreenState extends ConsumerState<ShareScreen> {
   final GlobalKey _anonymousCardKey = GlobalKey();
   final GlobalKey _detailCardKey = GlobalKey();
   bool _includePayPayLink = false;
@@ -77,7 +79,7 @@ class _ShareScreenState extends State<ShareScreen> {
           ),
         ),
         title: Text(
-          '集金状況の共有',
+          S.of(context)!.shareCollectionStatus,
           style: GoogleFonts.notoSansJp(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -99,23 +101,23 @@ class _ShareScreenState extends State<ShareScreen> {
                 const Divider(),
                 const SizedBox(height: 8),
                 // 匿名版カード
-                const Row(
+                Row(
                   children: [
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
                     Text.rich(
                       TextSpan(
                         children: [
                           TextSpan(
-                              text: '匿名カード ',
-                              style: TextStyle(
+                              text: S.of(context)!.anonymousCard,
+                              style: const TextStyle(
                                   fontSize: 18, fontWeight: FontWeight.bold)),
                           TextSpan(
-                            text: 'メンバーの名前は共有されません',
-                            style: TextStyle(fontWeight: FontWeight.w500),
+                            text: S.of(context)!.memberNamesNotShared,
+                            style: const TextStyle(fontWeight: FontWeight.w500),
                           ),
                         ],
                       ),
-                      style: TextStyle(fontSize: 14),
+                      style: const TextStyle(fontSize: 14),
                     ),
                   ],
                 ),
@@ -135,14 +137,14 @@ class _ShareScreenState extends State<ShareScreen> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      'カードをタップして共有',
-                      style: TextStyle(fontSize: 12, color: Colors.black54),
+                      S.of(context)!.tapCardToShare,
+                      style: const TextStyle(fontSize: 12, color: Colors.black54),
                     ),
-                    SizedBox(width: 20)
+                    const SizedBox(width: 20)
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -150,23 +152,23 @@ class _ShareScreenState extends State<ShareScreen> {
                 const Divider(),
                 const SizedBox(height: 8),
                 // メンバー付きカード
-                const Row(
+                Row(
                   children: [
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
                     Text.rich(
                       TextSpan(
                         children: [
                           TextSpan(
-                              text: 'カード ',
-                              style: TextStyle(
+                              text: S.of(context)!.card,
+                              style: const TextStyle(
                                   fontSize: 18, fontWeight: FontWeight.bold)),
                           TextSpan(
-                            text: 'メンバーの名前と集金状況も共有されます',
-                            style: TextStyle(fontWeight: FontWeight.w500),
+                            text: S.of(context)!.memberNamesAndStatusShared,
+                            style: const TextStyle(fontWeight: FontWeight.w500),
                           ),
                         ],
                       ),
-                      style: TextStyle(fontSize: 14),
+                      style: const TextStyle(fontSize: 14),
                     ),
                   ],
                 ),
@@ -186,14 +188,14 @@ class _ShareScreenState extends State<ShareScreen> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      'カードをタップして共有',
-                      style: TextStyle(fontSize: 12, color: Colors.black54),
+                      S.of(context)!.tapCardToShare,
+                      style: const TextStyle(fontSize: 12, color: Colors.black54),
                     ),
-                    SizedBox(width: 20)
+                    const SizedBox(width: 20)
                   ],
                 ),
                 const SizedBox(
@@ -239,10 +241,10 @@ class _ShareScreenState extends State<ShareScreen> {
           }),
         ),
         const SizedBox(width: 8),
-        const Expanded(
+        Expanded(
           child: Text(
-            'PayPayリンクも一緒に共有する',
-            style: TextStyle(fontWeight: FontWeight.bold),
+            S.of(context)!.sharePayPayLink,
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
       ],
@@ -275,12 +277,22 @@ class _ShareScreenState extends State<ShareScreen> {
     setState(() => _includePayPayLink = true);
   }
 
-  // カードの画像化を試す。
+  // カードタップ時にリワード広告を表示してから共有する。
   Future<void> _handleCardTap(
     WidgetRef ref,
     GlobalKey cardKey, {
     required bool isAnonymous,
   }) async {
+    // 広告削除ユーザーでなければリワード広告を表示する
+    if (!ref.read(adsRemovalProvider)) {
+      final rewarded = await rewardedAd.showAndWaitForReward();
+      if (!mounted) return;
+      if (!rewarded) {
+        // リワード広告が未準備・失敗の場合はそのまま共有を許可
+        // （広告がロードできていない場合にブロックしない）
+      }
+    }
+
     try {
       final file = await _captureCardImage(cardKey);
       if (!mounted) return;
@@ -289,7 +301,7 @@ class _ShareScreenState extends State<ShareScreen> {
       } else {
         unawaited(AnalyticsUiLogger.logShareDetailCard());
       }
-      final shareText = _buildShareText(ref);
+      final shareText = _buildShareText(context, ref);
       final origin = _buildShareOrigin(context);
       await Share.shareXFiles(
         [file],
@@ -299,18 +311,18 @@ class _ShareScreenState extends State<ShareScreen> {
     } catch (error) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('画像の作成に失敗しました')),
+        SnackBar(content: Text(S.of(context)!.imageCreationFailed)),
       );
       debugPrint('カード画像化エラー: $error');
     }
   }
 
   // 共有テキストを作る。
-  String? _buildShareText(WidgetRef ref) {
+  String? _buildShareText(BuildContext context, WidgetRef ref) {
     if (!_includePayPayLink) return null;
     final paypayUrl = ref.read(userProvider)?.paypayUrl;
     if (paypayUrl == null || paypayUrl.isEmpty) return null;
-    return 'お支払いをお願いいたします。PayPayリンク：$paypayUrl';
+    return '${S.of(context)!.sharePaymentRequest}$paypayUrl';
   }
 
   // 共有シートの基準位置を作る。
@@ -445,12 +457,12 @@ class SummaryCardPreview extends StatelessWidget {
                         Text.rich(
                           TextSpan(
                             children: [
-                              const TextSpan(
-                                  text: 'メンバー数：',
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.w700)),
                               TextSpan(
-                                text: '${event.members.length}人',
+                                  text: S.of(context)!.memberCount,
+                                  style:
+                                      const TextStyle(fontWeight: FontWeight.w700)),
+                              TextSpan(
+                                text: '${event.members.length}${S.of(context)!.personUnit}',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.w700),
                               ),
@@ -462,12 +474,12 @@ class SummaryCardPreview extends StatelessWidget {
                         Text.rich(
                           TextSpan(
                             children: [
-                              const TextSpan(
-                                  text: '合計金額：',
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.w700)),
                               TextSpan(
-                                text: '$totalMoney円',
+                                  text: S.of(context)!.totalAmount,
+                                  style:
+                                      const TextStyle(fontWeight: FontWeight.w700)),
+                              TextSpan(
+                                text: '$totalMoney${S.of(context)!.currencyUnit}',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.w700),
                               ),
@@ -481,7 +493,7 @@ class SummaryCardPreview extends StatelessWidget {
                   Column(
                     children: [
                       Text(
-                        '回収率 $collectedCount/$totalCount人',
+                        '${S.of(context)!.collectionRate} $collectedCount/$totalCount${S.of(context)!.personUnit}',
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -503,7 +515,7 @@ class SummaryCardPreview extends StatelessWidget {
                 const Divider(height: 1),
                 const SizedBox(height: 12),
                 Text(
-                  'メンバー詳細',
+                  S.of(context)!.memberDetail,
                   style: GoogleFonts.notoSansJp(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
@@ -530,8 +542,8 @@ class SummaryCardPreview extends StatelessWidget {
                         const SizedBox(width: 8),
                         Text(
                           member.memberMoney != null
-                              ? '${member.memberMoney}円'
-                              : '— 円',
+                              ? '${member.memberMoney}${S.of(context)!.currencyUnit}'
+                              : '— ${S.of(context)!.currencyUnit}',
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,

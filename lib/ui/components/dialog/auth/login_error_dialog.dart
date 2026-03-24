@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:mr_collection/generated/s.dart';
 
 class LoginErrorDialog extends StatelessWidget {
   const LoginErrorDialog({
@@ -23,7 +23,7 @@ class LoginErrorDialog extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'サインインに失敗しました',
+              S.of(context)!.signInFailed,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
@@ -32,7 +32,7 @@ class LoginErrorDialog extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Text(
-              'お手数ですが、再度お試しください',
+              S.of(context)!.pleaseTryAgain,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
@@ -52,7 +52,7 @@ class LoginErrorDialog extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  '閉じる',
+                  S.of(context)!.close,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     fontSize: 12,
                     fontWeight: FontWeight.w700,

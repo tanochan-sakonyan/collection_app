@@ -216,10 +216,10 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
                         child: TextField(
                           controller: _newRoleNameController,
                           focusNode: _newRoleNameFocusNode,
-                          decoration: const InputDecoration(
-                            hintText: '役割名',
+                          decoration: InputDecoration(
+                            hintText: S.of(context)!.roleName,
                             border: InputBorder.none,
-                            contentPadding: EdgeInsets.symmetric(
+                            contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 8, vertical: 4),
                           ),
                           style: Theme.of(context).textTheme.bodyMedium,
@@ -267,7 +267,7 @@ class _RoleSetupDialogState extends State<RoleSetupDialog> {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      '円',
+                      S.of(context)!.currencyUnit,
                       style: GoogleFonts.notoSansJp(
                         fontSize: 14,
                         color: Colors.black,

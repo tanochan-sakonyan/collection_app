@@ -184,24 +184,6 @@ class SJa extends S {
   String get enterEventName => 'イベント名を入力してください';
 
   @override
-  String get tapToAddEvent => 'こちらをタップでイベントを\n追加できます';
-
-  @override
-  String get longPressToDeleteEvent => 'タップでイベントを編集\n長押しでイベントを削除\nできます';
-
-  @override
-  String get tapToAddMember => 'こちらをタップでメンバーを\n追加できます';
-
-  @override
-  String get swipeToEditOrDeleteMember => 'スワイプでメンバーの削除及び\nメンバー名の変更ができます';
-
-  @override
-  String get tapToSortByPayment => 'こちらをタップで支払い状況順に\n並び変えることができます';
-
-  @override
-  String get tapToSendReminder => 'こちらをタップで催促メッセージを\n送信できます';
-
-  @override
   String get skip => 'スキップ';
 
   @override
@@ -481,4 +463,328 @@ class SJa extends S {
 
   @override
   String get newFeatures => '以下の新機能が使えるようになります';
+
+  @override
+  String get changeThemeColor => 'テーマカラーの変更';
+
+  @override
+  String get removeAds => '広告を削除する';
+
+  @override
+  String get supportDeveloper => '開発者に支援をする';
+
+  @override
+  String get close => '閉じる';
+
+  @override
+  String get registerEvent => '集金管理するイベントを';
+
+  @override
+  String get tryRegistering => '登録してみよう';
+
+  @override
+  String get eventExample => '例) 飲み会、カラオケ、旅行 etc...';
+
+  @override
+  String get addEventButton => 'イベントを追加';
+
+  @override
+  String get roundUp => '端数切り上げ';
+
+  @override
+  String get change => 'お釣り';
+
+  @override
+  String get shareCollectionStatus => '集金状況の共有';
+
+  @override
+  String get anonymousCard => '匿名カード ';
+
+  @override
+  String get memberNamesNotShared => 'メンバーの名前は共有されません';
+
+  @override
+  String get tapCardToShare => 'カードをタップして共有';
+
+  @override
+  String get card => 'カード ';
+
+  @override
+  String get memberNamesAndStatusShared => 'メンバーの名前と集金状況も共有されます';
+
+  @override
+  String get sharePayPayLink => 'PayPayリンクも一緒に共有する';
+
+  @override
+  String get imageCreationFailed => '画像の作成に失敗しました';
+
+  @override
+  String get sharePaymentRequest => 'お支払いをお願いいたします。PayPayリンク：';
+
+  @override
+  String get memberCount => 'メンバー数：';
+
+  @override
+  String get personUnit => '人';
+
+  @override
+  String get totalAmount => '合計金額：';
+
+  @override
+  String get collectionRate => '回収率';
+
+  @override
+  String get memberDetail => 'メンバー詳細';
+
+  @override
+  String get errorTitle => 'エラー';
+
+  @override
+  String get addOneMemberError => 'イベントにメンバーを一人以上追加してください。';
+
+  @override
+  String get signInFailed => 'サインインに失敗しました';
+
+  @override
+  String get pleaseTryAgain => 'お手数ですが、再度お試しください';
+
+  @override
+  String get sendFailed => '送信に失敗しました';
+
+  @override
+  String get pleaseTryAgainShort => 'お手数ですが再度お試しください';
+
+  @override
+  String get purchaseError => '購入処理でエラーが発生しました。';
+
+  @override
+  String get purchaseCancelledOrFailed => '購入がキャンセルまたは失敗しました。';
+
+  @override
+  String get purchaseUnavailable => '現在購入を利用できません。';
+
+  @override
+  String get productNotFound => '商品情報が見つかりませんでした。';
+
+  @override
+  String get purchaseStartFailed => '購入処理を開始できませんでした。';
+
+  @override
+  String get purchaseFailed => '購入に失敗しました。';
+
+  @override
+  String get productQueryFailed => '商品情報の取得に失敗しました。';
+
+  @override
+  String get purchasePrepareFailed => '購入の準備に失敗しました。';
+
+  @override
+  String get purchaseCancelled => '購入がキャンセルされました。';
+
+  @override
+  String get restoreFailed => '購入の復元に失敗しました。';
+
+  @override
+  String get noRestorablePurchase => '復元できる購入が見つかりませんでした。';
+
+  @override
+  String get removeAdsDescription =>
+      '全ての広告を永久に削除します。\n※ 金額設定で端数切り上げをすればすぐ元が取れます。';
+
+  @override
+  String get removeAdsPriceLabel => '¥300 買い切り';
+
+  @override
+  String get purchase => '購入';
+
+  @override
+  String get restorePurchase => '購入を復元する';
+
+  @override
+  String get adsAlreadyRemoved => 'すでに広告は削除済みです。';
+
+  @override
+  String modifyMemberRole(Object name) {
+    return '$nameの役割を修正';
+  }
+
+  @override
+  String get noRoleOption => '役割なし';
+
+  @override
+  String get questionnaireDesc1 => '【集金くん】に追加してほしい\n機能があれば\nぜひご意見ください！';
+
+  @override
+  String get questionnaireDesc2 => '匿名で提出できます。';
+
+  @override
+  String get questionnaireDesc3 => '今後のアップデートの\n参考にさせていただきます。';
+
+  @override
+  String get termsPrivacyUpdated => '利用規約・プライバシーポリシーを\n一部変更しました';
+
+  @override
+  String get termsPrivacyPrefix => 'コンテンツ利用に当たっては、\n本';
+
+  @override
+  String get termsPrivacySuffix2 => '\n双方に同意したものとみなします。';
+
+  @override
+  String get createFromLineGroup => 'LINEグループから作成';
+
+  @override
+  String get addEventFromLineDesc =>
+      '「LINEグループから作成」をすると、\n自動でグループのメンバーを追加し、\nグループにメッセージを送信できます。';
+
+  @override
+  String get transferFromOtherEvent => '他のイベントからメンバー引継ぎ';
+
+  @override
+  String get createEmptyEvent => '空のイベントを作成';
+
+  @override
+  String get themeColor => 'テーマカラー';
+
+  @override
+  String get roleName => '役割名';
+
+  @override
+  String changeCount(int count) {
+    return '変更($count)';
+  }
+
+  @override
+  String get changeButton => '変更';
+
+  @override
+  String get themeColorDefault => 'デフォルト';
+
+  @override
+  String get themeColorSakura => 'サクラ';
+
+  @override
+  String get themeColorAjisai => 'アジサイ';
+
+  @override
+  String get themeColorIchou => 'イチョウ';
+
+  @override
+  String get donationTitle => '開発者にドリンク１杯をご馳走する';
+
+  @override
+  String donationDescription(Object deficit) {
+    return '「集金くん」は学生エンジニアによって\n$deficit開発されています。\nよりよい機能を継続的に届けられるよう、\nご支援いただけると幸いです。';
+  }
+
+  @override
+  String get deficit => '赤字';
+
+  @override
+  String get donationCoffeeName => 'カフェモカ';
+
+  @override
+  String get donationFrappeName => '抹茶フラッペ';
+
+  @override
+  String get donationSweetsName => 'スイーツセット';
+
+  @override
+  String get donationThanksTitle => 'ご支援ありがとうございます！';
+
+  @override
+  String get donationThanksSmall1 => 'ごちそうさまです！';
+
+  @override
+  String get donationThanksSmall2 => 'カフェモカでほっと一息ついて、';
+
+  @override
+  String get donationThanksSmall3 => 'また開発がんばります！';
+
+  @override
+  String get donationThanksSmall4 => '応援してくれてありがとう🙌';
+
+  @override
+  String get donationThanksMedium2 => '抹茶フラッペでリフレッシュして、';
+
+  @override
+  String get donationThanksMedium3 => '次のアイデアにつなげます！';
+
+  @override
+  String get donationThanksLarge1 => 'ドーナツで当分補給ばっちり！';
+
+  @override
+  String get donationThanksLarge2 => '集中モードに入ります！';
+
+  @override
+  String get paypayLinkTitle => 'PayPayリンクとは？';
+
+  @override
+  String get paypayLinkDesc =>
+      'PayPayアプリで自分に送金してもらうためのリンクです。\n「集金くん」に登録しておくと、LINEで催促メッセージを送る際に、そのリンクから支払いをお願いできます。';
+
+  @override
+  String get paypayLinkQ1 => 'Q. PayPayリンクはどうやって取得するの？';
+
+  @override
+  String get paypayLinkA1 => 'A. PayPayアプリの「アカウント」→「マイコード」からコピーできます。';
+
+  @override
+  String get paypayLinkQ2 => 'Q. PayPayリンクを登録すれば、自動で支払い状況が反映される？';
+
+  @override
+  String get paypayLinkA2 => 'A. いいえ。PayPayの仕様上、自動反映はできません。';
+
+  @override
+  String get paypayStatusTitle => '「PayPayで支払い済み」とは？';
+
+  @override
+  String get paypayStatusDesc =>
+      'PayPayで受け取った支払いを管理しやすくするためのステータスです。\n現金で受け取った場合と区別して記録できます。';
+
+  @override
+  String get paypayStatusQ => 'Q. PayPayで支払ったら、自動で反映されますか？';
+
+  @override
+  String get paypayStatusA =>
+      'A. いいえ。PayPayの仕組み上、自動反映はできません。\nPayPayで受け取ったことを確認したら、手動で「PayPayで支払い済み」を選んでください。';
+
+  @override
+  String get updateAnnouncement => 'アップデートのお知らせ🎉';
+
+  @override
+  String get updateShareFeature => '集金状況の共有機能を実装！';
+
+  @override
+  String get updateRoundUpFeature => '金額設定時に端数を切り上げる機能';
+
+  @override
+  String get updateBulkEditFeature => '一括編集機能を実装';
+
+  @override
+  String get updateFeedbackMessage => 'ご意見・ご要望はアンケートからいつでも\nお気軽にお寄せください📮';
+
+  @override
+  String get suggestOfficialLineTitle => 'LINE公式アカウントを追加して\n集金くんを便利にしませんか？';
+
+  @override
+  String get suggestOfficialLineDesc =>
+      'おかげさまで、LINE公式アカウントが認証され、\nLINEと連携した超便利機能が使えるようになりました！';
+
+  @override
+  String get suggestOfficialLineAction => '公式LINEをグループに追加すると...';
+
+  @override
+  String get bulkAddMembers => 'メンバーを一括追加';
+
+  @override
+  String get autoSendGroupMessage => 'グループにメッセージを自動送信';
+
+  @override
+  String get addMemberFailed => 'メンバーの追加に失敗しました';
+
+  @override
+  String get releaseNotesEmpty => 'リリースノートなし';
+
+  @override
+  String get roleBasedSplit => '役割別で割り勘';
 }

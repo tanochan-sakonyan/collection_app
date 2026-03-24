@@ -106,7 +106,7 @@ class TanochanDrawerState extends ConsumerState<TanochanDrawer>
               const SizedBox(height: 14),
               _buildMenuItem(
                 context,
-                text: 'テーマカラーの変更',
+                text: S.of(context)!.changeThemeColor,
                 icon: SvgPicture.asset("assets/icons/drawer_star.svg"),
                 onTap: () {
                   unawaited(AnalyticsUiLogger.logThemeColorChangePressed());
@@ -143,7 +143,7 @@ class TanochanDrawerState extends ConsumerState<TanochanDrawer>
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        "広告を削除する",
+                        S.of(context)!.removeAds,
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                               fontSize: 16,
                               fontWeight: FontWeight.w800,
@@ -224,7 +224,7 @@ class TanochanDrawerState extends ConsumerState<TanochanDrawer>
                 const SizedBox(height: 20),
                 _buildMenuItem(
                   context,
-                  text: "開発者に支援をする",
+                  text: S.of(context)!.supportDeveloper,
                   icon: SvgPicture.asset("assets/icons/drawer_heart.svg",
                       colorFilter: ColorFilter.mode(
                         Theme.of(context).primaryColor,

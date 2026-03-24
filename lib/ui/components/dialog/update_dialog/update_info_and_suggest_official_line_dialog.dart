@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/ui/components/dialog/questionnaire_dialog.dart';
 import 'package:mr_collection/ui/components/dialog/update_dialog/update_info_dialog.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -40,14 +41,14 @@ class _UpdateInfoAndSuggestQuestionnaireDialogState
               child: PageView(
                 controller: _pageController,
                 onPageChanged: widget.onPageChanged,
-                children: const [
+                children: [
                   UpdateInfoDialog(
-                    version: "2.9.0",
-                    first: "集金状況の共有機能を実装！",
-                    second: "金額設定時に端数を切り上げる機能",
-                    third: "一括編集機能を実装",
+                    version: "2.12.0",
+                    first: S.of(context)!.updateShareFeature,
+                    second: S.of(context)!.updateRoundUpFeature,
+                    third: S.of(context)!.updateBulkEditFeature,
                   ),
-                  QuestionnaireDialog(),
+                  const QuestionnaireDialog(),
                 ],
               ),
             ),

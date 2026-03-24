@@ -16,8 +16,12 @@ import 'package:mr_collection/logging/analytics_amount_logger.dart';
 import 'package:mr_collection/ui/screen/amount_screen/tabs/adjust_amounts_tab.dart';
 import 'package:mr_collection/ui/screen/amount_screen/tabs/role_adjust_tab.dart';
 import 'package:mr_collection/ui/screen/amount_screen/tabs/split_equally_tab.dart';
+import 'package:mr_collection/ads/rewarded_ad_singleton.dart';
+import 'package:mr_collection/provider/ads_removal_provider.dart';
 import 'package:mr_collection/ui/screen/home_screen.dart';
 import 'package:mr_collection/ui/components/round_up_module.dart';
+import 'package:mr_collection/ui/components/dialog/ads/suggest_remove_ads_dialog.dart';
+import 'package:mr_collection/ui/components/dialog/ads/remove_ads_dialog.dart';
 
 class _TabPill extends StatelessWidget {
   const _TabPill({
@@ -582,7 +586,7 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
 
   TextSpan _buildRoleDescriptionTextSpan(BuildContext context) {
     final description = S.of(context)!.roleSetupDescription;
-    const boldPhrase = "役割別で割り勘"; // 太字にしたい部分
+    final boldPhrase = S.of(context)!.roleBasedSplit; // 太字にしたい部分
 
     if (description.contains(boldPhrase)) {
       final parts = description.split(boldPhrase);
@@ -857,6 +861,43 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                           );
                           if (!mounted) {
                             return;
+                          }
+                          // 広告削除ユーザーでなければ広告を表示する
+                          if (!ref.read(adsRemovalProvider)) {
+                            final changeAmount =
+                                _calculateChangeAmountForCurrentTab();
+                            if (changeAmount >= 300) {
+                              // async gap 越えの context 使用を避けるためローカルに退避
+                              final currentContext = context;
+                              // 端数切り上げが300円以上なら広告削除提案ダイアログを表示
+                              final wantRemoveAds = await showDialog<bool>(
+                                context: currentContext,
+                                barrierDismissible: false,
+                                builder: (_) => SuggestRemoveAdsDialog(
+                                    changeAmount: changeAmount),
+                              );
+                              if (!mounted) return;
+                              if (wantRemoveAds == true) {
+                                // 広告削除ダイアログを表示
+                                await showDialog(
+                                  context: currentContext,
+                                  builder: (_) => const RemoveAdsDialog(),
+                                );
+                                if (!mounted) return;
+                                // 購入が完了していなければ遷移せず画面に留まる
+                                if (!ref.read(adsRemovalProvider)) return;
+                              } else {
+                                // リワード広告を表示
+                                await amountConfirmRewardedAd
+                                    .showAndWaitForReward();
+                                if (!mounted) return;
+                              }
+                            } else {
+                              // 端数切り上げが300円未満なら従来通りリワード広告
+                              await amountConfirmRewardedAd
+                                  .showAndWaitForReward();
+                              if (!mounted) return;
+                            }
                           }
                           ref.read(pendingEventFocusProvider.notifier).state =
                               widget.eventId;

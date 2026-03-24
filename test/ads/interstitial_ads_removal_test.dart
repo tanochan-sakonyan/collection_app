@@ -5,6 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:in_app_purchase_storekit/src/sk2_pigeon.g.dart' as iap_storekit;
 import 'package:mr_collection/ads/interstitial_service.dart';
 import 'package:mr_collection/ads/interstitial_singleton.dart';
+import 'package:mr_collection/ads/rewarded_ad_service.dart';
+import 'package:mr_collection/ads/rewarded_ad_singleton.dart';
 import 'package:mr_collection/generated/s.dart';
 import 'package:mr_collection/provider/ads_removal_provider.dart';
 import 'package:mr_collection/ui/components/dialog/line/line_message_complete_dialog.dart';
@@ -31,6 +33,28 @@ class MockInterstitialService extends InterstitialService {
   @override
   Future<void> showAndWait() async {
     showAndWaitCallCount++;
+  }
+}
+
+// --- Mock RewardedAdService ---
+
+// リワード広告の呼び出しを記録するモック。
+class MockRewardedAdService extends RewardedAdService {
+  MockRewardedAdService({required this.mockIsReady, this.mockRewardResult = true})
+      : super(useProd: false);
+
+  final bool mockIsReady;
+  final bool mockRewardResult;
+  int showAndWaitCallCount = 0;
+
+  @override
+  bool get isReady => mockIsReady;
+
+  @override
+  Future<bool> showAndWaitForReward() async {
+    if (!mockIsReady) return false;
+    showAndWaitCallCount++;
+    return mockRewardResult;
   }
 }
 
@@ -254,26 +278,37 @@ void main() {
   //
   // AddEventDialog._selectLineGroup() と
   // AddEventNameDialog._selectLineGroup() は
-  // 同じ条件パターンで interstitial.show() を呼ぶ。
+  // 同じ条件パターンで lineGroupRewardedAd.showAndWaitForReward() を呼ぶ。
   // ウィジェット全体のテストは依存が多いため、
   // Provider の状態と Mock を組み合わせて条件ロジックを検証する。
   // ------------------------------------------------------------------
-  group('LINEグループ取得時の広告表示条件 - Provider 統合テスト', () {
-    // 検証: LINEグループ情報取得時、課金済みユーザーには interstitial.show() を呼ばない
+  group('LINEグループ取得時のリワード広告表示条件 - Provider 統合テスト', () {
+    late MockRewardedAdService mockRewardedService;
+
+    setUp(() {
+      // テスト環境ではプラットフォーム判定が効かないためダミーモックを注入
+      setLineGroupRewardedAdForTesting(MockRewardedAdService(mockIsReady: false));
+    });
+
+    tearDown(() {
+      setLineGroupRewardedAdForTesting(MockRewardedAdService(mockIsReady: false));
+    });
+
+    // 検証: LINEグループ情報取得時、課金済みユーザーにはリワード広告を表示しない
     // 該当箇所:
     //   - add_event_dialog.dart:102-103
-    //     if (!ref.read(adsRemovalProvider) && interstitial.isReady) {
-    //       await interstitial.show();
+    //     if (!ref.read(adsRemovalProvider)) {
+    //       await lineGroupRewardedAd.showAndWaitForReward();
     //     }
-    //   - add_event_name_dialog.dart:117-118
-    //     if (!ref.read(adsRemovalProvider) && interstitial.isReady) {
-    //       await interstitial.show();
+    //   - add_event_name_dialog.dart:117-119
+    //     if (!ref.read(adsRemovalProvider)) {
+    //       await lineGroupRewardedAd.showAndWaitForReward();
     //     }
     testWidgets(
-      '課金済みの場合、Provider が true を返し広告条件が成立しない',
+      '課金済みの場合、Provider が true を返しリワード広告条件が成立しない',
       withIos((tester) async {
-        mockService = MockInterstitialService(mockIsReady: true);
-        setInterstitialForTesting(mockService);
+        mockRewardedService = MockRewardedAdService(mockIsReady: true);
+        setLineGroupRewardedAdForTesting(mockRewardedService);
 
         final container = ProviderContainer(
           overrides: _adsRemovedOverrides(true),
@@ -287,23 +322,23 @@ void main() {
         final adsRemoved = container.read(adsRemovalProvider);
 
         // AddEventDialog / AddEventNameDialog と同じ条件
-        if (!adsRemoved && interstitial.isReady) {
-          await interstitial.show();
+        if (!adsRemoved) {
+          await lineGroupRewardedAd.showAndWaitForReward();
         }
 
         expect(adsRemoved, true);
-        expect(mockService.showCallCount, 0,
-            reason: '課金済みユーザーにはLINEグループ取得時の広告を表示しない');
+        expect(mockRewardedService.showAndWaitCallCount, 0,
+            reason: '課金済みユーザーにはLINEグループ取得時のリワード広告を表示しない');
       }),
     );
 
-    // 検証: LINEグループ情報取得時、未課金ユーザーには interstitial.show() を呼ぶ
-    // 該当箇所: add_event_dialog.dart:102-103, add_event_name_dialog.dart:117-118
+    // 検証: LINEグループ情報取得時、未課金ユーザーにはリワード広告を表示する
+    // 該当箇所: add_event_dialog.dart:102-103, add_event_name_dialog.dart:117-119
     testWidgets(
-      '未課金の場合、Provider が false を返し広告条件が成立する',
+      '未課金の場合、Provider が false を返しリワード広告条件が成立する',
       withIos((tester) async {
-        mockService = MockInterstitialService(mockIsReady: true);
-        setInterstitialForTesting(mockService);
+        mockRewardedService = MockRewardedAdService(mockIsReady: true);
+        setLineGroupRewardedAdForTesting(mockRewardedService);
 
         final container = ProviderContainer(
           overrides: _adsRemovedOverrides(false),
@@ -316,13 +351,13 @@ void main() {
         final adsRemoved = container.read(adsRemovalProvider);
 
         // AddEventDialog / AddEventNameDialog と同じ条件
-        if (!adsRemoved && interstitial.isReady) {
-          await interstitial.show();
+        if (!adsRemoved) {
+          await lineGroupRewardedAd.showAndWaitForReward();
         }
 
         expect(adsRemoved, false);
-        expect(mockService.showCallCount, 1,
-            reason: '未課金ユーザーにはLINEグループ取得時の広告を表示する');
+        expect(mockRewardedService.showAndWaitCallCount, 1,
+            reason: '未課金ユーザーにはLINEグループ取得時のリワード広告を表示する');
       }),
     );
   });
