@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(git status:*)",
-      "Bash(git restore:*)"
+      "Bash(git restore:*)",
+      "Bash(./gradlew --stop)"
+    ],
+    "additionalDirectories": [
+      "/Users/yuma/.gradle/caches"
     ]
   }
 }

@@ -19,7 +19,7 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "app.web.mr_collection"
-    compileSdk = 35
+    compileSdk = 36
     ndkVersion = "27.0.12077973"
 
     compileOptions {
@@ -43,8 +43,8 @@ android {
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 25
         targetSdk = 35
-        versionCode = 260
-        versionName = "2.6.0"
+        versionCode = 2120
+        versionName = "2.12.0"
     }
 
     fun requireProp(p: Properties, key: String): String =

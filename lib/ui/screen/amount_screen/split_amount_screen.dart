@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -864,39 +866,46 @@ class _SplitAmountScreenState extends ConsumerState<SplitAmountScreen>
                           }
                           // 広告削除ユーザーでなければ広告を表示する
                           if (!ref.read(adsRemovalProvider)) {
-                            final changeAmount =
-                                _calculateChangeAmountForCurrentTab();
-                            if (changeAmount >= 300) {
-                              // async gap 越えの context 使用を避けるためローカルに退避
-                              final currentContext = context;
-                              // 端数切り上げが300円以上なら広告削除提案ダイアログを表示
-                              final wantRemoveAds = await showDialog<bool>(
-                                context: currentContext,
-                                barrierDismissible: false,
-                                builder: (_) => SuggestRemoveAdsDialog(
-                                    changeAmount: changeAmount),
-                              );
+                            // Androidでは課金機能がないためリワード広告のみ表示する
+                            if (Platform.isAndroid) {
+                              await amountConfirmRewardedAd
+                                  .showAndWaitForReward();
                               if (!mounted) return;
-                              if (wantRemoveAds == true) {
-                                // 広告削除ダイアログを表示
-                                await showDialog(
+                            } else {
+                              final changeAmount =
+                                  _calculateChangeAmountForCurrentTab();
+                              if (changeAmount >= 300) {
+                                // async gap 越えの context 使用を避けるためローカルに退避
+                                final currentContext = context;
+                                // 端数切り上げが300円以上なら広告削除提案ダイアログを表示
+                                final wantRemoveAds = await showDialog<bool>(
                                   context: currentContext,
-                                  builder: (_) => const RemoveAdsDialog(),
+                                  barrierDismissible: false,
+                                  builder: (_) => SuggestRemoveAdsDialog(
+                                      changeAmount: changeAmount),
                                 );
                                 if (!mounted) return;
-                                // 購入が完了していなければ遷移せず画面に留まる
-                                if (!ref.read(adsRemovalProvider)) return;
+                                if (wantRemoveAds == true) {
+                                  // 広告削除ダイアログを表示
+                                  await showDialog(
+                                    context: currentContext,
+                                    builder: (_) => const RemoveAdsDialog(),
+                                  );
+                                  if (!mounted) return;
+                                  // 購入が完了していなければ遷移せず画面に留まる
+                                  if (!ref.read(adsRemovalProvider)) return;
+                                } else {
+                                  // リワード広告を表示
+                                  await amountConfirmRewardedAd
+                                      .showAndWaitForReward();
+                                  if (!mounted) return;
+                                }
                               } else {
-                                // リワード広告を表示
+                                // 端数切り上げが300円未満なら従来通りリワード広告
                                 await amountConfirmRewardedAd
                                     .showAndWaitForReward();
                                 if (!mounted) return;
                               }
-                            } else {
-                              // 端数切り上げが300円未満なら従来通りリワード広告
-                              await amountConfirmRewardedAd
-                                  .showAndWaitForReward();
-                              if (!mounted) return;
                             }
                           }
                           ref.read(pendingEventFocusProvider.notifier).state =

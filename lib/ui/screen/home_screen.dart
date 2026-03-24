@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io' show Platform;
 
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
@@ -134,11 +135,14 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   // 起動時に広告削除状態を復元してからバナーを作成し、アイドルタイマーを開始する。
+  // Androidでは課金機能がないためIAP復元をスキップする。
   Future<void> _restoreAdsRemovalStatusOnStart() async {
-    await ref
-        .read(adsRemovalProvider.notifier)
-        .restoreAdsRemovalStatus();
-    if (!mounted) return;
+    if (!Platform.isAndroid) {
+      await ref
+          .read(adsRemovalProvider.notifier)
+          .restoreAdsRemovalStatus();
+      if (!mounted) return;
+    }
     _createBannerAd();
     if (!ref.read(adsRemovalProvider)) {
       idleInterstitialManager.start();

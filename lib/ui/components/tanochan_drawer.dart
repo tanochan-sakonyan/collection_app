@@ -116,44 +116,47 @@ class TanochanDrawerState extends ConsumerState<TanochanDrawer>
                   );
                 },
               ),
-              const SizedBox(height: 20),
-              // ここだけ何故かアイコンがズレるので_buildMenuItemは使わない。
-              GestureDetector(
-                onTap: () {
-                  final isAdsRemoved = ref.read(adsRemovalProvider);
-                  showDialog(
-                    context: context,
-                    builder: (_) => isAdsRemoved
-                        ? const RemoveAdsThanksDialog()
-                        : const RemoveAdsDialog(),
-                  );
-                },
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.61,
-                  child: Row(
-                    children: [
-                      SvgPicture.asset(
-                        "assets/icons/ic_crown.svg",
-                        width: 24,
-                        height: 24,
-                        colorFilter: const ColorFilter.mode(
-                          Color(0xFFFFD700),
-                          BlendMode.srcIn,
+              // Androidでは広告削除の購入機能を非表示にする
+              if (!Platform.isAndroid) ...[
+                const SizedBox(height: 20),
+                // ここだけ何故かアイコンがズレるので_buildMenuItemは使わない。
+                GestureDetector(
+                  onTap: () {
+                    final isAdsRemoved = ref.read(adsRemovalProvider);
+                    showDialog(
+                      context: context,
+                      builder: (_) => isAdsRemoved
+                          ? const RemoveAdsThanksDialog()
+                          : const RemoveAdsDialog(),
+                    );
+                  },
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.61,
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(
+                          "assets/icons/ic_crown.svg",
+                          width: 24,
+                          height: 24,
+                          colorFilter: const ColorFilter.mode(
+                            Color(0xFFFFD700),
+                            BlendMode.srcIn,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        S.of(context)!.removeAds,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w800,
-                              color: Colors.black,
-                            ),
-                      ),
-                    ],
+                        const SizedBox(width: 8),
+                        Text(
+                          S.of(context)!.removeAds,
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w800,
+                                color: Colors.black,
+                              ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
+              ],
               const SizedBox(height: 20),
               _buildMenuItem(
                 context,

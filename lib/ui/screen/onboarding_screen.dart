@@ -1,3 +1,4 @@
+import 'dart:io' show Platform;
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -800,61 +801,64 @@ class _OnboardingScreenState extends State<OnboardingScreen>
               ),
             ),
           ),
-          const SizedBox(height: 16),
-          // 購入するボタン
-          SizedBox(
-            width: 120,
-            height: 44,
-            child: ElevatedButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => const RemoveAdsDialog(),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: Theme.of(context).primaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(22),
+          // Androidでは課金機能がないため購入ボタンと広告削除の案内を非表示にする
+          if (!Platform.isAndroid) ...[
+            const SizedBox(height: 16),
+            // 購入するボタン
+            SizedBox(
+              width: 120,
+              height: 44,
+              child: ElevatedButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => const RemoveAdsDialog(),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: Theme.of(context).primaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(22),
+                  ),
                 ),
-              ),
-              child: const Text(
-                '購入する',
-                style: TextStyle(
-                  fontFamily: 'Noto Sans JP',
-                  fontWeight: FontWeight.w900,
+                child: const Text(
+                  '購入する',
+                  style: TextStyle(
+                    fontFamily: 'Noto Sans JP',
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
               ),
             ),
-          ),
-          const SizedBox(height: 24),
-          _buildSectionCard(
-            children: [
-              RichText(
-                text: const TextSpan(
-                  style: TextStyle(
-                    fontFamily: 'Noto Sans JP',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                    height: 1.5,
-                  ),
-                  children: [
-                    TextSpan(text: '集金くんは、現在'),
-                    TextSpan(
-                      text: '赤字',
-                      style: TextStyle(color: Colors.red),
+            const SizedBox(height: 24),
+            _buildSectionCard(
+              children: [
+                RichText(
+                  text: const TextSpan(
+                    style: TextStyle(
+                      fontFamily: 'Noto Sans JP',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                      height: 1.5,
                     ),
-                    TextSpan(
-                        text: '開発されています。\n'
-                            '今後集金くんの機能を継続して提供できない可能性がございます。\n\n'
-                            '広告を削除できる機能を300円でご用意しております。ぜひ、ご利用いただければと思います。'),
-                  ],
+                    children: [
+                      TextSpan(text: '集金くんは、現在'),
+                      TextSpan(
+                        text: '赤字',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                      TextSpan(
+                          text: '開発されています。\n'
+                              '今後集金くんの機能を継続して提供できない可能性がございます。\n\n'
+                              '広告を削除できる機能を300円でご用意しております。ぜひ、ご利用いただければと思います。'),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
+          ],
         ],
       ),
     );
