@@ -43,7 +43,7 @@ class _UpdateInfoAndSuggestQuestionnaireDialogState
                 onPageChanged: widget.onPageChanged,
                 children: [
                   UpdateInfoDialog(
-                    version: "2.9.0",
+                    version: "2.12.0",
                     first: S.of(context)!.updateShareFeature,
                     second: S.of(context)!.updateRoundUpFeature,
                     third: S.of(context)!.updateBulkEditFeature,
