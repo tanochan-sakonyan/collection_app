@@ -61,7 +61,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   final Set<String> _dismissedDuplicateWarningEventIds = {};
   final Set<String> _loggedDuplicateWarningEventIds = {};
   ProviderSubscription<bool>? _adsRemovalSubscription;
-  late final IdleInterstitialManager _idleInterstitialManager;
 
   final GlobalKey eventAddKey = GlobalKey();
   ProviderSubscription<String?>? _pendingFocusSubscription;
@@ -93,7 +92,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
             _banner = null;
             _isBannerLoaded = false;
           });
-          _idleInterstitialManager.stop();
+          idleInterstitialManager.stop();
         }
       },
       fireImmediately: false,
@@ -129,7 +128,6 @@ class HomeScreenState extends ConsumerState<HomeScreen>
       fireImmediately: false,
     );
 
-    _idleInterstitialManager = IdleInterstitialManager();
     unawaited(_loadSavedTabOrder());
     _loadSavedTabIndex();
     unawaited(_restoreAdsRemovalStatusOnStart());
@@ -143,7 +141,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     if (!mounted) return;
     _createBannerAd();
     if (!ref.read(adsRemovalProvider)) {
-      _idleInterstitialManager.start();
+      idleInterstitialManager.start();
     }
   }
 
@@ -280,14 +278,14 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   @override
   // 別の画面がプッシュされてHomeScreenが非表示になった時、タイマーを停止する。
   void didPushNext() {
-    _idleInterstitialManager.stop();
+    idleInterstitialManager.stop();
   }
 
   @override
   // 別の画面からHomeScreenに戻ってきた時、タイマーをリセットして再開する。
   void didPopNext() {
     if (!ref.read(adsRemovalProvider)) {
-      _idleInterstitialManager.start();
+      idleInterstitialManager.start();
     }
   }
 
@@ -299,7 +297,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     _banner?.dispose();
     _pendingFocusSubscription?.close();
     _adsRemovalSubscription?.close();
-    _idleInterstitialManager.dispose();
+    idleInterstitialManager.dispose();
     super.dispose();
   }
 
@@ -976,8 +974,8 @@ class HomeScreenState extends ConsumerState<HomeScreen>
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Listener(
-      onPointerDown: (_) => _idleInterstitialManager.resetTimer(),
-      onPointerMove: (_) => _idleInterstitialManager.resetTimer(),
+      onPointerDown: (_) => idleInterstitialManager.resetTimer(),
+      onPointerMove: (_) => idleInterstitialManager.resetTimer(),
       child: WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(

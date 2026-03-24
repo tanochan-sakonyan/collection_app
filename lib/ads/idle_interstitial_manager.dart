@@ -22,6 +22,9 @@ void setIdleInterstitialForTesting(InterstitialService service) {
 /// アイドル時インタースティシャル広告のインスタンスを取得する。
 InterstitialService get idleInterstitial => _idleInterstitial;
 
+/// アイドルタイマーマネージャーのシングルトンインスタンス。
+final idleInterstitialManager = IdleInterstitialManager();
+
 /// HomeScreenのアイドル時にインタースティシャル広告を表示するマネージャー。
 class IdleInterstitialManager {
   final Duration idleTimeout;
@@ -29,7 +32,6 @@ class IdleInterstitialManager {
 
   Timer? _idleTimer;
   DateTime? _lastShownAt;
-  bool _disposed = false;
   VoidCallback? _onShowAd;
 
   IdleInterstitialManager({
@@ -42,13 +44,12 @@ class IdleInterstitialManager {
 
   /// アイドルタイマーを開始する。
   void start() {
-    if (_disposed) return;
     _resetTimer();
   }
 
   /// ユーザー操作を検知してタイマーをリセットする。
   void resetTimer() {
-    if (_disposed) return;
+    if (_idleTimer == null) return; // タイマーが動いていない場合は何もしない
     _resetTimer();
   }
 
@@ -59,18 +60,21 @@ class IdleInterstitialManager {
 
   /// アイドル時間経過時の処理。
   Future<void> _onIdle() async {
-    if (_disposed) return;
     if (_isInCooldown()) {
       log('Idle interstitial skipped: in cooldown');
+      _resetTimer(); // クールダウン中でも次の検出のためにタイマーを再開する
       return;
     }
     if (!_idleInterstitial.isReady) {
       log('Idle interstitial skipped: ad not ready');
+      _resetTimer();
       return;
     }
     _lastShownAt = clock.now();
     _onShowAd?.call();
     await _idleInterstitial.show();
+    // 広告表示後にタイマーを再スタートする（クールダウン判定で弾かれる）
+    _resetTimer();
   }
 
   /// クールダウン中かどうか判定する。
@@ -85,10 +89,8 @@ class IdleInterstitialManager {
     _idleTimer = null;
   }
 
-  /// リソースを解放する。
+  /// リソースを解放する（シングルトンとして使う場合は stop と同じ動作）。
   void dispose() {
-    _disposed = true;
-    _idleTimer?.cancel();
-    _idleTimer = null;
+    stop();
   }
 }
